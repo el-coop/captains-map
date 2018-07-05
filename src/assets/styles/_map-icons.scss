@@ -1,0 +1,10 @@
+.map-icon-wrapper {
+	height: 50px;
+	padding: 2px;
+	background-color: $background;
+	pointer-events: visible;
+
+	& > .map-icon {
+		height: 100%;
+	}
+}

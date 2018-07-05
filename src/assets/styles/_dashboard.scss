@@ -1,0 +1,37 @@
+.dashboard {
+	background-color: transparent;
+	position: relative;
+	pointer-events: none;
+	height: 100vh;
+	width: 100vw;
+	display: grid;
+	z-index: 10;
+	grid-template-rows: [header] $gap/1.5 [body] auto [footer] $gap/1.5;
+	grid-template-columns: 100%;
+
+	@media #{$above-tablet} {
+		grid-template-rows: [header] $gap/1.5 [body] auto;
+	}
+
+	&__control {
+		background-color: $background;
+		pointer-events: visible;
+		position: relative;
+
+		&--dark {
+			background-color: darken($background, 10%);
+		}
+	}
+
+	&__header {
+		grid-row: header;
+	}
+	&__body {
+		grid-row: body;
+		display: flex;
+		justify-content: space-between;
+	}
+	&__footer {
+		grid-row: footer;
+	}
+}
