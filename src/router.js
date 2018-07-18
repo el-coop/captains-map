@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Layout from '@/views/Layout';
+import ViewLayout from '@/views/ViewLayout';
+import EditLayout from '@/views/EditLayout';
+import Auth from './middleware/Auth.middleware';
 
 
 Vue.use(Router);
@@ -8,9 +10,15 @@ Vue.use(Router);
 export default new Router({
 	routes: [
 		{
-			path: '/',
-			name: 'map',
-			component: Layout
+			path: '/edit',
+			name: 'edit',
+			component: EditLayout,
+			beforeEnter: Auth.handle
+		},
+		{
+			path: '/:username?',
+			name: 'view',
+			component: ViewLayout
 		},
 	]
 })

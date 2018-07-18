@@ -22,4 +22,8 @@
 </script>
 
 <style scoped>
+    .media + .media {
+        margin-top: 0;
+        padding-top: 0;
+    }
 </style>

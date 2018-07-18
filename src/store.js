@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Map from '@/services/leaflet.service';
 
 Vue.use(Vuex);
 
@@ -11,6 +10,16 @@ export default new Vuex.Store({
 	mutations: {
 		addMarker(state, marker) {
 			state.markers.push(marker);
+		},
+
+		deleteMarker(state, marker) {
+			state.markers = state.markers.filter((obj) => {
+				return obj.id !== marker.id;
+			});
+		},
+
+		replaceMarkers(state, markers) {
+			state.markers = markers;
 		}
 	},
 	actions: {}

@@ -25,13 +25,12 @@
 			}
 		},
 
-		async mounted() {
-			let file = await this.readFile(this.marker.file);
+		mounted() {
 			let icon = leaflet.divIcon({
-				html: `<div class="map-icon-wrapper"><img src="${file.target.result}" class="map-icon"></div>`,
+				html: `<div class="map-icon-wrapper"><img src="api/${this.marker.media.path}" class="map-icon"></div>`,
 				iconSize: ['auto', 50]
 			});
-			this.mapObject = leaflet.marker(this.marker.latLng, {icon: icon});
+			this.mapObject = leaflet.marker([this.marker.lat, this.marker.lng], {icon: icon}).on('click', this.onClick.bind(this));
 			leaflet.DomEvent.on(this.mapObject, this.$listeners);
 			this.addToMap();
 
@@ -46,16 +45,10 @@
 				Map.addMarker(this.mapObject);
 			},
 			removeFromMap() {
-				//	Map.removeMarker(this.mapObject);
+				Map.removeMarker(this.mapObject);
 			},
-
-			readFile(file) {
-				return new Promise((resolve, reject) => {
-					let reader = new FileReader();
-					reader.onload = resolve;
-					reader.onerror = reject;
-					reader.readAsDataURL(file);
-				});
+			onClick() {
+				this.$bus.$emit('marker-click', this.marker);
 			}
 		}
 	}

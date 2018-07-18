@@ -2,17 +2,15 @@
     <div class="media" @click="showMarker">
         <figure class="media-left">
             <p class="image">
-                <img :src="image">
+                <img :src="'/api' + marker.media.path">
             </p>
         </figure>
         <div class="media-content">
             <div class="content">
                 <small>Type:&nbsp;</small>
-                <strong v-html="marker.type"></strong>
+                <strong v-text="marker.type"></strong>
                 <br>
-                <p v-html="marker.description">
-
-                </p>
+                <p v-text="marker.description"></p>
             </div>
         </div>
     </div>
@@ -37,24 +35,11 @@
 			}
 		},
 
-		async mounted() {
-			let file = await this.readFile(this.marker.file);
-			this.image = file.target.result;
-
-		},
 
 		methods: {
-			readFile(file) {
-				return new Promise((resolve, reject) => {
-					let reader = new FileReader();
-					reader.onload = resolve;
-					reader.onerror = reject;
-					reader.readAsDataURL(file);
-				});
-			},
-
 			showMarker() {
-				Map.move(this.marker.latLng, 16);
+				this.$bus.$emit('moving-map');
+				Map.move([this.marker.lat, this.marker.lng], 16);
 			}
 		}
 	}

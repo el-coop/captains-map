@@ -4,20 +4,20 @@
              @click="setStatus('')"
              :src="profile.image">
         <!--<div class="field has-addons buttons">-->
-            <!--<p class="control" v-if="status === 'open'">-->
-                <!--<button class="button">-->
-                    <!--Save-->
-                <!--</button>-->
-            <!--</p>-->
-            <!--<p class="control">-->
-                <!--<button class="button" @click="setStatus('open')" v-html="openButton">-->
-                <!--</button>-->
-            <!--</p>-->
-            <!--<p class="control">-->
-                <!--<button class="button" @click="setStatus('closed')">-->
-                    <!--Min-->
-                <!--</button>-->
-            <!--</p>-->
+        <!--<p class="control" v-if="status === 'open'">-->
+        <!--<button class="button">-->
+        <!--Save-->
+        <!--</button>-->
+        <!--</p>-->
+        <!--<p class="control">-->
+        <!--<button class="button" @click="setStatus('open')" v-html="openButton">-->
+        <!--</button>-->
+        <!--</p>-->
+        <!--<p class="control">-->
+        <!--<button class="button" @click="setStatus('closed')">-->
+        <!--Min-->
+        <!--</button>-->
+        <!--</p>-->
         <!--</div>-->
     </div>
 </template>
@@ -65,8 +65,9 @@
     @import "~$scss/variables";
 
     .profile {
+        width: 0;
+        height: 0;
         transition: all $animation-speed;
-        height: 100vh;
         align-self: start;
 
         &.open {

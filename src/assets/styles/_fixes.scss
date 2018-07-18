@@ -1,7 +1,22 @@
+html {
+	overflow-y: auto;
+}
+
+.layout {
+	position: relative;
+	height: 100vh;
+	width: 100vw;
+}
+
 .v--modal-overlay {
 	pointer-events: visible;
 }
 
 .v--modal-box {
-	overflow: visible !important;
+	max-height: 100vh;
+	overflow: auto !important;
+}
+
+.v--modal {
+	background: transparent !important;
 }

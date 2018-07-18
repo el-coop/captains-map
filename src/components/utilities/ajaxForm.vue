@@ -16,7 +16,9 @@
 			},
 			headers: {
 				default() {
-					return {};
+					return {
+						'Content-type': 'application/json'
+					};
 				},
 				type: Object
 			},
@@ -25,6 +27,10 @@
 					return {};
 				},
 				type: Object
+			},
+			action: {
+				type: String,
+				default: window.location
 			}
 		},
 
@@ -41,13 +47,24 @@
 						data.append(prop, this.extraData[prop])
 					}
 				}
+				if (this.headers['Content-type'] === 'application/json') {
+					return this.jsonify(data);
+				}
+				return data;
+			},
+
+			jsonify(formData) {
+				let data = {};
+				formData.forEach((value, key) => {
+					data[key] = value;
+				});
 				return data;
 			},
 
 			async submit() {
 				this.clearErrors();
 				this.$emit('submitting');
-				let request = await this.$http[this.method]('marker/create', this.getData(), this.headers);
+				let request = await this.$http[this.method](this.action, this.getData(), this.headers);
 				this.$emit('submitted', request);
 				if (request.hasOwnProperty('response') && request.response.data.errors) {
 					this.formatErrors(request.response.data.errors);

@@ -16,29 +16,41 @@ export class LeafletMapService {
 			zoom,
 			zoomControl: false
 		});
-		new leaflet.Control.Zoom({position: 'bottomleft'}).addTo(this.map);
-
-		if (!center) {
-			this.map.locate({
-				setView: true,
-				maxZoom: 12
-			});
-		}
+		let zoomControl = new leaflet.Control.Zoom({position: 'bottomleft'}).addTo(this.map);
 
 		leaflet.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="//www.openstreetmap.org/copyright">OpenStreetMap</a>',
 			subdomains: ['a', 'b', 'c'],
 			interactive: true,
 		}).addTo(this.map);
+
+		if (leaflet.Browser.mobile) {
+			this.map.removeControl(zoomControl);
+		}
 	}
 
-	async addMarker(marker) {
+	addMarker(marker) {
 		this.markers.push(marker);
 		marker.addTo(this.map);
 	}
 
+	removeMarker(marker) {
+		this.map.removeLayer(marker);
+	}
+
 	move(latLang, zoom = 18) {
 		this.map.flyTo(latLang, zoom);
+	}
+
+	setView(latLang, zoom = 15) {
+		this.map.setView(latLang, zoom);
+	}
+
+	goToCurrentLocation() {
+		this.map.locate({
+			setView: true,
+			maxZoom: 12
+		});
 	}
 
 	static locate(address) {

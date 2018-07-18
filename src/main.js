@@ -5,9 +5,11 @@ import store from './store'
 import './registerServiceWorker'
 import VModal from 'vue-js-modal'
 import HttpService from './services/http.service';
+import vueMoment from 'vue-moment';
 
 Vue.use(VModal);
 Vue.use(HttpService);
+Vue.use(vueMoment);
 Vue.config.productionTip = false;
 Vue.prototype.$bus = new Vue();
 

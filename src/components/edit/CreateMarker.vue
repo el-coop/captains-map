@@ -5,7 +5,7 @@
             lat: latLng.lat,
             lng: latLng.lng,
             time: dateTime
-        }">
+        }" action="marker/edit/create">
             <div class="field">
                 <div class="file is-boxed has-name is-light">
                     <label class="file-label">
@@ -108,12 +108,7 @@
 				if (response.status !== 200) {
 					return;
 				}
-				this.$store.commit('addMarker', {
-					latLng: this.latLng,
-					file: this.file,
-					description: this.description,
-					type: 'Visited'
-				});
+				this.$store.commit('addMarker', response.data);
 
 				this.$emit('close-modal');
 
