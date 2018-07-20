@@ -56,7 +56,7 @@
 <style scoped>
     .map {
         position: absolute;
-        height: 100vh;
+        height: 100%;
         width: 100vw;
         top: 0;
         left: 0;

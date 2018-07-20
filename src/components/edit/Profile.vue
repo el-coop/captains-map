@@ -89,7 +89,7 @@
             &.open {
                 width: auto;
                 flex: 1;
-                height: 100vh;
+                height: 100%;
             }
         }
     }
