@@ -27,7 +27,7 @@
 
 		mounted() {
 			let icon = leaflet.divIcon({
-				html: `<div class="map-icon-wrapper"><img src="api/${this.marker.media.path}" class="map-icon"></div>`,
+				html: `<div class="map-icon-wrapper"><img src="/api${this.marker.media.path}" class="map-icon"></div>`,
 				iconSize: ['auto', 50]
 			});
 			this.mapObject = leaflet.marker([this.marker.lat, this.marker.lng], {icon: icon}).on('click', this.onClick.bind(this));
