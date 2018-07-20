@@ -61,10 +61,11 @@
 					this.$store.commit('replaceMarkers', markersRequest.data);
 					if (markersRequest.data.length) {
 						map.setView([markersRequest.data[0].lat, markersRequest.data[0].lng]);
+						return;
 					}
-				} else {
-					map.goToCurrentLocation();
 				}
+				map.goToCurrentLocation();
+
 			} catch (error) {
 				// TODO: add loading error
 				console.log(error);
