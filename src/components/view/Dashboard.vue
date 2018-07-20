@@ -57,9 +57,13 @@
 				}
 				const markersRequest = await this.$http.get(markersRoute);
 
-				this.$store.commit('replaceMarkers', markersRequest.data);
-				if (markersRequest.data.length) {
-					map.setView([markersRequest.data[0].lat, markersRequest.data[0].lng]);
+				if (markersRequest.data !== undefined) {
+					this.$store.commit('replaceMarkers', markersRequest.data);
+					if (markersRequest.data.length) {
+						map.setView([markersRequest.data[0].lat, markersRequest.data[0].lng]);
+					}
+				} else {
+					map.goToCurrentLocation();
 				}
 			} catch (error) {
 				// TODO: add loading error

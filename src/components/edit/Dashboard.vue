@@ -55,8 +55,10 @@
 			try {
 				let userDetails = auth.getUserDetails();
 				const markersRequest = await this.$http.get(`marker/${userDetails.username}`);
-				this.$store.commit('replaceMarkers', markersRequest.data);
-				map.goToCurrentLocation();
+				if (markersRequest.data !== undefined) {
+					this.$store.commit('replaceMarkers', markersRequest.data);
+					map.goToCurrentLocation();
+				}
 			} catch (error) {
 				// TODO: add loading error
 				console.log(error);
