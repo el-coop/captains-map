@@ -73,7 +73,7 @@
 		methods: {
 			async deleteMarker() {
 				this.deleting = true;
-				let response = await this.$http.delete(`marker//edit/${this.marker.id}`);
+				let response = await this.$http.delete(`marker/${this.marker.id}`);
 				this.$store.commit('deleteMarker', this.marker);
 				this.$modal.hide('edit-marker');
 			}

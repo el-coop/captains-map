@@ -5,7 +5,7 @@
             lat: latLng.lat,
             lng: latLng.lng,
             time: dateTime
-        }" action="marker/edit/create">
+        }" action="marker/create">
             <div class="field">
                 <div class="file is-boxed has-name is-light">
                     <label class="file-label">
