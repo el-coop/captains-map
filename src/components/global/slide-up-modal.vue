@@ -3,7 +3,7 @@
            :scrollable="true"
            :pivotY="pivotY"
            @before-open="beforeOpen"
-           @opened="fixModalPosition"
+           @opened="startFixingModalPosition"
            ref="modal">
         <div class="card">
             <div class="card-header dashboard__control--dark">
@@ -56,9 +56,15 @@
 					this.pivotY = 0.5;
 				}
 			},
+			startFixingModalPosition() {
+				window.setTimeout(this.fixModalPosition, 50);
+			},
 			fixModalPosition() {
 				if (this.$refs.modal._computedWatchers.position.value.top < 0) {
-					this.pivotY = 0.1;
+					this.pivotY += 0.05;
+					window.setTimeout(() => {
+						this.fixModalPosition();
+					}, 50);
 				}
 			}
 		}
