@@ -2,7 +2,9 @@
     <modal :name="name" :transition="transition" :height="height" :adaptive="true"
            :scrollable="true"
            :pivotY="pivotY"
-           @before-open="beforeOpen">
+           @before-open="beforeOpen"
+           @opened="fixModalPosition"
+           ref="modal">
         <div class="card">
             <div class="card-header dashboard__control--dark">
                 <slot name="header"/>
@@ -52,6 +54,11 @@
 				} else {
 					this.transition = 'slide-up';
 					this.pivotY = 0.5;
+				}
+			},
+			fixModalPosition() {
+				if (this.$refs.modal._computedWatchers.position.value.top < 0) {
+					this.pivotY = 0.1;
 				}
 			}
 		}
