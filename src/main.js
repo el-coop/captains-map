@@ -6,8 +6,14 @@ import './registerServiceWorker'
 import VModal from 'vue-js-modal'
 import HttpService from './services/http.service';
 import vueMoment from 'vue-moment';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faUpload, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+library.add(faUpload, faTimesCircle);
 
 Vue.use(VModal);
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(HttpService);
 Vue.use(vueMoment);
 Vue.config.productionTip = false;

@@ -50,7 +50,7 @@ export default class HttpService {
 			let response = await axios.delete(`${host}/${url}`, headers);
 			return response;
 		} catch (error) {
-			return error;
+			return false;
 		}
 	}
 

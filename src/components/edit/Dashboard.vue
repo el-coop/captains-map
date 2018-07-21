@@ -12,12 +12,8 @@
                 Show {{ openSidebar ? 'Map' : 'List'}}
             </button>
         </div>
-        <modal name="create-marker" :adaptive="true" :height="'auto'">
-            <create-marker :latLng="latLng" @close-modal="$modal.hide('create-marker')"/>
-        </modal>
-        <modal name="edit-marker" :adaptive="true" :height="'auto'">
-            <edit-marker :marker="selectedMarker"></edit-marker>
-        </modal>
+        <create-marker :latLng="latLng"/>
+        <view-marker v-if="selectedMarker" :marker="selectedMarker"/>
     </div>
 </template>
 
@@ -26,24 +22,24 @@
 	import SearchBar from '@/components/edit/SearchBar';
 	import CreateMarker from '@/components/edit/CreateMarker';
 	import MarkerList from "@/components/global/MarkerList";
-	import EditMarker from "@/components/edit/EditMarker";
 	import auth from "@/services/authentication.service";
 	import map from "@/services/leaflet.service";
+	import ViewMarker from '@/components/global/ViewMarker';
 
 	export default {
 		name: "edit-dashboard",
 
 		components: {
-			EditMarker,
 			MarkerList,
 			Profile,
 			SearchBar,
 			CreateMarker,
+			ViewMarker
 		},
 
 		data() {
 			return {
-				latLng: null,
+				latLng: {},
 				selectedMarker: null,
 				openSidebar: false
 			}
@@ -77,7 +73,9 @@
 
 			showMarker(marker) {
 				this.selectedMarker = marker;
-				this.$modal.show('edit-marker');
+				setTimeout(() => {
+					this.$modal.show('view-marker');
+				}, 50);
 			}
 		}
 	}

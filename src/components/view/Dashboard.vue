@@ -17,16 +17,14 @@
                 Show {{ openSidebar ? 'Map' : 'List'}}
             </button>
         </div>
-        <modal name="view-marker" :adaptive="true" :height="'auto'">
-            <view-marker :marker="selectedMarker"/>
-        </modal>
+        <view-marker v-if="selectedMarker" :marker="selectedMarker"/>
     </div>
 </template>
 
 <script>
 	import MarkerList from "@/components/global/MarkerList";
 	import TopBar from "./TopBar";
-	import ViewMarker from "./ViewMarker";
+	import ViewMarker from "../global/ViewMarker";
 	import Profile from "../edit/Profile";
 	import map from '@/services/leaflet.service';
 
