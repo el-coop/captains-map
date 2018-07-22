@@ -13,7 +13,7 @@
             </button>
         </div>
         <create-marker :latLng="latLng"/>
-        <view-marker v-if="selectedMarker" :marker="selectedMarker"/>
+        <view-marker :marker="selectedMarker"/>
     </div>
 </template>
 
@@ -73,9 +73,7 @@
 
 			showMarker(marker) {
 				this.selectedMarker = marker;
-				setTimeout(() => {
-					this.$modal.show('view-marker');
-				}, 50);
+				this.$modal.show('view-marker');
 			}
 		}
 	}

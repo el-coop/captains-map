@@ -17,7 +17,7 @@
                 Show {{ openSidebar ? 'Map' : 'List'}}
             </button>
         </div>
-        <view-marker v-if="selectedMarker" :marker="selectedMarker"/>
+        <view-marker :marker="selectedMarker"/>
     </div>
 </template>
 
