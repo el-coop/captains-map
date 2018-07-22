@@ -60,6 +60,7 @@
 				window.setTimeout(this.fixModalPosition, 50);
 			},
 			fixModalPosition() {
+				console.log(`resizing ${this.$refs.modal._computedWatchers.position.value.top}`);
 				if (this.$refs.modal._computedWatchers.position.value.top < 0) {
 					this.pivotY += 0.05;
 					window.setTimeout(() => {
