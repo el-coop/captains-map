@@ -1,26 +1,13 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import User from './store/user';
+import Markers from './store/markers';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-	state: {
-		markers: [],
+	modules: {
+		User,
+		Markers
 	},
-	mutations: {
-		addMarker(state, marker) {
-			state.markers.push(marker);
-		},
-
-		deleteMarker(state, marker) {
-			state.markers = state.markers.filter((obj) => {
-				return obj.id !== marker.id;
-			});
-		},
-
-		replaceMarkers(state, markers) {
-			state.markers = markers;
-		}
-	},
-	actions: {}
 })

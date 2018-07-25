@@ -42,7 +42,7 @@
 <script>
 	import globe from '@/assets/images/globe-icon.png';
 	import SlideUpModal from "./slide-up-modal";
-	import auth from '@/services/authentication.service';
+	import Auth from '@/services/authentication.service';
 
 	export default {
 		name: "view-marker",
@@ -70,17 +70,20 @@
 		methods: {
 			async deleteMarker() {
 				this.deleting = true;
-				let response = await this.$http.delete(`marker/${this.marker.id}`);
+				const response = await this.$store.dispatch('Markers/delete', this.marker.id);
+				this.deleting = false;
 				if (response) {
-					this.$store.commit('deleteMarker', this.marker);
-					this.$modal.hide('view-marker');
+					return this.$modal.hide('view-marker');
 				}
+
+
 			}
 		},
 
 		computed: {
 			canDelete() {
-				return auth.getUserDetails() && auth.getUserDetails().id === this.marker.user_id
+				let user = Auth.getUserDetails();
+				return user && user.id === this.marker.user_id
 			}
 		}
 	}

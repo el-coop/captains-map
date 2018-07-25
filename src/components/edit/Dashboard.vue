@@ -22,9 +22,9 @@
 	import SearchBar from '@/components/edit/SearchBar';
 	import CreateMarker from '@/components/edit/CreateMarker';
 	import MarkerList from "@/components/global/MarkerList";
-	import auth from "@/services/authentication.service";
 	import map from "@/services/leaflet.service";
 	import ViewMarker from '@/components/global/ViewMarker';
+	import Auth from '@/services/authentication.service';
 
 	export default {
 		name: "edit-dashboard",
@@ -48,17 +48,9 @@
 		async created() {
 			this.$bus.$on('map-right-click', this.createMarker);
 			this.$bus.$on('marker-click', this.showMarker);
-			try {
-				let userDetails = auth.getUserDetails();
-				const markersRequest = await this.$http.get(`marker/${userDetails.username}`);
-				if (markersRequest.data !== undefined) {
-					this.$store.commit('replaceMarkers', markersRequest.data);
-					map.goToCurrentLocation();
-				}
-			} catch (error) {
-				// TODO: add loading error
-				console.log(error);
-			}
+
+			await this.$store.dispatch('Markers/load', Auth.getUserDetails().username);
+			map.goToCurrentLocation();
 		},
 		beforeDestroy() {
 			this.$bus.$off('map-right-click');

@@ -15,7 +15,7 @@
 
 		computed: {
 			markers() {
-				return this.$store.state.markers;
+				return this.$store.state.Markers.markers;
 			}
 		},
 	}

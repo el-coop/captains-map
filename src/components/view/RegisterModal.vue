@@ -31,8 +31,6 @@
 </template>
 
 <script>
-	import AjaxForm from "@/components/utilities/ajaxForm";
-	import Auth from '@/services/authentication.service'
 	import SlideUpModal from "../global/slide-up-modal";
 
 	export default {

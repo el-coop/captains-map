@@ -1,5 +1,5 @@
 <template>
-    <div class="media" @click="showMarker">
+    <div class="media" :class="marker.type" @click="showMarker">
         <figure class="media-left">
             <p class="image">
                 <img :src="'/api' + marker.media.path">
@@ -54,6 +54,15 @@
         padding: 0.5rem;
 
         &:hover {
+            &.Plan {
+                background-color: $cyan;
+            }
+            &.Visited {
+                background-color: $turquoise;
+            }
+            &.Suggestion {
+                background-color: $red;
+            }
             background-color: $grey-light;
         }
     }
@@ -63,6 +72,6 @@
     }
 
     strong {
-        color: white;
+        color: $white;
     }
 </style>

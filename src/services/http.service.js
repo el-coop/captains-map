@@ -3,7 +3,7 @@ import auth from "./authentication.service";
 
 let host = "/api";
 
-export default class HttpService {
+class HttpService {
 	constructor() {
 		axios.interceptors.request.use(function (config) {
 			config.headers.jwt = auth.getToken();
@@ -29,8 +29,7 @@ export default class HttpService {
 
 	async get(url, headers = {}) {
 		try {
-			let response = await axios.get(`${host}/${url}`, headers);
-			return response;
+			return await axios.get(`${host}/${url}`, headers);
 		} catch (error) {
 			return error;
 		}
@@ -38,8 +37,7 @@ export default class HttpService {
 
 	async post(url, data = {}, headers = {}) {
 		try {
-			let response = await axios.post(`${host}/${url}`, data, headers);
-			return response;
+			return await axios.post(`${host}/${url}`, data, headers);
 		} catch (error) {
 			return error.response;
 		}
@@ -47,14 +45,18 @@ export default class HttpService {
 
 	async delete(url, headers = {}) {
 		try {
-			let response = await axios.delete(`${host}/${url}`, headers);
-			return response;
+			return await axios.delete(`${host}/${url}`, headers);
 		} catch (error) {
 			return false;
 		}
 	}
 
 	static install(Vue) {
-		Vue.prototype.$http = new HttpService();
+		Vue.prototype.$http = service;
 	}
 }
+
+const service = new HttpService();
+
+export default service;
+export const installer = HttpService;

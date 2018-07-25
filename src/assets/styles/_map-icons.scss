@@ -1,10 +1,33 @@
-.map-icon-wrapper {
+.map__icon-wrapper {
 	height: 50px;
-	padding: 2px;
 	background-color: $background;
 	pointer-events: visible;
 
-	& > .map-icon {
+	.map__icon {
 		height: 100%;
+		border-style: solid;
+		border-width: 2px;
+
+		&-Visited {
+			@extend .map__icon;
+			border-color: $turquoise;
+		}
+
+		&-Plan {
+			@extend .map__icon;
+			border-color: $cyan;
+		}
+
+		&-Suggestion {
+			@extend .map__icon;
+			border-color: $red;
+		}
+
+		&-Other {
+			@extend .map__icon;
+			border-color: $white-ter;
+		}
 	}
+
 }
+

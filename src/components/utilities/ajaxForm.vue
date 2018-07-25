@@ -67,8 +67,10 @@
 				let request = await this.$http[this.method](this.action, this.getData(), this.headers);
 				this.$emit('submitted', request);
 				if (request.hasOwnProperty('response') && request.response.data.errors) {
-					this.formatErrors(request.response.data.errors);
+					return this.formatErrors(request.response.data.errors);
 				}
+
+				this.$el.reset();
 			},
 
 			formatErrors(errors) {

@@ -20,8 +20,8 @@
 
 <script>
 	import LoginModal from "./LoginModal";
-	import Auth from '@/services/authentication.service';
 	import RegisterModal from "./RegisterModal";
+	import Auth from '@/services/authentication.service';
 
 	export default {
 		components: {RegisterModal, LoginModal},

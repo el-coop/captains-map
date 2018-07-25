@@ -48,26 +48,19 @@
 		async created() {
 			this.$bus.$on('moving-map', this.closeSidebar);
 			this.$bus.$on('marker-click', this.showMarker);
-			try {
-				let markersRoute = 'marker';
-				if (this.$route.params.username !== undefined) {
-					markersRoute += `/${this.$route.params.username}`;
-				}
-				const markersRequest = await this.$http.get(markersRoute);
-
-				if (markersRequest.data !== undefined) {
-					this.$store.commit('replaceMarkers', markersRequest.data);
-					if (markersRequest.data.length) {
-						map.setView([markersRequest.data[0].lat, markersRequest.data[0].lng]);
-						return;
-					}
-				}
-				map.goToCurrentLocation();
-
-			} catch (error) {
-				// TODO: add loading error
-				console.log(error);
+			let markersRoute = '';
+			if (this.$route.params.username !== undefined) {
+				markersRoute = this.$route.params.username;
 			}
+
+			const markers = await this.$store.dispatch('Markers/load', markersRoute);
+			if (markers) {
+				return map.setView([markers[0].lat, markers[0].lng]);
+			}
+
+			map.goToCurrentLocation();
+
+
 		},
 		beforeDestroy() {
 			this.$bus.$off('marker-click');

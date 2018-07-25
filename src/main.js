@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import VModal from 'vue-js-modal'
-import HttpService from './services/http.service';
+import { installer as HttpService } from './services/http.service';
 import vueMoment from 'vue-moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faUpload, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
