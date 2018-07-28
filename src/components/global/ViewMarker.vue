@@ -16,9 +16,8 @@
                     </div>
                 </div>
             </div>
-            <figure class="image" slot="image">
-                <img :src="'api' + marker.media.path">
-            </figure>
+            <component slot="image" :is="marker.media.type === 'instagram' ? 'Instagram': 'Photo'"
+                       :path="marker.media.path" @instagram-loaded="$bus.$emit('fix-modal')"/>
             <template slot="content">
                 <div class="content">
                     <p v-text="marker.description"></p>
@@ -43,10 +42,12 @@
 	import globe from '@/assets/images/globe-icon.png';
 	import SlideUpModal from "./slide-up-modal";
 	import Auth from '@/services/authentication.service';
+	import Photo from './media/photo';
+	import Instagram from './media/instagram';
 
 	export default {
 		name: "view-marker",
-		components: {SlideUpModal},
+		components: {SlideUpModal, Photo, Instagram},
 		props: {
 			marker: {
 				type: Object

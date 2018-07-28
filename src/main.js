@@ -17,10 +17,12 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(HttpService);
 Vue.use(vueMoment);
 Vue.config.productionTip = false;
-Vue.prototype.$bus = new Vue();
+let bus = new Vue();
+Vue.prototype.$bus = bus;
+
 
 new Vue({
 	router,
 	store,
 	render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

@@ -28,8 +28,11 @@ class HttpService {
 	}
 
 	async get(url, headers = {}) {
+		if (url.indexOf('http') !== 0) {
+			url = `${host}/${url}`;
+		}
 		try {
-			return await axios.get(`${host}/${url}`, headers);
+			return await axios.get(url, headers);
 		} catch (error) {
 			return error;
 		}

@@ -2,13 +2,13 @@
     <div class="media" :class="marker.type" @click="showMarker">
         <figure class="media-left">
             <p class="image">
-                <img :src="'/api' + marker.media.path">
+                <img :src="src">
             </p>
         </figure>
         <div class="media-content">
             <div class="content">
                 <small>Type:&nbsp;</small>
-                <strong v-text="marker.type"></strong>
+                <strong v-text="marker.src"></strong>
                 <br>
                 <p v-text="marker.description"></p>
             </div>
@@ -31,8 +31,18 @@
 
 		data() {
 			return {
-				image: null
+				image: null,
+				src: null
 			}
+		},
+
+		mounted() {
+			if (this.marker.media.type == 'instagram') {
+				this.src = `https://instagram.com/p/${this.marker.media.path}/media/`;
+			} else {
+				this.src = `/api${this.marker.media.path}`;
+			}
+
 		},
 
 
