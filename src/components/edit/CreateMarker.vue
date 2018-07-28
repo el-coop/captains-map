@@ -8,10 +8,33 @@
         <slide-up-modal name="create-marker">
             <p slot="header" class="card-header-title">Create new marker</p>
             <template slot="content">
-                <div class="field">
+                <div class="tabs is-toggle is-toggle-rounded is-fullwidth">
+                    <input type="hidden" name="media[type]" v-model="form.media.type"/>
+                    <ul>
+                        <li :class="{ 'is-active': form.media.type === 'image'}">
+                            <a @click="form.media.type = 'image'">
+                                <span class="icon is-small">
+                                    <font-awesome-icon icon="file-image"/>
+                                </span>
+                                <span>Upload file</span>
+                            </a>
+
+                        </li>
+                        <li :class="{ 'is-active': form.media.type === 'instagram'}">
+                            <a @click="form.media.type = 'instagram'">
+                                <span class="icon">
+                                    <font-awesome-icon icon="camera-retro"/>
+                                </span>
+                                <span>Instagram</span>
+                            </a>
+
+                        </li>
+                    </ul>
+                </div>
+                <div class="field" v-if="form.media.type === 'image'">
                     <div class="file is-boxed has-name is-light">
                         <label class="file-label">
-                            <input class="file-input" type="file" name="media" @change="imageSelected">
+                            <input class="file-input" type="file" name="media[image]" @change="imageSelected">
                             <span class="file-cta">
                         <span class="file-icon">
                             <font-awesome-icon icon="upload"/>
@@ -20,9 +43,16 @@
                             Choose an image
                         </span>
                     </span>
-                            <span class="file-name" v-html="form.file ? form.file.name : 'Choose an image'">
+                            <span class="file-name" v-html="form.media.file ? form.media.file.name : 'Choose an image'">
                     </span>
                         </label>
+                    </div>
+                </div>
+                <div class="field" v-if="form.media.type === 'instagram'">
+                    <label class="label" for="instagram">Instagram Link</label>
+                    <div class="control">
+                        <textarea id="instagram" class="input" v-model="form.media.path"
+                                  name="media[path]"></textarea>
                     </div>
                 </div>
                 <div class="field">
@@ -96,7 +126,11 @@
 		data() {
 			return {
 				form: {
-					file: null,
+					media: {
+						type: 'image',
+						file: null,
+						path: ''
+					},
 					description: '',
 					date: new Date(),
 					time: new Date(),
@@ -129,14 +163,18 @@
 				this.errors = errors;
 			},
 
-
 			submitted(response) {
 				this.loading = false;
 				if (response.status !== 200) {
 					return;
 				}
+				this.form = {};
 				this.form = {
-					file: null,
+					media: {
+						type: 'image',
+						file: null,
+						path: ''
+					},
 					description: '',
 					date: new Date(),
 					time: new Date(),

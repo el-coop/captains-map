@@ -7,10 +7,10 @@ import VModal from 'vue-js-modal'
 import { installer as HttpService } from './services/http.service';
 import vueMoment from 'vue-moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUpload, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faUpload, faTimesCircle, faFileImage, faCameraRetro } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faUpload, faTimesCircle);
+library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro);
 
 Vue.use(VModal);
 Vue.component('font-awesome-icon', FontAwesomeIcon)
