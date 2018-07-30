@@ -1,5 +1,3 @@
-
-
 class AuthenticationService {
 
 	saveToken(token) {
@@ -8,10 +6,15 @@ class AuthenticationService {
 	}
 
 	getToken() {
-		if (!this.token) {
-			this.token = localStorage.getItem('captains-map');
+		try {
+			if (!this.token) {
+				this.token = localStorage.getItem('captains-map');
+			}
+			return this.token;
+		} catch (error) {
+			console.log(error);
+			return null;
 		}
-		return this.token;
 	}
 
 	getUserDetails() {

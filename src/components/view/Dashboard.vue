@@ -1,6 +1,6 @@
 <template>
     <div class="dashboard">
-        <top-bar></top-bar>
+        <top-bar/>
         <div class="dashboard__body">
             <profile/>
             <div class="dashboard__control dashboard__body-sidebar" :class="{open: openSidebar}">
@@ -41,32 +41,45 @@
 		data() {
 			return {
 				selectedMarker: null,
-				openSidebar: false
+				openSidebar: false,
+				currentUser: ''
 			}
 		},
 
-		async created() {
+		created() {
 			this.$bus.$on('moving-map', this.closeSidebar);
 			this.$bus.$on('marker-click', this.showMarker);
-			let markersRoute = '';
-			if (this.$route.params.username !== undefined) {
-				markersRoute = this.$route.params.username;
-			}
 
-			const markers = await this.$store.dispatch('Markers/load', markersRoute);
-			if (markers) {
-				return map.setView([markers[0].lat, markers[0].lng]);
-			}
-
-			map.goToCurrentLocation();
-
-
+			this.loadMarkers();
 		},
 		beforeDestroy() {
 			this.$bus.$off('marker-click');
 		},
 
 		methods: {
+
+			async loadMarkers() {
+				let markersRoute = '';
+				let markers = [];
+
+				if (this.currentUser !== this.$route.params.username) {
+					if (this.currentUser = this.$route.params.username) {
+						markersRoute = this.currentUser;
+					}
+					await this.$store.dispatch('Markers/load', markersRoute);
+				}
+				if (markers = this.$store.state.Markers.markers) {
+					if (this.$route.params.marker) {
+						let marker = markers.find(({id}) => {
+							return id == this.$route.params.marker;
+						});
+						return map.setView([marker.lat, marker.lng], 16);
+					}
+					return map.setView([markers[0].lat, markers[0].lng]);
+				}
+
+				map.goToCurrentLocation()
+			},
 
 			showMarker(marker) {
 				this.selectedMarker = marker;
@@ -75,6 +88,12 @@
 
 			closeSidebar() {
 				this.openSidebar = false;
+			}
+		},
+
+		watch: {
+			$route() {
+				this.loadMarkers();
 			}
 		}
 	}

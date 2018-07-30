@@ -16,7 +16,7 @@ export default new Router({
 			beforeEnter: Auth.handle
 		},
 		{
-			path: '/:username?',
+			path: '/:username?/:marker?',
 			name: 'view',
 			component: ViewLayout
 		},

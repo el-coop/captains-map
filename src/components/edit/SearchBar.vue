@@ -6,7 +6,7 @@
             </div>
             <div v-if="results.length" class="dropdown-menu">
                 <div class="dropdown-content">
-                    <a v-for="(result, index) in results" :key="index" v-html="result.name" class="dropdown-item"
+                    <a v-for="(result, index) in results" :key="index" v-text="result.name" class="dropdown-item"
                        @click="moveMap(result.center)">
                     </a>
                 </div>

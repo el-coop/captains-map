@@ -43,7 +43,7 @@
                             Choose an image
                         </span>
                     </span>
-                            <span class="file-name" v-html="form.media.file ? form.media.file.name : 'Choose an image'">
+                            <span class="file-name" v-text="form.media.file ? form.media.file.name : 'Choose an image'">
                     </span>
                         </label>
                     </div>
@@ -66,7 +66,7 @@
                             <timepicker v-model="form.time"/>
                         </div>
                     </div>
-                    <p class="help is-danger" v-if="errors && errors.time" v-html="errors.time"></p>
+                    <p class="help is-danger" v-if="errors && errors.time" v-text="errors.time"></p>
                 </div>
                 <div class="field">
                     <label for="description" class="label">Type</label>

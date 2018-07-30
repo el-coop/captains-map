@@ -19,8 +19,19 @@
             <component slot="image" :is="marker.media.type === 'instagram' ? 'Instagram': 'Photo'"
                        :path="marker.media.path" @instagram-loaded="$bus.$emit('fix-modal')"/>
             <template slot="content">
-                <div class="content">
-                    <p v-text="marker.description"></p>
+                <div class="columns">
+                    <div class="column is-11">
+                        <div class="content">
+                            <p v-text="marker.description"></p>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <button class="button is-dark is-rounded" @click="copyLink">
+                            <span class="icon">
+                                <font-awesome-icon icon="copy"/>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </template>
             <template slot="footer">
@@ -76,8 +87,18 @@
 				if (response) {
 					return this.$modal.hide('view-marker');
 				}
+			},
 
-
+			async copyLink() {
+				let link = this.$router.resolve(`/${this.marker.user.username}/${this.marker.id}`).href;
+				await this.$copyText(`${window.location.protocol}/${window.location.host}/${link}`);
+				this.$snotify.info('You can paste it anywhere', 'Link copied', {
+					timeout: 2000,
+					showProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: false,
+					position: "centerBottom"
+				});
 			}
 		},
 

@@ -8,7 +8,7 @@
         <div class="media-content">
             <div class="content">
                 <small>Type:&nbsp;</small>
-                <strong v-text="marker.src"></strong>
+                <strong v-text="marker.type"></strong>
                 <br>
                 <p v-text="marker.description"></p>
             </div>
