@@ -68,7 +68,8 @@
 					}
 					await this.$store.dispatch('Markers/load', markersRoute);
 				}
-				if (markers = this.$store.state.Markers.markers) {
+				markers = this.$store.state.Markers.markers;
+				if (markers.length) {
 					if (this.$route.params.marker) {
 						let marker = markers.find(({id}) => {
 							return id == this.$route.params.marker;
