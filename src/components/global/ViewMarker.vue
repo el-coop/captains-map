@@ -20,12 +20,12 @@
                        :path="marker.media.path" @instagram-loaded="$bus.$emit('fix-modal')"/>
             <template slot="content">
                 <div class="columns">
-                    <div class="column is-11">
+                    <div class="column is-10">
                         <div class="content">
                             <p v-text="marker.description"></p>
                         </div>
                     </div>
-                    <div class="column">
+                    <div class="column has-text-centered">
                         <button class="button is-dark is-rounded" @click="copyLink">
                             <span class="icon">
                                 <font-awesome-icon icon="copy"/>
