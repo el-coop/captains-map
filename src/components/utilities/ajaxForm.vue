@@ -64,12 +64,12 @@
 			async submit() {
 				this.clearErrors();
 				this.$emit('submitting');
-				let request = await this.$http[this.method](this.action, this.getData(), this.headers);
-				this.$emit('submitted', request);
-				if (request.hasOwnProperty('response') && request.response.data.errors) {
-					return this.formatErrors(request.response.data.errors);
+				let response = await this.$http[this.method](this.action, this.getData(), this.headers);
+				this.$emit('submitted', response);
+				if (response.data.errors) {
+					return this.formatErrors(response.data.errors);
 				}
-
+				console.log('resetting');
 				this.$el.reset();
 			},
 

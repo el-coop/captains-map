@@ -3,6 +3,7 @@
            :scrollable="true"
            :pivotY="pivotY"
            @before-open="beforeOpen"
+           @closed="closed"
            ref="modal">
         <div class="card">
             <div class="card-header dashboard__control--dark">
@@ -55,6 +56,10 @@
 					this.pivotY = 0.5;
 				}
 			},
+
+			closed() {
+				this.$emit('closed');
+			}
 		}
 	}
 </script>

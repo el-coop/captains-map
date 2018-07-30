@@ -5,7 +5,7 @@
             lng: latLng.lng,
             time: dateTime
         }" action="marker/create">
-        <slide-up-modal name="create-marker">
+        <slide-up-modal name="create-marker" @closed="resetForm">
             <p slot="header" class="card-header-title">Create new marker</p>
             <template slot="content">
                 <div class="tabs is-toggle is-toggle-rounded is-fullwidth">
@@ -153,10 +153,10 @@
 			imageSelected(event) {
 				let file = event.target.files;
 				if (file[0]) {
-					return this.form.file = file[0];
+					return this.form.media.file = file[0];
 				}
 
-				this.form.file = null;
+				this.form.media.file = null;
 			},
 
 			getErrors(errors) {
@@ -168,7 +168,14 @@
 				if (response.status !== 200) {
 					return;
 				}
-				this.form = {};
+				this.$store.commit('Markers/add', response.data);
+
+				this.$modal.hide('create-marker');
+			},
+
+			resetForm() {
+				console.log('resseting');
+				this.errors = null;
 				this.form = {
 					media: {
 						type: 'image',
@@ -179,9 +186,6 @@
 					date: new Date(),
 					time: new Date(),
 				};
-				this.$store.commit('Markers/add', response.data);
-
-				this.$modal.hide('create-marker');
 			}
 		},
 
