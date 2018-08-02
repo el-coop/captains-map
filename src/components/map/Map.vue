@@ -1,6 +1,8 @@
 <template>
-    <div class="map">
-        <map-marker v-for="(marker, index) in markers" :marker="marker" :key="index"></map-marker>
+    <div :class="`zoom-${zoomStatus}`">
+        <div class="map" ref="map">
+            <map-marker v-for="(marker, index) in markers" :marker="marker" :key="index"></map-marker>
+        </div>
     </div>
 </template>
 
@@ -30,12 +32,27 @@
 				this.$bus.$emit('map-right-click', {
 					event
 				});
+			},
+
+			handleZoom(event) {
+				let zoomLevel = event.target._animateToZoom;
+				if (zoomLevel < 5) {
+					return this.zoomStatus = 'far';
+				}
+				if (zoomLevel < 10) {
+					return this.zoomStatus = 'medium';
+				}
+				if (zoomLevel < 15) {
+					return this.zoomStatus = 'normal';
+				}
+				return this.zoomStatus = 'close';
 			}
 		},
 
 		data() {
 			return {
-				Map
+				Map,
+				zoomStatus: 'normal'
 			}
 		},
 
@@ -46,9 +63,10 @@
 		},
 
 		mounted() {
-			this.Map.init(this.$el, this.center, this.zoom);
+			this.Map.init(this.$refs.map, this.center, this.zoom);
 
 			this.Map.map.on('contextmenu', this.rightClick);
+			this.Map.map.on('zoomend', this.handleZoom);
 		}
 	}
 </script>

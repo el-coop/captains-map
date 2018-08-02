@@ -1,5 +1,8 @@
 .map__icon-wrapper {
-	height: 50px;
+	height: 35px;
+	@media #{$above-phone} {
+		height: 40px;
+	}
 	background-color: $background;
 	pointer-events: visible;
 
@@ -28,6 +31,31 @@
 			border-color: $white-ter;
 		}
 	}
-
 }
+
+.zoom-far {
+	.map__icon-wrapper {
+		height: 20px;
+	}
+}
+
+.zoom-medium {
+	.map__icon-wrapper {
+		height: 25px;
+		@media #{$above-phone} {
+			height: 30px;
+		}
+	}
+}
+
+.zoom-close {
+	.map__icon-wrapper {
+		height: 45px;
+		@media #{$above-phone} {
+			height: 50px;
+		}
+	}
+}
+
+
 

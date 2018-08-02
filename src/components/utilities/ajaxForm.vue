@@ -69,7 +69,6 @@
 				if (response.data.errors) {
 					return this.formatErrors(response.data.errors);
 				}
-				console.log('resetting');
 				this.$el.reset();
 			},
 

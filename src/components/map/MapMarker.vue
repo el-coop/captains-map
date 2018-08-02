@@ -34,7 +34,7 @@
 			}
 			let icon = leaflet.divIcon({
 				html: `<div class="map__icon-wrapper"><img src="${path}" class="map__icon-${this.marker.type}"></div>`,
-				iconSize: ['auto', 50]
+				iconSize: ['auto', 'auto']
 			});
 			this.mapObject = leaflet.marker([this.marker.lat, this.marker.lng], {icon: icon}).on('click', this.onClick.bind(this));
 			leaflet.DomEvent.on(this.mapObject, this.$listeners);

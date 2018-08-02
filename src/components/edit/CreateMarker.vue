@@ -36,23 +36,25 @@
                         <label class="file-label">
                             <input class="file-input" type="file" name="media[image]" @change="imageSelected">
                             <span class="file-cta">
-                        <span class="file-icon">
-                            <font-awesome-icon icon="upload"/>
-                        </span>
-                        <span class="file-label">
-                            Choose an image
-                        </span>
-                    </span>
-                            <span class="file-name" v-text="form.media.file ? form.media.file.name : 'Choose an image'">
-                    </span>
+                                <span class="file-icon">
+                                    <font-awesome-icon icon="upload"/>
+                                </span>
+                                <span class="file-label">
+                                    Choose an image
+                                </span>
+                            </span>
+                            <span class="file-name"
+                                  v-text="form.media.file ? form.media.file.name : 'Choose an image'"></span>
                         </label>
                     </div>
+                    <p class="help is-danger" v-if="errors && errors['media.file']" v-text="errors['media.file']"></p>
                 </div>
                 <div class="field" v-if="form.media.type === 'instagram'">
                     <label class="label" for="instagram">Instagram Link</label>
                     <div class="control">
-                        <textarea id="instagram" class="input" v-model="form.media.path"
-                                  name="media[path]"></textarea>
+                        <input type="text" id="instagram" class="input" v-model="form.media.path"
+                                  name="media[path]">
+                        <p class="help is-danger" v-if="errors && errors['media.path']">You most give a valid instagram link.</p>
                     </div>
                 </div>
                 <div class="field">
@@ -66,7 +68,7 @@
                             <timepicker v-model="form.time"/>
                         </div>
                     </div>
-                    <p class="help is-danger" v-if="errors && errors.time" v-text="errors.time"></p>
+                    <p class="help is-danger" v-if="errors && errors.time">Invalid date or time.</p>
                 </div>
                 <div class="field">
                     <label for="description" class="label">Type</label>
@@ -76,6 +78,7 @@
                                     v-text="markerType"></option>
                         </select>
                     </div>
+                    <p class="help is-danger" v-if="errors && errors.type">Invalid marker type.</p>
                 </div>
                 <div class="field">
                     <label for="description" class="label">Description</label>
@@ -174,7 +177,6 @@
 			},
 
 			resetForm() {
-				console.log('resseting');
 				this.errors = null;
 				this.form = {
 					media: {
@@ -191,8 +193,17 @@
 
 		computed: {
 			dateTime() {
-				return `${Moment(this.date).format('MM/DD/YYYY')} ${Moment(this.time).format('hh:mm')}`;
+				if (!this.form.time || !this.form.date) {
+					return null;
+				}
+				return `${Moment(this.form.date).format('MM/DD/YYYY')} ${Moment(this.form.time).format('hh:mm')}`;
 			}
 		}
 	}
 </script>
+
+<style scoped lang="scss">
+    .field > .field {
+        margin-bottom: 0;
+    }
+</style>
