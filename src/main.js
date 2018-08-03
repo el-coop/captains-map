@@ -10,7 +10,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueClipboard from 'vue-clipboard2';
-import Snotify from 'vue-snotify';
+import VueIziToast from 'vue-izitoast';
+
 
 library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy);
 
@@ -19,7 +20,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(HttpService);
 Vue.use(VueMoment);
 Vue.use(VueClipboard);
-Vue.use(Snotify);
+Vue.use(VueIziToast);
 Vue.config.productionTip = false;
 let bus = new Vue();
 Vue.prototype.$bus = bus;

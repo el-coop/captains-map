@@ -3,7 +3,7 @@ html {
 	height: 100%;
 }
 
-body, #app{
+body, #app {
 	height: 100%;
 }
 
@@ -24,4 +24,8 @@ body, #app{
 
 .v--modal {
 	background: transparent !important;
+}
+
+iframe.instagram-media.instagram-media-rendered {
+	width: 100% !important;
 }
