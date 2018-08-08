@@ -1,7 +1,7 @@
 <template>
     <div :class="`zoom-${zoomStatus}`">
         <div class="map" ref="map">
-            <map-marker v-for="(marker, index) in markers" :marker="marker" :key="index"></map-marker>
+            <map-marker v-for="(marker, index) in markers" :marker="marker" :key="marker.id"></map-marker>
         </div>
     </div>
 </template>

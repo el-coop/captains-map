@@ -27,7 +27,7 @@ export let openstreetmapLayer = {
 	}
 };
 
-const layers = [mapboxLayer, openstreetmapLayer];
+const layers = [mapboxLayer];
 export let tileLayer = layers[Math.floor(Math.random() * layers.length)];
 
 export let geocoder = function () {

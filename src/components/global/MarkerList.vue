@@ -1,6 +1,6 @@
 <template>
     <ul>
-        <li v-for="marker in markers" class="media">
+        <li v-for="marker in markers" class="media" :key="marker.id">
             <marker-entry :marker="marker"></marker-entry>
         </li>
     </ul>

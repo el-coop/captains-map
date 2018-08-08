@@ -8,7 +8,7 @@ export default {
 	},
 	mutations: {
 		add(state, marker) {
-			state.markers.push(marker);
+			state.markers.unshift(marker);
 		},
 
 		remove(state, id) {
