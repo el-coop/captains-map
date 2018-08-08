@@ -38,10 +38,15 @@
 					timeout: 2000
 				});
 			}
-		}
+		},
 	}
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+	.content {
+		& > p {
+			white-space: pre-wrap;
+			word-wrap: break-word;
+		}
+	}
 </style>

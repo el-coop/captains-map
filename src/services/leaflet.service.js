@@ -1,7 +1,6 @@
 import leaflet from 'leaflet';
-import leafletControlGeocoder from 'leaflet-control-geocoder';
 
-import * as seetings from '@/settings/leaflet.settings';
+import { tileLayer, geocoder } from '@/settings/leaflet.settings';
 
 export class LeafletMapService {
 	constructor() {
@@ -18,11 +17,7 @@ export class LeafletMapService {
 		});
 		let zoomControl = new leaflet.Control.Zoom({position: 'bottomleft'}).addTo(this.map);
 
-		leaflet.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: '&copy; <a href="//www.openstreetmap.org/copyright">OpenStreetMap</a>',
-			subdomains: ['a', 'b', 'c'],
-			interactive: true,
-		}).addTo(this.map);
+		leaflet.tileLayer(tileLayer.url, tileLayer.options).addTo(this.map);
 
 		if (leaflet.Browser.mobile) {
 			this.map.removeControl(zoomControl);
@@ -62,6 +57,6 @@ export class LeafletMapService {
 	}
 }
 
-LeafletMapService.geocoder = new leaflet.Control.Geocoder.Nominatim({});
+LeafletMapService.geocoder = geocoder;
 
 export default new LeafletMapService();

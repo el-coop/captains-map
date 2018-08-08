@@ -1,19 +1,19 @@
 <template>
-    <div class="media" :class="marker.type" @click="showMarker">
-        <figure class="media-left">
-            <p class="image">
-                <img :src="src">
-            </p>
-        </figure>
-        <div class="media-content">
-            <div class="content">
-                <small>Type:&nbsp;</small>
-                <strong v-text="marker.type"></strong>
-                <br>
-                <p v-text="marker.description"></p>
-            </div>
-        </div>
-    </div>
+	<div class="media" :class="marker.type" @click="showMarker">
+		<figure class="media-left">
+			<p class="image">
+				<img :src="src">
+			</p>
+		</figure>
+		<div class="media-content">
+			<div class="content">
+				<small>Type:&nbsp;</small>
+				<strong v-text="marker.type"></strong>
+				<br>
+				<p>{{ marker.description | truncate(45) }}</p>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -51,37 +51,63 @@
 				this.$bus.$emit('moving-map');
 				Map.move([this.marker.lat, this.marker.lng], 16);
 			}
+		},
+
+		filters: {
+			truncate(text, length) {
+				let hasEnters = false;
+				if (text.indexOf('\n') > 0) {
+					text = text.substring(0, text.indexOf('\n'));
+					hasEnters = true;
+				}
+				if (text.length <= length - 4) {
+					return text + (hasEnters ? ' ...' : '');
+				}
+				let tcText = text.slice(0, length - 3);
+				let last = tcText.length;
+
+
+				while (last > 0 && tcText[last] !== ' ' && tcText[last] !== '.') {
+					last--;
+				}
+
+				last = last || length - 3;
+
+				tcText = tcText.slice(0, last);
+
+				return tcText + '...';
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-    @import "~$scss/variables";
+	@import "~$scss/variables";
 
-    .media {
-        width: 100%;
-        cursor: pointer;
-        padding: 0.5rem;
+	.media {
+		width: 100%;
+		cursor: pointer;
+		padding: 0.5rem;
 
-        &:hover {
-            &.Plan {
-                background-color: $cyan;
-            }
-            &.Visited {
-                background-color: $turquoise;
-            }
-            &.Suggestion {
-                background-color: $red;
-            }
-            background-color: $grey-light;
-        }
-    }
+		&:hover {
+			&.Plan {
+				background-color: $cyan;
+			}
+			&.Visited {
+				background-color: $turquoise;
+			}
+			&.Suggestion {
+				background-color: $red;
+			}
+			background-color: $grey-light;
+		}
+	}
 
-    .image {
-        width: 64px;
-    }
+	.image {
+		width: 64px;
+	}
 
-    strong {
-        color: $white;
-    }
+	strong {
+		color: $white;
+	}
 </style>
