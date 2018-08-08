@@ -27,13 +27,13 @@ export let openstreetmapLayer = {
 	}
 };
 
-const layers = [mapboxLayer];
+const layers = [mapboxLayer, openstreetmapLayer];
 export let tileLayer = layers[Math.floor(Math.random() * layers.length)];
 
 export let geocoder = function () {
 	if (Math.floor(Math.random() * 2) === 1) {
 		return new leaflet.Control.Geocoder.Nominatim({});
 	} else {
-		return new leaflet.Control.Geocoder.Mapbox(mapbox_key, {})
+		return new leaflet.Control.Geocoder.Bing(process.env.VUE_APP_BING_KEY);
 	}
 }();
