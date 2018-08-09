@@ -12,7 +12,6 @@ class AuthenticationService {
 			}
 			return this.token;
 		} catch (error) {
-			console.log(error);
 			return null;
 		}
 	}

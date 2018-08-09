@@ -1,20 +1,20 @@
 <template>
-    <div class="dashboard">
-        <search-bar class="dashboard__header"/>
-        <div class="dashboard__body">
-            <profile/>
-            <div class="dashboard__control  dashboard__body-sidebar" :class="{open: openSidebar}">
-                <marker-list/>
-            </div>
-        </div>
-        <div class="dashboard__control is-hidden-tablet">
-            <button class="button is-fullwidth is-dark is-medium" @click="openSidebar = !openSidebar">
-                Show {{ openSidebar ? 'Map' : 'List'}}
-            </button>
-        </div>
-        <create-marker :latLng="latLng"/>
-        <view-marker :marker="selectedMarker"/>
-    </div>
+	<div class="dashboard">
+		<search-bar class="dashboard__header"/>
+		<div class="dashboard__body">
+			<profile/>
+			<div class="dashboard__control  dashboard__body-sidebar" :class="{open: openSidebar}">
+				<marker-list/>
+			</div>
+		</div>
+		<div class="dashboard__control is-hidden-tablet">
+			<button class="button is-fullwidth is-dark is-medium" @click="openSidebar = !openSidebar">
+				Show {{ openSidebar ? 'Map' : 'List'}}
+			</button>
+		</div>
+		<create-marker :latLng="latLng"/>
+		<view-marker :marker="selectedMarker"/>
+	</div>
 </template>
 
 <script>
@@ -53,8 +53,8 @@
 			map.goToCurrentLocation();
 		},
 		beforeDestroy() {
-			this.$bus.$off('map-right-click');
-			this.$bus.$off('marker-click');
+			this.$bus.$off('map-right-click', this.createMarker);
+			this.$bus.$off('marker-click', this.showMarker);
 		},
 
 		methods: {

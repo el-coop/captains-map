@@ -5,11 +5,13 @@ let host = "/api";
 
 class HttpService {
 	constructor() {
-		axios.interceptors.request.use(function (config) {
-			config.headers.jwt = auth.getToken();
-			return config;
-		}, function (error) {
-			return Promise.reject(error);
+		axios.interceptors.response.use((response) => {
+			return response;
+		}, (error) => {
+			if (error.response.data.clearToken || false) {
+				auth.logout();
+				return Promise.reject(error);
+			}
 		});
 		this.getCsrf();
 	}
@@ -19,7 +21,7 @@ class HttpService {
 			let response = await axios.get(`${host}/csrf-token`);
 			this.setHeader('X-CSRF-TOKEN', response.data.csrfToken);
 		} catch (error) {
-			console.log(error);
+			console.log(error.response);
 		}
 	}
 
@@ -34,7 +36,7 @@ class HttpService {
 		try {
 			return await axios.get(url, headers);
 		} catch (error) {
-			return error;
+			return error.response;
 		}
 	}
 
