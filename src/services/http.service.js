@@ -13,8 +13,8 @@ class HttpService {
 		}, (error) => {
 			if (error.response.data.clearToken || false) {
 				auth.logout();
-				return Promise.reject(error);
 			}
+			return Promise.reject(error);
 		});
 	}
 
