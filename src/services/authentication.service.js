@@ -1,29 +1,23 @@
 class AuthenticationService {
 
-	saveToken(token) {
-		localStorage.setItem('captains-map', token);
-		this.token = token;
-	}
-
-	getToken() {
-		try {
-			if (!this.token) {
-				this.token = localStorage.getItem('captains-map');
-			}
-			return this.token;
-		} catch (error) {
-			return null;
-		}
+	saveUser(user) {
+		localStorage.setItem('captains-map.user_id', user.id);
+		localStorage.setItem('captains-map.username', user.username);
+		localStorage.setItem('captains-map.exp', user.exp);
+		this.user = user;
 	}
 
 	getUserDetails() {
-		const token = this.getToken();
-		if (token) {
-			let payload;
-			payload = token.split('.')[1];
-			payload = window.atob(payload);
-			return JSON.parse(payload);
-		} else {
+		try {
+			if (!this.user) {
+				this.user = {
+					id: localStorage.getItem('captains-map.user_id'),
+					username: localStorage.getItem('captains-map.username'),
+					exp: localStorage.getItem('captains-map.exp'),
+				};
+			}
+			return this.user;
+		} catch (error) {
 			return null;
 		}
 	}
@@ -38,8 +32,10 @@ class AuthenticationService {
 	}
 
 	logout() {
-		this.token = '';
-		window.localStorage.removeItem('captains-map');
+		this.user = '';
+		localStorage.removeItem('captains-map.user_id');
+		localStorage.removeItem('captains-map.username');
+		localStorage.removeItem('captains-map.exp');
 	}
 }
 
