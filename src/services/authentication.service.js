@@ -25,14 +25,18 @@ class AuthenticationService {
 	isLoggedIn() {
 		const user = this.getUserDetails();
 		if (user) {
-			return user.exp > Date.now() / 1000;
+			if (user.exp > Date.now()) {
+				return true;
+			}
+			this.logout();
+			return false;
 		} else {
 			return false;
 		}
 	}
 
 	logout() {
-		this.user = '';
+		this.user = null;
 		localStorage.removeItem('captains-map.user_id');
 		localStorage.removeItem('captains-map.username');
 		localStorage.removeItem('captains-map.exp');
