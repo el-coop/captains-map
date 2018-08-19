@@ -1,5 +1,6 @@
 <template>
 	<div id="app">
+		<map-view/>
 		<router-view/>
 	</div>
 </template>

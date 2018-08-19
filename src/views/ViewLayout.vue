@@ -1,12 +1,10 @@
 <template>
     <div class="layout">
-        <map-view/>
         <view-dashboard/>
     </div>
 </template>
 
 <script>
-	import MapView from "@/components/map/Map";
 	import ViewDashboard from "../components/view/Dashboard";
 
 	export default {
@@ -14,7 +12,6 @@
 
 		components: {
 			ViewDashboard,
-			MapView
 		}
 	}
 </script>
