@@ -4,6 +4,7 @@
            :pivotY="pivotY"
            @before-open="beforeOpen"
            @closed="closed"
+           @before-close="beforeClose"
            ref="modal">
         <div class="card">
             <div class="card-header dashboard__control--dark">
@@ -48,6 +49,7 @@
 
 		methods: {
 			beforeOpen() {
+				this.$emit('before-open');
 				if (window.innerWidth < 769) {
 					this.transition = 'slide-up';
 					this.pivotY = 0.001;
@@ -59,7 +61,11 @@
 
 			closed() {
 				this.$emit('closed');
-			}
+			},
+
+			beforeClose(){
+				this.$emit('before-close');
+            }
 		}
 	}
 </script>

@@ -26,19 +26,16 @@ export default {
 		async load({commit}, username = '') {
 			try {
 				commit('clear');
-				const markersRequest = await $http.get(`marker/${username}`);
-				if (markersRequest.data !== undefined) {
-					markersRequest.data.forEach((item) => {
+				const response = await $http.get(`marker/${username}`);
+				if (response.status === 200) {
+					response.data.forEach((item) => {
 						commit('add', item)
 					});
-					if (markersRequest.data.length) {
-						return markersRequest.data;
-					}
 				}
 
-				return false;
+				return response;
 			} catch (error) {
-				return false;
+				return error;
 			}
 		},
 

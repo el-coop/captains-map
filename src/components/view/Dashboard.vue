@@ -18,6 +18,7 @@
 			</button>
 		</div>
 		<view-marker :marker="selectedMarker"/>
+		<not-found/>
 	</div>
 </template>
 
@@ -27,11 +28,13 @@
 	import ViewMarker from "../global/ViewMarker";
 	import Profile from "../edit/Profile";
 	import map from '@/services/leaflet.service';
+	import NotFound from "../global/404";
 
 	export default {
 		name: "view-dashboard",
 
 		components: {
+			NotFound,
 			Profile,
 			ViewMarker,
 			TopBar,
@@ -60,27 +63,31 @@
 		methods: {
 
 			async loadMarkers() {
+				this.$modal.hide('404');
 				let markersRoute = '';
 				let markers = [];
 
 				if (this.currentUser !== this.$route.params.username) {
-					if (this.currentUser = this.$route.params.username) {
-						markersRoute = this.currentUser;
-					}
-					await this.$store.dispatch('Markers/load', markersRoute);
+					this.currentUser = this.$route.params.username
+					markersRoute = this.currentUser;
 				}
-				markers = this.$store.state.Markers.markers;
-				if (markers.length) {
-					if (this.$route.params.marker) {
-						let marker = markers.find(({id}) => {
-							return id == this.$route.params.marker;
-						});
-						return map.setView([marker.lat, marker.lng], 16);
+				const response = await this.$store.dispatch('Markers/load', markersRoute);
+				if (response.status !== 404) {
+					markers = this.$store.state.Markers.markers;
+					if (markers.length) {
+						if (this.$route.params.marker) {
+							let marker = markers.find(({id}) => {
+								return id == this.$route.params.marker;
+							});
+							return map.setView([marker.lat, marker.lng], 16);
+						}
+						return map.setView([markers[0].lat, markers[0].lng]);
 					}
-					return map.setView([markers[0].lat, markers[0].lng]);
+
+					return map.goToCurrentLocation();
 				}
 
-				map.goToCurrentLocation()
+				this.$modal.show('404');
 			},
 
 			showMarker(marker) {
@@ -95,6 +102,7 @@
 
 		watch: {
 			$route() {
+				console.log('watch');
 				this.loadMarkers();
 			}
 		}
