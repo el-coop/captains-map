@@ -30,7 +30,7 @@
 			let response = await this.$http.get(`marker/instagram/${this.path}`);
 			this.loading = false;
 			if (response.data) {
-				this.embedCode = response.data.data.html;
+				this.embedCode = response.data.html;
 				this.$nextTick(() => {
 					instgrm.Embeds.process();
 				});
