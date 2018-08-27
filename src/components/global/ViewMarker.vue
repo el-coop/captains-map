@@ -3,7 +3,7 @@
 		<template v-if="marker">
 			<view-marker-header slot="header" :marker="marker"/>
 			<component slot="image" :is="marker.media.type === 'instagram' ? 'Instagram': 'Photo'"
-					   :path="marker.media.path" @instagram-loaded="$bus.$emit('fix-modal')"/>
+					   :path="marker.media.path" :marker-id="marker.media.id"	 @instagram-loaded="$bus.$emit('fix-modal')"/>
 			<view-marker-content slot="content" :marker="marker"/>
 
 			<template slot="footer">

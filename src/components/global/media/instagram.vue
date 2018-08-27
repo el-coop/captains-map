@@ -13,7 +13,7 @@
 		name: "instagram",
 
 		props: {
-			path: {
+			markerId: {
 				required: true,
 				type: String
 			}
@@ -27,7 +27,7 @@
 		},
 
 		async created() {
-			let response = await this.$http.get(`marker/instagram/${this.path}`);
+			let response = await this.$http.get(`marker/instagram/${this.markerId}`);
 			this.loading = false;
 			if (response.data) {
 				this.embedCode = response.data.html;
