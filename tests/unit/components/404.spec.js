@@ -1,8 +1,7 @@
 import { assert } from 'chai';
-import { mount, createLocalVue } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import NotFound from '@/components/global/404.vue';
 import sinon from 'sinon';
-
 
 describe('404.vue', () => {
 	it('renders', () => {
@@ -25,7 +24,7 @@ describe('404.vue', () => {
 		assert.isTrue(wrapper.find('modal-stub').exists());
 	});
 
-	it('Saves starting route when opened', () => {
+	it('Saves starting route when opened', async () => {
 		const wrapper = mount(NotFound, {
 			stubs: {
 				'font-awesome-icon': true,
@@ -41,11 +40,11 @@ describe('404.vue', () => {
 		});
 
 		wrapper.vm.$children[0].$emit('before-open');
-
 		assert.equal(wrapper.vm.$data.openRoute, 'path');
+
 	});
 
-	it('It changes navigates when closed on the same route as opened', () => {
+	it('It changes navigates when closed on the same route as opened', async () => {
 		const $router = {
 			currentRoute: {
 				fullPath: 'path'

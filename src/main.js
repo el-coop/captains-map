@@ -12,11 +12,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueClipboard from 'vue-clipboard2';
 import VueIziToast from 'vue-izitoast';
 import MapView from './components/map/Map';
+import Router from 'vue-router';
 
 
 library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy);
 
 Vue.use(VModal);
+Vue.use(Router);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('map-view', MapView);
 Vue.use(HttpService);

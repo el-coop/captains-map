@@ -102,7 +102,6 @@
 
 		watch: {
 			$route() {
-				console.log('watch');
 				this.loadMarkers();
 			}
 		}

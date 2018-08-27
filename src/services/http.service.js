@@ -1,21 +1,25 @@
 import axios from "axios";
-import auth from "./authentication.service";
+import userStore from '../store/user';
 
 let host = "/api";
 
 class HttpService {
 	constructor() {
-		axios.interceptors.response.use((response) => {
-			if (response.headers.csrftoken || false) {
-				this.setHeader('X-CSRF-TOKEN', response.headers.csrftoken);
-			}
-			return response;
-		}, (error) => {
-			if (error.response.data.clearToken || false) {
-				auth.logout();
-			}
-			return Promise.reject(error);
-		});
+		axios.interceptors.response.use(this.setCsrfToken.bind(this), this.issueLogout.bind(this));
+	}
+
+	issueLogout(error) {
+		if (error.response.data.clearToken || false) {
+			userStore.actions.logout();
+		}
+		return Promise.reject(error);
+	}
+
+	setCsrfToken(response) {
+		if (response.headers.csrftoken || false) {
+			this.setHeader('X-CSRF-TOKEN', response.headers.csrftoken);
+		}
+		return response;
 	}
 
 	setHeader(key, value) {
@@ -45,7 +49,7 @@ class HttpService {
 		try {
 			return await axios.delete(`${host}/${url}`, headers);
 		} catch (error) {
-			return false;
+			return error.response;
 		}
 	}
 

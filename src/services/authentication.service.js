@@ -11,7 +11,7 @@ class AuthenticationService {
 		try {
 			if (!this.user) {
 				this.user = {
-					id: localStorage.getItem('captains-map.user_id'),
+					id: parseInt(localStorage.getItem('captains-map.user_id')),
 					username: localStorage.getItem('captains-map.username'),
 					exp: localStorage.getItem('captains-map.exp'),
 				};
