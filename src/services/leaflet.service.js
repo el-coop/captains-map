@@ -1,4 +1,5 @@
 import leaflet from 'leaflet';
+import http from './http.service';
 
 import { tileLayer, geocoder } from '@/settings/leaflet.settings';
 
@@ -48,15 +49,16 @@ export class LeafletMapService {
 		});
 	}
 
-	static locate(address) {
-		return new Promise((resolve, reject) => {
-			LeafletMapService.geocoder.geocode(address, (result) => {
-				resolve(result);
-			});
-		});
+	static async locate(address) {
+		let response = {
+			data: []
+		};
+		try {
+			response = await http.get(`geocode/${address}`);
+		} catch (error) {
+		}
+		return response.data;
 	}
 }
-
-LeafletMapService.geocoder = geocoder;
 
 export default new LeafletMapService();

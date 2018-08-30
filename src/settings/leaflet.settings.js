@@ -2,7 +2,6 @@ import leaflet from 'leaflet';
 
 import markerIcon from '@/assets/images/marker-icon-2x.png';
 import shadowIcon from '@/assets/images/marker-shadow.png';
-import leafletControlGeocoder from 'leaflet-control-geocoder';
 
 let mapbox_key = process.env.VUE_APP_MAPBOX_TOKEN;
 
@@ -29,11 +28,3 @@ export let openstreetmapLayer = {
 
 const layers = [mapboxLayer, openstreetmapLayer];
 export let tileLayer = layers[Math.floor(Math.random() * layers.length)];
-
-export let geocoder = function () {
-	if (Math.floor(Math.random() * 2) === 1) {
-		return new leaflet.Control.Geocoder.Nominatim({});
-	} else {
-		return new leaflet.Control.Geocoder.Bing(process.env.VUE_APP_BING_KEY);
-	}
-}();

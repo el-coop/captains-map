@@ -6,11 +6,12 @@
 			</div>
 			<div class="dropdown-menu">
 				<div class="dropdown-content" v-if="results.length || searched">
-					<a v-for="(result, index) in results" :key="index" v-text="result.name" class="dropdown-item"
-					   @click="moveMap(result.center)">
+					<a v-for="(result, index) in results" :key="index" v-text="result.formattedAddress"
+					   class="dropdown-item"
+					   @click="moveMap([result.latitude,result.longitude])">
 					</a>
 					<p class="help is-danger dropdown-item" v-if="! results.length && searched">
-						No results found for <span v-text="query"/>
+							No results found for <span v-text="query"/>
 					</p>
 				</div>
 			</div>
@@ -29,7 +30,6 @@
 
 		data() {
 			return {
-				geocoder: null,
 				query: '',
 				searching: false,
 				results: [],
@@ -53,7 +53,7 @@
 			},
 
 			moveMap(latLng) {
-				Map.move(latLng,15);
+				Map.move(latLng, 15);
 			}
 		},
 
