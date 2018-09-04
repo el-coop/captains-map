@@ -11,9 +11,9 @@ describe('User Store', () => {
 		sinon.restore();
 	});
 
-	it('Calls log out and pushes a redirect on logout', () => {
+	it('Calls log out and redirects on logout', () => {
 		const logoutStub = sinon.stub(auth, 'logout');
-		const routerStub = sinon.stub(router, 'push');
+		const routerStub = sinon.stub(router, 'go');
 
 		userStore.actions.logout();
 

@@ -10,6 +10,7 @@ describe('SearchBar.vue', () => {
 
 		assert.isTrue(wrapper.find('.input.is-rounded').exists());
 		assert.isTrue(wrapper.find('.button.is-rounded').exists());
+		assert.isTrue(wrapper.find('logout-stub').exists());
 	});
 
 	it('It tracks input', () => {

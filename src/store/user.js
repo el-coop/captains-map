@@ -8,7 +8,7 @@ export default {
 	actions: {
 		logout() {
 			Auth.logout();
-			router.push('/');
+			router.go('/');
 		},
 		async login({commit}, form) {
 			let response = await $http.post('/auth/login', form);
