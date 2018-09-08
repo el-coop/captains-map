@@ -13,7 +13,7 @@
 			</button>
 		</div>
 		<create-marker :latLng="latLng"/>
-		<view-marker :marker="selectedMarker"/>
+		<view-marker v-if="mountModal" :marker="selectedMarker"/>
 	</div>
 </template>
 
@@ -41,11 +41,17 @@
 			return {
 				latLng: {},
 				selectedMarker: null,
-				openSidebar: false
+				openSidebar: false,
+				mountModal: false
 			}
 		},
 
+		mounted() {
+			this.mountModal = true;
+		},
+
 		async created() {
+
 			this.$bus.$on('map-right-click', this.createMarker);
 			this.$bus.$on('marker-click', this.showMarker);
 
@@ -71,6 +77,15 @@
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
+	@import "~$scss/variables";
+
+	.dashboard {
+		grid-template-rows: [header] 2*$gap/1.5 [body] calc(100% - #{3 * $gap / 1.5}) [footer] $gap/1.5;
+
+		@media #{$above-tablet} {
+			grid-template-rows: [header] $gap/1.5 [body] calc(100% - #{$gap / 1.5});
+		}
+	}
 </style>

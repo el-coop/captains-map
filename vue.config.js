@@ -16,5 +16,16 @@ module.exports = {
 				secure: false
 			}
 		}
+	},
+	pwa: {
+		name: 'Captains Map',
+		workboxPluginMode: "InjectManifest",
+		workboxOptions: {
+			swSrc: "./src/registerServiceWorker.js"
+		},
+		themeColor: '#209CEE',
+		msTileColor:'#363636',
+		appleMobileWebAppCapable: "yes"
+
 	}
 };

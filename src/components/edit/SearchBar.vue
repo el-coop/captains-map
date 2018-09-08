@@ -20,7 +20,12 @@
 				<button class="button is-rounded" :class="{'is-loading': searching}" @click="search">Search</button>
 			</div>
 		</div>
-		<logout/>
+		<div class="field has-addons has-text-centered side-buttons">
+			<div class="control is-expanded">
+				<button class="button is-dark is-fullwidth" @click="$router.push('/')">Map Feed</button>
+			</div>
+			<logout/>
+		</div>
 	</div>
 </template>
 
@@ -72,14 +77,25 @@
 	@import "~$scss/variables";
 
 	.dashboard__control {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
 		padding: 0 2px;
-		@media #{$above-tablet} {
-			padding: 0 20px;
-		}
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
 
+		@media #{$above-tablet} {
+			justify-content: space-between;
+			flex-direction: row;
+		}
+	}
+
+	.field.has-addons.side-buttons {
+		margin-top: 6px;
+		@media #{$above-tablet} {
+			width: 20vw;
+			padding-right: 20px;
+			margin-top: 0;
+		}
 	}
 
 	.dropdown-item {
@@ -87,7 +103,7 @@
 	}
 
 	.field.has-addons {
-		margin: 0 5px;
+		margin: 0;
 	}
 
 	.dropdown-menu {

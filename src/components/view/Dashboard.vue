@@ -17,7 +17,7 @@
 				Show {{ openSidebar ? 'Map' : 'List'}}
 			</button>
 		</div>
-		<view-marker :marker="selectedMarker"/>
+		<view-marker v-if="mountModal" :marker="selectedMarker"/>
 		<not-found/>
 	</div>
 </template>
@@ -45,8 +45,13 @@
 			return {
 				selectedMarker: null,
 				openSidebar: false,
-				currentUser: ''
+				currentUser: '',
+				mountModal: false
 			}
+		},
+
+		mounted() {
+			this.mountModal = true;
 		},
 
 		created() {
@@ -91,6 +96,7 @@
 			},
 
 			showMarker(marker) {
+
 				this.selectedMarker = marker;
 				this.$modal.show('view-marker');
 			},
