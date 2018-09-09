@@ -8,13 +8,8 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 
 workbox.routing.registerRoute(
-	/\.(?:png|gif|jpg|jpeg|svg)$/,
+	new RegExp('/img/'),
 	workbox.strategies.cacheFirst({
-		cacheName: 'images',
-		plugins: [
-			new workbox.expiration.Plugin({
-				maxEntries: 60
-			}),
-		],
-	}),
+		cacheName: 'image-cache',
+	})
 );
