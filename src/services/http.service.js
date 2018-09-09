@@ -9,7 +9,7 @@ class HttpService {
 	}
 
 	issueLogout(error) {
-		if (error.response.data.clearToken || false) {
+		if ((error.response && error.response.data.clearToken) || false) {
 			userStore.actions.logout();
 		}
 		return Promise.reject(error);

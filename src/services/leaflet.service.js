@@ -1,5 +1,5 @@
 import leaflet from 'leaflet';
-import './leafletCache.service';
+import './leafletCache.service'
 import http from './http.service';
 
 import { tileLayer, geocoder } from '@/settings/leaflet.settings';
@@ -19,11 +19,7 @@ export class LeafletMapService {
 		});
 		let zoomControl = new leaflet.Control.Zoom({position: 'bottomleft'}).addTo(this.map);
 
-		leaflet.tileLayer(tileLayer.url, {
-			...tileLayer.options,
-			useCache: true,
-			crossOrigin: true
-		}).addTo(this.map);
+		leaflet.tileLayer.offline(tileLayer.url, tileLayer.options).addTo(this.map);
 
 		if (leaflet.Browser.mobile) {
 			this.map.removeControl(zoomControl);
