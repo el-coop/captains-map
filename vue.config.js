@@ -21,7 +21,8 @@ module.exports = {
 		name: 'Captains Map',
 		workboxPluginMode: "InjectManifest",
 		workboxOptions: {
-			swSrc: "./src/registerServiceWorker.js"
+			swSrc: "./src/registerServiceWorker.js",
+			swDest: "service-worker.js"
 		},
 		themeColor: '#209CEE',
 		msTileColor:'#363636',
