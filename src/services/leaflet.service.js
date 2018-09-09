@@ -27,8 +27,10 @@ export class LeafletMapService {
 	}
 
 	addMarker(marker) {
-		this.markers.push(marker);
-		marker.addTo(this.map);
+		if (this.map) {
+			this.markers.push(marker);
+			marker.addTo(this.map);
+		}
 	}
 
 	removeMarker(marker) {

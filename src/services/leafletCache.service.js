@@ -13,12 +13,12 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 
 	createTile(coords, done) {
 		const tile = leaflet.TileLayer.prototype.createTile.call(this, coords, done);
-		this.getSrc(tile);
+		this.getSrc(tile, coords);
 		return tile;
 	},
 
-	async getSrc(tile) {
-		const key = this.getTileKey(tile);
+	async getSrc(tile, coords) {
+		const key = this.getTileKey(coords);
 		try {
 			const data = await localForage.getItem(key);
 			if (data && typeof data === 'object' && Date.now() < data.timestamp + 7 * 24 * 3600 * 1000) {
@@ -32,13 +32,8 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 		this.cacheSrc(key, tile);
 	},
 
-	getTileKey({src}) {
-		if (src > 0) {
-			src = src.substring(0, src) +
-				this.options.subdomains['0'] +
-				src.substring(src + 1, src.length);
-		}
-		return src;
+	getTileKey(coords) {
+		return `x${coords.x}yx${coords.y}zx${coords.x}`;
 	},
 
 	cacheSrc(key, tile) {
