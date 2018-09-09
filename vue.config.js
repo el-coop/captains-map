@@ -19,11 +19,7 @@ module.exports = {
 	},
 	pwa: {
 		name: 'Captains Map',
-		workboxPluginMode: "InjectManifest",
-		workboxOptions: {
-			swSrc: "./src/registerServiceWorker.js",
-			swDest: "service-worker.js"
-		},
+		workboxPluginMode: "GenerateSW",
 		themeColor: '#209CEE',
 		msTileColor:'#363636',
 		appleMobileWebAppCapable: "yes"
