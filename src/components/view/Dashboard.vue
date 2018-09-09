@@ -78,6 +78,11 @@
 				}
 				const response = await this.$store.dispatch('Markers/load', markersRoute);
 				if (response.status !== 404) {
+					if(response.status === 'cached'){
+						this.$toast.info('Markers loaded from cache','',{
+							position: 'bottomCenter'
+						});
+					}
 					markers = this.$store.state.Markers.markers;
 					if (markers.length) {
 						if (this.$route.params.marker) {

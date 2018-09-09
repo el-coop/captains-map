@@ -1,6 +1,8 @@
 import axios from "axios";
 import userStore from '../store/user';
 
+import Cache from './cache.service';
+
 let host = "/api";
 
 class HttpService {
@@ -30,11 +32,26 @@ class HttpService {
 		if (url.indexOf('http') !== 0) {
 			url = `${host}/${url}`;
 		}
+		let error;
 		try {
-			return await axios.get(url, headers);
-		} catch (error) {
-			return error.response;
+			const response = await axios.get(url, headers);
+			Cache.store('request', url, response.data);
+			return response;
+		} catch (responseError) {
+			error = responseError;
 		}
+
+		const cachedData = await Cache.get('request', url);
+
+		if (cachedData) {
+			return {
+				status: 'cached',
+				data: cachedData
+			}
+		}
+
+		return error.response;
+
 	}
 
 	async post(url, data = {}, headers = {}) {

@@ -27,12 +27,11 @@ export default {
 			try {
 				commit('clear');
 				const response = await $http.get(`marker/${username}`);
-				if (response.status === 200) {
+				if (response.status === 200 || response.status === 'cached') {
 					response.data.forEach((item) => {
 						commit('add', item)
 					});
 				}
-
 				return response;
 			} catch (error) {
 				return error;

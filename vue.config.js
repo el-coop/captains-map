@@ -19,10 +19,12 @@ module.exports = {
 	},
 	pwa: {
 		name: 'Captains Map',
-		workboxPluginMode: "GenerateSW",
+		workboxPluginMode: "InjectManifest",
+		workboxOptions: {
+			swSrc: './src/service-worker.js'
+		},
 		themeColor: '#209CEE',
-		msTileColor:'#363636',
+		msTileColor: '#363636',
 		appleMobileWebAppCapable: "yes"
-
 	}
 };

@@ -1,13 +1,5 @@
 import leaflet from 'leaflet';
-import localForage from 'localforage';
-
-localForage.config({
-	name: 'leaflet_offline',
-	version: 1.0,
-	size: 4980736 * 4,
-	storeName: 'tiles',
-	description: 'the tiles',
-});
+import Cache from './cache.service';
 
 const TileLayerOffline = leaflet.TileLayer.extend({
 
@@ -20,9 +12,9 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 	async getSrc(tile, coords) {
 		const key = this.getTileKey(coords);
 		try {
-			const data = await localForage.getItem(key);
-			if (data && typeof data === 'object' && Date.now() < data.timestamp + 7 * 24 * 3600 * 1000) {
-				tile.src = data.dataUrl;
+			const data = await Cache.get('map', key);
+			if (data) {
+				tile.src = data;
 				return;
 			}
 		} catch (error) {
@@ -44,10 +36,7 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 			const fr = new FileReader();
 
 			fr.onload = async function () {
-				await localForage.setItem(key, {
-					dataUrl: this.result,
-					timestamp: Date.now()
-				});
+				Cache.store('map', key, this.result, 604800);
 			};
 
 			fr.readAsDataURL(xhr.response); // async call
