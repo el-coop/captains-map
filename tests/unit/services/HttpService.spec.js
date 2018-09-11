@@ -3,11 +3,16 @@ import { assert } from 'chai';
 import axios from 'axios';
 import moxios from 'moxios';
 import http from '@/services/http.service';
+import cache from '@/services/cache.service';
 import userStore from '@/store/user';
 
 describe('Http service', () => {
 	beforeEach(() => {
 		moxios.install()
+	});
+
+	afterEach(() => {
+		sinon.restore();
 	});
 
 	afterEach('Reset sinon and settings', () => {
@@ -44,7 +49,8 @@ describe('Http service', () => {
 		assert.isTrue(logoutStub.calledOnce);
 	});
 
-	it('returns the get response', async () => {
+	it('returns the get response and caches', async () => {
+		const cacheStub = sinon.stub(cache, 'store');
 		moxios.wait(() => {
 			let request = moxios.requests.mostRecent();
 			request.respondWith({
@@ -60,9 +66,40 @@ describe('Http service', () => {
 		assert.deepEqual(response.data, {
 			'message': 'test'
 		});
+		assert.isTrue(cacheStub.calledOnce);
+		assert.isTrue(cacheStub.calledWith('request', '/api/test', response.data));
 	});
 
-	it('returns the response from get error', async () => {
+	it('returns the cached response on axios error', async () => {
+		const cacheStub = sinon.stub(cache, 'get').callsFake(() => {
+			return {
+				'message': 'cached'
+			};
+		});
+		moxios.wait(() => {
+			let request = moxios.requests.mostRecent();
+			request.respondWith({
+				status: 400,
+				headers: {},
+				response: {
+					message: 'test'
+				}
+			});
+		});
+		const response = await http.get('test');
+		assert.equal(response.status, 'cached');
+		assert.deepEqual(response.data, {
+			'message': 'cached'
+		});
+		assert.isTrue(cacheStub.calledOnce);
+		assert.isTrue(cacheStub.calledWith('request', '/api/test'));
+	});
+
+
+	it('returns the response from get error and no cache', async () => {
+		sinon.stub(cache, 'get').callsFake(() => {
+			return null;
+		});
 		moxios.wait(() => {
 			let request = moxios.requests.mostRecent();
 			request.respondWith({

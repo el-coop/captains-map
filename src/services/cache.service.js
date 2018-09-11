@@ -17,6 +17,10 @@ const caches = {
 };
 
 class Cache {
+	caches() {
+		return caches;
+	}
+
 	async get(storageName, key, defaultValue = null) {
 		const storage = caches[storageName];
 		try {
@@ -32,7 +36,6 @@ class Cache {
 
 			return data.value;
 		} catch (error) {
-
 			return defaultValue;
 		}
 	}
