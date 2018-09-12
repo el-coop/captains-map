@@ -41,7 +41,7 @@
 
 		data() {
 			return {
-				transition: '',
+				transition: 'slide-up',
 				pivotY: 0.5,
 				height: 'auto'
 			};
@@ -51,11 +51,9 @@
 			beforeOpen() {
 				this.$emit('before-open');
 				if (window.innerWidth < 769) {
-					this.transition = 'slide-up';
 					this.pivotY = 0.001;
 				} else {
-					this.transition = 'slide-up';
-					this.pivotY = 0.5;
+					this.pivotY = 0.1;
 				}
 			},
 
