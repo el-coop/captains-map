@@ -55,13 +55,7 @@
 			this.$bus.$on('map-right-click', this.createMarker);
 			this.$bus.$on('marker-click', this.showMarker);
 
-			const response = await this.$store.dispatch('Markers/load', Auth.getUserDetails().username);
-			if (response.status === 'cached') {
-				this.$toast.info('Markers loaded from cache', '', {
-					position: 'bottomCenter'
-				});
-			}
-
+			await this.$store.dispatch('Markers/load', Auth.getUserDetails().username);
 			map.goToCurrentLocation();
 		},
 		beforeDestroy() {

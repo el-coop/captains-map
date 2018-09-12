@@ -15,8 +15,8 @@
 
 <script>
 	import Moment from 'moment';
-	import Datapicker from 'buefy/src/components/datepicker/Datepicker';
-	import Timepicker from 'buefy/src/components/timepicker/Timepicker';
+	import Datapicker from 'buefy/src/components/datepicker';
+	import Timepicker from 'buefy/src/components/timepicker';
 
 	export default {
 		name: "create-marker-date-time-field",

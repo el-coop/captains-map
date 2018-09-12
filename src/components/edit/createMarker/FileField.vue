@@ -4,13 +4,13 @@
 			<label class="file-label">
 				<input class="file-input" type="file" name="media[image]" @change="imageSelected">
 				<span class="file-cta">
-					<span class="file-icon">
-						<font-awesome-icon icon="upload"/>
-					</span>
-					<span class="file-label">
-						Choose an image
-					</span>
-				</span>
+                                <span class="file-icon">
+                                    <font-awesome-icon icon="upload"/>
+                                </span>
+                                <span class="file-label">
+                                    Choose an image
+                                </span>
+                            </span>
 				<span class="file-name"
 					  v-text="file ? file.name : 'Choose an image'"></span>
 			</label>
@@ -49,10 +49,10 @@
 
 		computed: {
 			file: {
-				get() {
+				get(){
 					return this.value;
 				},
-				set(value) {
+				set(value){
 					this.$emit('input', value);
 				}
 			}

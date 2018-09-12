@@ -3,9 +3,7 @@
 			   :extra-data="{
             lat: latLng.lat,
             lng: latLng.lng,
-            time: form.dateTime,
-            'media.camera': form.media.type === 'camera' ? form.media.camera : '' ,
-            'media.file': null
+            time: form.dateTime
         }" action="marker/create">
 		<slide-up-modal name="create-marker" @closed="resetForm">
 			<p slot="header" class="card-header-title">Create new marker</p>
@@ -15,8 +13,6 @@
 										  :error="errors ? errors['media.file'] : ''"/>
 				<create-marker-instagram-field v-if="form.media.type === 'instagram'" v-model="form.media.path"
 											   :error="errors ? errors['media.path'] : ''"/>
-				<create-marker-cam-view v-if="form.media.type === 'camera'" v-model="form.media.camera"
-										:error="errors ? errors['media.camera'] : ''"/>
 				<create-marker-date-time-field v-model="form.dateTime" :error="errors? errors['time'] : ''"/>
 				<create-marker-type-field v-model="form.type" :error="errors? errors['type'] : ''"/>
 				<div class="field">
@@ -49,13 +45,11 @@
 	import CreateMarkerInstagramField from "./createMarker/InstagramField";
 	import CreateMarkerTypeField from "./createMarker/TypeField";
 	import CreateMarkerDateTimeField from "./createMarker/DateTimeField";
-	import CreateMarkerCamView from "./createMarker/CameraField";
 
 	export default {
 		name: "new-marker-modal",
 
 		components: {
-			CreateMarkerCamView,
 			CreateMarkerDateTimeField,
 			CreateMarkerTypeField,
 			CreateMarkerInstagramField,
@@ -76,10 +70,9 @@
 			return {
 				form: {
 					media: {
-						type: 'camera',
+						type: 'image',
 						file: null,
-						path: '',
-						camera: ''
+						path: ''
 					},
 					description: '',
 					dateTime: new Date(),
@@ -113,10 +106,9 @@
 				this.errors = null;
 				this.form = {
 					media: {
-						type: 'camera',
+						type: 'image',
 						file: null,
-						path: '',
-						camera: ''
+						path: ''
 					},
 					description: '',
 					dateTime: new Date(),
