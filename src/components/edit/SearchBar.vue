@@ -61,7 +61,7 @@
 			},
 
 			moveMap(latLng) {
-				Map.move(latLng, 15);
+				Map.move(latLng, 17);
 			}
 		},
 

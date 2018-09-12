@@ -1,5 +1,3 @@
-console.log(self.__precacheManifest);
-
 workbox.core.setCacheNameDetails({prefix: "captains-map"});
 
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
