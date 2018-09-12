@@ -3,7 +3,8 @@
 			   :extra-data="{
             lat: latLng.lat,
             lng: latLng.lng,
-            time: form.dateTime
+            time: form.dateTime,
+		    'media.file': null
         }" action="marker/create">
 		<slide-up-modal name="create-marker" @closed="resetForm">
 			<p slot="header" class="card-header-title">Create new marker</p>

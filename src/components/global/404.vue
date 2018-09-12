@@ -2,7 +2,9 @@
 	<slide-up-modal name="404" @before-close="navigateHome" @before-open="beforeOpen">
 		<p slot="header" class="card-header-title">404</p>
 		<template slot="content">
-			<h4 class="has-text-centered is-size-5">You uncovered Atlantis! Unfortunately it's not on our map.</h4>
+			<div class="content">
+				<h5	 class="has-text-centered is-size-5 ">You uncovered Atlantis! Unfortunately it's not on our map.</h5>
+			</div>
 			<div class="tear-wrapper">
 				<img :src="atlantis" class="atlantis">
 				<img :src="tear" class="tear">
@@ -49,6 +51,11 @@
 </script>
 
 <style lang="scss" scoped>
+	@import "~$scss/variables";
+
+	.content > h5 {
+		color: $text;
+	}
 
 	.tear-wrapper {
 		position: relative;
