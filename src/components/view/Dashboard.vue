@@ -78,8 +78,8 @@
 				}
 				const response = await this.$store.dispatch('Markers/load', markersRoute);
 				if (response.status !== 404) {
-					if(response.status === 'cached'){
-						this.$toast.info('Markers loaded from cache','',{
+					if (response.status === 'cached') {
+						this.$toast.info('Markers loaded from cache', '', {
 							position: 'bottomCenter'
 						});
 					}
@@ -89,7 +89,11 @@
 							let marker = markers.find(({id}) => {
 								return id == this.$route.params.marker;
 							});
-							return map.setView([marker.lat, marker.lng], 16);
+							if (marker) {
+								return map.setView([marker.lat, marker.lng], 16);
+							} else {
+								this.$modal.show('404');
+							}
 						}
 						return map.setView([markers[0].lat, markers[0].lng]);
 					}

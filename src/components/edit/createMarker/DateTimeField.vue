@@ -3,7 +3,7 @@
 		<label class="label">Time</label>
 		<div class="field is-grouped">
 			<div class="control is-expanded">
-				<datapicker v-model="date" icon-pack="fa"/>
+				<datapicker v-model="date" icon-pack="fas"/>
 			</div>
 			<div class="control is-expanded">
 				<timepicker v-model="time"/>
