@@ -41,11 +41,16 @@
 			MarkerList,
 		},
 
+		metaInfo() {
+			return {
+				title: this.$route.params.username || 'Home'
+			}
+		},
+
 		data() {
 			return {
 				selectedMarker: null,
 				openSidebar: false,
-				currentUser: '',
 				mountModal: false
 			}
 		},
@@ -72,9 +77,8 @@
 				let markersRoute = '';
 				let markers = [];
 
-				if (this.currentUser !== this.$route.params.username) {
-					this.currentUser = this.$route.params.username
-					markersRoute = this.currentUser;
+				if (this.$route.params.username) {
+					markersRoute = this.$route.params.username;
 				}
 				const response = await this.$store.dispatch('Markers/load', markersRoute);
 				if (response.status !== 404) {

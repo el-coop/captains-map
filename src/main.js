@@ -15,6 +15,7 @@ import {
 	faCopy,
 	faPowerOff,
 } from '@fortawesome/free-solid-svg-icons';
+import Meta from 'vue-meta';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueClipboard from 'vue-clipboard2';
 import VueIziToast from 'vue-izitoast';
@@ -26,6 +27,7 @@ library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faPower
 
 Vue.use(VModal);
 Vue.use(Router);
+Vue.use(Meta);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('map-view', MapView);
 Vue.use(HttpService);
