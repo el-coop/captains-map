@@ -15,11 +15,6 @@
 			title: 'Home',
 			// all titles will be injected into this template
 			titleTemplate: '%s | Captains Map',
-			meta: [{
-				'property': 'og:image',
-				'content': globe,
-				'vmid': 'og:image'
-			}]
 		}
 	}
 </script>

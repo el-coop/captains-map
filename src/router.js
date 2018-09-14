@@ -5,6 +5,7 @@ import Auth from './middleware/Auth.middleware';
 
 
 export default new Router({
+	mode: 'history',
 	routes: [
 		{
 			path: '/edit',
