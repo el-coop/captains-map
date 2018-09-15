@@ -32,7 +32,7 @@
 
 		methods: {
 			async copyLink() {
-				await this.$copyText(`${window.location.protocol}/${window.location.host}${this.link}`);
+				await this.$copyText(`${window.location.protocol}//${window.location.host}${this.link}`);
 				this.$toast.info('You can paste it anywhere', 'Link copied', {
 					position: 'bottomCenter',
 					timeout: 2000
