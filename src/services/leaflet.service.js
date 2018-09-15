@@ -48,7 +48,7 @@ export class LeafletMapService {
 	goToCurrentLocation() {
 		this.map.locate({
 			setView: true,
-			maxZoom: 12
+			maxZoom: 17
 		});
 	}
 

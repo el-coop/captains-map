@@ -37,6 +37,10 @@
 			ViewMarker
 		},
 
+		metaInfo: {
+			title: 'Edit'
+		},
+
 		data() {
 			return {
 				latLng: {},

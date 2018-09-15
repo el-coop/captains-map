@@ -15,7 +15,7 @@
 		props: {
 			markerId: {
 				required: true,
-				type: String
+				type: Number
 			}
 		},
 
