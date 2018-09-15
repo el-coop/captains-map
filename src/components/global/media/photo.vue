@@ -1,7 +1,7 @@
 <template>
-    <figure class="image">
-        <img :src="'api' + path">
-    </figure>
+	<figure class="image">
+		<img :src="`/api${path}`">
+	</figure>
 </template>
 
 <script>
