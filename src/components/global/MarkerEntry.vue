@@ -40,7 +40,7 @@
 			if (this.marker.media.type == 'instagram') {
 				this.src = `https://instagram.com/p/${this.marker.media.path}/media/`;
 			} else {
-				this.src = `/api${this.marker.media.path}`;
+				this.src = `/api${this.marker.media.path.replace('images', 'thumbnails')}`;
 			}
 
 		},
@@ -104,7 +104,7 @@
 	}
 
 	.image {
-		width: 64px;
+		max-width: 64px;
 	}
 
 	strong {

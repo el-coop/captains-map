@@ -1,31 +1,32 @@
 <template>
-    <modal :name="name" :transition="transition" :height="height" :adaptive="true"
-           :scrollable="true"
-           :pivotY="pivotY"
-           @before-open="beforeOpen"
-           @closed="closed"
-           @before-close="beforeClose"
-           ref="modal">
-        <div class="card">
-            <div class="card-header dashboard__control--dark">
-                <slot name="header"/>
-                <a class="card-header-icon" @click="$modal.hide(name)">
+	<modal :name="name" :transition="transition" :height="height" :adaptive="true"
+		   :width="width"
+		   :scrollable="true"
+		   :pivotY="pivotY"
+		   @before-open="beforeOpen"
+		   @closed="closed"
+		   @before-close="beforeClose"
+		   ref="modal">
+		<div class="card">
+			<div class="card-header dashboard__control--dark">
+				<slot name="header"/>
+				<a class="card-header-icon" @click="$modal.hide(name)">
                     <span class="icon">
                         <font-awesome-icon icon="times-circle"/>
                     </span>
-                </a>
-            </div>
-            <div class="card-image" v-if="!! $slots.image">
-                <slot name="image"/>
-            </div>
-            <div class="card-content">
-                <slot name="content"/>
-            </div>
-            <footer class="card-footer">
-                <slot name="footer"/>
-            </footer>
-        </div>
-    </modal>
+				</a>
+			</div>
+			<div class="card-image" v-if="!! $slots.image">
+				<slot name="image"/>
+			</div>
+			<div class="card-content">
+				<slot name="content"/>
+			</div>
+			<footer class="card-footer">
+				<slot name="footer"/>
+			</footer>
+		</div>
+	</modal>
 </template>
 
 <script>
@@ -37,6 +38,10 @@
 				type: String,
 				required: true
 			},
+			width: {
+				type: Number,
+				default: 600
+			}
 		},
 
 		data() {
@@ -63,24 +68,24 @@
 				this.$emit('closed');
 			},
 
-			beforeClose(){
+			beforeClose() {
 				this.$emit('before-close');
-            }
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-    @import "~$scss/variables";
+	@import "~$scss/variables";
 
-    .card {
+	.card {
 
-        a.card-header-icon {
-            color: $white-ter;
+		a.card-header-icon {
+			color: $white-ter;
 
-            &:hover {
-                color: $white-bis;
-            }
-        }
-    }
+			&:hover {
+				color: $white-bis;
+			}
+		}
+	}
 </style>

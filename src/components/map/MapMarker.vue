@@ -1,7 +1,7 @@
 <template>
-    <div>
+	<div>
 
-    </div>
+	</div>
 </template>
 
 <script>
@@ -30,7 +30,7 @@
 			if (this.marker.media.type == 'instagram') {
 				path = `https://instagram.com/p/${this.marker.media.path}/media/`;
 			} else {
-				path = `/api${this.marker.media.path}`;
+				path = `/api${this.marker.media.path.replace('images', 'thumbnails')}`;
 			}
 			let icon = leaflet.divIcon({
 				html: `<div class="map__icon-wrapper"><img src="${path}" class="map__icon-${this.marker.type}"></div>`,
