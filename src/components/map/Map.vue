@@ -1,15 +1,17 @@
 <template>
-    <div :class="`zoom-${zoomStatus}`">
-        <div class="map" ref="map">
-            <map-marker v-for="(marker, index) in markers" :marker="marker" :key="marker.id"></map-marker>
-        </div>
-    </div>
+	<div :class="`zoom-${zoomStatus}`">
+		<div class="map" ref="map">
+			<user-marker/>
+			<map-marker v-for="marker in markers" :marker="marker" :key="marker.id"/>
+		</div>
+	</div>
 </template>
 
 <script>
 
 	import Map from '@/services/leaflet.service';
-	import MapMarker from '@/components/map/MapMarker';
+	import MapMarker from './Markers/MapMarker';
+	import UserMarker from './Markers/UserMarker';
 
 	export default {
 		name: "map-view",
@@ -24,7 +26,8 @@
 		},
 
 		components: {
-			MapMarker
+			MapMarker,
+			UserMarker
 		},
 
 		methods: {
@@ -72,12 +75,12 @@
 </script>
 
 <style scoped>
-    .map {
-        position: absolute;
-        height: 100%;
-        width: 100vw;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
+	.map {
+		position: absolute;
+		height: 100%;
+		width: 100vw;
+		top: 0;
+		left: 0;
+		z-index: 1;
+	}
 </style>

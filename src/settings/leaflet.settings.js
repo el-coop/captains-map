@@ -5,11 +5,6 @@ import shadowIcon from '@/assets/images/marker-shadow.png';
 
 let mapbox_key = process.env.VUE_APP_MAPBOX_TOKEN;
 
-export let defaultIcon = leaflet.icon({
-	iconUrl: markerIcon,
-	shadowUrl: shadowIcon,
-});
-
 export let mapboxLayer = {
 	url: `https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${mapbox_key}`,
 	options: {

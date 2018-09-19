@@ -8,6 +8,7 @@ export class LeafletMapService {
 	constructor() {
 		this.map = null;
 		this.markers = [];
+		this.queuedActions = [];
 	}
 
 	init(el, center, zoom) {
@@ -24,33 +25,73 @@ export class LeafletMapService {
 		if (leaflet.Browser.mobile) {
 			this.map.removeControl(zoomControl);
 		}
+
+		this.runQueuedActions();
+	}
+
+	runQueuedActions() {
+		let action;
+		while (action = this.queuedActions.pop()) {
+			this[action[0]](...action[1]);
+		}
 	}
 
 	addMarker(marker) {
 		if (this.map) {
 			this.markers.push(marker);
 			marker.addTo(this.map);
+		} else {
+			this.queuedActions.push(['addMarker', [marker]]);
 		}
 	}
 
 	removeMarker(marker) {
-		this.map.removeLayer(marker);
+		if (this.map) {
+			this.map.removeLayer(marker);
+		} else {
+			this.queuedActions.push(['removeMarker', [marker]]);
+		}
 	}
 
-	move(latLang, zoom = 18) {
-		this.map.flyTo(latLang, zoom);
+	move(latLng, zoom = 18) {
+		if (this.map) {
+			this.map.flyTo(latLng, zoom);
+		} else {
+			this.queuedActions.push(['move', [latLng, zoom]]);
+		}
 	}
 
-	setView(latLang, zoom = 15) {
-		this.map.setView(latLang, zoom);
+	setView(latLng, zoom = 15) {
+		if (this.map) {
+			this.map.setView(latLng, zoom);
+		} else {
+			this.queuedActions.push(['setView', [latLng, zoom]]);
+		}
 	}
 
 	goToCurrentLocation() {
-		this.map.locate({
-			setView: true,
-			maxZoom: 17
-		});
+		if (this.map) {
+			this.map.locate({
+				setView: true,
+				maxZoom: 17
+			});
+		} else {
+			this.queuedActions.push(['goToCurrentLocation', []]);
+		}
 	}
+
+	watchLocation(callback) {
+		if (this.map) {
+			this.map.locate({
+				watch: true,
+				enableHighAccuracy: true
+			});
+			this.map.on("locationfound", callback);
+		} else {
+			this.queuedActions.push(['watchLocation', [callback]]);
+		}
+	}
+
 
 	static async locate(address) {
 		let response = {

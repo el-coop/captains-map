@@ -17,14 +17,15 @@
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	.image {
 		background-color: black;
+
+		> img {
+			max-width: 100%;
+			width: auto;
+			margin: auto;
+		}
 	}
 
-	img {
-		max-width: 100%;
-		width: auto;
-		margin: auto;
-	}
 </style>

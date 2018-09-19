@@ -1,5 +1,5 @@
 <template>
-	<slide-up-modal name="view-marker" :width="800">
+	<slide-up-modal name="view-marker">
 		<template v-if="marker">
 			<view-marker-header slot="header" :marker="marker"/>
 			<component slot="image" :is="marker.media.type === 'instagram' ? 'Instagram': 'Photo'"
