@@ -7,7 +7,6 @@ import { tileLayer, geocoder } from '@/settings/leaflet.settings';
 export class LeafletMapService {
 	constructor() {
 		this.map = null;
-		this.markers = [];
 		this.queuedActions = [];
 	}
 
@@ -18,13 +17,10 @@ export class LeafletMapService {
 			zoom,
 			zoomControl: false
 		});
-		let zoomControl = new leaflet.Control.Zoom({position: 'bottomleft'}).addTo(this.map);
-
-		leaflet.tileLayer.offline(tileLayer.url, tileLayer.options).addTo(this.map);
-
-		if (leaflet.Browser.mobile) {
-			this.map.removeControl(zoomControl);
+		if (!leaflet.Browser.mobile) {
+			new leaflet.Control.Zoom({position: 'bottomleft'}).addTo(this.map);
 		}
+		leaflet.tileLayer.offline(tileLayer.url, tileLayer.options).addTo(this.map);
 
 		this.runQueuedActions();
 	}
@@ -38,7 +34,6 @@ export class LeafletMapService {
 
 	addMarker(marker) {
 		if (this.map) {
-			this.markers.push(marker);
 			marker.addTo(this.map);
 		} else {
 			this.queuedActions.push(['addMarker', [marker]]);

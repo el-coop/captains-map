@@ -11,10 +11,6 @@ describe('Http service', () => {
 		moxios.install()
 	});
 
-	afterEach(() => {
-		sinon.restore();
-	});
-
 	afterEach('Reset sinon and settings', () => {
 		sinon.restore();
 		moxios.uninstall();
