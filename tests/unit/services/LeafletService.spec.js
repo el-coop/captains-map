@@ -210,6 +210,34 @@ describe('Map Service', () => {
 		Map.queuedActions = [];
 	});
 
+
+	it('Registers event listeners', () => {
+		const callback = function () {
+		};
+		Map.map = {
+			on: sinon.spy()
+		};
+
+		Map.on('event', callback);
+
+		assert.isTrue(Map.map.on.calledOnce);
+		assert.isTrue(Map.map.on.calledWith('event', callback));
+	});
+
+
+	it('It queues registrations of event listeners ', () => {
+		const callback = function () {
+		};
+		Map.map = null;
+
+		Map.on('event', callback);
+
+		assert.isTrue(Map.queuedActions.length === 1);
+		assert.deepEqual(Map.queuedActions, [['on', ['event', callback]]]);
+		Map.queuedActions = [];
+	});
+
+
 	it('Returns empty on address lcoation answer error', async () => {
 		sinon.stub(Http, 'get').callsFake(() => {
 			throw new Error('error');
@@ -220,7 +248,7 @@ describe('Map Service', () => {
 	});
 
 	it('Returns response data when address found', async () => {
-		const data =[
+		const data = [
 			'test',
 			'test1'
 		];
@@ -231,4 +259,5 @@ describe('Map Service', () => {
 		const response = await LeafletMapService.locate('test');
 		assert.deepEqual(response, data);
 	});
+
 });

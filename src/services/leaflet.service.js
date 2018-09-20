@@ -81,9 +81,17 @@ export class LeafletMapService {
 				watch: true,
 				enableHighAccuracy: true
 			});
-			this.map.on("locationfound", callback);
+			this.on("locationfound", callback);
 		} else {
 			this.queuedActions.push(['watchLocation', [callback]]);
+		}
+	}
+
+	on(event, callback) {
+		if (this.map) {
+			this.map.on(event, callback);
+		} else {
+			this.queuedActions.push(['on', [event,callback]]);
 		}
 	}
 

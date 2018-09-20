@@ -38,27 +38,29 @@
 			},
 
 			setLocation(location) {
+				this.accuracy = location.accuracy;
+
 				if (!location.latlng || (this.lat === location.latlng.lat && this.lng === location.latlng.lng)) {
 					return;
 				}
 
 				this.lat = location.latlng.lat;
 				this.lng = location.latlng.lng;
-				this.accuracy = location.accuracy;
 
 				if (!this.mapObject) {
-					this.mapObject = leaflet.marker(location.latlng, {
-						icon: leaflet.divIcon({
-							html: `<div class="map__user-marker"></div>`,
-							iconSize: ['auto', 'auto']
-						})
-					});
-					this.addToMap();
-				}
-				if (this.accuracy > 50) {
-
+					this.createObject(location.latlng);
 				}
 				this.mapObject.setLatLng(location.latlng);
+			},
+
+			createObject(latLng) {
+				this.mapObject = leaflet.marker(latLng, {
+					icon: leaflet.divIcon({
+						html: `<div class="map__user-marker"></div>`,
+						iconSize: ['auto', 'auto']
+					})
+				});
+				this.addToMap();
 			}
 		}
 

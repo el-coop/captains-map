@@ -9,7 +9,7 @@
 
 <script>
 
-	import Map from '@/services/leaflet.service';
+	import map from '@/services/leaflet.service';
 	import MapMarker from './Markers/MapMarker';
 	import UserMarker from './Markers/UserMarker';
 
@@ -54,7 +54,6 @@
 
 		data() {
 			return {
-				Map,
 				zoomStatus: 'normal'
 			}
 		},
@@ -66,10 +65,9 @@
 		},
 
 		mounted() {
-			this.Map.init(this.$refs.map, this.center, this.zoom);
-
-			this.Map.map.on('contextmenu', this.rightClick);
-			this.Map.map.on('zoomend', this.handleZoom);
+			map.init(this.$refs.map, this.center, this.zoom);
+			map.on('contextmenu', this.rightClick);
+			map.on('zoomend', this.handleZoom);
 		}
 	}
 </script>
