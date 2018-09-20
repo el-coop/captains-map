@@ -23,6 +23,7 @@ describe('UserAccuracyMarker.vue', () => {
 
 		const wrapper = shallowMount(UserAccuracyMarker, {
 			propsData: {
+				accuracy: 100,
 				lat: 10,
 				lng: 10
 			}
@@ -32,7 +33,7 @@ describe('UserAccuracyMarker.vue', () => {
 		assert.isTrue(createIconStub.calledOnce);
 		assert.isTrue(createIconStub.calledWith({
 			html: `<div class="map__user-accuracy-marker"></div>`,
-			iconSize: ['auto', 'auto']
+			iconSize: [50, 50]
 		}));
 		assert.isTrue(createMarkerStub.calledOnce);
 		assert.isTrue(createMarkerStub.calledWith([10, 10], {icon}));
@@ -53,6 +54,7 @@ describe('UserAccuracyMarker.vue', () => {
 
 		const wrapper = shallowMount(UserAccuracyMarker, {
 			propsData: {
+				accuracy: 100,
 				lat: 10,
 				lng: 10
 			}
@@ -73,6 +75,40 @@ describe('UserAccuracyMarker.vue', () => {
 		assert.isTrue(marker.setLatLng.calledWith([11, 12]));
 	});
 
+	it('updates icon size when accuracy changes', () => {
+		const marker = {
+			options: {
+				icon: {
+					options: {
+						iconSize: [10, 10]
+					}
+				}
+			},
+			setIcon: sinon.spy()
+		};
+
+		const wrapper = shallowMount(UserAccuracyMarker, {
+			propsData: {
+				accuracy: 100,
+				lat: 10,
+				lng: 10
+			}
+		});
+
+		wrapper.vm.mapObject = marker;
+
+		wrapper.setProps({
+			accuracy: 50
+		});
+
+		assert.isTrue(marker.setIcon.calledOnce);
+		assert.isTrue(marker.setIcon.calledWith({
+			options: {
+				iconSize: [25, 25]
+			}
+		}));
+	});
+
 
 	it('It removes marker when destroyed', () => {
 		const marker = {};
@@ -80,6 +116,7 @@ describe('UserAccuracyMarker.vue', () => {
 
 		const wrapper = shallowMount(UserAccuracyMarker, {
 			propsData: {
+				accuracy: 100,
 				lat: 10,
 				lng: 10
 			}
@@ -105,6 +142,7 @@ describe('UserAccuracyMarker.vue', () => {
 				$bus,
 			},
 			propsData: {
+				accuracy: 100,
 				lat: 10,
 				lng: 10
 			}

@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<user-accuracy-marker v-if="accuracy > 50 && lat !== null && lng !== null" :lat="lat" :lng="lng"/>
+		<user-accuracy-marker v-if="accuracy !== null && lat !== null && lng !== null" :accuracy="accuracy" :lat="lat"
+							  :lng="lng"/>
 	</div>
 </template>
 
@@ -20,7 +21,7 @@
 			return {
 				lat: null,
 				lng: null,
-				accuracy: 0,
+				accuracy: 100,
 			}
 		},
 
@@ -50,7 +51,7 @@
 				this.mapObject = leaflet.marker(latLng, {
 					icon: leaflet.divIcon({
 						html: `<div class="map__user-marker"></div>`,
-						iconSize: ['auto', 'auto']
+						iconSize: [20, 20]
 					})
 				}).on('click', this.onClick.bind(this));
 				this.addToMap();

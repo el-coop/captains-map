@@ -18,6 +18,10 @@
 			lng: {
 				type: Number,
 				required: true
+			},
+			accuracy: {
+				type: Number,
+				required: true
 			}
 		},
 
@@ -26,7 +30,7 @@
 				this.mapObject = leaflet.marker([this.lat, this.lng], {
 					icon: leaflet.divIcon({
 						html: `<div class="map__user-accuracy-marker"></div>`,
-						iconSize: ['auto', 'auto']
+						iconSize: [this.accuracy / 2, this.accuracy / 2]
 					})
 				}).on('click', this.onClick.bind(this));
 			}
@@ -38,6 +42,11 @@
 			},
 			lng() {
 				this.mapObject.setLatLng([this.lat, this.lng]);
+			},
+			accuracy() {
+				let icon = this.mapObject.options.icon;
+				icon.options.iconSize = [this.accuracy / 2, this.accuracy / 2];
+				this.mapObject.setIcon(icon);
 			}
 		},
 	}

@@ -43,7 +43,7 @@ describe('UserMarker.vue', () => {
 		assert.isTrue(createIconStub.calledOnce);
 		assert.isTrue(createIconStub.calledWith({
 			html: `<div class="map__user-marker"></div>`,
-			iconSize: ['auto', 'auto']
+			iconSize: [20, 20]
 		}));
 		assert.isTrue(createMarkerStub.calledOnce);
 		assert.isTrue(createMarkerStub.calledWith({
@@ -87,7 +87,7 @@ describe('UserMarker.vue', () => {
 		}));
 	});
 
-	it('renders accuracy marker when high inaccuracy', () => {
+	it('renders accuracy marker', () => {
 
 		const wrapper = shallowMount(UserMarker);
 
@@ -102,21 +102,6 @@ describe('UserMarker.vue', () => {
 		assert.isTrue(wrapper.find('useraccuracymarker-stub').exists());
 	});
 
-
-	it('doesnt renders accuracy marker when low inaccuracy', () => {
-
-		const wrapper = shallowMount(UserMarker);
-
-		wrapper.vm.setLocation({
-			accuracy: 50,
-			latlng: {
-				lat: 0,
-				lng: 0
-			}
-		});
-
-		assert.isFalse(wrapper.find('useraccuracymarker-stub').exists());
-	});
 
 	it('removes marker when destroyed', () => {
 		const marker = {};
