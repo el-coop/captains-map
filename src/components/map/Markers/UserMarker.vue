@@ -1,35 +1,28 @@
 <template>
 	<div>
-		<user-accuracy-marker v-if="accuracy > 50" :lat="lat" :lng="lng"/>
+		<user-accuracy-marker v-if="accuracy > 50 && lat !== null && lng !== null" :lat="lat" :lng="lng"/>
 	</div>
 </template>
 
 <script>
 	import leaflet from 'leaflet';
 	import MarkerMixin from './MarkerMixin';
+	import UserMarkerMixin from './UserMarkerMixin';
 	import Map from '@/services/leaflet.service';
 	import UserAccuracyMarker from "./UserAccuracyMarker";
 
 	export default {
 		name: "UserMarker",
 		components: {UserAccuracyMarker},
-		mixins: [MarkerMixin],
+		mixins: [MarkerMixin, UserMarkerMixin],
 
 		data() {
 			return {
-				event: 'user-marker-click',
 				lat: null,
 				lng: null,
-				accuracy: 0
+				accuracy: 0,
 			}
 		},
-
-		beforeDestroy() {
-			if (this.radiusObject) {
-				Map.removeMarker(this.radiusObject);
-			}
-		},
-
 
 		methods: {
 			prepareMapObject() {
@@ -59,10 +52,9 @@
 						html: `<div class="map__user-marker"></div>`,
 						iconSize: ['auto', 'auto']
 					})
-				});
+				}).on('click', this.onClick.bind(this));
 				this.addToMap();
 			}
-		}
-
+		},
 	}
 </script>

@@ -5,10 +5,11 @@
 <script>
 	import leaflet from 'leaflet';
 	import MarkerMixin from './MarkerMixin';
+	import UserMarkerMixin from './UserMarkerMixin';
 
 	export default {
 		name: "UserAccuracyMarker",
-		mixins: [MarkerMixin],
+		mixins: [MarkerMixin, UserMarkerMixin],
 		props: {
 			lat: {
 				type: Number,
@@ -27,7 +28,7 @@
 						html: `<div class="map__user-accuracy-marker"></div>`,
 						iconSize: ['auto', 'auto']
 					})
-				});
+				}).on('click', this.onClick.bind(this));
 			}
 		},
 
@@ -38,7 +39,6 @@
 			lng() {
 				this.mapObject.setLatLng([this.lat, this.lng]);
 			}
-		}
-
+		},
 	}
 </script>
