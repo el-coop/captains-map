@@ -1,5 +1,5 @@
 <template>
-	<div class="leaflet-bar leaflet-control">
+	<div class="leaflet-bar leaflet-control user-marker-control">
 		<a @click="toggleMarker">
 			<font-awesome-icon icon="globe"/>
 		</a>
@@ -48,6 +48,14 @@
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+	@import "~$scss/variables";
 
+	.user-marker-control {
+		margin-bottom: $gap * 0.8;
+
+		@media #{$above-tablet}{
+			margin-bottom: 10px;
+		}
+	}
 </style>
