@@ -1,15 +1,14 @@
 <template>
-	<div></div>
+	<div class="map__user-accuracy-marker"></div>
 </template>
 
 <script>
-	import leaflet from 'leaflet';
-	import MarkerMixin from './MarkerMixin';
+	import MapObjectMixin from '../MapObjectMixin';
 	import UserMarkerMixin from './UserMarkerMixin';
 
 	export default {
 		name: "UserAccuracyMarker",
-		mixins: [MarkerMixin, UserMarkerMixin],
+		mixins: [MapObjectMixin, UserMarkerMixin],
 		props: {
 			lat: {
 				type: Number,
@@ -22,17 +21,12 @@
 			accuracy: {
 				type: Number,
 				required: true
-			}
+			},
 		},
 
-		methods: {
-			prepareMapObject() {
-				this.mapObject = leaflet.marker([this.lat, this.lng], {
-					icon: leaflet.divIcon({
-						html: `<div class="map__user-accuracy-marker"></div>`,
-						iconSize: [this.accuracy / 2, this.accuracy / 2]
-					})
-				}).on('click', this.onClick.bind(this));
+		data() {
+			return {
+				iconSize: this.accuracy / 2
 			}
 		},
 
@@ -51,3 +45,14 @@
 		},
 	}
 </script>
+
+<style lang="scss" scoped>
+	.map__user-marker {
+		background-color: darken(#06f, 0.1);
+		border-radius: 50%;
+		width: 100%;
+		height: 100%;
+		opacity: 0.4;
+		border: 1px solid darken(#06f, 0.1);
+	}
+</style>

@@ -69,10 +69,10 @@ describe('Map Service', () => {
 	it('Runs queued actions', () => {
 		const marker = {};
 		const callback = {};
-		const addMarkerStub = sinon.stub(Map, 'addMarker');
+		const addMarkerStub = sinon.stub(Map, 'addObject');
 		const watchLocationStub = sinon.stub(Map, 'watchLocation');
-		Map.queuedActions.push(['addMarker', [marker]]);
-		Map.queuedActions.push(['addMarker', [marker]]);
+		Map.queuedActions.push(['addObject', [marker]]);
+		Map.queuedActions.push(['addObject', [marker]]);
 		Map.queuedActions.push(['watchLocation', [callback]]);
 
 		Map.runQueuedActions();
@@ -83,44 +83,44 @@ describe('Map Service', () => {
 		assert.isTrue(watchLocationStub.calledWith(callback));
 	});
 
-	it('Adds marker', () => {
+	it('Adds object', () => {
 		const marker = {
 			addTo: sinon.spy()
 		};
 		Map.map = {};
-		Map.addMarker(marker);
+		Map.addObject(marker);
 
 		assert.isTrue(marker.addTo.calledOnce);
 		assert.isTrue(marker.addTo.calledWith(Map.map));
 	});
 
-	it('Queues add marker if no map yet', () => {
+	it('Queues add object if no map yet', () => {
 		const marker = {};
 		Map.map = null;
-		Map.addMarker(marker);
+		Map.addObject(marker);
 		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['addMarker', [marker]]]);
+		assert.deepEqual(Map.queuedActions, [['addObject', [marker]]]);
 		Map.queuedActions = [];
 	});
 
 
-	it('Removes marker', () => {
+	it('Removes object', () => {
 		const marker = {};
 		Map.map = {
 			removeLayer: sinon.spy()
 		};
-		Map.removeMarker(marker);
+		Map.removeObject(marker);
 
 		assert.isTrue(Map.map.removeLayer.calledOnce);
 		assert.isTrue(Map.map.removeLayer.calledWith(marker));
 	});
 
-	it('Queues remove marker if no map yet', () => {
+	it('Queues remove object if no map yet', () => {
 		const marker = {};
 		Map.map = null;
-		Map.removeMarker(marker);
+		Map.removeObject(marker);
 		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['removeMarker', [marker]]]);
+		assert.deepEqual(Map.queuedActions, [['removeObject', [marker]]]);
 		Map.queuedActions = [];
 	});
 
@@ -258,6 +258,25 @@ describe('Map Service', () => {
 
 		const response = await LeafletMapService.locate('test');
 		assert.deepEqual(response, data);
+	});
+
+	it('Stops watching location', () => {
+		Map.map = {
+			stopLocate: sinon.spy(),
+			off: sinon.spy()
+		};
+		Map.stopLocate();
+
+		assert.isTrue(Map.map.stopLocate.calledOnce);
+		assert.isTrue(Map.map.off.calledOnce);
+	});
+
+	it('Queues stopLocate if no map yet', () => {
+		Map.map = null;
+		Map.stopLocate();
+		assert.isTrue(Map.queuedActions.length === 1);
+		assert.deepEqual(Map.queuedActions, [['stopLocate', []]]);
+		Map.queuedActions = [];
 	});
 
 });

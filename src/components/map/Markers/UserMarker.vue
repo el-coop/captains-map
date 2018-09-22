@@ -1,13 +1,12 @@
 <template>
-	<div>
+	<div class="map__user-marker" @click="onClick">
 		<user-accuracy-marker v-if="accuracy !== null && lat !== null && lng !== null" :accuracy="accuracy" :lat="lat"
 							  :lng="lng"/>
 	</div>
 </template>
 
 <script>
-	import leaflet from 'leaflet';
-	import MarkerMixin from './MarkerMixin';
+	import MapObjectMixin from '../MapObjectMixin';
 	import UserMarkerMixin from './UserMarkerMixin';
 	import Map from '@/services/leaflet.service';
 	import UserAccuracyMarker from "./UserAccuracyMarker";
@@ -15,18 +14,22 @@
 	export default {
 		name: "UserMarker",
 		components: {UserAccuracyMarker},
-		mixins: [MarkerMixin, UserMarkerMixin],
+		mixins: [MapObjectMixin, UserMarkerMixin],
 
 		data() {
 			return {
 				lat: null,
 				lng: null,
 				accuracy: 100,
+				iconSize: 20
 			}
+		},
+		beforeDestroy() {
+			Map.stopLocate();
 		},
 
 		methods: {
-			prepareMapObject() {
+			setUp() {
 				Map.watchLocation(this.setLocation.bind(this));
 
 			},
@@ -42,20 +45,22 @@
 				this.lng = location.latlng.lng;
 
 				if (!this.mapObject) {
-					this.createObject(location.latlng);
+					this.prepareMapObject(location.latlng.lat, location.latlng.lng);
+					this.addToMap();
 				}
 				this.mapObject.setLatLng(location.latlng);
 			},
-
-			createObject(latLng) {
-				this.mapObject = leaflet.marker(latLng, {
-					icon: leaflet.divIcon({
-						html: `<div class="map__user-marker"></div>`,
-						iconSize: [20, 20]
-					})
-				}).on('click', this.onClick.bind(this));
-				this.addToMap();
-			}
 		},
 	}
 </script>
+
+<style lang="scss" scoped>
+	.map__user-marker {
+		box-shadow: inset 0 0 5px #06f, inset 0 0 5px #06f, inset 0 0 5px #06f, 0 0 5px #06f, 0 0 5px #06f, 0 0 5px #06f;
+		background-color: darken(#06f, 0.1);
+		border-radius: 50%;
+		border: 1px solid #fff;
+		width: 100%;
+		height: 100%;
+	}
+</style>

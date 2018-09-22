@@ -8,11 +8,12 @@
 				event: 'marker-click',
 				eventPayload: {},
 				mapObject: null,
+				iconSize: 'auto'
 			}
 		},
 
 		mounted() {
-			this.prepareMapObject();
+			this.setUp();
 			if (this.mapObject) {
 				this.addToMap();
 			}
@@ -23,20 +24,26 @@
 		},
 
 		methods: {
-			prepareMapObject() {
-				this.mapObject = leaflet.marker([29.972156439427465, -90.0618624687195], {
+			setUp() {
+				this.prepareMapObject();
+			},
+
+			prepareMapObject(lat, lng) {
+				lat = this.lat;
+				lng = this.lng;
+				this.mapObject = leaflet.marker([lat, lng], {
 					icon: leaflet.divIcon({
-						html: `<div class="map__marker"></div>`,
-						iconSize: ['auto', 'auto']
+						html: this.$el.outerHTML,
+						iconSize: [this.iconSize, this.iconSize]
 					})
 				}).on('click', this.onClick.bind(this));
 			},
 
 			addToMap() {
-				Map.addMarker(this.mapObject);
+				Map.addObject(this.mapObject);
 			},
 			removeFromMap() {
-				Map.removeMarker(this.mapObject);
+				Map.removeObject(this.mapObject);
 			},
 			onClick() {
 				this.$bus.$emit(this.event, this.payload);

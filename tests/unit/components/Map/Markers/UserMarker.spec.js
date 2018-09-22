@@ -28,7 +28,7 @@ describe('UserMarker.vue', () => {
 		const icon = sinon.spy();
 		const createIconStub = sinon.stub(leaflet, 'divIcon').returns(icon);
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(marker);
-		const addMarkerStub = sinon.stub(mapService, 'addMarker');
+		const addMarkerStub = sinon.stub(mapService, 'addObject');
 
 		const wrapper = shallowMount(UserMarker);
 
@@ -42,14 +42,11 @@ describe('UserMarker.vue', () => {
 
 		assert.isTrue(createIconStub.calledOnce);
 		assert.isTrue(createIconStub.calledWith({
-			html: `<div class="map__user-marker"></div>`,
+			html: wrapper.vm.$el.outerHTML,
 			iconSize: [20, 20]
 		}));
 		assert.isTrue(createMarkerStub.calledOnce);
-		assert.isTrue(createMarkerStub.calledWith({
-			lat: 0,
-			lng: 0
-		}, {icon}));
+		assert.isTrue(createMarkerStub.calledWith([0, 0], {icon}));
 		assert.isTrue(marker.on.calledOnce);
 		assert.isTrue(marker.on.calledWith('click'));
 		assert.isTrue(addMarkerStub.calledOnce);
@@ -64,7 +61,7 @@ describe('UserMarker.vue', () => {
 		const icon = sinon.spy();
 		const createIconStub = sinon.stub(leaflet, 'divIcon').returns(icon);
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(marker);
-		const addMarkerStub = sinon.stub(mapService, 'addMarker');
+		const addMarkerStub = sinon.stub(mapService, 'addObject');
 
 		const wrapper = shallowMount(UserMarker);
 
@@ -105,7 +102,7 @@ describe('UserMarker.vue', () => {
 
 	it('removes marker when destroyed', () => {
 		const marker = {};
-		const removeMarkerStub = sinon.stub(mapService, 'removeMarker');
+		const removeMarkerStub = sinon.stub(mapService, 'removeObject');
 
 		const wrapper = shallowMount(UserMarker);
 		wrapper.vm.mapObject = marker;

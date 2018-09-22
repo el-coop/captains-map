@@ -205,4 +205,24 @@ describe('Marker Store', () => {
 		});
 	});
 
+	it('Toggles userMarker on', () => {
+		const state = {
+			userMarker: false
+		};
+
+		markersStore.mutations.toggleUserMarker(state);
+
+		assert.isTrue(state.userMarker);
+	});
+
+	it('Toggles userMarker off', () => {
+		const state = {
+			userMarker: true
+		};
+
+		markersStore.mutations.toggleUserMarker(state);
+
+		assert.isFalse(state.userMarker);
+	});
+
 });

@@ -1,7 +1,8 @@
 <template>
 	<div :class="`zoom-${zoomStatus}`">
 		<div class="map" ref="map">
-			<user-marker/>
+			<user-marker-control/>
+			<user-marker v-if="userMarker"/>
 			<map-marker v-for="marker in markers" :marker="marker" :key="marker.id"/>
 		</div>
 	</div>
@@ -12,6 +13,7 @@
 	import map from '@/services/leaflet.service';
 	import MapMarker from './Markers/MapMarker';
 	import UserMarker from './Markers/UserMarker';
+	import UserMarkerControl from "@/components/map/Controls/UserMarkerControl";
 
 	export default {
 		name: "map-view",
@@ -26,6 +28,7 @@
 		},
 
 		components: {
+			UserMarkerControl,
 			MapMarker,
 			UserMarker
 		},
@@ -61,6 +64,9 @@
 		computed: {
 			markers() {
 				return this.$store.state.Markers.markers;
+			},
+			userMarker() {
+				return this.$store.state.Markers.userMarker;
 			}
 		},
 

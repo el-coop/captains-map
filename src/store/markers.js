@@ -5,6 +5,7 @@ export default {
 
 	state: {
 		markers: [],
+		userMarker: false
 	},
 	mutations: {
 		add(state, marker) {
@@ -19,6 +20,10 @@ export default {
 
 		clear(state) {
 			state.markers = [];
+		},
+
+		toggleUserMarker(state) {
+			state.userMarker = !state.userMarker;
 		}
 
 	},

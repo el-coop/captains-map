@@ -18,7 +18,7 @@ describe('MapMarker.vue', () => {
 		const icon = sinon.spy();
 		const createIconStub = sinon.stub(leaflet, 'divIcon').returns(icon);
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(marker);
-		const addMarkerStub = sinon.stub(mapService, 'addMarker');
+		const addMarkerStub = sinon.stub(mapService, 'addObject');
 		const wrapper = shallowMount(MapMarker, {
 			propsData: {
 				marker: {
@@ -34,7 +34,7 @@ describe('MapMarker.vue', () => {
 		assert.isTrue(wrapper.find('div').exists());
 		assert.isTrue(createIconStub.calledOnce);
 		assert.isTrue(createIconStub.calledWith({
-			html: '<div class="map__icon-wrapper"><img src="/api/thumbnails/test.jpg" class="map__icon-image"></div>',
+			html: wrapper.vm.$el.outerHTML,
 			iconSize: ['auto', 'auto']
 		}));
 		assert.isTrue(createMarkerStub.calledOnce);
@@ -49,8 +49,8 @@ describe('MapMarker.vue', () => {
 		const marker = {};
 		marker.on = sinon.stub().returns(marker);
 		sinon.stub(leaflet, 'marker').returns(marker);
-		sinon.stub(mapService, 'addMarker');
-		const removeMarkerStub = sinon.stub(mapService, 'removeMarker');
+		sinon.stub(mapService, 'addObject');
+		const removeMarkerStub = sinon.stub(mapService, 'removeObject');
 
 		const wrapper = shallowMount(MapMarker, {
 			propsData: {
@@ -81,7 +81,7 @@ describe('MapMarker.vue', () => {
 		const marker = {};
 		marker.on = sinon.stub().returns(marker);
 		sinon.stub(leaflet, 'marker').returns(marker);
-		sinon.stub(mapService, 'addMarker');
+		sinon.stub(mapService, 'addObject');
 
 		const wrapper = shallowMount(MapMarker, {
 			mocks: {

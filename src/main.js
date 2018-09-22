@@ -14,6 +14,7 @@ import {
 	faCameraRetro,
 	faCopy,
 	faPowerOff,
+	faGlobe
 } from '@fortawesome/free-solid-svg-icons';
 import Meta from 'vue-meta';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -23,7 +24,7 @@ import MapView from './components/map/Map';
 import Router from 'vue-router';
 
 
-library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faPowerOff);
+library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faPowerOff, faGlobe);
 
 Vue.use(VModal);
 Vue.use(Router);

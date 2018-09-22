@@ -32,19 +32,19 @@ export class LeafletMapService {
 		}
 	}
 
-	addMarker(marker) {
+	addObject(marker) {
 		if (this.map) {
 			marker.addTo(this.map);
 		} else {
-			this.queuedActions.push(['addMarker', [marker]]);
+			this.queuedActions.push(['addObject', [marker]]);
 		}
 	}
 
-	removeMarker(marker) {
+	removeObject(marker) {
 		if (this.map) {
 			this.map.removeLayer(marker);
 		} else {
-			this.queuedActions.push(['removeMarker', [marker]]);
+			this.queuedActions.push(['removeObject', [marker]]);
 		}
 	}
 
@@ -87,11 +87,20 @@ export class LeafletMapService {
 		}
 	}
 
+	stopLocate() {
+		if (this.map) {
+			this.map.stopLocate();
+			this.map.off("locationfound");
+		} else {
+			this.queuedActions.push(['stopLocate', []]);
+		}
+	}
+
 	on(event, callback) {
 		if (this.map) {
 			this.map.on(event, callback);
 		} else {
-			this.queuedActions.push(['on', [event,callback]]);
+			this.queuedActions.push(['on', [event, callback]]);
 		}
 	}
 

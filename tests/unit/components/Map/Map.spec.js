@@ -23,7 +23,7 @@ describe('Map.vue', () => {
 			}
 		});
 		assert.isTrue(wrapper.find('.map').exists());
-		assert.isTrue(wrapper.find('usermarker-stub').exists());
+		assert.isFalse(wrapper.find('usermarker-stub').exists());
 		assert.isFalse(wrapper.find('mapmarker-stub').exists());
 	});
 
@@ -64,6 +64,22 @@ describe('Map.vue', () => {
 			}
 		});
 		assert.equal(wrapper.findAll('mapmarker-stub').length, 3);
+	});
+
+	it('renders userMarker', () => {
+		const wrapper = shallowMount(Map, {
+			mocks: {
+				$store: {
+					state: {
+						Markers: {
+							markers: [],
+							userMarker: true
+						}
+					}
+				}
+			}
+		});
+		assert.isTrue(wrapper.find('usermarker-stub').exists());
 	});
 
 	it('reacts to zoom change', () => {
