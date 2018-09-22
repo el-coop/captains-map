@@ -57,6 +57,7 @@
 		async created() {
 
 			this.$bus.$on('map-right-click', this.createMarker);
+			this.$bus.$on('user-marker-click', this.createMarker);
 			this.$bus.$on('marker-click', this.showMarker);
 
 			const response = await this.$store.dispatch('Markers/load', Auth.getUserDetails().username);
@@ -74,7 +75,11 @@
 
 		methods: {
 			createMarker(data) {
-				this.latLng = data.event.latlng;
+				if (data.lat && data.lng) {
+					this.latLng = data;
+				} else {
+					this.latLng = data.event.latlng;
+				}
 				this.$modal.show('create-marker');
 			},
 
