@@ -8,6 +8,7 @@ export class LeafletMapService {
 	constructor() {
 		this.map = null;
 		this.queuedActions = [];
+		this.location = null;
 	}
 
 	init(el, center, zoom) {
@@ -66,11 +67,16 @@ export class LeafletMapService {
 
 	goToCurrentLocation() {
 		if (this.map) {
-			this.map.locate({
-				watch: false,
-				setView: true,
-				maxZoom: 17
-			});
+			if (!this.location) {
+				this.map.locate({
+					watch: false,
+					setView: true,
+					maxZoom: 17,
+					enableHighAccuracy: true
+				});
+			} else {
+				this.setView(this.location, 17)
+			}
 		} else {
 			this.queuedActions.push(['goToCurrentLocation', []]);
 		}
@@ -84,6 +90,9 @@ export class LeafletMapService {
 				enableHighAccuracy: true
 			});
 			this.on("locationfound", callback);
+			this.on("locationfound", (location) => {
+				this.location = location.latlng;
+			});
 		} else {
 			this.queuedActions.push(['watchLocation', [callback]]);
 		}
@@ -93,6 +102,7 @@ export class LeafletMapService {
 		if (this.map) {
 			this.map.stopLocate();
 			this.map.off("locationfound");
+			this.location = null;
 		} else {
 			this.queuedActions.push(['stopLocate', []]);
 		}

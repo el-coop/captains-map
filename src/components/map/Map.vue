@@ -3,7 +3,7 @@
 		<div class="map" ref="map">
 			<user-marker-control/>
 			<user-marker v-if="userMarker"/>
-			<map-marker v-for="marker in markers" :marker="marker" :key="marker.id"/>
+			<map-marker v-for="marker in markers" :marker="marker" :key="`${Date.now()}_${marker.id}`"/>
 		</div>
 	</div>
 </template>
