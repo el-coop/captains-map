@@ -168,9 +168,20 @@ describe('Map Service', () => {
 
 		assert.isTrue(Map.map.locate.calledOnce);
 		assert.isTrue(Map.map.locate.calledWith({
+			watch: false,
 			setView: true,
-			maxZoom: 17
+			maxZoom: 17,
+			enableHighAccuracy: true
 		}));
+	});
+
+	it('Goes to location that is already found', () => {
+		Map.location = [0,0];
+		const setViewStub = sinon.stub(Map,'setView');
+		Map.goToCurrentLocation();
+
+		assert.isTrue(setViewStub.calledOnce);
+		assert.isTrue(setViewStub.calledWith([0,0],17));
 	});
 
 	it('Queues goToUserLocation if no map yet', () => {
@@ -193,11 +204,13 @@ describe('Map Service', () => {
 		assert.isTrue(Map.map.locate.calledOnce);
 		assert.isTrue(Map.map.locate.calledWith({
 			watch: true,
+			setView: false,
 			enableHighAccuracy: true
 		}));
 
-		assert.isTrue(Map.map.on.calledOnce);
+		assert.isTrue(Map.map.on.calledTwice);
 		assert.isTrue(Map.map.on.calledWith('locationfound', callback));
+
 	});
 
 	it('Queues watchLocation if no map yet', () => {
@@ -265,10 +278,12 @@ describe('Map Service', () => {
 			stopLocate: sinon.spy(),
 			off: sinon.spy()
 		};
+		Map.location = [];
 		Map.stopLocate();
 
 		assert.isTrue(Map.map.stopLocate.calledOnce);
 		assert.isTrue(Map.map.off.calledOnce);
+		assert.isNull(Map.location);
 	});
 
 	it('Queues stopLocate if no map yet', () => {
