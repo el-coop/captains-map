@@ -1,5 +1,5 @@
 <template>
-	<div class="map__user-marker" @click="onClick">
+	<div class="map__user-marker map__marker" @click="onClick">
 		<user-accuracy-marker v-if="accuracy !== null && lat !== null && lng !== null" :accuracy="accuracy" :lat="lat"
 							  :lng="lng"/>
 	</div>

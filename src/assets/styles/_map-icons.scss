@@ -1,3 +1,9 @@
+.map {
+	> .map__marker {
+		display: none;
+	}
+}
+
 .map__icon-wrapper {
 	height: 35px;
 	@media #{$above-phone} {

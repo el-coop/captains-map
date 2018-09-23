@@ -1,5 +1,5 @@
 <template>
-	<div class="map__icon-wrapper">
+	<div class="map__icon-wrapper map__marker">
 		<img :src="path" :class="`map__icon-${marker.type}`">
 	</div>
 </template>

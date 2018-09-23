@@ -1,5 +1,5 @@
 <template>
-	<div class="leaflet-bar leaflet-control user-marker-control">
+	<div class="leaflet-bar leaflet-control user-marker-control map__marker">
 		<a @click="toggleMarker">
 			<font-awesome-icon icon="globe"/>
 		</a>
