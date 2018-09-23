@@ -67,6 +67,7 @@ export class LeafletMapService {
 	goToCurrentLocation() {
 		if (this.map) {
 			this.map.locate({
+				watch: false,
 				setView: true,
 				maxZoom: 17
 			});
@@ -79,6 +80,7 @@ export class LeafletMapService {
 		if (this.map) {
 			this.map.locate({
 				watch: true,
+				setView: false,
 				enableHighAccuracy: true
 			});
 			this.on("locationfound", callback);
