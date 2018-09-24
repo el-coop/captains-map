@@ -1,8 +1,8 @@
 <template>
-    <form @submit.prevent="submit">
-        <slot name="errors"></slot>
-        <slot></slot>
-    </form>
+	<form @submit.prevent="submit">
+		<slot name="errors"></slot>
+		<slot></slot>
+	</form>
 </template>
 
 <script>
@@ -68,6 +68,9 @@
 				this.$emit('submitted', response);
 				if (response.data.errors) {
 					return this.formatErrors(response.data.errors);
+				}
+				if (response.status !== 200) {
+					return;
 				}
 				this.$el.reset();
 			},

@@ -96,6 +96,12 @@
 			submitted(response) {
 				this.loading = false;
 				if (response.status !== 200) {
+					if (!response.data.errors) {
+						this.$toast.error('Please try again at a later time', 'Submit failed.', {
+							timeout: 2000,
+							position: 'bottomCenter',
+						});
+					}
 					return;
 				}
 				this.$store.commit('Markers/add', response.data);
