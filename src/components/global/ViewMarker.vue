@@ -1,5 +1,5 @@
 <template>
-	<slide-up-modal name="view-marker">
+	<slide-up-modal name="view-marker" :route-name="routeName">
 		<template v-if="marker">
 			<view-marker-header slot="header" :marker="marker"/>
 			<component slot="image" :is="marker.media.type === 'instagram' ? 'Instagram': 'Photo'"
@@ -66,8 +66,16 @@
 			canDelete() {
 				let user = Auth.getUserDetails();
 				return user && user.id === this.marker.user_id
+			},
+
+			routeName(){
+				if(! this.marker){
+					return null;
+				}
+				return `${this.marker.user.username}/${this.marker.id}`;
 			}
-		}
+		},
+
 	}
 </script>
 

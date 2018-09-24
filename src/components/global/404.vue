@@ -1,9 +1,9 @@
 <template>
-	<slide-up-modal name="404" @before-close="navigateHome" @before-open="beforeOpen">
+	<slide-up-modal name="404" @before-close="navigateHome" @before-open="beforeOpen" route-name="404">
 		<p slot="header" class="card-header-title">404</p>
 		<template slot="content">
 			<div class="content">
-				<h5	 class="has-text-centered is-size-5 ">You uncovered Atlantis! Unfortunately it's not on our map.</h5>
+				<h5 class="has-text-centered is-size-5 ">You uncovered Atlantis! Unfortunately it's not on our map.</h5>
 			</div>
 			<div class="tear-wrapper">
 				<img :src="atlantis" class="atlantis">
@@ -13,7 +13,7 @@
 		<template slot="footer">
 			<p class="card-footer-item">
 				<span>
-					<a href="#" @click="$modal.hide('404')">Take me out of here!</a>
+					<a @click="$modal.hide('404')">Take me out of here!</a>
 				</span>
 			</p>
 		</template>

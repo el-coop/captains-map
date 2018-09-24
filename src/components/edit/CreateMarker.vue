@@ -6,7 +6,7 @@
             time: form.dateTime,
 		    'media.file': null
         }" action="marker/create">
-		<slide-up-modal name="create-marker" @closed="resetForm">
+		<slide-up-modal name="create-marker" @closed="resetForm" route-name="edit">
 			<p slot="header" class="card-header-title">Create new marker</p>
 			<template slot="content">
 				<create-marker-type-toggle v-model="form.media.type"/>

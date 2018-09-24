@@ -4,7 +4,7 @@ import EditLayout from '@/views/EditLayout';
 import Auth from './middleware/Auth.middleware';
 
 
-export default new Router({
+const router = new Router({
 	mode: 'history',
 	routes: [
 		{
@@ -19,4 +19,10 @@ export default new Router({
 			component: ViewLayout
 		},
 	]
-})
+});
+
+router.pushRoute = function (location) {
+	history.pushState(null, null, `${window.location.protocol}//${window.location.host}/${location}`);
+};
+
+export default router;

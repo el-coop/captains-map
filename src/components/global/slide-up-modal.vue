@@ -4,6 +4,7 @@
 		   :scrollable="true"
 		   :pivotY="pivotY"
 		   @before-open="beforeOpen"
+		   @opened="opened"
 		   @closed="closed"
 		   @before-close="beforeClose"
 		   ref="modal">
@@ -41,6 +42,10 @@
 			width: {
 				type: Number,
 				default: 600
+			},
+			routeName: {
+				type: String,
+				default: null
 			}
 		},
 
@@ -48,12 +53,23 @@
 			return {
 				transition: '',
 				pivotY: 0.5,
-				height: 'auto'
+				height: 'auto',
+				isOpen: false
 			};
+		},
+
+		mounted() {
+			window.addEventListener('popstate', () => {
+				if (this.isOpen) {
+					this.isOpen = false;
+					this.$modal.hide(this.name);
+				}
+			});
 		},
 
 		methods: {
 			beforeOpen() {
+				this.isOpen = true;
 				this.$emit('before-open');
 				if (window.innerWidth < 769) {
 					this.transition = 'slide-up';
@@ -63,15 +79,22 @@
 					this.pivotY = 0.5;
 				}
 			},
+			opened() {
+				this.$router.pushRoute(this.routeName);
+			},
 
 			closed() {
 				this.$emit('closed');
 			},
 
 			beforeClose() {
+				if (this.isOpen) {
+					this.isOpen = false;
+					this.$router.back();
+				}
 				this.$emit('before-close');
 			}
-		}
+		},
 	}
 </script>
 
