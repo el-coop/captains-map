@@ -6,7 +6,7 @@
 
 <script>
 	import MapObjectMixin from '../MapObjectMixin';
-
+	import leaflet from 'leaflet';
 
 	export default {
 		name: "map-marker",
@@ -28,6 +28,20 @@
 			}
 		},
 
+		methods: {
+			prepareMapObject(lat, lng) {
+				lat = this.lat;
+				lng = this.lng;
+				this.mapObject = leaflet.marker([lat, lng], {
+					icon: leaflet.divIcon({
+						html: this.$el.outerHTML,
+						iconSize: [this.iconSize, this.iconSize]
+					})
+				}).on('click', this.onClick.bind(this));
+				this.mapObject.id = this.marker.id;
+			},
+		},
+
 		computed: {
 			path() {
 				if (this.marker.media.type === 'instagram') {
@@ -35,6 +49,6 @@
 				}
 				return `/api${this.marker.media.path.replace('images', 'thumbnails')}`;
 			}
-		}
+		},
 	}
 </script>

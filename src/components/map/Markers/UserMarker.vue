@@ -50,6 +50,13 @@
 				}
 				this.mapObject.setLatLng(location.latlng);
 			},
+			addObject(marker) {
+				this.$parent.addObject(marker);
+			},
+
+			removeObject(marker) {
+				this.$parent.removeObject(marker);
+			}
 		},
 	}
 </script>

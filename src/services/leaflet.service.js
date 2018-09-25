@@ -1,8 +1,10 @@
 import leaflet from 'leaflet';
 import './leafletCache.service'
 import http from './http.service';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 import { tileLayer, geocoder } from '@/settings/leaflet.settings';
+import 'leaflet.markercluster/dist/leaflet.markercluster-src';
 
 export class LeafletMapService {
 	constructor() {

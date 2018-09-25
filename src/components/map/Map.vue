@@ -3,17 +3,21 @@
 		<div class="map" ref="map">
 			<user-marker-control/>
 			<user-marker v-if="userMarker"/>
-			<map-marker v-for="marker in markers" :marker="marker" :key="`${Date.now()}_${marker.id}`"/>
+			<marker-cluster ref="userMarker">
+				<map-marker v-for="marker in markers" :layer="$refs.userMarker" :marker="marker"
+							:key="`${Date.now()}_${marker.id}`"/>
+			</marker-cluster>
 		</div>
 	</div>
 </template>
 
 <script>
 
-	import map from '@/services/leaflet.service';
+	import Map from '@/services/leaflet.service';
 	import MapMarker from './Markers/MapMarker';
 	import UserMarker from './Markers/UserMarker';
 	import UserMarkerControl from "@/components/map/Controls/UserMarkerControl";
+	import MarkerCluster from "@/components/map/Layers/MarkerCluster";
 
 	export default {
 		name: "map-view",
@@ -28,6 +32,7 @@
 		},
 
 		components: {
+			MarkerCluster,
 			UserMarkerControl,
 			MapMarker,
 			UserMarker
@@ -52,6 +57,13 @@
 					return this.zoomStatus = 'normal';
 				}
 				return this.zoomStatus = 'close';
+			},
+
+			addObject(object) {
+				Map.addObject(object);
+			},
+			removeObject(object) {
+				Map.removeObject(object);
 			}
 		},
 
@@ -67,13 +79,13 @@
 			},
 			userMarker() {
 				return this.$store.state.Markers.userMarker;
-			}
+			},
 		},
 
 		mounted() {
-			map.init(this.$refs.map, this.center, this.zoom);
-			map.on('contextmenu', this.rightClick);
-			map.on('zoomend', this.handleZoom);
+			Map.init(this.$refs.map, this.center, this.zoom);
+			Map.on('contextmenu', this.rightClick);
+			Map.on('zoomend', this.handleZoom);
 		}
 	}
 </script>

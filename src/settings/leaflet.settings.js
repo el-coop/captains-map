@@ -1,8 +1,3 @@
-import leaflet from 'leaflet';
-
-import markerIcon from '@/assets/images/marker-icon-2x.png';
-import shadowIcon from '@/assets/images/marker-shadow.png';
-
 let mapbox_key = process.env.VUE_APP_MAPBOX_TOKEN;
 
 export let mapboxLayer = {
