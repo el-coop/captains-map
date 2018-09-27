@@ -19,9 +19,14 @@ describe('UserAccuracyMarker.vue', () => {
 		const icon = sinon.spy();
 		const createIconStub = sinon.stub(leaflet, 'divIcon').returns(icon);
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(marker);
-		const addMarkerStub = sinon.stub(mapService, 'addObject');
+		const parent = {
+			methods: {
+				addObject: sinon.spy()
+			}
+		};
 
 		const wrapper = shallowMount(UserAccuracyMarker, {
+			parentComponent: parent,
 			propsData: {
 				accuracy: 100,
 				lat: 10,
@@ -39,8 +44,8 @@ describe('UserAccuracyMarker.vue', () => {
 		assert.isTrue(createMarkerStub.calledWith([10, 10], {icon}));
 		assert.isTrue(marker.on.calledOnce);
 		assert.isTrue(marker.on.calledWith('click'));
-		assert.isTrue(addMarkerStub.calledOnce);
-		assert.isTrue(addMarkerStub.calledWith(marker));
+		assert.isTrue(parent.methods.addObject.calledOnce);
+		assert.isTrue(parent.methods.addObject.calledWith(marker));
 	});
 
 
@@ -50,9 +55,14 @@ describe('UserAccuracyMarker.vue', () => {
 		marker.on = sinon.stub();
 
 		sinon.stub(leaflet, 'marker').returns(marker);
-		sinon.stub(mapService, 'addObject');
+		const parent = {
+			methods: {
+				addObject: sinon.spy()
+			}
+		};
 
 		const wrapper = shallowMount(UserAccuracyMarker, {
+			parentComponent: parent,
 			propsData: {
 				accuracy: 100,
 				lat: 10,
@@ -86,8 +96,14 @@ describe('UserAccuracyMarker.vue', () => {
 			},
 			setIcon: sinon.spy()
 		};
+		const parent = {
+			methods: {
+				addObject: sinon.spy()
+			}
+		};
 
 		const wrapper = shallowMount(UserAccuracyMarker, {
+			parentComponent: parent,
 			propsData: {
 				accuracy: 100,
 				lat: 10,
@@ -112,9 +128,15 @@ describe('UserAccuracyMarker.vue', () => {
 
 	it('It removes marker when destroyed', () => {
 		const marker = {};
-		const removeMarkerStub = sinon.stub(mapService, 'removeObject');
+		const parent = {
+			methods: {
+				addObject: sinon.spy(),
+				removeObject: sinon.spy()
+			}
+		};
 
 		const wrapper = shallowMount(UserAccuracyMarker, {
+			parentComponent: parent,
 			propsData: {
 				accuracy: 100,
 				lat: 10,
@@ -124,8 +146,8 @@ describe('UserAccuracyMarker.vue', () => {
 		wrapper.vm.mapObject = marker;
 
 		wrapper.destroy();
-		assert.isTrue(removeMarkerStub.calledOnce);
-		assert.isTrue(removeMarkerStub.calledWith(marker));
+		assert.isTrue(parent.methods.removeObject.calledOnce);
+		assert.isTrue(parent.methods.removeObject.calledWith(marker));
 	});
 
 
@@ -136,8 +158,15 @@ describe('UserAccuracyMarker.vue', () => {
 			}
 		};
 		const busEmit = sinon.stub($bus, '$emit');
+		const parent = {
+			methods: {
+				addObject: sinon.spy(),
+				removeObject: sinon.spy()
+			}
+		};
 
 		const wrapper = shallowMount(UserAccuracyMarker, {
+			parentComponent: parent,
 			mocks: {
 				$bus,
 			},

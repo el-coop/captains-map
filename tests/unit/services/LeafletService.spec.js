@@ -71,6 +71,7 @@ describe('Map Service', () => {
 		const callback = {};
 		const addMarkerStub = sinon.stub(Map, 'addObject');
 		const watchLocationStub = sinon.stub(Map, 'watchLocation');
+		Map.queuedActions = [];
 		Map.queuedActions.push(['addObject', [marker]]);
 		Map.queuedActions.push(['addObject', [marker]]);
 		Map.queuedActions.push(['watchLocation', [callback]]);

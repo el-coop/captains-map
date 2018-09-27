@@ -13,13 +13,17 @@ describe('MapMarker.vue', () => {
 
 	it('Adds marker to map on creation', () => {
 		const marker = {};
+		const parent = {
+			methods: {
+				addObject: sinon.spy()
+			}
+		};
 		marker.on = sinon.stub().returns(marker);
-
 		const icon = sinon.spy();
 		const createIconStub = sinon.stub(leaflet, 'divIcon').returns(icon);
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(marker);
-		const addMarkerStub = sinon.stub(mapService, 'addObject');
 		const wrapper = shallowMount(MapMarker, {
+			parentComponent: parent,
 			propsData: {
 				marker: {
 					media: {
@@ -38,11 +42,10 @@ describe('MapMarker.vue', () => {
 			iconSize: ['auto', 'auto']
 		}));
 		assert.isTrue(createMarkerStub.calledOnce);
-		assert.isTrue(createMarkerStub.calledWith([0, 0], {icon}));
+		assert.isTrue(parent.methods.addObject.calledOnce);
+		assert.isTrue(parent.methods.addObject.calledWith(marker));
 		assert.isTrue(marker.on.calledOnce);
 		assert.isTrue(marker.on.calledWith('click'));
-		assert.isTrue(addMarkerStub.calledOnce);
-		assert.isTrue(addMarkerStub.calledWith(marker));
 	});
 
 	it('It removes marker when destroyed', () => {
@@ -50,9 +53,15 @@ describe('MapMarker.vue', () => {
 		marker.on = sinon.stub().returns(marker);
 		sinon.stub(leaflet, 'marker').returns(marker);
 		sinon.stub(mapService, 'addObject');
-		const removeMarkerStub = sinon.stub(mapService, 'removeObject');
+		const parent = {
+			methods: {
+				addObject: sinon.spy(),
+				removeObject: sinon.spy()
+			}
+		};
 
 		const wrapper = shallowMount(MapMarker, {
+			parentComponent: parent,
 			propsData: {
 				marker: {
 					media: {
@@ -66,8 +75,8 @@ describe('MapMarker.vue', () => {
 		});
 
 		wrapper.destroy();
-		assert.isTrue(removeMarkerStub.calledOnce);
-		assert.isTrue(removeMarkerStub.calledWith(marker));
+		assert.isTrue(parent.methods.removeObject.calledOnce);
+		assert.isTrue(parent.methods.removeObject.calledWith(marker));
 	});
 
 
@@ -77,13 +86,19 @@ describe('MapMarker.vue', () => {
 
 			}
 		};
+		const parent = {
+			methods: {
+				addObject: sinon.spy(),
+				removeObject: sinon.spy()
+			}
+		};
 		const busEmit = sinon.stub($bus, '$emit');
 		const marker = {};
 		marker.on = sinon.stub().returns(marker);
 		sinon.stub(leaflet, 'marker').returns(marker);
-		sinon.stub(mapService, 'addObject');
 
 		const wrapper = shallowMount(MapMarker, {
+			parentComponent: parent,
 			mocks: {
 				$bus,
 			},

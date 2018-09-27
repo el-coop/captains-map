@@ -1,8 +1,6 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import UserMarkerControl from '@/components/map/Controls/UserMarkerControl';
-import leaflet from 'leaflet';
-import mapService from '@/services/leaflet.service';
 import sinon from 'sinon';
 
 describe('UserMarkerControl.vue', () => {
@@ -12,7 +10,13 @@ describe('UserMarkerControl.vue', () => {
 	});
 
 	it('Renders', () => {
+		const parent = {
+			methods: {
+				addObject: sinon.spy()
+			}
+		};
 		const wrapper = shallowMount(UserMarkerControl, {
+			parentComponent: parent,
 			stubs: {
 				'font-awesome-icon': true
 			},
@@ -22,6 +26,12 @@ describe('UserMarkerControl.vue', () => {
 	});
 
 	it('Toggles on user marker on click', () => {
+
+		const parent = {
+			methods: {
+				addObject: sinon.spy()
+			}
+		};
 		const $store = {
 			commit: sinon.spy(),
 			state: {
@@ -34,6 +44,7 @@ describe('UserMarkerControl.vue', () => {
 			info: sinon.spy()
 		};
 		const wrapper = shallowMount(UserMarkerControl, {
+			parentComponent: parent,
 			stubs: {
 				'font-awesome-icon': true
 			},
@@ -54,6 +65,11 @@ describe('UserMarkerControl.vue', () => {
 	});
 
 	it('Toggles off user marker on click', () => {
+		const parent = {
+			methods: {
+				addObject: sinon.spy()
+			}
+		};
 		const $store = {
 			commit: sinon.spy(),
 			state: {
@@ -66,6 +82,7 @@ describe('UserMarkerControl.vue', () => {
 			info: sinon.spy()
 		};
 		const wrapper = shallowMount(UserMarkerControl, {
+			parentComponent: parent,
 			stubs: {
 				'font-awesome-icon': true
 			},
@@ -86,29 +103,40 @@ describe('UserMarkerControl.vue', () => {
 	});
 
 	it('Adds control when created', () => {
-		const addObjectStub = sinon.stub(mapService, 'addObject');
+		const parent = {
+			methods: {
+				addObject: sinon.spy()
+			}
+		};
 		const wrapper = shallowMount(UserMarkerControl, {
+			parentComponent: parent,
 			stubs: {
 				'font-awesome-icon': true
 			}
 		});
 
-		assert.isTrue(addObjectStub.calledOnce);
-		assert.isTrue(addObjectStub.calledWith(wrapper.vm.mapObject));
+		assert.isTrue(parent.methods.addObject.calledOnce);
+		assert.isTrue(parent.methods.addObject.calledWith(wrapper.vm.mapObject));
 	});
 
 	it('Removes control when destroyed', () => {
-		sinon.stub(mapService, 'addObject');
-		const removeObjectStub = sinon.stub(mapService, 'removeObject');
+		const parent = {
+			methods: {
+				addObject: sinon.spy(),
+				removeObject: sinon.spy(),
+			}
+		};
 		const wrapper = shallowMount(UserMarkerControl, {
+			parentComponent: parent,
+
 			stubs: {
 				'font-awesome-icon': true
 			}
 		});
 
 		wrapper.destroy();
-		assert.isTrue(removeObjectStub.calledOnce);
-		assert.isTrue(removeObjectStub.calledWith(wrapper.vm.mapObject));
+		assert.isTrue(parent.methods.removeObject.calledOnce);
+		assert.isTrue(parent.methods.removeObject.calledWith(wrapper.vm.mapObject));
 	});
 
 });
