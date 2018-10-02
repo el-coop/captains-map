@@ -1,15 +1,20 @@
 import $http from '../services/http.service';
 
+const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+
 export default {
 	namespaced: true,
 
 	state: {
 		markers: [],
-		userMarker: false
+		userMarker: false,
+		hasNext: false,
+		username: '',
+		page: 0
 	},
 	mutations: {
 		add(state, marker) {
-			state.markers.unshift(marker);
+			state.markers.push(marker);
 		},
 
 		remove(state, id) {
@@ -24,16 +29,28 @@ export default {
 
 		toggleUserMarker(state) {
 			state.userMarker = !state.userMarker;
+		},
+
+		setUser(state, username) {
+			state.username = username;
+		},
+
+		changePage(state, value) {
+			state.page += value;
 		}
 
 	},
 	actions: {
-		async load({commit}, username = '') {
+		async load({commit, state}, startingId = false) {
 			try {
-				commit('clear');
-				const response = await $http.get(`marker/${username}`);
+				if(! startingId){
+					commit('clear');
+				}
+				const response = await $http.get(`marker/${state.username}${ startingId ? `?startingId=${startingId}` : ''}`);
 				if (response.status === 200 || response.status === 'cached') {
-					response.data.forEach((item) => {
+					const markers = response.data.markers;
+					state.hasNext = response.data.pagination.hasNext;
+					markers.forEach((item) => {
 						commit('add', item)
 					});
 				}
@@ -50,6 +67,22 @@ export default {
 				return true;
 			}
 			return false
+		},
+
+		previousPage({commit, state}) {
+			if (state.page > 0) {
+				commit('changePage', -1);
+			}
+		},
+
+		async nextPage({commit, state, dispatch}) {
+			if (state.markers.length > state.page * pageSize + pageSize) {
+				return commit('changePage', +1);
+			}
+			if (state.hasNext) {
+				await dispatch('load', state.markers[state.markers.length - 1].id);
+				return commit('changePage', +1);
+			}
 		}
 	}
 }

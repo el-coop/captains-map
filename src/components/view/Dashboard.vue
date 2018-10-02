@@ -77,9 +77,8 @@
 				let markersRoute = '';
 				let markers = [];
 
-				if (this.$route.params.username) {
-					markersRoute = this.$route.params.username;
-				}
+				this.$store.commit('Markers/setUser', this.$route.params.username || '');
+
 				const response = await this.$store.dispatch('Markers/load', markersRoute);
 				if (response.status !== 404) {
 					if (response.status === 'cached') {

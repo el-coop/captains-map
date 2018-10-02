@@ -3,6 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import Map from '@/components/map/Map.vue';
 import mapService from '@/services/leaflet.service';
 import sinon from 'sinon';
+const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
 describe('Map.vue', () => {
 
@@ -16,7 +17,8 @@ describe('Map.vue', () => {
 				$store: {
 					state: {
 						Markers: {
-							markers: []
+							markers: [],
+							page: 0
 						}
 					}
 				}
@@ -35,7 +37,8 @@ describe('Map.vue', () => {
 				$store: {
 					state: {
 						Markers: {
-							markers: {}
+							markers: [],
+							page: 0
 						}
 					}
 				}
@@ -56,8 +59,27 @@ describe('Map.vue', () => {
 					state: {
 						Markers: {
 							markers: [
-								{}, {}, {}
-							]
+								{id:1}, {id:2}, {id:3}
+							],
+							page: 0
+						}
+					}
+				}
+			}
+		});
+		assert.equal(wrapper.findAll('mapmarker-stub').length, 3);
+	});
+
+	it('renders second page of markers markers', () => {
+		const markers = new Array(pageSize).fill({});
+		markers.push({id:1},{id:2},{id:3})
+		const wrapper = shallowMount(Map, {
+			mocks: {
+				$store: {
+					state: {
+						Markers: {
+							markers,
+							page: 1
 						}
 					}
 				}
@@ -73,7 +95,8 @@ describe('Map.vue', () => {
 					state: {
 						Markers: {
 							markers: [],
-							userMarker: true
+							userMarker: true,
+							page: 0
 						}
 					}
 				}
@@ -88,7 +111,8 @@ describe('Map.vue', () => {
 				$store: {
 					state: {
 						Markers: {
-							markers: []
+							markers: [],
+							page: 0
 						}
 					}
 				}
@@ -140,7 +164,8 @@ describe('Map.vue', () => {
 				$store: {
 					state: {
 						Markers: {
-							markers: []
+							markers: [],
+							page: 0
 						}
 					}
 				}

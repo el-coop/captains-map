@@ -60,7 +60,8 @@
 			this.$bus.$on('user-marker-click', this.createMarker);
 			this.$bus.$on('marker-click', this.showMarker);
 
-			const response = await this.$store.dispatch('Markers/load', Auth.getUserDetails().username);
+			this.$store.commit('Markers/setUser', Auth.getUserDetails().username);
+			const response = await this.$store.dispatch('Markers/load');
 			if (response.status === 'cached') {
 				this.$toast.info('Markers loaded from cache', '', {
 					position: 'bottomCenter'

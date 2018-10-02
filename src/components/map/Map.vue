@@ -75,7 +75,9 @@
 
 		computed: {
 			markers() {
-				return this.$store.state.Markers.markers;
+				const start = this.$store.state.Markers.page * process.env.VUE_APP_PAGE_SIZE;
+				const end = this.$store.state.Markers.page * process.env.VUE_APP_PAGE_SIZE + process.env.VUE_APP_PAGE_SIZE;
+				return this.$store.state.Markers.markers.slice(start, end);
 			},
 			userMarker() {
 				return this.$store.state.Markers.userMarker;
