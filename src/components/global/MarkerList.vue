@@ -1,11 +1,12 @@
 <template>
 	<div>
-		<ul>
+		<div class="loader" v-if="loading"></div>
+		<ul v-if="! loading">
 			<li v-for="marker in markers" class="media" :key="marker.id">
 				<marker-entry :marker="marker"></marker-entry>
 			</li>
 		</ul>
-		<div class="buttons has-addons" v-if="hasNext || hasPrev">
+		<div class="buttons has-addons" v-if="(hasNext || hasPrev) && ! loading">
 			<button class="button" @click="previousPage" :disabled="! hasPrev">< Previous</button>
 			<button class="button" @click="nextPage" :disabled="! hasNext">Next ></button>
 		</div>
@@ -32,6 +33,9 @@
 			},
 			hasPrev(){
 				return this.$store.state.Markers.page > 0;
+			},
+			loading(){
+				return this.$store.state.Markers.loading;
 			}
 		},
 
@@ -60,5 +64,9 @@
 		> .button {
 			flex: 1;
 		}
+	}
+
+	.loader {
+		margin: 1em auto;
 	}
 </style>

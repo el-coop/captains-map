@@ -101,7 +101,7 @@ describe('Marker Store', () => {
 		};
 		const state = {
 			hasNext: false,
-			username: ''
+			username: '',
 		};
 		const getStub = sinon.stub(http, 'get').callsFake(() => {
 			return {
@@ -160,7 +160,7 @@ describe('Marker Store', () => {
 		const response = await markersStore.actions.load({
 			commit: commitSpy,
 			state
-		},2);
+		}, 2);
 
 		assert.isTrue(getStub.calledOnce);
 		assert.isTrue(getStub.calledWith('marker/?startingId=2'));
@@ -357,9 +357,9 @@ describe('Marker Store', () => {
 		assert.isFalse(commit.called);
 	});
 
-	it('Commits next page and loads from server when hasNext',async () => {
+	it('Commits next page and loads from server when hasNext', async () => {
 		const state = {
-			markers: new Array(pageSize).fill({id:1}),
+			markers: new Array(pageSize).fill({id: 1}),
 			page: 0,
 			hasNext: true
 		};
@@ -381,7 +381,7 @@ describe('Marker Store', () => {
 
 	it('Commits next page when not on last page', async () => {
 		const state = {
-			markers: new Array(pageSize + 5).fill({id:1}),
+			markers: new Array(pageSize + 5).fill({id: 1}),
 			page: 0,
 			hasNext: false
 		};
@@ -399,7 +399,7 @@ describe('Marker Store', () => {
 	});
 
 
-	it('Doesnt commit next page when page is at max and no next page',async () => {
+	it('Doesnt commit next page when page is at max and no next page', async () => {
 		const state = {
 			markers: [{}],
 			page: 0,

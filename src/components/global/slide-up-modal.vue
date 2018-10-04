@@ -80,7 +80,7 @@
 				}
 			},
 			opened() {
-				this.$router.pushRoute(this.routeName);
+				this.$router.pushRoute(this.routeName || this.name);
 			},
 
 			closed() {

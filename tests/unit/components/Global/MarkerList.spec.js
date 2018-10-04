@@ -27,6 +27,27 @@ describe('MarkerList.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('ul').exists());
+		assert.isFalse(wrapper.find('.loader').exists());
+	});
+
+	it('Shows loader when loading',() => {
+		const wrapper = shallowMount(MarkerList, {
+			mocks: {
+				$store: {
+					state: {
+						Markers: {
+							markers: [],
+							hasNext: false,
+							page: 0,
+							loading: true
+						},
+					}
+				}
+			}
+		});
+
+		assert.isFalse(wrapper.find('ul').exists());
+		assert.isTrue(wrapper.find('.loader').exists());
 	});
 
 	it('Renders list of markers and hides pagination when no hasNext', () => {

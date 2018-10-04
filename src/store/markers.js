@@ -10,7 +10,8 @@ export default {
 		userMarker: false,
 		hasNext: false,
 		username: '',
-		page: 0
+		page: 0,
+		loading: false
 	},
 	mutations: {
 		add(state, marker) {
@@ -43,6 +44,7 @@ export default {
 	actions: {
 		async load({commit, state}, startingId = false) {
 			try {
+				state.loading = true;
 				if(! startingId){
 					commit('clear');
 				}
@@ -54,8 +56,10 @@ export default {
 						commit('add', item)
 					});
 				}
+				state.loading = false;
 				return response;
 			} catch (error) {
+				state.loading = false;
 				return error;
 			}
 		},
