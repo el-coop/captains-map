@@ -74,12 +74,14 @@
 
 			async loadMarkers() {
 				this.$modal.hide('404');
-				let markersRoute = '';
 				let markers = [];
 
 				this.$store.commit('Markers/setUser', this.$route.params.username || '');
 
-				const response = await this.$store.dispatch('Markers/load', markersRoute);
+				const response = await this.$store.dispatch('Markers/load', {
+					startingId: this.$route.params.marker || false,
+					pageIncluding: true
+				});
 				if (response.status !== 404) {
 					if (response.status === 'cached') {
 						this.$toast.info('Markers loaded from cache', '', {

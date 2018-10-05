@@ -104,7 +104,7 @@
 					}
 					return;
 				}
-				this.$store.commit('Markers/add', response.data);
+				this.$store.commit('Markers/addAtStart', response.data);
 
 				this.$modal.hide('create-marker');
 			},

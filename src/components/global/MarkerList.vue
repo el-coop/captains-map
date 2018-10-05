@@ -15,6 +15,8 @@
 
 <script>
 	import MarkerEntry from "./MarkerEntry";
+	import Map from '@/services/leaflet.service';
+
 	const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
 	export default {
@@ -31,21 +33,29 @@
 				const pageEnd = this.$store.state.Markers.page * pageSize + pageSize;
 				return this.$store.state.Markers.hasNext || pageEnd < this.$store.state.Markers.markers.length;
 			},
-			hasPrev(){
-				return this.$store.state.Markers.page > 0;
+			hasPrev() {
+				return this.$store.state.Markers.page > 0 || this.$store.state.Markers.serverPage > 0;
 			},
-			loading(){
+			loading() {
 				return this.$store.state.Markers.loading;
-			}
+			},
 		},
 
 
 		methods: {
-			previousPage() {
-				return this.$store.dispatch('Markers/previousPage');
+			async previousPage() {
+				await this.$store.dispatch('Markers/previousPage');
+				this.goToFirst();
 			},
-			nextPage() {
-				return this.$store.dispatch('Markers/nextPage');
+			async nextPage() {
+				await this.$store.dispatch('Markers/nextPage');
+				this.goToFirst();
+			},
+			goToFirst() {
+				if (!this.markers.length) {
+					return;
+				}
+				return Map.setView([this.markers[0].lat, this.markers[0].lng], 16);
 			}
 		}
 	}

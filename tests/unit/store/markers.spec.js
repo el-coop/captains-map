@@ -28,6 +28,25 @@ describe('Marker Store', () => {
 		});
 	});
 
+	it('Adds a marker to start', () => {
+		const state = {
+			markers: [{
+				id: 2
+			}]
+		};
+
+		markersStore.mutations.addAtStart(state, {
+			id: 1,
+			name: 'test'
+		});
+
+		assert.equal(state.markers.length, 2);
+		assert.deepEqual(state.markers[0], {
+			id: 1,
+			name: 'test'
+		});
+	});
+
 	it('Removes a marker', () => {
 		const state = {
 			markers: [{
@@ -220,6 +239,52 @@ describe('Marker Store', () => {
 		});
 	});
 
+	it('Loads markers from specific page', async () => {
+		const data = {
+			markers: [{
+				id: 1
+			}],
+
+			pagination: {
+				hasNext: true,
+				page: 2
+			}
+		};
+		const state = {
+			hasNext: false,
+			username: 'test',
+			serverPage: 0
+		};
+		const getStub = sinon.stub(http, 'get').callsFake(() => {
+			return {
+				status: 200,
+				data
+			};
+		});
+		const commitSpy = sinon.spy();
+
+		const response = await markersStore.actions.load({
+			commit: commitSpy,
+			state
+		}, {
+			startingId: 2,
+			pageIncluding: true
+		});
+
+		assert.isTrue(getStub.calledOnce);
+		assert.isTrue(getStub.calledWith('marker/test/2'));
+		assert.isTrue(commitSpy.calledOnce);
+		assert.isTrue(commitSpy.calledWith('add', {
+			id: 1
+		}));
+		assert.isTrue(state.hasNext);
+		assert.equal(state.serverPage, 2);
+		assert.deepEqual(response, {
+			status: 200,
+			data
+		});
+	});
+
 
 	it('Loads cached markers', async () => {
 		const data = {
@@ -318,6 +383,7 @@ describe('Marker Store', () => {
 
 	it('Updates page', () => {
 		const state = {
+			markers: new Array(6).fill({}),
 			page: 1
 		};
 
@@ -355,6 +421,24 @@ describe('Marker Store', () => {
 		}, 1);
 
 		assert.isFalse(commit.called);
+	});
+
+	it('Loads previous page from server when page is 0 and serverPage is bigger than 0', () => {
+		const state = {
+			page: 0,
+			serverPage: 1,
+		};
+		const dispatch = sinon.spy();
+
+		markersStore.actions.previousPage({
+			state,
+			commit: {},
+			dispatch
+		}, 1);
+
+		assert.isTrue(dispatch.calledOnce);
+		assert.isTrue(dispatch.calledWith('loadPrevious'));
+		assert.equal(state.serverPage, 0);
 	});
 
 	it('Commits next page and loads from server when hasNext', async () => {
@@ -416,4 +500,55 @@ describe('Marker Store', () => {
 
 		assert.isFalse(commit.called);
 	});
+
+	it('Loads previous page of markers', async () => {
+		const data = {
+			markers: [{
+				id: 1
+			}, {
+				id: 2
+			}],
+
+			pagination: {
+				hasNext: null,
+				serverPage: null
+			}
+		};
+		const state = {
+			hasNext: false,
+			serverPage: 1,
+			username: 'nur',
+			markers: [
+				{id: 3}
+			]
+		};
+		const getStub = sinon.stub(http, 'get').callsFake(() => {
+			return {
+				status: 200,
+				data
+			};
+		});
+		const commitSpy = sinon.spy();
+
+		const response = await markersStore.actions.loadPrevious({
+			commit: commitSpy,
+			state
+		});
+
+		assert.isTrue(getStub.calledOnce);
+		assert.isTrue(getStub.calledWith('marker/nur/3/previous'));
+		assert.isTrue(commitSpy.calledTwice);
+		assert.isTrue(commitSpy.calledWith('addAtStart', {
+			id: 1
+		}));
+		assert.isTrue(commitSpy.calledWith('addAtStart', {
+			id: 2
+		}));
+		assert.isFalse(state.hasNext);
+		assert.deepEqual(response, {
+			status: 200,
+			data
+		});
+	});
+
 });
