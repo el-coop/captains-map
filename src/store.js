@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import User from './store/user';
-import Markers from './store/markers';
+import User from '@/store/user';
+import Markers from '@/store/markers';
 
 Vue.use(Vuex);
 

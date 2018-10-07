@@ -6,14 +6,11 @@
 </template>
 
 <script>
-	import globe from '@/assets/images/globe-icon.png';
-
 	export default {
 		name: 'App',
 		metaInfo: {
 
 			title: 'Home',
-			// all titles will be injected into this template
 			titleTemplate: '%s | Captains Map',
 		}
 	}
