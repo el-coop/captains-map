@@ -6,7 +6,12 @@
 </template>
 
 <script>
+	import MapView from './components/map/Map';
+
 	export default {
+		components: {
+			MapView
+		},
 		name: 'App',
 		metaInfo: {
 
