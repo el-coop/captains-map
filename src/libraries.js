@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VModal from 'vue-js-modal';
-import { installer as HttpService } from './services/http.service';
+import { installer as HttpService } from '@/services/http.service';
 import VueMoment from 'vue-moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
