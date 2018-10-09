@@ -1,6 +1,6 @@
 <template>
 	<div class="leaflet-bar leaflet-control user-marker-control map__marker">
-		<a @click="toggleMarker">
+		<a @click="toggleMarker" @contextmenu="goToUserMarker">
 			<font-awesome-icon icon="globe"/>
 		</a>
 	</div>
@@ -31,9 +31,14 @@
 			},
 			toggleMarker() {
 				this.$toast.info(this.message, '', {
-					position: 'bottomCenter'
+					id: 'geolocation-notification',
 				});
 				this.$store.commit('Markers/toggleUserMarker');
+			},
+			goToUserMarker() {
+				if (this.$store.state.Markers.userMarker) {
+					this.$bus.$emit('goToUserMarker');
+				}
 			}
 		},
 
@@ -51,7 +56,7 @@
 <style lang="scss" scoped>
 	@import "~$scss/variables";
 
-	.user-marker-control {
+	.leaflet-control.user-marker-control {
 		margin-bottom: $gap * 0.8;
 
 		@media #{$above-tablet}{

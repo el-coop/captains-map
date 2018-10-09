@@ -25,6 +25,8 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(HttpService);
 Vue.use(VueMoment);
 Vue.use(VueClipboard);
-Vue.use(VueIziToast);
+Vue.use(VueIziToast, {
+	position: 'bottomCenter'
+});
 Vue.config.productionTip = false;
 Vue.prototype.$bus = new Vue();

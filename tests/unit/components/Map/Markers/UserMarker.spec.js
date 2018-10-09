@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import UserMarker from '@/components/map/Markers/UserMarker';
@@ -13,7 +14,13 @@ describe('UserMarker.vue', () => {
 
 	it('watches for location when created', () => {
 		const addWatchLocationStub = sinon.stub(mapService, 'watchLocation');
-		const wrapper = shallowMount(UserMarker);
+		const wrapper = shallowMount(UserMarker, {
+			mocks: {
+				$bus: {
+					$on: sinon.spy()
+				}
+			}
+		});
 
 		assert.isTrue(wrapper.find('div').exists());
 		assert.isTrue(addWatchLocationStub.calledOnce);
@@ -33,8 +40,21 @@ describe('UserMarker.vue', () => {
 				addObject: sinon.spy(),
 			}
 		};
-		const wrapper = shallowMount(UserMarker,{
-			parentComponent: parent
+
+		const $toast = {
+			info: sinon.spy(),
+			hide: sinon.spy()
+		};
+
+		const wrapper = shallowMount(UserMarker, {
+			parentComponent: parent,
+			mocks: {
+				$bus: {
+					$on: sinon.spy()
+				},
+				$toast
+
+			}
 		});
 
 		wrapper.vm.setLocation({
@@ -56,6 +76,10 @@ describe('UserMarker.vue', () => {
 		assert.isTrue(marker.on.calledWith('click'));
 		assert.isTrue(parent.methods.addObject.calledOnce);
 		assert.isTrue(parent.methods.addObject.calledWith(marker));
+		assert.isTrue($toast.hide.calledOnce);
+		assert.isTrue($toast.hide.calledWith('#geolocation-notification'));
+		assert.isTrue($toast.info.calledOnce);
+		assert.isTrue($toast.info.calledWith('You can now go to your location by holding the location icon. (right click on desktop)', ''));
 	});
 
 
@@ -72,8 +96,13 @@ describe('UserMarker.vue', () => {
 			}
 		};
 
-		const wrapper = shallowMount(UserMarker,{
-			parentComponent: parent
+		const wrapper = shallowMount(UserMarker, {
+			parentComponent: parent,
+			mocks: {
+				$bus: {
+					$on: sinon.spy()
+				},
+			}
 		});
 
 		wrapper.vm.mapObject = marker;
@@ -100,11 +129,22 @@ describe('UserMarker.vue', () => {
 			methods: {
 				addObject: sinon.spy(),
 				removeObject: sinon.spy()
-			}
+			},
+		};
+
+		const $toast = {
+			info: sinon.spy(),
+			hide: sinon.spy()
 		};
 
 		const wrapper = shallowMount(UserMarker, {
-			parentComponent: parent
+			parentComponent: parent,
+			mocks: {
+				$bus: {
+					$on: sinon.spy()
+				},
+				$toast
+			}
 		});
 
 		wrapper.vm.setLocation({
@@ -127,40 +167,66 @@ describe('UserMarker.vue', () => {
 				removeObject: sinon.spy()
 			}
 		};
+		const $off = sinon.spy();
 
-		const wrapper = shallowMount(UserMarker,{
-			parentComponent: parent
+		const wrapper = shallowMount(UserMarker, {
+			parentComponent: parent,
+			mocks: {
+				$bus: {
+					$on: sinon.spy(),
+					$off
+				},
+			}
 		});
 		wrapper.vm.mapObject = marker;
 
 		wrapper.destroy();
 		assert.isTrue(parent.methods.removeObject.calledOnce);
 		assert.isTrue(parent.methods.removeObject.calledWith(marker));
+		assert.isTrue($off.calledOnce);
+
 	});
 
 
 	it('emits events when detects click', () => {
 		const $bus = {
-			$emit() {
-
-			}
+			$emit: sinon.spy(),
+			$on: sinon.spy()
 		};
-		const busEmit = sinon.stub($bus, '$emit');
 
 		const wrapper = shallowMount(UserMarker, {
 			mocks: {
 				$bus,
 			},
+
 		});
 
 		wrapper.vm.lat = 0;
 		wrapper.vm.lng = 0;
 
 		wrapper.vm.onClick();
-		assert.isTrue(busEmit.calledOnce);
-		assert.isTrue(busEmit.calledWith('user-marker-click', {
+		assert.isTrue($bus.$emit.calledOnce);
+		assert.isTrue($bus.$emit.calledWith('user-marker-click', {
 			lat: 0,
 			lng: 0
 		}));
+	});
+
+	it('responds to right click event by going to marker', () => {
+		const $bus = new Vue();
+		const mapSetViewStub = sinon.stub(mapService, 'setView');
+
+		const wrapper = shallowMount(UserMarker, {
+			mocks: {
+				$bus,
+			},
+		});
+		wrapper.vm.lat = 1;
+		wrapper.vm.lng = 1;
+
+		$bus.$emit('goToUserMarker');
+
+		assert.isTrue(mapSetViewStub.calledOnce);
+		assert.isTrue(mapSetViewStub.calledWith([1, 1]));
 	});
 });

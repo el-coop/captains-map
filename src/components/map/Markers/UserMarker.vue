@@ -24,7 +24,13 @@
 				iconSize: 20
 			}
 		},
+
+		mounted() {
+			this.$bus.$on('goToUserMarker', this.goToMarker);
+		},
+
 		beforeDestroy() {
+			this.$bus.$off('goToUserMarker', this.goToMarker);
 			Map.stopLocate();
 		},
 
@@ -45,6 +51,8 @@
 				this.lng = location.latlng.lng;
 
 				if (!this.mapObject) {
+					this.$toast.hide('#geolocation-notification');
+					this.$toast.info('You can now go to your location by holding the location icon. (right click on desktop)', '');
 					this.prepareMapObject(location.latlng.lat, location.latlng.lng);
 					this.addToMap();
 				}
@@ -56,6 +64,10 @@
 
 			removeObject(marker) {
 				this.$parent.removeObject(marker);
+			},
+
+			goToMarker() {
+				Map.setView([this.lat, this.lng]);
 			}
 		},
 	}
