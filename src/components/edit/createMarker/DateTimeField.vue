@@ -3,10 +3,10 @@
 		<label class="label">Time</label>
 		<div class="field is-grouped">
 			<div class="control is-expanded">
-				<datapicker v-model="date" icon-pack="fas"/>
+				<input type="date" class="input" v-model="date"/>
 			</div>
 			<div class="control is-expanded">
-				<timepicker v-model="time"/>
+				<input type="time" class="input" v-model="time"/>
 			</div>
 		</div>
 		<p class="help is-danger" v-if="error">Invalid date or time.</p>
@@ -14,17 +14,8 @@
 </template>
 
 <script>
-	import Moment from 'moment';
-	import Datapicker from 'buefy/src/components/datepicker/Datepicker';
-	import Timepicker from 'buefy/src/components/timepicker/Timepicker';
-
 	export default {
 		name: "create-marker-date-time-field",
-
-		components: {
-			Datapicker,
-			Timepicker
-		},
 
 		props: {
 			value: {
@@ -40,19 +31,20 @@
 
 		methods: {
 			getDateTime() {
-				return new Date(`${Moment(this.date).format('MM/DD/YYYY')} ${Moment(this.time).format('HH:mm')}`);
+				return new Date(`${this.date} ${this.time}`);
 			}
 		},
 
 		data() {
 			return {
-				date: new Date(),
-				time: new Date()
+				date: this.$moment().format('YYYY-MM-DD'),
+				time: this.$moment().format('HH:mm'),
 			}
 		},
 
 		watch: {
 			date(value) {
+				console.log(this.getDateTime());
 				this.$emit('input', this.getDateTime());
 			},
 			time(value) {
