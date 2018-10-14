@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VModal from 'vue-js-modal';
-import { installer as HttpService } from '@/services/http.service';
+import { installer as HttpService } from '@/Services/http.service';
 import VueMoment from 'vue-moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -12,12 +12,13 @@ import {
 	faPowerOff,
 	faGlobe
 } from '@fortawesome/free-solid-svg-icons';
+import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import Meta from 'vue-meta';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueClipboard from 'vue-clipboard2';
 import VueIziToast from 'vue-izitoast';
 
-library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faPowerOff, faGlobe);
+library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faPowerOff, faGlobe, faFacebook);
 
 Vue.use(VModal);
 Vue.use(Meta);

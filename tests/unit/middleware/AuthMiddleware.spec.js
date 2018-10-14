@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import auth from '@/services/authentication.service';
+import auth from '@/Services/authentication.service';
 import authMiddleware from '@/middleware/Auth.middleware';
 
 describe('Authentication Middleware', () => {

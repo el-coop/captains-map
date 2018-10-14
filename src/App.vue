@@ -6,7 +6,7 @@
 </template>
 
 <script>
-	import MapView from './components/map/Map';
+	import MapView from '@/Components/Map/Map';
 
 	export default {
 		components: {

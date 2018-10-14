@@ -1,0 +1,104 @@
+<template>
+	<div :class="`zoom-${zoomStatus}`">
+		<div class="map" ref="map">
+			<user-marker-control/>
+			<user-marker v-if="userMarker"/>
+			<marker-cluster ref="userMarker">
+				<map-marker v-for="marker in markers" :layer="$refs.userMarker" :marker="marker"
+							:key="`${Date.now()}_${marker.id}`"/>
+			</marker-cluster>
+		</div>
+	</div>
+</template>
+
+<script>
+
+	import Map from '@/Services/LeafletMapService';
+	import MapMarker from '@/Components/Map/Markers/MapMarker';
+	import UserMarker from '@/Components/Map/Markers/UserMarker';
+	import UserMarkerControl from "@/Components/Map/Controls/UserMarkerControl";
+	import MarkerCluster from "@/Components/Map/Layers/MarkerCluster";
+
+	export default {
+		name: "map-view",
+		props: {
+			center: {
+				type: Array,
+			},
+			zoom: {
+				type: Number,
+				default: 10
+			},
+		},
+
+		components: {
+			MarkerCluster,
+			UserMarkerControl,
+			MapMarker,
+			UserMarker
+		},
+
+		methods: {
+			rightClick(event) {
+				this.$bus.$emit('map-right-click', {
+					event
+				});
+			},
+
+			handleZoom(event) {
+				let zoomLevel = event.target._animateToZoom;
+				if (zoomLevel < 5) {
+					return this.zoomStatus = 'far';
+				}
+				if (zoomLevel < 10) {
+					return this.zoomStatus = 'medium';
+				}
+				if (zoomLevel < 15) {
+					return this.zoomStatus = 'normal';
+				}
+				return this.zoomStatus = 'close';
+			},
+
+			addObject(object) {
+				Map.addObject(object);
+			},
+			removeObject(object) {
+				Map.removeObject(object);
+			}
+		},
+
+		data() {
+			return {
+				zoomStatus: 'normal'
+			}
+		},
+
+		computed: {
+			markers() {
+				const start = this.$store.state.Markers.page * process.env.VUE_APP_PAGE_SIZE;
+				const end = this.$store.state.Markers.page * process.env.VUE_APP_PAGE_SIZE + process.env.VUE_APP_PAGE_SIZE;
+				return this.$store.state.Markers.markers.slice(start, end);
+			},
+			userMarker() {
+				return this.$store.state.Markers.userMarker;
+			},
+		},
+
+		mounted() {
+			Map.init(this.$refs.map, this.center, this.zoom);
+			Map.on('contextmenu', this.rightClick);
+			Map.on('zoomend', this.handleZoom);
+		}
+	}
+</script>
+
+<style scoped>
+	.map {
+		position: absolute;
+		height: 100%;
+		width: 100vw;
+		top: 0;
+		left: 0;
+		z-index: 1;
+	}
+</style>
