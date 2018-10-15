@@ -28,7 +28,7 @@
 	import Photo from './media/photo';
 	import Instagram from './media/instagram';
 	import ViewMarkerHeader from "./viewMarker/header";
-	import ViewMarkerContent from "./viewMarker/content";
+	import ViewMarkerContent from "./viewMarker/Content";
 
 	export default {
 		name: "view-marker",

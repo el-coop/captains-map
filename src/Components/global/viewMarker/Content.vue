@@ -53,7 +53,7 @@
 						});
 						this.$toast.success('Link shared', '');
 					} catch (error) {
-						this.$toast.error('Sharing failed', '');
+
 					}
 					return;
 				}
