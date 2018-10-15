@@ -31,7 +31,7 @@
 
 <script>
 	import Map, { LeafletMapService } from '@/Services/LeafletMapService';
-	import Logout from "../global/topBar/Logout";
+	import Logout from "../Global/topBar/Logout";
 
 	export default {
 		name: "search-bar",

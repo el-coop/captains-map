@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import NotFound from '@/Components/global/404.vue';
+import NotFound from '@/Components/Global/404.vue';
 import sinon from 'sinon';
 
 describe('404.vue', () => {

@@ -6,6 +6,7 @@ describe('Authentication Service', () => {
 	afterEach('Reset sinon and settings', () => {
 		sinon.restore();
 		auth.user = null;
+		// noinspection JSAnnotator
 		delete global.localStorage;
 	});
 

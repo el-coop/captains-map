@@ -1,7 +1,7 @@
 <template>
-    <div class="layout">
-        <edit-dashboard/>
-    </div>
+	<div class="layout">
+		<edit-dashboard/>
+	</div>
 </template>
 
 <script>
@@ -9,6 +9,10 @@
 
 	export default {
 		name: "edit-layout",
+
+		metaInfo: {
+			title: 'Edit'
+		},
 
 		components: {
 			EditDashboard

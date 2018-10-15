@@ -70,7 +70,7 @@
 
 			routeName(){
 				if(! this.marker){
-					return null;
+					return '';
 				}
 				return `${this.marker.user.username}/${this.marker.id}`;
 			}

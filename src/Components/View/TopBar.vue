@@ -23,7 +23,7 @@
 	import LoginModal from "./LoginModal";
 	import RegisterModal from "./RegisterModal";
 	import Auth from '@/Services/authentication.service';
-	import Logout from "@/Components/global/topBar/Logout";
+	import Logout from "@/Components/Global/topBar/Logout";
 
 	export default {
 		components: {Logout, RegisterModal, LoginModal},

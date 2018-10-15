@@ -31,7 +31,7 @@
 </template>
 
 <script>
-	import SlideUpModal from "../global/slide-up-modal";
+	import SlideUpModal from "../Global/slide-up-modal";
 
 	export default {
 		name: "register-modal",

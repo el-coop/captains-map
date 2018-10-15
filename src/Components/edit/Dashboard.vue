@@ -5,6 +5,11 @@
 			<profile/>
 			<div class="dashboard__control  dashboard__body-sidebar" :class="{open: openSidebar}">
 				<marker-list/>
+
+				<div class="content copyright">
+					Map data available thanks to © OpenStreetMap contributors.
+					<a href="https://www.openstreetmap.org/copyright" target="_blank">Copyright info</a>
+				</div>
 			</div>
 		</div>
 		<div class="dashboard__control is-hidden-tablet">
@@ -21,9 +26,9 @@
 	import Profile from '@/Components/edit/Profile';
 	import SearchBar from '@/Components/edit/SearchBar';
 	import CreateMarker from '@/Components/edit/CreateMarker';
-	import MarkerList from "@/Components/global/MarkerList";
+	import MarkerList from "@/Components/Global/MarkerList";
 	import map from "@/Services/LeafletMapService";
-	import ViewMarker from '@/Components/global/ViewMarker';
+	import ViewMarker from '@/Components/Global/ViewMarker';
 	import Auth from '@/Services/authentication.service';
 
 	export default {
@@ -35,10 +40,6 @@
 			SearchBar,
 			CreateMarker,
 			ViewMarker
-		},
-
-		metaInfo: {
-			title: 'Edit'
 		},
 
 		data() {

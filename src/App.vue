@@ -2,15 +2,18 @@
 	<div id="app">
 		<map-view/>
 		<router-view/>
+		<not-found/>
 	</div>
 </template>
 
 <script>
+	import NotFound from '@/Components/Global/404';
 	import MapView from '@/Components/Map/Map';
 
 	export default {
 		components: {
-			MapView
+			MapView,
+			NotFound
 		},
 		name: 'App',
 		metaInfo: {

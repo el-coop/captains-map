@@ -34,7 +34,7 @@
 
 <script>
 	import AjaxForm from "@/Components/utilities/ajaxForm";
-	import SlideUpModal from "../global/slide-up-modal";
+	import SlideUpModal from "../Global/slide-up-modal";
 
 	export default {
 		components: {SlideUpModal, AjaxForm},
