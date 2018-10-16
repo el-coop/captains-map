@@ -26,7 +26,7 @@
 			this.$bus.$off('marker-click', this.showMarker);
 			this.$bus.$off('moving-map', this.closeSidebar);
 			this.$bus.$off('map-right-click', this.createMarker);
-			this.$bus.$off('marker-click', this.showMarker);
+			this.$bus.$off('user-marker-click', this.createMarker);
 		},
 
 		methods: {
