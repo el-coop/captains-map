@@ -1,10 +1,19 @@
 <template>
 	<div class="dashboard__control dashboard__control--dark">
-		<div class="field has-addons has-text-centered" v-if="loggedIn">
-			<div class="control is-expanded">
-				<button class="button is-dark is-fullwidth" @click="$router.push('/edit')">Dashboard</button>
+		<div v-if="loggedIn" class="topbar-flex">
+			<div></div>
+			<search-bar/>
+			<div class="field has-addons has-text-centered side-buttons" v-if="loggedIn">
+				<div class="control is-expanded">
+					<button class="button is-dark is-fullwidth" @click="$router.push('/edit')"
+							v-if="$router.currentRoute.name === 'view'">Dashboard
+					</button>
+					<button class="button is-dark is-fullwidth" @click="$router.push('/')"
+							v-if="$router.currentRoute.name === 'edit'">Map Feed
+					</button>
+				</div>
+				<logout/>
 			</div>
-			<logout/>
 		</div>
 		<div class="field is-grouped has-text-centered" v-else>
 			<div class="control is-expanded">
@@ -24,9 +33,10 @@
 	import RegisterModal from "./RegisterModal";
 	import Auth from '@/Services/authentication.service';
 	import Logout from "@/Components/Global/topBar/Logout";
+	import SearchBar from "@/Components/edit/SearchBar";
 
 	export default {
-		components: {Logout, RegisterModal, LoginModal},
+		components: {SearchBar, Logout, RegisterModal, LoginModal},
 		name: "top-bar",
 
 		computed: {
@@ -40,7 +50,7 @@
 <style lang="scss" scoped>
 	@import "~$scss/variables";
 
-	.field {
+	.field.is-grouped {
 		height: 100%;
 		align-items: center;
 		padding: 0 2px;
@@ -49,6 +59,32 @@
 			margin-left: auto;
 			padding: 0 20px;
 			max-width: 20vw;
+		}
+	}
+
+	.topbar-flex {
+		height: 100%;
+		padding: 0 2px;
+		display: flex;
+		justify-content: center;
+		align-items: stretch;
+		flex-direction: column;
+
+		@media #{$above-tablet} {
+			justify-content: space-between;
+			align-items: center;
+			flex-direction: row;
+		}
+	}
+
+	.field.has-addons.side-buttons {
+		padding-right: 10px;
+		padding-left: 10px;
+		@media #{$above-tablet} {
+			width: 20vw;
+			padding-right: 20px;
+			padding-left: 0;
+			margin-top: 0;
 		}
 	}
 </style>

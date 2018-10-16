@@ -1,6 +1,6 @@
 <template>
 	<div class="dashboard">
-		<top-bar/>
+		<top-bar class="dashboard__header"/>
 		<div class="dashboard__body">
 			<profile/>
 			<div class="dashboard__control dashboard__body-sidebar" :class="{open: openSidebar}">
@@ -17,6 +17,7 @@
 				Show {{ openSidebar ? 'Map' : 'List'}}
 			</button>
 		</div>
+		<create-marker v-if="editMode" :latLng="latLng"/>
 		<view-marker :marker="selectedMarker"/>
 	</div>
 </template>
@@ -27,6 +28,7 @@
 	import TopBar from "@/Components/View/TopBar";
 	import ViewMarker from "@/Components/Global/ViewMarker";
 	import Profile from "@/Components/edit/Profile";
+	import CreateMarker from "@/Components/edit/CreateMarker";
 
 	export default {
 		name: "dashboard",
@@ -37,6 +39,7 @@
 			Profile,
 			ViewMarker,
 			TopBar,
+			CreateMarker,
 			MarkerList,
 		},
 

@@ -22,7 +22,15 @@ describe('TopBar.vue', () => {
 		sinon.stub(Auth, 'isLoggedIn').callsFake(() => {
 			return true;
 		});
-		const wrapper = shallowMount(TopBar);
+		const wrapper = shallowMount(TopBar, {
+			mocks: {
+				$router: {
+					currentRoute: {
+						name: 'view'
+					}
+				}
+			}
+		});
 
 		assert.include(wrapper.html(), 'Dashboard');
 		assert.include(wrapper.html(), '</logout-stub>');
@@ -69,7 +77,10 @@ describe('TopBar.vue', () => {
 			return true;
 		});
 		const $router = {
-			push: sinon.spy()
+			push: sinon.spy(),
+			currentRoute: {
+				name: 'view'
+			}
 		};
 		const wrapper = shallowMount(TopBar, {
 			mocks: {

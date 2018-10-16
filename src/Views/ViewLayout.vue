@@ -78,6 +78,5 @@
 				this.loadMarkers();
 			}
 		}
-
 	}
 </script>
