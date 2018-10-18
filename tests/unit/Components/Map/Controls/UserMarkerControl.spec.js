@@ -5,6 +5,21 @@ import sinon from 'sinon';
 
 describe('UserMarkerControl.vue', () => {
 
+	let mocks;
+
+	beforeEach(() => {
+		mocks = {
+			$store: {
+				commit: sinon.spy(),
+				state: {
+					Markers: {
+						userMarker: false
+					}
+				}
+			}
+		}
+	});
+
 	afterEach(() => {
 		sinon.restore();
 	});
@@ -20,27 +35,41 @@ describe('UserMarkerControl.vue', () => {
 			stubs: {
 				'font-awesome-icon': true
 			},
+			mocks
 		});
 
 		assert.isTrue(wrapper.find('.leaflet-bar.leaflet-control').exists());
+		assert.isFalse(wrapper.find('.active').exists());
 	});
 
-	it('Toggles on user marker on click', () => {
+
+	it('Puts active class when turned on', () => {
+		const parent = {
+			methods: {
+				addObject: sinon.spy()
+			}
+		};
+		mocks.$store.state.Markers.userMarker = true;
+
+		const wrapper = shallowMount(UserMarkerControl, {
+			parentComponent: parent,
+			stubs: {
+				'font-awesome-icon': true
+			},
+			mocks
+		});
+
+		assert.isTrue(wrapper.find('.active').exists());
+	});
+
+	it('Toggles on user marker on click', async () => {
 
 		const parent = {
 			methods: {
 				addObject: sinon.spy()
 			}
 		};
-		const $store = {
-			commit: sinon.spy(),
-			state: {
-				Markers: {
-					userMarker: false
-				}
-			}
-		};
-		const $toast = {
+		mocks.$toast = {
 			info: sinon.spy()
 		};
 		const wrapper = shallowMount(UserMarkerControl, {
@@ -48,18 +77,16 @@ describe('UserMarkerControl.vue', () => {
 			stubs: {
 				'font-awesome-icon': true
 			},
-			mocks: {
-				$store,
-				$toast
-			}
+			mocks
 		});
 
 		wrapper.find('a').trigger('click');
 
-		assert.isTrue($toast.info.calledOnce);
-		assert.isTrue($toast.info.calledWith('Calculating location, please wait.', ''));
-		assert.isTrue($store.commit.calledOnce);
-		assert.isTrue($store.commit.calledWith('Markers/toggleUserMarker'));
+		assert.isTrue(mocks.$toast.info.calledOnce);
+		assert.isTrue(mocks.$toast.info.calledWith('Calculating location, please wait.', ''));
+		assert.isTrue(mocks.$store.commit.calledOnce);
+		assert.isTrue(mocks.$store.commit.calledWith('Markers/toggleUserMarker'));
+
 	});
 
 	it('Toggles off user marker on click', () => {
@@ -68,34 +95,24 @@ describe('UserMarkerControl.vue', () => {
 				addObject: sinon.spy()
 			}
 		};
-		const $store = {
-			commit: sinon.spy(),
-			state: {
-				Markers: {
-					userMarker: true
-				}
-			}
-		};
-		const $toast = {
+		mocks.$toast = {
 			info: sinon.spy()
 		};
+		mocks.$store.state.Markers.userMarker = true;
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
 			stubs: {
 				'font-awesome-icon': true
 			},
-			mocks: {
-				$store,
-				$toast
-			}
+			mocks
 		});
 
 		wrapper.find('a').trigger('click');
 
-		assert.isTrue($toast.info.calledOnce);
-		assert.isTrue($toast.info.calledWith('Turning off location service.', ''));
-		assert.isTrue($store.commit.calledOnce);
-		assert.isTrue($store.commit.calledWith('Markers/toggleUserMarker'));
+		assert.isTrue(mocks.$toast.info.calledOnce);
+		assert.isTrue(mocks.$toast.info.calledWith('Turning off location service.', ''));
+		assert.isTrue(mocks.$store.commit.calledOnce);
+		assert.isTrue(mocks.$store.commit.calledWith('Markers/toggleUserMarker'));
 	});
 
 	it('Adds control when created', () => {
@@ -108,7 +125,8 @@ describe('UserMarkerControl.vue', () => {
 			parentComponent: parent,
 			stubs: {
 				'font-awesome-icon': true
-			}
+			},
+			mocks
 		});
 
 		assert.isTrue(parent.methods.addObject.calledOnce);
@@ -127,7 +145,8 @@ describe('UserMarkerControl.vue', () => {
 
 			stubs: {
 				'font-awesome-icon': true
-			}
+			},
+			mocks
 		});
 
 		wrapper.destroy();
@@ -141,30 +160,23 @@ describe('UserMarkerControl.vue', () => {
 				addObject: sinon.spy(),
 			}
 		};
-		const $bus = {
+		mocks.$bus = {
 			$emit: sinon.spy()
 		};
+		mocks.$store.state.Markers.userMarker = true;
+
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
 
 			stubs: {
 				'font-awesome-icon': true
 			},
-			mocks: {
-				$bus,
-				$store: {
-					state: {
-						Markers: {
-							userMarker: true
-						}
-					}
-				}
-			}
+			mocks
 		});
 		wrapper.find('a').trigger('contextmenu');
 
-		assert.isTrue($bus.$emit.calledOnce);
-		assert.isTrue($bus.$emit.calledWith('goToUserMarker'));
+		assert.isTrue(mocks.$bus.$emit.calledOnce);
+		assert.isTrue(mocks.$bus.$emit.calledWith('goToUserMarker'));
 
 	});
 
@@ -174,7 +186,7 @@ describe('UserMarkerControl.vue', () => {
 				addObject: sinon.spy(),
 			}
 		};
-		const $bus = {
+		mocks.$bus = {
 			$emit: sinon.spy()
 		};
 		const wrapper = shallowMount(UserMarkerControl, {
@@ -183,20 +195,11 @@ describe('UserMarkerControl.vue', () => {
 			stubs: {
 				'font-awesome-icon': true
 			},
-			mocks: {
-				$bus,
-				$store: {
-					state: {
-						Markers: {
-							userMarker: false
-						}
-					}
-				}
-			}
+			mocks
 		});
 		wrapper.find('a').trigger('contextmenu');
 
-		assert.isFalse($bus.$emit.called);
+		assert.isFalse(mocks.$bus.$emit.called);
 
 	});
 });

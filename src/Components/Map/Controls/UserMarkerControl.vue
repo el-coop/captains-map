@@ -1,6 +1,6 @@
 <template>
 	<div class="leaflet-bar leaflet-control user-marker-control map__marker">
-		<a @click="toggleMarker" @contextmenu="goToUserMarker">
+		<a @click="toggleMarker" @contextmenu="goToUserMarker" :class="{active}">
 			<font-awesome-icon icon="globe"/>
 		</a>
 	</div>
@@ -36,15 +36,18 @@
 				this.$store.commit('Markers/toggleUserMarker');
 			},
 			goToUserMarker() {
-				if (this.$store.state.Markers.userMarker) {
+				if (this.active) {
 					this.$bus.$emit('goToUserMarker');
 				}
 			}
 		},
 
 		computed: {
+			active() {
+				return this.$store.state.Markers.userMarker;
+			},
 			message() {
-				if (this.$store.state.Markers.userMarker) {
+				if (this.active) {
 					return 'Turning off location service.';
 				}
 				return 'Calculating location, please wait.';
@@ -61,6 +64,10 @@
 
 		@media #{$above-tablet}{
 			margin-bottom: 10px;
+		}
+
+		& > .active {
+			background-color: $link;
 		}
 	}
 </style>

@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { createLocalVue, shallowMount } from '@vue/test-utils';
-import Logout from '@/Components/Global/topBar/Logout';
+import Logout from '@/Components/Utilities/Logout';
 import Vuex from 'vuex'
 import sinon from 'sinon';
 

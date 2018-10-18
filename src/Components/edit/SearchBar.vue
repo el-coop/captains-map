@@ -22,7 +22,7 @@
 
 <script>
 	import Map, { LeafletMapService } from '@/Services/LeafletMapService';
-	import Logout from "../Global/topBar/Logout";
+	import Logout from "../Utilities/Logout";
 
 	export default {
 		name: "search-bar",

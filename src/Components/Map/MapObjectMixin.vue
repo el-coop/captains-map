@@ -39,10 +39,14 @@
 			},
 
 			addToMap() {
-				this.$parent.addObject(this.mapObject);
+				if (this.mapObject) {
+					this.$parent.addObject(this.mapObject);
+				}
 			},
 			removeFromMap() {
-				this.$parent.removeObject(this.mapObject);
+				if (this.mapObject) {
+					this.$parent.removeObject(this.mapObject);
+				}
 			},
 			onClick() {
 				this.$bus.$emit(this.event, this.payload);

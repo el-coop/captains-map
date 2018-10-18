@@ -39,7 +39,7 @@
 </template>
 
 <script>
-	import AjaxForm from "@/Components/utilities/ajaxForm";
+	import AjaxForm from "@/Components/Utilities/AjaxForm";
 	import SlideUpModal from "../Global/slide-up-modal";
 	import CreateMarkerTypeToggle from "./createMarker/TypeToggle";
 	import CreateMarkerFileField from "./createMarker/FileField";
