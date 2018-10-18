@@ -14,7 +14,7 @@
 </template>
 
 <script>
-	import MarkerEntry from "./MarkerEntry";
+	import MarkerEntry from "@/Components/Dashboard/SideBar/MarkerEntry";
 	import Map from '@/Services/LeafletMapService';
 
 	const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);

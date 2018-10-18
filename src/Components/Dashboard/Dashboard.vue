@@ -24,7 +24,7 @@
 
 <script>
 	import DashboardMixin from '@/Components/Dashboard/DashboardMixin';
-	import MarkerList from "@/Components/Global/MarkerList";
+	import MarkerList from "@/Components/Dashboard/SideBar/MarkerList";
 	import TopBar from "@/Components/View/TopBar";
 	import ViewMarker from "@/Components/Global/ViewMarker";
 	import Profile from "@/Components/edit/Profile";

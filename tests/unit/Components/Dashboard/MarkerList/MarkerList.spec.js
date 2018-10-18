@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import MarkerList from '@/Components/Global/MarkerList';
+import MarkerList from '@/Components/Dashboard/SideBar/MarkerList';
 import sinon from 'sinon';
 import Map from '@/Services/LeafletMapService';
 

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-	import Map from '@/Services/LeafletMapService';
+	import map from '@/Services/LeafletMapService';
 
 	export default {
 		name: "marker-entry",
@@ -49,7 +49,7 @@
 		methods: {
 			showMarker() {
 				this.$bus.$emit('moving-map');
-				Map.move([this.marker.lat, this.marker.lng], 16);
+				map.move([this.marker.lat, this.marker.lng], 16);
 			}
 		},
 
