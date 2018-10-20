@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import SearchBar from '@/Components/edit/SearchBar';
+import SearchBar from '@/Components/Dashboard/TopBar/SearchBar';
 import Map, { LeafletMapService } from '@/Services/LeafletMapService';
 import sinon from 'sinon';
 

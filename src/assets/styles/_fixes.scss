@@ -29,36 +29,3 @@ body {
 iframe.instagram-media.instagram-media-rendered {
 	width: 100% !important;
 }
-
-.datepicker-header {
-	a.pagination-next, a.pagination-previous {
-		span.icon {
-			display: none;
-		}
-
-		&:after {
-			color: $info;
-			font-weight: $weight-bold;
-		}
-
-		&:hover {
-			&:after {
-				color: $dark;
-			}
-
-		}
-	}
-
-	a.pagination-previous {
-		&:after {
-			content: '<';
-		}
-	}
-
-	a.pagination-next {
-		&:after {
-			content: '>';
-		}
-	}
-
-}

@@ -1,6 +1,9 @@
 <template>
-	<div class="dashboard">
-		<top-bar class="dashboard__header"/>
+	<div class="dashboard" :class="{'dashboard--big-mobile-header' : loggedIn}">
+		<div class="dashboard__header dashboard__control dashboard__control--dark">
+			<logged-in-bar v-if="loggedIn"/>
+			<logged-out-bar v-else/>
+		</div>
 		<div class="dashboard__body">
 			<profile/>
 			<div class="dashboard__control dashboard__body-sidebar" :class="{open: openSidebar}">
@@ -25,10 +28,12 @@
 <script>
 	import DashboardMixin from '@/Components/Dashboard/DashboardMixin';
 	import MarkerList from "@/Components/Dashboard/SideBar/MarkerList";
-	import TopBar from "@/Components/Dashboard/TopBar/TopBar";
 	import ViewMarker from "@/Components/Global/ViewMarker";
 	import Profile from "@/Components/edit/Profile";
 	import CreateMarker from "@/Components/edit/CreateMarker";
+	import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
+	import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar';
+	import auth from '@/Services/authentication.service';
 
 	export default {
 		name: "dashboard",
@@ -38,10 +43,16 @@
 		components: {
 			Profile,
 			ViewMarker,
-			TopBar,
 			CreateMarker,
 			MarkerList,
+			LoggedInBar,
+			LoggedOutBar
 		},
 
+		computed: {
+			loggedIn() {
+				return auth.isLoggedIn();
+			}
+		}
 	}
 </script>

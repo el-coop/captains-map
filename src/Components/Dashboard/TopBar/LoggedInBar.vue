@@ -1,6 +1,6 @@
 <template>
 	<div class="topbar-flex">
-		<div></div>
+		<div class="is-hidden-touch"></div>
 		<search-bar/>
 		<div class="field has-addons has-text-centered side-buttons">
 			<div class="control is-expanded">
@@ -18,7 +18,7 @@
 
 <script>
 	import Logout from "@/Components/Utilities/Logout";
-	import SearchBar from "@/Components/edit/SearchBar";
+	import SearchBar from "@/Components/Dashboard/TopBar/SearchBar";
 
 	export default {
 		name: "LoggedInBar",
@@ -34,9 +34,8 @@
 
 	.topbar-flex {
 		height: 100%;
-		padding: 0 2px;
+		padding: 0;
 		display: flex;
-		justify-content: center;
 		align-items: stretch;
 		flex-direction: column;
 
@@ -44,6 +43,7 @@
 			justify-content: space-between;
 			align-items: center;
 			flex-direction: row;
+			padding: 0 2px;
 		}
 	}
 

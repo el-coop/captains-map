@@ -2,8 +2,9 @@ import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import Dashboard from '@/Components/Dashboard/Dashboard';
 import sinon from 'sinon';
+import Auth from '@/Services/authentication.service';
 
-describe('MarkerList.vue', () => {
+describe('Dashboard.vue', () => {
 
 	let mocks;
 
@@ -31,7 +32,6 @@ describe('MarkerList.vue', () => {
 		assert.isTrue(wrapper.find('profile-stub').exists());
 		assert.isTrue(wrapper.find('viewmarker-stub').exists());
 		assert.isTrue(wrapper.find('markerlist-stub').exists());
-		assert.isTrue(wrapper.find('topbar-stub').exists());
 		assert.isFalse(wrapper.find('createmarker-stub').exists());
 	});
 
@@ -46,7 +46,6 @@ describe('MarkerList.vue', () => {
 		assert.isTrue(wrapper.find('profile-stub').exists());
 		assert.isTrue(wrapper.find('viewmarker-stub').exists());
 		assert.isTrue(wrapper.find('markerlist-stub').exists());
-		assert.isTrue(wrapper.find('topbar-stub').exists());
 		assert.isTrue(wrapper.find('createmarker-stub').exists());
 	});
 
@@ -184,4 +183,25 @@ describe('MarkerList.vue', () => {
 		assert.isFalse(wrapper.vm.$data.openSidebar);
 		assert.isFalse(wrapper.find('.dashboard__body-sidebar.open').exists());
 	});
+	it('Renders logged out bar when no user', () => {
+		const wrapper = shallowMount(Dashboard, {
+			mocks
+		});
+
+		assert.isTrue(wrapper.find('loggedoutbar-stub').exists());
+		assert.isFalse(wrapper.find('loggedinbar-stub').exists());
+	});
+
+
+	it('Renders logged in bar when authenticated', () => {
+		sinon.stub(Auth, 'isLoggedIn').returns(true);
+		const wrapper = shallowMount(Dashboard, {
+			mocks
+		});
+
+		assert.isFalse(wrapper.find('loggedoutbar-stub').exists());
+		assert.isTrue(wrapper.find('loggedinbar-stub').exists());
+		assert.isTrue(wrapper.find('.dashboard.dashboard--big-mobile-header').exists());
+	});
+
 });
