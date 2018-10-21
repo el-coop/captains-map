@@ -1,6 +1,6 @@
 <template>
 	<div class="leaflet-bar leaflet-control user-marker-control map__marker">
-		<a @click="toggleMarker" @contextmenu="goToUserMarker" :class="{active}">
+		<a @click="toggleMarker" @contextmenu.stop="goToUserMarker" :class="{active}">
 			<font-awesome-icon icon="globe"/>
 		</a>
 	</div>
