@@ -4,15 +4,15 @@
 			<div class="dropdown is-hoverable is-rounded">
 				<div class="dropdown-trigger">
 					<button class="button is-rounded">
-						<font-awesome-icon :icon="searchOptions[searchCategory]"/>
+						<font-awesome-icon :icon="searchOptions[searchCategory].icon"/>
 					</button>
 				</div>
 				<div class="dropdown-menu">
 					<div class="dropdown-content">
-						<a class="dropdown-item" v-for="(icon, option) in searchOptions"
+						<a class="dropdown-item" v-for="(settings, option) in searchOptions"
 						   @click="searchCategory = option"
 						   v-if="option !== searchCategory">
-							<font-awesome-icon :icon="icon"/>&nbsp;&nbsp;{{ option }}
+							<font-awesome-icon :icon="settings.icon"/>&nbsp;&nbsp;{{ option }}
 						</a>
 					</div>
 				</div>
@@ -22,9 +22,10 @@
 			<input type="search" class="input dropdown-trigger" v-model="query" @keyup="searched = false"/>
 			<div class="dropdown-menu">
 				<div class="dropdown-content" v-if="results.length || searched">
-					<a v-for="(result, index) in results" :key="index" v-text="result.formattedAddress"
+					<a v-for="(result, index) in results" :key="index" v-text="searchCategory === 'Users' ? result :
+					result.formattedAddress"
 					   class="dropdown-item"
-					   @click="moveMap([result.latitude,result.longitude])">
+					   @click="resultClicked(result)">
 					</a>
 					<p class="help is-danger dropdown-item" v-if="! results.length && searched">
 						No results found for <span v-text="query"/>
@@ -52,8 +53,14 @@
 				results: [],
 				searched: false,
 				searchOptions: {
-					Users: 'users',
-					Address: 'address-card'
+					Users: {
+						icon: 'users',
+						funcName: 'searchUsers'
+					},
+					Address: {
+						icon: 'address-card',
+						funcName: 'searchLocation'
+					},
 				},
 				searchCategory: 'Users'
 			}
@@ -68,15 +75,36 @@
 
 				this.searching = true;
 
-				this.results = await LeafletMapService.locate(this.query);
-				this.searched = true;
+				this.results = await this[this.searchOptions[this.searchCategory].funcName]();
 
 				this.searching = false;
+				this.searched = true;
+
 			},
 
-			moveMap(latLng) {
-				Map.move(latLng, 17);
-			}
+			async searchLocation() {
+				return await LeafletMapService.locate(this.query);
+			},
+
+			async searchUsers() {
+				try {
+					const response = await this.$http.get(`search/users/${this.query}`);
+					if (response.status === 200 || response.status === 'cached') {
+						return response.data;
+					}
+				} catch (error) {
+				}
+				return [];
+
+			},
+
+			resultClicked(result) {
+				if (this.searchCategory === 'Address') {
+					Map.move([result.latitude, result.longitude], 17);
+				} else {
+					this.$router.push(result);
+				}
+			},
 		},
 	}
 </script>
