@@ -61,7 +61,6 @@
 
 		watch: {
 			date(value) {
-				console.log(this.getDateTime());
 				this.$emit('input', this.getDateTime());
 			},
 			time(value) {
