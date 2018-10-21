@@ -19,7 +19,8 @@
 			</div>
 		</div>
 		<div class="control dropdown is-hoverable search-field">
-			<input type="search" class="input dropdown-trigger" v-model="query" @keyup="searched = false"/>
+			<input type="search" class="input dropdown-trigger" v-model="query" @keyup="searched = false"
+				   @keyup.enter="search"/>
 			<div class="dropdown-menu">
 				<div class="dropdown-content" v-if="results.length || searched">
 					<a v-for="(result, index) in results" :key="index" v-text="searchCategory === 'Users' ? result :

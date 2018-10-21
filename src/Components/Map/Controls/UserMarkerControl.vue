@@ -13,6 +13,9 @@
 	const LControl = leaflet.Control.extend({
 		element: undefined,
 		onAdd() {
+			leaflet.DomEvent.on(this.element, 'click', (ev) => {
+				leaflet.DomEvent.stopPropagation(ev);
+			});
 			return this.element;
 		},
 		setElement(el) {
