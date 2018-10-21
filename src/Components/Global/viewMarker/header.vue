@@ -7,10 +7,8 @@
 			<div class="media-content">
 				<p class="is-4" v-text="marker.user.username"/>
 				<p class="is-7 has-text-weight-normal" v-text="marker.type"/>
-				<p class="is-7 has-text-weight-light has-text-grey-lighter">{{ marker.time | moment("calendar",
-					null, {
-					sameElse: 'DD/MM/YYYY HH:mm'
-					}) }}</p>
+				<p class="is-7 has-text-weight-light has-text-grey-lighter"
+				   v-text="dateDisplay"></p>
 			</div>
 		</div>
 	</div>
@@ -34,6 +32,19 @@
 				}
 			}
 		},
+
+		computed: {
+			dateDisplay() {
+				const date = new Date(this.marker.time);
+
+				let hour = date.getHours();
+				if (hour < 10) {
+					hour = `0${hour}`;
+				}
+
+				return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${hour}:${date.getMinutes()}`;
+			}
+		}
 
 	}
 </script>

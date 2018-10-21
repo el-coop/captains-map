@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VModal from 'vue-js-modal';
 import { installer as HttpService } from '@/Services/http.service';
-import VueMoment from 'vue-moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
 	faUpload,
@@ -27,7 +26,6 @@ Vue.use(VModal);
 Vue.use(Meta);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(HttpService);
-Vue.use(VueMoment);
 Vue.use(VueClipboard);
 Vue.use(VueIziToast, {
 	position: 'bottomCenter'

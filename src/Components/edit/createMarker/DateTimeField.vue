@@ -32,13 +32,30 @@
 		methods: {
 			getDateTime() {
 				return new Date(`${this.date} ${this.time}`);
+			},
+
+			getCurrentDate() {
+				const date = new Date();
+
+				return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+			},
+
+			getCurrentTime() {
+				const date = new Date();
+
+				let hour = date.getHours();
+				if (hour < 10) {
+					hour = `0${hour}`;
+				}
+
+				return `${hour}:${date.getMinutes()}`;
 			}
 		},
 
 		data() {
 			return {
-				date: this.$moment().format('YYYY-MM-DD'),
-				time: this.$moment().format('HH:mm'),
+				date: this.getCurrentDate(),
+				time: this.getCurrentTime(),
 			}
 		},
 
