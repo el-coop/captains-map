@@ -2,9 +2,8 @@
 	<slide-up-modal name="view-marker" :route-name="routeName">
 		<template v-if="marker">
 			<view-marker-header slot="header" :marker="marker"/>
-			<component slot="image" :is="marker.media.type === 'instagram' ? 'Instagram': 'Photo'"
-					   :path="marker.media.path" :marker-id="marker.media.id"
-					   @instagram-loaded="$bus.$emit('fix-modal')"/>
+			<component slot="image" :is="marker.media.type === 'instagram' ? 'instagram': 'photo'"
+					   :path="marker.media.path" :marker-id="marker.media.id"/>
 			<view-marker-content slot="content" :marker="marker"/>
 
 			<template slot="footer">
@@ -23,10 +22,10 @@
 </template>
 
 <script>
-	import SlideUpModal from "./slide-up-modal";
-	import Auth from '@/Services/authentication.service';
-	import Photo from './media/photo';
-	import Instagram from './media/instagram';
+	import SlideUpModal from "@/Components/Utilities/SlideUpModal";
+	import auth from '@/Services/authentication.service';
+	import Photo from '../Global/media/photo';
+	import Instagram from '../Global/media/instagram';
 	import ViewMarkerHeader from "./viewMarker/header";
 	import ViewMarkerContent from "./viewMarker/Content";
 
@@ -53,10 +52,7 @@
 				if (response) {
 					return this.$modal.hide('view-marker');
 				} else {
-					this.$toast.error('Please try again at a later time', 'Delete failed.', {
-						timeout: 2000,
-						position: 'bottomCenter',
-					});
+					this.$toast.error('Please try again at a later time', 'Delete failed.');
 				}
 			},
 
@@ -64,12 +60,12 @@
 
 		computed: {
 			canDelete() {
-				let user = Auth.getUserDetails();
+				let user = auth.getUserDetails();
 				return user && user.id === this.marker.user_id
 			},
 
-			routeName(){
-				if(! this.marker){
+			routeName() {
+				if (!this.marker) {
 					return '';
 				}
 				return `${this.marker.user.username}/${this.marker.id}`;
@@ -78,15 +74,3 @@
 
 	}
 </script>
-
-<style lang="scss" scoped>
-	@import "~$scss/variables";
-
-	.dashboard__control--dark {
-		margin-bottom: 0.2rem;
-	}
-
-	hr {
-		margin: 0.5rem 0 0;
-	}
-</style>

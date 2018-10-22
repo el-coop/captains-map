@@ -21,7 +21,7 @@
 </template>
 
 <script>
-	import SlideUpModal from "./slide-up-modal";
+	import SlideUpModal from "@/Components/Utilities/SlideUpModal";
 	import atlantis from '@/assets/images/atlantis.jpg';
 	import tear from '@/assets/images/tear.png';
 

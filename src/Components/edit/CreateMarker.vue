@@ -40,7 +40,7 @@
 
 <script>
 	import AjaxForm from "@/Components/Utilities/AjaxForm";
-	import SlideUpModal from "../Global/slide-up-modal";
+	import SlideUpModal from "../Utilities/SlideUpModal";
 	import CreateMarkerTypeToggle from "./createMarker/TypeToggle";
 	import CreateMarkerFileField from "./createMarker/FileField";
 	import CreateMarkerInstagramField from "./createMarker/InstagramField";

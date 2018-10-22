@@ -7,7 +7,7 @@
 </template>
 
 <script>
-	import NotFound from '@/Components/Global/404';
+	import NotFound from '@/Components/Modals/404';
 	import MapView from '@/Components/Map/Map';
 
 	export default {

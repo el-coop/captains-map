@@ -28,7 +28,7 @@
 <script>
 	import DashboardMixin from '@/Components/Dashboard/DashboardMixin';
 	import MarkerList from "@/Components/Dashboard/SideBar/MarkerList";
-	import ViewMarker from "@/Components/Global/ViewMarker";
+	import ViewMarker from "@/Components/Modals/ViewMarker";
 	import Profile from "@/Components/edit/Profile";
 	import CreateMarker from "@/Components/edit/CreateMarker";
 	import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
