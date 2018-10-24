@@ -51,7 +51,9 @@
 				this.lng = location.latlng.lng;
 
 				if (!this.mapObject) {
-					this.$toast.hide('#geolocation-notification');
+					if(document.querySelector('#geolocation-notification')){
+						this.$toast.hide('#geolocation-notification');
+					}
 					this.$toast.info('You can now go to your location by holding the location icon. (right click on desktop)', '');
 					this.prepareMapObject(location.latlng.lat, location.latlng.lng);
 					this.addToMap();

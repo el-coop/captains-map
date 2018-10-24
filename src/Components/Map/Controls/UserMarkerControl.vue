@@ -1,6 +1,6 @@
 <template>
 	<div class="leaflet-bar leaflet-control user-marker-control map__marker">
-		<a @click="toggleMarker" @contextmenu.stop="goToUserMarker" :class="{active}">
+		<a @click="toggleMarker" @contextmenu.stop.prevent="goToUserMarker" :class="{active}">
 			<font-awesome-icon icon="globe"/>
 		</a>
 	</div>
@@ -14,6 +14,9 @@
 		element: undefined,
 		onAdd() {
 			leaflet.DomEvent.on(this.element, 'click', (ev) => {
+				leaflet.DomEvent.stopPropagation(ev);
+			});
+			leaflet.DomEvent.on(this.element, 'contextmenu', (ev) => {
 				leaflet.DomEvent.stopPropagation(ev);
 			});
 			return this.element;
