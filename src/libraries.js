@@ -12,7 +12,10 @@ import {
 	faGlobe,
 	faSearch,
 	faUsers,
-	faAddressCard
+	faAddressCard,
+	faList,
+	faMapMarked,
+	faGlobeAsia
 } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import Meta from 'vue-meta';
@@ -20,7 +23,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueClipboard from 'vue-clipboard2';
 import VueIziToast from 'vue-izitoast';
 
-library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faPowerOff, faGlobe, faFacebook, faSearch, faUsers, faAddressCard);
+library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faPowerOff, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia);
 
 Vue.use(VModal);
 Vue.use(Meta);

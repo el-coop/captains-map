@@ -18,7 +18,8 @@
 		<div class="dashboard__control dashboard__footer is-hidden-tablet">
 			<marker-borders-filter class="h-100">
 				<button class="button is-light is-outlined is-marginless" @click="openSidebar = !openSidebar">
-					Show {{ openSidebar ? 'Map' : 'List'}}
+					<font-awesome-icon icon="list" size="sm"/>
+					<span class="is-size-7">Show {{ openSidebar ? 'Map' : 'List'}}</span>
 				</button>
 			</marker-borders-filter>
 		</div>

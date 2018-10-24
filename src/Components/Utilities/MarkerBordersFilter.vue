@@ -2,10 +2,14 @@
 	<div class="buttons has-addons is-marginless">
 		<slot></slot>
 		<button class="button is-light is-outlined is-marginless" @click="setBorders"
-				:disabled="location === 'current'">Only Here
+				:disabled="location === 'current'">
+			<font-awesome-icon icon="map-marked" size="sm"/>
+			<span class="is-size-7">Only Here</span>
 		</button>
 		<button class="button is-light is-outlined is-marginless" @click="clearBorders"
-				:disabled="location === 'everywhere'">Everywhere
+				:disabled="location === 'everywhere'">
+			<font-awesome-icon icon="globe-asia" size="sm"/>
+			<span class="is-size-7">Everywhere</span>
 		</button>
 	</div>
 </template>
@@ -59,9 +63,15 @@
 	.button {
 		flex: 1;
 		height: 100%;
+		flex-direction: column;
 
 		&.is-light.is-outlined {
 			border-color: rgba(219, 219, 219, 0.5);
+
+			&:focus:not(:hover), &:active:not(:hover) {
+				color: whitesmoke;
+				background-color: transparent;
+			}
 		}
 
 	}
