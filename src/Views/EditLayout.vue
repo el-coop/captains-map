@@ -27,6 +27,7 @@
 		methods: {
 			envSetup() {
 				this.$modal.hide('404');
+				this.$store.commit('Markers/setBorders', false);
 				this.$store.commit('Markers/setUser', auth.getUserDetails().username);
 			},
 

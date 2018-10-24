@@ -23,6 +23,7 @@
 			envSetup() {
 				this.$modal.hide('404');
 
+				this.$store.commit('Markers/setBorders', false);
 				this.$store.commit('Markers/setUser', this.$route.params.username || '');
 			},
 
