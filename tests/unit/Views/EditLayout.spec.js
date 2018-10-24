@@ -75,6 +75,7 @@ describe('EditLayout.vue', () => {
 	});
 
 	it('Shows cache toast when loaded from cache', async () => {
+		sinon.stub(map, 'goToCurrentLocation');
 		mocks.$store.dispatch.returns({
 			status: 'cached'
 		});

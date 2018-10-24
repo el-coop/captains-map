@@ -15,10 +15,12 @@
 				</div>
 			</div>
 		</div>
-		<div class="dashboard__control is-hidden-tablet">
-			<button class="button is-fullwidth is-dark is-medium" @click="openSidebar = !openSidebar">
-				Show {{ openSidebar ? 'Map' : 'List'}}
-			</button>
+		<div class="dashboard__control dashboard__footer is-hidden-tablet">
+			<marker-borders-filter class="h-100">
+				<button class="button is-light is-outlined is-marginless" @click="openSidebar = !openSidebar">
+					Show {{ openSidebar ? 'Map' : 'List'}}
+				</button>
+			</marker-borders-filter>
 		</div>
 		<create-marker v-if="editMode" :latLng="latLng"/>
 		<view-marker :marker="selectedMarker"/>
@@ -34,6 +36,7 @@
 	import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
 	import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar';
 	import auth from '@/Services/authentication.service';
+	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter";
 
 	export default {
 		name: "dashboard",
@@ -41,6 +44,7 @@
 		mixins: [DashboardMixin],
 
 		components: {
+			MarkerBordersFilter,
 			Profile,
 			ViewMarker,
 			CreateMarker,

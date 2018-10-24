@@ -177,12 +177,12 @@ describe('Map Service', () => {
 	});
 
 	it('Goes to location that is already found', () => {
-		Map.location = [0,0];
-		const setViewStub = sinon.stub(Map,'setView');
+		Map.location = [0, 0];
+		const setViewStub = sinon.stub(Map, 'setView');
 		Map.goToCurrentLocation();
 
 		assert.isTrue(setViewStub.calledOnce);
-		assert.isTrue(setViewStub.calledWith([0,0],17));
+		assert.isTrue(setViewStub.calledWith([0, 0], 17));
 	});
 
 	it('Queues goToUserLocation if no map yet', () => {
@@ -293,6 +293,29 @@ describe('Map Service', () => {
 		assert.isTrue(Map.queuedActions.length === 1);
 		assert.deepEqual(Map.queuedActions, [['stopLocate', []]]);
 		Map.queuedActions = [];
+	});
+
+	it('Returns default boundaries value when map is null', () => {
+		Map.map = null;
+		assert.deepEqual(Map.getBorders(), {
+			_southWest: {
+				lat: -90,
+				lng: -180
+			},
+			_northEast: {
+				lat: 90,
+				lng: 180
+			}
+		});
+	});
+
+	it('Returns map boundries when it is set', () => {
+		Map.map = {
+			getBounds() {
+				return 'data'
+			}
+		};
+		assert.deepEqual(Map.getBorders(), 'data');
 	});
 
 });

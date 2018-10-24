@@ -90,6 +90,7 @@ describe('ViewLayout.vue', () => {
 	});
 
 	it('Shows cache toast when loaded from cache', async () => {
+		sinon.stub(map,'setView');
 		mocks.$store.dispatch.returns({
 			status: 'cached'
 		});
@@ -167,6 +168,7 @@ describe('ViewLayout.vue', () => {
 			lat: 10,
 			lng: 10
 		}];
+		sinon.stub(map,'setView');
 
 		mocks.$route.params.username = 'test';
 		await shallowMount(ViewLayout, {

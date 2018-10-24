@@ -12,7 +12,8 @@ export default {
 		username: '',
 		page: 0,
 		serverPage: 0,
-		loading: false
+		loading: false,
+		borders: false
 	},
 	mutations: {
 		add(state, marker) {
@@ -31,6 +32,9 @@ export default {
 
 		clear(state) {
 			state.markers = [];
+			state.page = 0
+			state.serverPage = 0;
+			state.hasNext = false;
 		},
 
 		toggleUserMarker(state) {
@@ -42,9 +46,13 @@ export default {
 		},
 
 		changePage(state, value) {
-			if (state.page + value > -1 && state.page + value < (state.markers.length / pageSize)){
+			if (state.page + value > -1 && state.page + value < (state.markers.length / pageSize)) {
 				state.page += value;
 			}
+		},
+
+		setBorders(state, borders) {
+			state.borders = borders;
 		}
 
 	},
@@ -73,12 +81,15 @@ export default {
 						route += `?startingId=${startingId}`;
 					}
 				}
+				if (state.borders) {
+					route += `${startingId ? '&' : '?'}borders=` + JSON.stringify(state.borders);
+				}
 
 				const response = await $http.get(route);
 				if (response.status === 200 || response.status === 'cached') {
 					const markers = response.data.markers;
 					state.hasNext = response.data.pagination.hasNext;
-					if (typeof response.data.pagination.page !== undefined) {
+					if (typeof response.data.pagination.page !== "undefined") {
 						state.serverPage = response.data.pagination.page;
 					}
 					markers.forEach((item) => {
@@ -97,8 +108,12 @@ export default {
 			let response;
 			try {
 				state.loading = true;
+				let route = `marker/${state.username}/${state.markers[0].id}/previous`
+				if (state.borders) {
+					route += '?borders=' + JSON.stringify(state.borders);
+				}
 
-				response = await $http.get(`marker/${state.username}/${state.markers[0].id}/previous`);
+				response = await $http.get(route);
 				if (response.status === 200 || response.status === 'cached') {
 					const markers = response.data.markers;
 					markers.forEach((item) => {

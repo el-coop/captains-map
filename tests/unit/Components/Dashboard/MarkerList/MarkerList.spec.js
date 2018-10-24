@@ -28,6 +28,7 @@ describe('MarkerList.vue', () => {
 			}
 		});
 
+		assert.isTrue(wrapper.find('markerbordersfilter-stub').exists());
 		assert.isTrue(wrapper.find('ul').exists());
 		assert.isFalse(wrapper.find('.loader').exists());
 	});
@@ -213,6 +214,9 @@ describe('MarkerList.vue', () => {
 	it('Loads next page', async () => {
 		const storeDispatchSpy = sinon.spy();
 		const mapSetViewStub = sinon.stub(Map, 'setView');
+		const $bus = {
+			$emit: sinon.spy()
+		};
 		const wrapper = shallowMount(MarkerList, {
 			mocks: {
 				$store: {
@@ -225,11 +229,14 @@ describe('MarkerList.vue', () => {
 						},
 					},
 					dispatch: storeDispatchSpy
-				}
+				},
+				$bus
 			}
 		});
 
 		await wrapper.vm.nextPage();
+		assert.isTrue($bus.$emit.calledOnce);
+		assert.isTrue($bus.$emit.calledWith('moving-map'));
 		assert.isTrue(storeDispatchSpy.calledOnce);
 		assert.isTrue(storeDispatchSpy.calledWith('Markers/nextPage'));
 		assert.isTrue(mapSetViewStub.calledOnce);
@@ -239,6 +246,9 @@ describe('MarkerList.vue', () => {
 	it('Loads prev page', async () => {
 		const storeDispatchSpy = sinon.spy();
 		const mapSetViewStub = sinon.stub(Map, 'setView');
+		const $bus = {
+			$emit: sinon.spy()
+		};
 		const wrapper = shallowMount(MarkerList, {
 			mocks: {
 				$store: {
@@ -251,11 +261,14 @@ describe('MarkerList.vue', () => {
 						},
 					},
 					dispatch: storeDispatchSpy
-				}
+				},
+				$bus
 			}
 		});
 
 		await wrapper.vm.previousPage();
+		assert.isTrue($bus.$emit.calledOnce);
+		assert.isTrue($bus.$emit.calledWith('moving-map'));
 		assert.isTrue(storeDispatchSpy.calledOnce);
 		assert.isTrue(storeDispatchSpy.calledWith('Markers/previousPage'));
 		assert.isTrue(mapSetViewStub.calledOnce);

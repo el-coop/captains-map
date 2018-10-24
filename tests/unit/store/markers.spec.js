@@ -64,15 +64,21 @@ describe('Marker Store', () => {
 
 	it('Clears markers', () => {
 		const state = {
+			hasNext: true,
+			page: 1,
+			serverPAge: 1,
 			markers: [{
 				id: 1,
-				name: 'test'
+				name: 'test',
 			}]
 		};
 
 		markersStore.mutations.clear(state);
 
 		assert.equal(state.markers.length, 0);
+		assert.equal(state.hasNext, false);
+		assert.equal(state.page, 0);
+		assert.equal(state.serverPage, 0);
 		assert.deepEqual(state.markers, []);
 	});
 
@@ -137,6 +143,59 @@ describe('Marker Store', () => {
 
 		assert.isTrue(getStub.calledOnce);
 		assert.isTrue(getStub.calledWith('marker/'));
+		assert.isTrue(commitSpy.calledThrice);
+		assert.isTrue(commitSpy.calledWith('clear'));
+		assert.isTrue(commitSpy.calledWith('add', {
+			id: 1
+		}));
+		assert.isTrue(commitSpy.calledWith('add', {
+			id: 2
+		}));
+		assert.isFalse(state.hasNext);
+		assert.deepEqual(response, {
+			status: 200,
+			data
+		});
+	});
+
+	it('Loads markers with boundries', async () => {
+		const data = {
+			markers: [{
+				id: 1
+			}, {
+				id: 2
+			}],
+
+			pagination: {
+				hasNext: false
+			}
+		};
+		const state = {
+			hasNext: false,
+			username: '',
+			borders: [{
+				lat: 0,
+				lng: 0
+			}, {
+				lat: 1,
+				lng: 1
+			}]
+		};
+		const getStub = sinon.stub(http, 'get').callsFake(() => {
+			return {
+				status: 200,
+				data
+			};
+		});
+		const commitSpy = sinon.spy();
+
+		const response = await markersStore.actions.load({
+			commit: commitSpy,
+			state
+		});
+
+		assert.isTrue(getStub.calledOnce);
+		assert.isTrue(getStub.calledWith('marker/?borders=' + JSON.stringify(state.borders)));
 		assert.isTrue(commitSpy.calledThrice);
 		assert.isTrue(commitSpy.calledWith('clear'));
 		assert.isTrue(commitSpy.calledWith('add', {
@@ -227,6 +286,55 @@ describe('Marker Store', () => {
 
 		assert.isTrue(getStub.calledOnce);
 		assert.isTrue(getStub.calledWith('marker/test'));
+		assert.isTrue(commitSpy.calledTwice);
+		assert.isTrue(commitSpy.calledWith('clear'));
+		assert.isTrue(commitSpy.calledWith('add', {
+			id: 1
+		}));
+		assert.isTrue(state.hasNext);
+		assert.deepEqual(response, {
+			status: 200,
+			data
+		});
+	});
+
+	it('Loads users markers with specific boundaries', async () => {
+		const data = {
+			markers: [{
+				id: 1
+			}],
+
+			pagination: {
+				hasNext: true
+			}
+		};
+		const state = {
+			hasNext: false,
+			username: 'test',
+			borders: [{
+				lat: 0,
+				lng: 0
+			}, {
+				lat: 1,
+				lng: 1
+			}]
+
+		};
+		const getStub = sinon.stub(http, 'get').callsFake(() => {
+			return {
+				status: 200,
+				data
+			};
+		});
+		const commitSpy = sinon.spy();
+
+		const response = await markersStore.actions.load({
+			commit: commitSpy,
+			state
+		});
+
+		assert.isTrue(getStub.calledOnce);
+		assert.isTrue(getStub.calledWith('marker/test?borders=' + JSON.stringify(state.borders)));
 		assert.isTrue(commitSpy.calledTwice);
 		assert.isTrue(commitSpy.calledWith('clear'));
 		assert.isTrue(commitSpy.calledWith('add', {
@@ -537,6 +645,63 @@ describe('Marker Store', () => {
 
 		assert.isTrue(getStub.calledOnce);
 		assert.isTrue(getStub.calledWith('marker/nur/3/previous'));
+		assert.isTrue(commitSpy.calledTwice);
+		assert.isTrue(commitSpy.calledWith('addAtStart', {
+			id: 1
+		}));
+		assert.isTrue(commitSpy.calledWith('addAtStart', {
+			id: 2
+		}));
+		assert.isFalse(state.hasNext);
+		assert.deepEqual(response, {
+			status: 200,
+			data
+		});
+	});
+
+	it('Loads previous page of markers in specific boundy', async () => {
+		const data = {
+			markers: [{
+				id: 1
+			}, {
+				id: 2
+			}],
+
+			pagination: {
+				hasNext: null,
+				serverPage: null
+			}
+		};
+		const state = {
+			hasNext: false,
+			serverPage: 1,
+			username: 'nur',
+			markers: [
+				{id: 3}
+			],
+			borders: [{
+				lat: 0,
+				lng: 0
+			}, {
+				lat: 1,
+				lng: 1
+			}]
+		};
+		const getStub = sinon.stub(http, 'get').callsFake(() => {
+			return {
+				status: 200,
+				data
+			};
+		});
+		const commitSpy = sinon.spy();
+
+		const response = await markersStore.actions.loadPrevious({
+			commit: commitSpy,
+			state
+		});
+
+		assert.isTrue(getStub.calledOnce);
+		assert.isTrue(getStub.calledWith('marker/nur/3/previous?borders=' + JSON.stringify(state.borders)));
 		assert.isTrue(commitSpy.calledTwice);
 		assert.isTrue(commitSpy.calledWith('addAtStart', {
 			id: 1

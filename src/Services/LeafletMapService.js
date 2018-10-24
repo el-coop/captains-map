@@ -27,6 +27,23 @@ export class LeafletMapService {
 		this.runQueuedActions();
 	}
 
+	getBorders() {
+		if(this.map){
+			return this.map.getBounds();
+		}
+
+		return {
+			_southWest: {
+				lat: -90,
+				lng: -180
+			},
+			_northEast: {
+				lat: 90,
+				lng: 180
+			}
+		}
+	}
+
 	runQueuedActions() {
 		let action;
 		while (action = this.queuedActions.pop()) {

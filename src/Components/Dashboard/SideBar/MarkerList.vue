@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<marker-borders-filter class="is-hidden-touch"/>
 		<div class="loader" v-if="loading"></div>
 		<ul v-if="! loading">
 			<li v-for="marker in markers" class="media" :key="marker.id">
@@ -7,8 +8,8 @@
 			</li>
 		</ul>
 		<div class="buttons has-addons" v-if="(hasNext || hasPrev) && ! loading">
-			<button class="button" @click="previousPage" :disabled="! hasPrev">< Previous</button>
-			<button class="button" @click="nextPage" :disabled="! hasNext">Next ></button>
+			<button class="button is-light" @click="previousPage" :disabled="! hasPrev">< Previous</button>
+			<button class="button is-light" @click="nextPage" :disabled="! hasNext">Next ></button>
 		</div>
 	</div>
 </template>
@@ -16,11 +17,12 @@
 <script>
 	import MarkerEntry from "@/Components/Dashboard/SideBar/MarkerEntry";
 	import Map from '@/Services/LeafletMapService';
+	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter";
 
 	const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
 	export default {
-		components: {MarkerEntry},
+		components: {MarkerBordersFilter, MarkerEntry},
 		name: "marker-list",
 
 		computed: {
@@ -55,6 +57,7 @@
 				if (!this.markers.length) {
 					return;
 				}
+				this.$bus.$emit('moving-map');
 				return Map.setView([this.markers[0].lat, this.markers[0].lng], 16);
 			}
 		}

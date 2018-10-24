@@ -30,6 +30,7 @@ describe('Dashboard.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('profile-stub').exists());
+		assert.isTrue(wrapper.find('markerbordersfilter-stub').exists());
 		assert.isTrue(wrapper.find('viewmarker-stub').exists());
 		assert.isTrue(wrapper.find('markerlist-stub').exists());
 		assert.isFalse(wrapper.find('createmarker-stub').exists());
