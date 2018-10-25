@@ -76,8 +76,6 @@ describe('UserMarker.vue', () => {
 		assert.isTrue(marker.on.calledWith('click'));
 		assert.isTrue(parent.methods.addObject.calledOnce);
 		assert.isTrue(parent.methods.addObject.calledWith(marker));
-		assert.isTrue($toast.hide.calledOnce);
-		assert.isTrue($toast.hide.calledWith('#geolocation-notification'));
 		assert.isTrue($toast.info.calledOnce);
 		assert.isTrue($toast.info.calledWith('You can now go to your location by holding the location icon. (right click on desktop)', ''));
 	});

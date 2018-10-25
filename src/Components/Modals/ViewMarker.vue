@@ -24,10 +24,10 @@
 <script>
 	import SlideUpModal from "@/Components/Utilities/SlideUpModal";
 	import auth from '@/Services/authentication.service';
-	import Photo from '../Global/media/photo';
-	import Instagram from '../Global/media/instagram';
-	import ViewMarkerHeader from "./viewMarker/header";
-	import ViewMarkerContent from "./viewMarker/Content";
+	import Photo from '@/Components/Global/Media/Photo';
+	import Instagram from '@/Components/Global/Media/Instagram';
+	import ViewMarkerHeader from "./ViewMarker/header";
+	import ViewMarkerContent from "./ViewMarker/Content";
 
 	export default {
 		name: "view-marker",
@@ -60,7 +60,7 @@
 
 		computed: {
 			canDelete() {
-				let user = auth.getUserDetails();
+				const user = auth.getUserDetails();
 				return user && user.id === this.marker.user_id
 			},
 

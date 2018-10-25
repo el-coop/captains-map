@@ -26,6 +26,9 @@ describe('Dashboard.vue', () => {
 
 	it('Renders without create-marker modal', () => {
 		const wrapper = shallowMount(Dashboard, {
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 
@@ -41,6 +44,9 @@ describe('Dashboard.vue', () => {
 			propsData: {
 				editMode: true
 			},
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 
@@ -54,6 +60,9 @@ describe('Dashboard.vue', () => {
 		shallowMount(Dashboard, {
 			propsData: {
 				editMode: true
+			},
+			stubs: {
+				'font-awesome-icon': true
 			},
 			mocks
 		});
@@ -69,6 +78,9 @@ describe('Dashboard.vue', () => {
 			propsData: {
 				editMode: true
 			},
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 
@@ -82,6 +94,9 @@ describe('Dashboard.vue', () => {
 
 	it('selects a marker to show and displays the modal', () => {
 		const wrapper = shallowMount(Dashboard, {
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 
@@ -100,6 +115,9 @@ describe('Dashboard.vue', () => {
 
 	it('closes the sidebar', () => {
 		const wrapper = shallowMount(Dashboard, {
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 
@@ -117,6 +135,9 @@ describe('Dashboard.vue', () => {
 		const wrapper = shallowMount(Dashboard, {
 			propsData: {
 				editMode: true
+			},
+			stubs: {
+				'font-awesome-icon': true
 			},
 			mocks
 		});
@@ -137,6 +158,9 @@ describe('Dashboard.vue', () => {
 			propsData: {
 				editMode: false
 			},
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 
@@ -156,6 +180,9 @@ describe('Dashboard.vue', () => {
 			propsData: {
 				editMode: false
 			},
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 
@@ -173,6 +200,9 @@ describe('Dashboard.vue', () => {
 			propsData: {
 				editMode: false
 			},
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 
@@ -186,6 +216,9 @@ describe('Dashboard.vue', () => {
 	});
 	it('Renders logged out bar when no user', () => {
 		const wrapper = shallowMount(Dashboard, {
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 
@@ -197,6 +230,9 @@ describe('Dashboard.vue', () => {
 	it('Renders logged in bar when authenticated', () => {
 		sinon.stub(Auth, 'isLoggedIn').returns(true);
 		const wrapper = shallowMount(Dashboard, {
+			stubs: {
+				'font-awesome-icon': true
+			},
 			mocks
 		});
 

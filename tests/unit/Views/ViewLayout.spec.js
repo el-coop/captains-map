@@ -63,7 +63,8 @@ describe('ViewLayout.vue', () => {
 			assert.isTrue(mocks.$modal.hide.calledOnce);
 			assert.isTrue(mocks.$modal.hide.calledWith('404'));
 
-			assert.isTrue(mocks.$store.commit.calledOnce);
+			assert.isTrue(mocks.$store.commit.calledTwice);
+			assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
 			assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', ''));
 
 			assert.isTrue(mocks.$store.dispatch.calledOnce);
@@ -90,7 +91,7 @@ describe('ViewLayout.vue', () => {
 	});
 
 	it('Shows cache toast when loaded from cache', async () => {
-		sinon.stub(map,'setView');
+		sinon.stub(map, 'setView');
 		mocks.$store.dispatch.returns({
 			status: 'cached'
 		});
@@ -168,14 +169,15 @@ describe('ViewLayout.vue', () => {
 			lat: 10,
 			lng: 10
 		}];
-		sinon.stub(map,'setView');
+		sinon.stub(map, 'setView');
 
 		mocks.$route.params.username = 'test';
 		await shallowMount(ViewLayout, {
 			mocks
 		});
 
-		assert.isTrue(mocks.$store.commit.calledOnce);
+		assert.isTrue(mocks.$store.commit.calledTwice);
+		assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
 		assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', 'test'));
 	});
 

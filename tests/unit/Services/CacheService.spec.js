@@ -1,8 +1,6 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import cache from '@/Services/cache.service';
-import localForage from 'localforage';
-
 
 describe('Cache Service', () => {
 
