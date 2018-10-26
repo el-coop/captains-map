@@ -9,6 +9,9 @@ describe('Dashboard.vue', () => {
 	let mocks;
 
 	beforeEach(() => {
+		global.window.matchMedia = sinon.stub().returns({
+			matches: true
+		});
 		mocks = {
 			$bus: {
 				$on: sinon.spy(),
@@ -21,10 +24,11 @@ describe('Dashboard.vue', () => {
 	});
 
 	afterEach(() => {
+		delete global.window.matchMedia;
 		sinon.restore();
 	});
 
-	it('Renders without create-marker modal', () => {
+	it('Renders without create-marker modal', async () => {
 		const wrapper = shallowMount(Dashboard, {
 			stubs: {
 				'font-awesome-icon': true
@@ -114,6 +118,9 @@ describe('Dashboard.vue', () => {
 	});
 
 	it('closes the sidebar', () => {
+		global.window.matchMedia = sinon.stub().returns({
+			matches: false
+		});
 		const wrapper = shallowMount(Dashboard, {
 			stubs: {
 				'font-awesome-icon': true
@@ -128,7 +135,8 @@ describe('Dashboard.vue', () => {
 		wrapper.vm.closeSidebar();
 
 		assert.isFalse(wrapper.vm.$data.openSidebar);
-		assert.isFalse(wrapper.find('.dashboard__body-sidebar.open').exists());
+		assert.isFalse(wrapper.find('markerlist-stub').exists());
+
 	});
 
 	it('Shows the create modal when in edit mode', () => {
@@ -176,6 +184,9 @@ describe('Dashboard.vue', () => {
 	});
 
 	it('It toggles list on when clicked and list is off', () => {
+		global.window.matchMedia = sinon.stub().returns({
+			matches: false
+		});
 		const wrapper = shallowMount(Dashboard, {
 			propsData: {
 				editMode: false
@@ -192,7 +203,7 @@ describe('Dashboard.vue', () => {
 		wrapper.find('button').trigger('click');
 
 		assert.isTrue(wrapper.vm.$data.openSidebar);
-		assert.isTrue(wrapper.find('.dashboard__body-sidebar.open').exists());
+		assert.isTrue(wrapper.find('markerlist-stub').exists());
 	});
 
 	it('It toggles list off when clicked and list is on', () => {

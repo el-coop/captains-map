@@ -32,6 +32,9 @@ describe('MapMarker.vue', () => {
 					lat: 0,
 					lng: 0,
 					type: 'image',
+					user: {
+						username: 'test'
+					}
 				}
 			}
 		});
@@ -70,6 +73,9 @@ describe('MapMarker.vue', () => {
 					lat: 0,
 					lng: 0,
 					type: 'image',
+					user: {
+						username: 'test'
+					}
 				}
 			}
 		});
@@ -110,6 +116,9 @@ describe('MapMarker.vue', () => {
 					lat: 0,
 					lng: 0,
 					type: 'image',
+					user: {
+						username: 'test'
+					}
 				}
 			}
 		});

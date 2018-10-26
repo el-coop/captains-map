@@ -4,7 +4,7 @@ import MarkerEntry from '@/Components/Dashboard/SideBar/MarkerEntry';
 import sinon from 'sinon';
 import map from '@/Services/LeafletMapService';
 
-describe('MarkerList.vue', () => {
+describe('MarkerEntry.vue', () => {
 	let marker;
 
 	beforeEach(() => {
@@ -16,6 +16,9 @@ describe('MarkerList.vue', () => {
 			description: 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NP',
 			lat: 1,
 			lng: 1,
+			user: {
+				username: 'test'
+			}
 
 		};
 	});
