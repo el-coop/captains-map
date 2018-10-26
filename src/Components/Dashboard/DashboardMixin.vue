@@ -36,7 +36,9 @@
 			},
 
 			closeSidebar() {
-				this.openSidebar = false;
+				if (!window.matchMedia("(min-width: 769px)").matches) {
+					this.openSidebar = false;
+				}
 			},
 
 			createMarker(data) {

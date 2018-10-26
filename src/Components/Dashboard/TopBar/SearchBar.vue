@@ -10,7 +10,7 @@
 				<div class="dropdown-menu">
 					<div class="dropdown-content">
 						<a class="dropdown-item" v-for="(settings, option) in searchOptions"
-						   @click="searchCategory = option"
+						   @click="changeSearch(option)"
 						   v-if="option !== searchCategory">
 							<font-awesome-icon :icon="settings.icon"/>&nbsp;&nbsp;{{ option }}
 						</a>
@@ -106,6 +106,12 @@
 					this.$router.push(result);
 				}
 			},
+
+			changeSearch(category) {
+				this.results = [];
+				this.searched = false;
+				this.searchCategory = category;
+			}
 		},
 	}
 </script>
