@@ -1,6 +1,6 @@
 <template>
 	<div class="map__icon-wrapper map__marker">
-		<img :src="path" :class="`map__icon-${marker.type}`">
+		<img :src="path" :class="`map__icon-${marker.type}`" :alt="`${marker.user.username} ${marker.type}`">
 	</div>
 </template>
 

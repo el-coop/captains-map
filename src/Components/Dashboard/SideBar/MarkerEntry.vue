@@ -2,7 +2,7 @@
 	<div class="media" :class="marker.type" @click="showMarker">
 		<figure class="media-left">
 			<p class="image">
-				<img :src="src">
+				<img :src="src" :alt="`${marker.user.username} ${marker.type}`">
 			</p>
 		</figure>
 		<div class="media-content">

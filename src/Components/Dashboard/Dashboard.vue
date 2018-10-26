@@ -11,8 +11,10 @@
 					<marker-list/>
 
 					<div class="content copyright">
-						Map data available thanks to © OpenStreetMap contributors.
-						<a href="https://www.openstreetmap.org/copyright" target="_blank">Copyright info</a>
+						Map data available thanks to © OpenStreetMap contributors.<br>
+						© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> | © <a
+							href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> | <a
+							href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a>
 					</div>
 				</div>
 			</transition>

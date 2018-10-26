@@ -1,6 +1,6 @@
 <template>
 	<figure class="image">
-		<img :src="`/api${path}`">
+		<img :src="`/api${path}`" :alt="alt">
 	</figure>
 </template>
 
@@ -12,6 +12,10 @@
 			path: {
 				required: true,
 				type: String
+			},
+			alt: {
+				type: String,
+				default: ''
 			}
 		}
 	}

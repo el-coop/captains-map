@@ -3,7 +3,8 @@
 		<template v-if="marker">
 			<view-marker-header slot="header" :marker="marker"/>
 			<component slot="image" :is="marker.media.type === 'instagram' ? 'instagram': 'photo'"
-					   :path="marker.media.path" :marker-id="marker.media.id"/>
+					   :path="marker.media.path" :marker-id="marker.media.id"
+					   :alt="`${marker.user.username} | ${marker.description}`"/>
 			<view-marker-content slot="content" :marker="marker"/>
 
 			<template slot="footer">
