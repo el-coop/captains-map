@@ -1,6 +1,6 @@
 <template>
 	<div class="topbar-flex">
-		<div class="is-hidden-touch"></div>
+		<div class="is-hidden-mobile"></div>
 		<search-bar/>
 		<div class="field has-addons has-text-centered side-buttons">
 			<div class="control is-expanded">

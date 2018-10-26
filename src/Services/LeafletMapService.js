@@ -28,7 +28,7 @@ export class LeafletMapService {
 	}
 
 	getBorders() {
-		if(this.map){
+		if (this.map) {
 			return this.map.getBounds();
 		}
 
@@ -148,3 +148,4 @@ export class LeafletMapService {
 }
 
 export default new LeafletMapService();
+export const provider = tileLayer.name;

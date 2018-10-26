@@ -9,6 +9,7 @@
 <script>
 	import NotFound from '@/Components/Modals/404';
 	import MapView from '@/Components/Map/Map';
+	import { provider } from '@/Services/LeafletMapService';
 
 	export default {
 		components: {
@@ -16,10 +17,35 @@
 			NotFound
 		},
 		name: 'App',
-		metaInfo: {
+		metaInfo() {
+			const link = [];
+			if (provider == 'mapbox') {
+				link.push({
+					rel: 'prefect',
+					href: 'https://api.mapbox.com'
+				})
+			} else {
+				link.push({
+					rel: 'prefect',
+					href: 'https://a.tile.openstreetmap.org'
+				});
+				link.push({
+					rel: 'prefect',
+					href: 'https://b.tile.openstreetmap.org'
+				});
 
-			title: 'Home',
-			titleTemplate: '%s | Captains Map',
+				link.push({
+					rel: 'prefect',
+					href: 'https://c.tile.openstreetmap.org'
+				});
+			}
+
+
+			return {
+				title: 'Home',
+				titleTemplate: '%s | Captains Map',
+				link
+			}
 		}
 	}
 </script>

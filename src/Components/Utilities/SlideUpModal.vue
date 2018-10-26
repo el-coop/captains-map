@@ -1,5 +1,5 @@
 <template>
-	<modal :name="name" :transition="transition" :height="height" :adaptive="true"
+	<modal :name="name" transition="slide-up-opacity" :height="height" :adaptive="true"
 		   :width="width"
 		   :scrollable="true"
 		   :pivotY="pivotY"
@@ -51,7 +51,6 @@
 
 		data() {
 			return {
-				transition: '',
 				pivotY: 0.5,
 				height: 'auto',
 				isOpen: false
@@ -72,10 +71,8 @@
 				this.isOpen = true;
 				this.$emit('before-open');
 				if (window.innerWidth < 769) {
-					this.transition = 'slide-up';
 					this.pivotY = 0.001;
 				} else {
-					this.transition = 'slide-up';
 					this.pivotY = 0.5;
 				}
 			},

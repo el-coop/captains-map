@@ -6,14 +6,16 @@
 		</div>
 		<div class="dashboard__body">
 			<profile/>
-			<div class="dashboard__control dashboard__body-sidebar" :class="{open: openSidebar}">
-				<marker-list/>
+			<transition name="slide-up">
+				<div class="dashboard__control dashboard__body-sidebar" v-if="openSidebar">
+					<marker-list/>
 
-				<div class="content copyright">
-					Map data available thanks to © OpenStreetMap contributors.
-					<a href="https://www.openstreetmap.org/copyright" target="_blank">Copyright info</a>
+					<div class="content copyright">
+						Map data available thanks to © OpenStreetMap contributors.
+						<a href="https://www.openstreetmap.org/copyright" target="_blank">Copyright info</a>
+					</div>
 				</div>
-			</div>
+			</transition>
 		</div>
 		<div class="dashboard__control dashboard__footer is-hidden-tablet">
 			<marker-borders-filter class="h-100">

@@ -32,7 +32,8 @@
 		data() {
 			return {
 				image: null,
-				src: null
+				src: null,
+				observer: null
 			}
 		},
 

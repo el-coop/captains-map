@@ -11,7 +11,7 @@
 			return {
 				latLng: {},
 				selectedMarker: null,
-				openSidebar: false,
+				openSidebar: window.matchMedia("(min-width: 769px)").matches,
 				mountModal: false
 			}
 		},

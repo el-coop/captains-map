@@ -1,6 +1,6 @@
 <template>
 	<div class="dashboard__control profile" :class="status">
-		<img class="image"
+		<img v-if="bigScreen" class="image"
 			 @click="setStatus('')"
 			 :src="profile.image">
 		<!--<div class="field has-addons buttons">-->
@@ -40,6 +40,7 @@
 
 		data() {
 			return {
+				bigScreen: window.matchMedia("(min-width: 769px)").matches,
 				status: ''
 			}
 		},
