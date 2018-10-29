@@ -1,7 +1,7 @@
 import Router from 'vue-router';
 import ViewLayout from '@/Views/ViewLayout';
 import EditLayout from '@/Views/EditLayout';
-import Auth from '@/middleware/Auth.middleware';
+import Auth from '@/Middleware/Auth.middleware';
 
 const router = new Router({
 	mode: 'history',

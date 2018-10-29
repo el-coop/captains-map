@@ -1,5 +1,5 @@
 <template>
-	<div class="media ">
+	<div class="media">
 		<div class="media-content">
 			<div class="content">
 				<p v-text="marker.description"></p>
@@ -51,7 +51,6 @@
 							text: '',
 							url: url,
 						});
-						this.$toast.success('Link shared', '');
 					} catch (error) {
 
 					}

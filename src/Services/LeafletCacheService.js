@@ -25,7 +25,7 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 	},
 
 	getTileKey(coords) {
-		return `x${coords.x}yx${coords.y}zx${coords.x}`;
+		return `x${coords.x}y${coords.y}z${coords.z}`;
 	},
 
 	cacheSrc(key, tile) {

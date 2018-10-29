@@ -27,8 +27,8 @@
 	import auth from '@/Services/authentication.service';
 	import Photo from '@/Components/Global/Media/Photo';
 	import Instagram from '@/Components/Global/Media/Instagram';
-	import ViewMarkerHeader from "./ViewMarker/header";
-	import ViewMarkerContent from "./ViewMarker/Content";
+	import ViewMarkerHeader from "@/Components/Modals/ViewMarker/Header";
+	import ViewMarkerContent from "@/Components/Modals/ViewMarker/Content";
 
 	export default {
 		name: "view-marker",

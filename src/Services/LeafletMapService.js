@@ -1,5 +1,5 @@
 import leaflet from 'leaflet';
-import '@/Services/leafletCache.service'
+import '@/Services/LeafletCacheService'
 import http from '@/Services/http.service';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 
