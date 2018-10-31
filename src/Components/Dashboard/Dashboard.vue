@@ -1,11 +1,11 @@
 <template>
-	<div class="dashboard" :class="{'dashboard--big-mobile-header' : loggedIn}">
+	<div class="dashboard">
 		<div class="dashboard__header dashboard__control dashboard__control--dark">
 			<logged-in-bar v-if="loggedIn"/>
 			<logged-out-bar v-else/>
 		</div>
 		<div class="dashboard__body">
-			<profile/>
+			<div></div>
 			<transition name="slide-up">
 				<div class="dashboard__control dashboard__body-sidebar" v-if="openSidebar">
 					<marker-list/>

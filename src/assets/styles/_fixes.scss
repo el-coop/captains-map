@@ -33,3 +33,16 @@ iframe.instagram-media.instagram-media-rendered {
 .h-100 {
 	height: 100%;
 }
+
+.button {
+	&.is-borderless {
+		border: none;
+	}
+
+	&.is-light-hover {
+		&:focus, &:hover, &:active {
+			background-color: lighten($background, 1) !important;
+			color: $text !important;
+		}
+	}
+}

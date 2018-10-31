@@ -1,11 +1,9 @@
 <template>
-	<div class="control">
-		<button class="button is-danger is-outlined is-fullwidth" @click="logout">
-			<span class="icon">
-				<font-awesome-icon icon="power-off"/>
-			</span>
-		</button>
-	</div>
+	<button class="button is-danger is-outlined is-marginless is-borderless" @click="logout">
+		<span class="icon">
+			<font-awesome-icon icon="sign-out-alt"/>
+		</span>
+	</button>
 </template>
 
 <script>
@@ -13,7 +11,7 @@
 		name: "Logout",
 
 		methods: {
-			logout(){
+			logout() {
 				this.$store.dispatch('User/logout');
 			}
 		}

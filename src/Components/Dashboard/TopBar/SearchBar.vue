@@ -3,8 +3,8 @@
 		<div class="control">
 			<div class="dropdown is-hoverable is-rounded">
 				<div class="dropdown-trigger">
-					<button class="button is-rounded">
-						<font-awesome-icon :icon="searchOptions[searchCategory].icon"/>
+					<button class="button">
+						<font-awesome-icon :icon="searchOptions[searchCategory].icon" fixed-width/>
 					</button>
 				</div>
 				<div class="dropdown-menu">
@@ -19,7 +19,7 @@
 			</div>
 		</div>
 		<div class="control dropdown is-hoverable search-field">
-			<input type="search" class="input dropdown-trigger" v-model="query" @keyup="searched = false"
+			<input type="search" class="input" v-model="query" @keyup="searched = false"
 				   @keyup.enter="search"/>
 			<div class="dropdown-menu">
 				<div class="dropdown-content" v-if="results.length || searched">
@@ -35,7 +35,7 @@
 			</div>
 		</div>
 		<div class="control">
-			<button class="button is-rounded" :class="{'is-loading': searching}" @click="search">
+			<button class="button" :class="{'is-loading': searching}" @click="search">
 				<font-awesome-icon icon="search"/>
 			</button>
 		</div>
@@ -124,12 +124,11 @@
 	}
 
 	.field.has-addons {
+		flex: 1;
 		margin: 0 0 5px 0;
 		padding: 0.2em 0.25em;
-		background-color: whitesmoke;
 
 		@media #{$above-tablet}{
-			background-color: transparent;
 			margin: 0;
 		}
 	}
