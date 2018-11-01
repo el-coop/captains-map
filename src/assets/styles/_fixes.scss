@@ -37,6 +37,10 @@ iframe.instagram-media.instagram-media-rendered {
 .button {
 	&.is-borderless {
 		border: none;
+		&:focus, &:hover, &:active {
+			border: none;
+			box-shadow: none !important;
+		}
 	}
 
 	&.is-light-hover {

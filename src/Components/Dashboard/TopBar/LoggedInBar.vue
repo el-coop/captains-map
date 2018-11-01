@@ -29,7 +29,7 @@
 					<span class="is-size-7" v-text="username"></span>
 				</button>
 				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
-						:disabled="$router.currentRoute.path === '/'"
+						:disabled="! hasUser"
 						@click="$router.push('/')">
 					<span class="icon is-small">
 						<font-awesome-icon icon="globe"/>
@@ -66,6 +66,10 @@
 			username() {
 				return auth.getUserDetails().username;
 			},
+
+			hasUser() {
+				return this.$store.state.Markers.username;
+			}
 		}
 	}
 </script>
@@ -76,7 +80,9 @@
 	.drawer-mobile {
 		position: absolute;
 		top: 0;
+		left: 0;
 		height: 100%;
+		max-height: $gap/1.5;
 		width: 100%;
 		z-index: 100;
 		transform: translateX(100%);
@@ -102,6 +108,7 @@
 
 	.buttons {
 		width: 100%;
+		height: 100%;
 
 		@media (min-width: $tablet) {
 			width: auto;

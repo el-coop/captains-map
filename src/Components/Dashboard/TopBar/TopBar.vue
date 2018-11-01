@@ -1,8 +1,7 @@
 <template>
 	<div class="top-bar">
 		<div class="top-bar__left">
-			<profile-open v-if="$router.currentRoute.name === 'edit' || this.$route.params.username"
-						  class="is-hidden-mobile"/>
+			<profile-open v-if="hasUsername" class="top-bar__profile"/>
 			<figure class="image is-32x32 is-hidden-mobile" v-else>
 				<img class="is-rounded" :src="logo">
 			</figure>
@@ -25,6 +24,12 @@
 				logo: globe
 			}
 		},
+
+		computed: {
+			hasUsername() {
+				return this.$store.state.Markers.username;
+			}
+		}
 	}
 </script>
 
@@ -34,10 +39,13 @@
 	.top-bar {
 		height: 100%;
 		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
+		justify-content: stretch;
+		flex-direction: column-reverse;
+		align-items: start;
 		@media (min-width: $tablet) {
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
 			margin: 0 20vw 0 10vw;
 		}
 
@@ -45,6 +53,11 @@
 			display: flex;
 			flex-direction: row;
 			align-items: center;
+			width: 100%;
+			@media (min-width: $tablet) {
+				width: auto;
+			}
 		}
 	}
+
 </style>

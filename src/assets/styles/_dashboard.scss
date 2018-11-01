@@ -9,9 +9,17 @@
 	z-index: 10;
 	grid-template-rows: [header] $gap/1.5 [body] calc(100% - #{2 * $gap / 1.5}) [footer] $gap/1.5;
 	grid-template-columns: 100%;
+	transition: grid-template-rows 0.3s;
+
+	&--with-profile {
+		grid-template-rows: [header] 2*$gap/1.5 [body] calc(100% - #{3 * $gap / 1.5}) [footer] $gap/1.5;
+	}
 
 	@media #{$above-tablet} {
 		grid-template-rows: [header] $gap/1.5 [body] calc(100% - #{$gap / 1.5});
+		&--with-profile {
+			grid-template-rows: [header] $gap/1.5 [body] calc(100% - #{$gap / 1.5});
+		}
 	}
 
 	.title, .subtitle, strong {

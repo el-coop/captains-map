@@ -1,5 +1,5 @@
 <template>
-	<div class="dashboard">
+	<div class="dashboard" :class="{'dashboard--with-profile': hasUsername}">
 		<div class="dashboard__header dashboard__control dashboard__control--dark">
 			<logged-in-bar v-if="loggedIn"/>
 			<logged-out-bar v-else/>
@@ -61,6 +61,10 @@
 		computed: {
 			loggedIn() {
 				return auth.isLoggedIn();
+			},
+
+			hasUsername() {
+				return this.$store.state.Markers.username;
 			}
 		}
 	}
