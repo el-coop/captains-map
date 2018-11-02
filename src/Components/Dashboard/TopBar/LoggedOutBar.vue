@@ -10,7 +10,7 @@
 					<span class="is-size-7">Log In</span>
 				</button>
 				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
-						@click="$modal.show('login')">
+						@click="$modal.show('register')">
 					<span class="is-size-7">Register</span>
 				</button>
 				<login-modal/>

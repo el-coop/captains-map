@@ -19,6 +19,13 @@ describe('Dashboard.vue', () => {
 			},
 			$modal: {
 				show: sinon.spy()
+			},
+			$store: {
+				state: {
+					Markers: {
+						username: false
+					}
+				}
 			}
 		}
 	});
@@ -36,7 +43,6 @@ describe('Dashboard.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('profile-stub').exists());
 		assert.isTrue(wrapper.find('markerbordersfilter-stub').exists());
 		assert.isTrue(wrapper.find('viewmarker-stub').exists());
 		assert.isTrue(wrapper.find('markerlist-stub').exists());
@@ -54,7 +60,6 @@ describe('Dashboard.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('profile-stub').exists());
 		assert.isTrue(wrapper.find('viewmarker-stub').exists());
 		assert.isTrue(wrapper.find('markerlist-stub').exists());
 		assert.isTrue(wrapper.find('createmarker-stub').exists());
@@ -249,7 +254,19 @@ describe('Dashboard.vue', () => {
 
 		assert.isFalse(wrapper.find('loggedoutbar-stub').exists());
 		assert.isTrue(wrapper.find('loggedinbar-stub').exists());
-		assert.isTrue(wrapper.find('.dashboard.dashboard--big-mobile-header').exists());
+	});
+
+	it('Toggles profile class when there is a user', () => {
+		mocks.$store.state.Markers.username = 'test';
+		sinon.stub(Auth, 'isLoggedIn').returns(true);
+		const wrapper = shallowMount(Dashboard, {
+			stubs: {
+				'font-awesome-icon': true
+			},
+			mocks
+		});
+
+		assert.isTrue(wrapper.find('.dashboard--with-profile').exists());
 	});
 
 });

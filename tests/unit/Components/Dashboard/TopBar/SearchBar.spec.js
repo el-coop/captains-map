@@ -19,7 +19,7 @@ describe('SearchBar.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('.input.dropdown-trigger').exists());
-		assert.isTrue(wrapper.find('.button.is-rounded').exists());
+		assert.isTrue(wrapper.find('.button').exists());
 	});
 
 	it('Tracks input', () => {
@@ -217,5 +217,33 @@ describe('SearchBar.vue', () => {
 		wrapper.find('.search-field .dropdown-item').trigger('click');
 		assert.isTrue(routeSpy.calledWith('test'));
 		assert.isFalse(moveStub.called);
+	});
+
+	it('Toggles dropdown on hen hover over search button', () => {
+		const wrapper = shallowMount(SearchBar, {
+			stubs: {
+				'font-awesome-icon': true
+			},
+		});
+
+
+		wrapper.findAll('button').at('1').trigger('mouseenter');
+		assert.isTrue(wrapper.find('.dropdown.is-active').exists());
+	});
+
+	it('Toggles dropdown off when hover over search button', () => {
+		const wrapper = shallowMount(SearchBar, {
+			stubs: {
+				'font-awesome-icon': true
+			},
+		});
+
+		wrapper.setData({
+			openResults: true
+		});
+
+
+		wrapper.findAll('button').at('1').trigger('mouseleave');
+		assert.isFalse(wrapper.find('.dropdown.is-active').exists());
 	});
 });

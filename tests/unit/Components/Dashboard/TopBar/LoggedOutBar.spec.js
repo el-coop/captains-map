@@ -5,18 +5,24 @@ import sinon from 'sinon';
 
 describe('LoggdOutBar.vue', () => {
 
+	const stubs = {
+		'font-awesome-icon': true
+	};
+
 	afterEach(() => {
 		sinon.restore();
 	});
 
 	it('Renders login and register', () => {
-		const wrapper = shallowMount(LoggedOutBar);
+		const wrapper = shallowMount(LoggedOutBar, {
+			stubs
+		});
 
-
+		assert.isTrue(wrapper.find('topbar-stub').exists());
 		assert.isTrue(wrapper.find('loginmodal-stub').exists());
 		assert.isTrue(wrapper.find('registermodal-stub').exists());
-		assert.include(wrapper.html(), 'Log in');
-		assert.include(wrapper.html(), 'Register');
+		assert.equal(wrapper.findAll('button.is-light.is-outlined').at(0).text(), 'Log In');
+		assert.equal(wrapper.findAll('button.is-light.is-outlined').at(1).text(), 'Register');
 	});
 
 	it('Calls login modal when log in clicked', () => {
@@ -24,13 +30,13 @@ describe('LoggdOutBar.vue', () => {
 			show: sinon.spy()
 		};
 		const wrapper = shallowMount(LoggedOutBar, {
+			stubs,
 			mocks: {
 				$modal
 			}
 		});
 
-		const loginButton = wrapper.findAll('.button.is-dark.is-fullwidth').at(0);
-		loginButton.trigger('click');
+		wrapper.findAll('.button.is-light.is-outlined').at(0).trigger('click');
 
 		assert.isTrue($modal.show.calledOnce);
 		assert.isTrue($modal.show.calledWith('login'));
@@ -42,13 +48,13 @@ describe('LoggdOutBar.vue', () => {
 			show: sinon.spy()
 		};
 		const wrapper = shallowMount(LoggedOutBar, {
+			stubs,
 			mocks: {
 				$modal
 			}
 		});
 
-		const registerButton = wrapper.findAll('.button.is-dark.is-fullwidth').at(1);
-		registerButton.trigger('click');
+		wrapper.findAll('.button.is-light.is-outlined').at(1).trigger('click');
 
 		assert.isTrue($modal.show.calledOnce);
 		assert.isTrue($modal.show.calledWith('register'));

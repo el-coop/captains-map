@@ -18,7 +18,7 @@ describe('Logout.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.find('font-awesome-icon-stub[icon=power-off]').exists());
+		assert.isTrue(wrapper.find('font-awesome-icon-stub[icon=sign-out-alt]').exists());
 	});
 
 	it('Logsout on click', () => {

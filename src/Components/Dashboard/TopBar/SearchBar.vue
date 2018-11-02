@@ -18,8 +18,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="control dropdown is-hoverable search-field">
-			<input type="search" class="input" v-model="query" @keyup="searched = false"
+		<div class="control dropdown is-hoverable search-field" :class="{'is-active': openResults}">
+			<input type="search" class="input dropdown-trigger" v-model="query" @keyup="searched = false"
 				   @keyup.enter="search"/>
 			<div class="dropdown-menu">
 				<div class="dropdown-content" v-if="results.length || searched">
@@ -35,7 +35,7 @@
 			</div>
 		</div>
 		<div class="control">
-			<button class="button" :class="{'is-loading': searching}" @click="search">
+			<button class="button" :class="{'is-loading': searching}" @click="search" @mouseenter="openResults = true" @mouseleave="openResults = false">
 				<font-awesome-icon icon="search"/>
 			</button>
 		</div>
@@ -63,7 +63,8 @@
 						funcName: 'searchLocation'
 					},
 				},
-				searchCategory: 'Users'
+				searchCategory: 'Users',
+				openResults: false
 			}
 		},
 
