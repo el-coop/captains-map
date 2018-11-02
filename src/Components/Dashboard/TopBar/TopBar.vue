@@ -5,7 +5,6 @@
 			<figure class="image is-32x32 is-hidden-mobile" v-else>
 				<img class="is-rounded" :src="logo">
 			</figure>
-
 			<slot name="left"></slot>
 		</div>
 		<slot name="right"></slot>
@@ -56,6 +55,29 @@
 			width: 100%;
 			@media (min-width: $tablet) {
 				width: auto;
+			}
+		}
+
+		.buttons {
+			width: 100%;
+			height: 100%;
+
+			@media (min-width: $tablet) {
+				width: auto;
+			}
+
+			> .button {
+				flex: 1;
+				height: 100%;
+				position: relative;
+
+				&:not(:last-child):after {
+					position: absolute;
+					right: 0;
+					content: ' ';
+					border: lighten($background, 3) solid 1px;
+					height: 50%;
+				}
 			}
 		}
 	}

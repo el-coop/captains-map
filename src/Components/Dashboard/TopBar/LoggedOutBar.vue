@@ -1,42 +1,36 @@
 <template>
-	<div class="field is-grouped has-text-centered" v-else>
-		<div class="control is-expanded">
-			<button class="button is-dark is-fullwidth" @click="$modal.show('login')">Log in</button>
-			<login-modal/>
-		</div>
-		<div class="control is-expanded">
-			<button class="button is-dark is-fullwidth" @click="$modal.show('register')">Register</button>
-			<register-modal/>
-		</div>
-	</div>
+	<top-bar>
+		<template slot="right">
+			<div class="buttons is-marginless">
+				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
+						@click="$modal.show('login')">
+					<span class="icon is-small">
+						<font-awesome-icon icon="sign-in-alt"/>&nbsp;
+					</span>
+					<span class="is-size-7">Log In</span>
+				</button>
+				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
+						@click="$modal.show('login')">
+					<span class="is-size-7">Register</span>
+				</button>
+				<login-modal/>
+				<register-modal/>
+			</div>
+		</template>
+	</top-bar>
 </template>
 
 <script>
 	import LoginModal from "@/Components/Modals/LoginModal";
 	import RegisterModal from "@/Components/Modals/RegisterModal";
+	import TopBar from "@/Components/Dashboard/TopBar/TopBar";
 
 	export default {
 		name: "LoggedOutBar",
 		components: {
+			TopBar,
 			LoginModal,
 			RegisterModal
 		}
 	}
 </script>
-
-<style lang="scss" scoped>
-
-	@import "~$scss/variables";
-
-	.field.is-grouped {
-		height: 100%;
-		align-items: center;
-		padding: 0 2px;
-
-		@media #{$above-tablet} {
-			margin-left: auto;
-			padding: 0 20px;
-			max-width: 20vw;
-		}
-	}
-</style>

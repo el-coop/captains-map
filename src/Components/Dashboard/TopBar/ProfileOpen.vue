@@ -5,9 +5,9 @@
 				<img class="is-rounded" :src="logo">
 			</figure>&nbsp;
 			<span class="is-size-7-tablet button-text"
-				  v-text="$router.currentRoute.params.username || 'Profile'"></span>
+				  v-text="$store.state.Markers.username"></span>
 			<span class="is-hidden-tablet icon is-small">
-				<font-awesome-icon icon="chevron-down" size="sm"/>
+				<!--<font-awesome-icon icon="chevron-down" size="sm"/>-->
 			</span>
 		</button>
 	</div>

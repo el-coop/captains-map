@@ -105,18 +105,4 @@
 			background-color: transparent;
 		}
 	}
-
-	.buttons {
-		width: 100%;
-		height: 100%;
-
-		@media (min-width: $tablet) {
-			width: auto;
-		}
-
-		> .button {
-			flex: 1;
-			height: 100%;
-		}
-	}
 </style>
