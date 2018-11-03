@@ -61,6 +61,7 @@
 		.buttons {
 			width: 100%;
 			height: 100%;
+			max-height: $gap/1.5;
 
 			@media (min-width: $tablet) {
 				width: auto;

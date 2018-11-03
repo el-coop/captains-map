@@ -30,7 +30,6 @@
 	@import "~$scss/variables";
 
 	.profile-open {
-		z-index: 10;
 		width: 100%;
 		background-color: transparentize(whitesmoke, 0.05);
 
