@@ -88,12 +88,13 @@ describe('Cache Service', () => {
 		const caches = cache.caches();
 		const setItemStub = sinon.stub(caches.request, 'setItem');
 
+		const expiry = Date.now() + 100;
 		await cache.store('request', 'key', 'value', 100);
 
 		assert.isTrue(setItemStub.calledOnce);
 		assert.isTrue(setItemStub.calledWith('key', {
 			value: 'value',
-			expiry: Date.now() + 100
+			expiry
 		}));
 	});
 });
