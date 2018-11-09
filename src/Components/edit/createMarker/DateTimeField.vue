@@ -59,7 +59,12 @@
 					hour = `0${hour}`;
 				}
 
-				return `${hour}:${date.getMinutes()}`;
+				let minutes = date.getMinutes();
+				if (minutes < 10) {
+					minutes = `0${minutes}`;
+				}
+
+				return `${hour}:${minutes}`;
 			}
 		},
 
