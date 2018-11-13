@@ -40,12 +40,12 @@
 
 <script>
 	import AjaxForm from "@/Components/Utilities/AjaxForm";
-	import SlideUpModal from "../Utilities/SlideUpModal";
-	import CreateMarkerTypeToggle from "./createMarker/TypeToggle";
-	import CreateMarkerFileField from "./createMarker/FileField";
-	import CreateMarkerInstagramField from "./createMarker/InstagramField";
-	import CreateMarkerTypeField from "./createMarker/TypeField";
-	import CreateMarkerDateTimeField from "./createMarker/DateTimeField";
+	import SlideUpModal from "@/Components/Utilities/SlideUpModal";
+	import CreateMarkerTypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
+	import CreateMarkerFileField from "@/Components/Modals/CreateMarker/FileField";
+	import CreateMarkerInstagramField from "@/Components/Modals/CreateMarker/InstagramField";
+	import CreateMarkerTypeField from "@/Components/Modals/CreateMarker/TypeField";
+	import CreateMarkerDateTimeField from "@/Components/Modals/CreateMarker/DateTimeField";
 
 	export default {
 		name: "new-marker-modal",
@@ -97,10 +97,7 @@
 				this.loading = false;
 				if (response.status !== 200) {
 					if (!response.data.errors) {
-						this.$toast.error('Please try again at a later time', 'Submit failed.', {
-							timeout: 2000,
-							position: 'bottomCenter',
-						});
+						this.$toast.error('Please try again at a later time', 'Creation failed.');
 					}
 					return;
 				}

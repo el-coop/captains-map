@@ -37,7 +37,7 @@
 	import MarkerList from "@/Components/Dashboard/SideBar/MarkerList";
 	import ViewMarker from "@/Components/Modals/ViewMarker";
 	import Profile from "@/Components/edit/Profile";
-	import CreateMarker from "@/Components/edit/CreateMarker";
+	import CreateMarker from "@/Components/Modals/CreateMarker";
 	import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
 	import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar';
 	import auth from '@/Services/authentication.service';
