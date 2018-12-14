@@ -7,6 +7,7 @@
 		</figure>
 		<div class="media-content">
 			<div class="content">
+				<small class="has-text-weight-semibold is-block is-size-7" v-text="dateDisplay(marker.time)"></small>
 				<small>Type:&nbsp;</small>
 				<strong v-text="marker.type"></strong>
 				<br>
@@ -51,6 +52,17 @@
 			showMarker() {
 				this.$bus.$emit('moving-map');
 				map.move([this.marker.lat, this.marker.lng], 16);
+			},
+			dateDisplay(value) {
+				const date = new Date(value);
+				console.log(date);
+
+				let hour = date.getHours();
+				if (hour < 10) {
+					hour = `0${hour}`;
+				}
+
+				return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${hour}:${date.getMinutes()}`;
 			}
 		},
 
@@ -77,7 +89,7 @@
 				tcText = tcText.slice(0, last);
 
 				return tcText + '...';
-			}
+			},
 		}
 	}
 </script>
@@ -94,12 +106,15 @@
 			&.Plan {
 				background-color: $cyan;
 			}
+
 			&.Visited {
 				background-color: $turquoise;
 			}
+
 			&.Suggestion {
 				background-color: $red;
 			}
+
 			background-color: $grey-light;
 		}
 	}
