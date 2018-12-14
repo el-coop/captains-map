@@ -10,8 +10,9 @@ describe('App.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.find('mapview-stub').exists());
-		assert.isTrue(wrapper.find('notfound-stub').exists());
+		assert.isTrue(wrapper.find('map-view-stub').exists());
+		assert.isTrue(wrapper.find('not-found-stub').exists());
 		assert.isTrue(wrapper.find('router-view-stub').exists());
+
 	});
 });

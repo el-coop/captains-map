@@ -28,7 +28,7 @@ describe('MarkerList.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.find('markerbordersfilter-stub').exists());
+		assert.isTrue(wrapper.find('marker-borders-filter-stub').exists());
 		assert.isTrue(wrapper.find('ul').exists());
 		assert.isFalse(wrapper.find('.loader').exists());
 	});
@@ -75,7 +75,7 @@ describe('MarkerList.vue', () => {
 			}
 		});
 
-		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
+		assert.equal(wrapper.findAll('marker-entry-stub').length, 2);
 		assert.isFalse(wrapper.findAll('.buttons').exists());
 	});
 
@@ -99,7 +99,7 @@ describe('MarkerList.vue', () => {
 			}
 		});
 
-		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
+		assert.equal(wrapper.findAll('marker-entry-stub').length, 2);
 		assert.isTrue(wrapper.find('.buttons').exists());
 	});
 
@@ -119,7 +119,7 @@ describe('MarkerList.vue', () => {
 			}
 		});
 
-		assert.equal(wrapper.findAll('markerentry-stub').length, 5);
+		assert.equal(wrapper.findAll('marker-entry-stub').length, 5);
 		assert.isTrue(wrapper.find('.buttons').exists());
 	});
 
@@ -235,12 +235,8 @@ describe('MarkerList.vue', () => {
 		});
 
 		await wrapper.vm.nextPage();
-		assert.isTrue($bus.$emit.calledOnce);
-		assert.isTrue($bus.$emit.calledWith('moving-map'));
 		assert.isTrue(storeDispatchSpy.calledOnce);
 		assert.isTrue(storeDispatchSpy.calledWith('Markers/nextPage'));
-		assert.isTrue(mapSetViewStub.calledOnce);
-		assert.isTrue(mapSetViewStub.calledWith([0, 0], 16));
 	});
 
 	it('Loads prev page', async () => {
@@ -267,12 +263,8 @@ describe('MarkerList.vue', () => {
 		});
 
 		await wrapper.vm.previousPage();
-		assert.isTrue($bus.$emit.calledOnce);
-		assert.isTrue($bus.$emit.calledWith('moving-map'));
 		assert.isTrue(storeDispatchSpy.calledOnce);
 		assert.isTrue(storeDispatchSpy.calledWith('Markers/previousPage'));
-		assert.isTrue(mapSetViewStub.calledOnce);
-		assert.isTrue(mapSetViewStub.calledWith([0, 0], 16));
 	});
 
 	it('Calls nextPage on click', () => {

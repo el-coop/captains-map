@@ -153,7 +153,7 @@ describe('UserMarker.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.find('useraccuracymarker-stub').exists());
+		assert.isTrue(wrapper.find('user-accuracy-marker-stub').exists());
 	});
 
 

@@ -33,9 +33,9 @@ describe('ViewMarker.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.find('slideupmodal-stub').exists());
-		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
-		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
+		assert.isTrue(wrapper.find('slide-up-modal-stub').exists());
+		assert.isTrue(wrapper.find('view-marker-header-stub').exists());
+		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
 		assert.isTrue(wrapper.find('photo-stub').exists());
 	});
 
@@ -48,9 +48,9 @@ describe('ViewMarker.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.find('slideupmodal-stub').exists());
-		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
-		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
+		assert.isTrue(wrapper.find('slide-up-modal-stub').exists());
+		assert.isTrue(wrapper.find('view-marker-header-stub').exists());
+		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
 		assert.isTrue(wrapper.find('instagram-stub').exists());
 	});
 

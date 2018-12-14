@@ -45,9 +45,9 @@ describe('LoggedInBar.vue', () => {
 		});
 
 		assert.equal(wrapper.find('.button.is-light.is-outlined:disabled > span:last-child').text(), 'Home');
-		assert.isTrue(wrapper.find('topbar-stub').exists());
+		assert.isTrue(wrapper.find('top-bar-stub').exists());
 		assert.isTrue(wrapper.find('logout-stub').exists());
-		assert.isTrue(wrapper.find('searchbar-stub').exists());
+		assert.isTrue(wrapper.find('search-bar-stub').exists());
 	});
 
 	it('Changes route when edit button clicked', () => {
@@ -73,7 +73,7 @@ describe('LoggedInBar.vue', () => {
 		assert.equal(wrapper.find('.button.is-light.is-outlined:disabled > span:last-child').text(), 'test');
 
 		assert.isTrue(wrapper.find('logout-stub').exists());
-		assert.isTrue(wrapper.find('searchbar-stub').exists());
+		assert.isTrue(wrapper.find('search-bar-stub').exists());
 	});
 
 	it('Changes route when home button clicked clicked', () => {

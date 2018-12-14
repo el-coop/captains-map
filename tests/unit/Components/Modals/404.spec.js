@@ -17,7 +17,7 @@ describe('404.vue', () => {
 
 		assert.isTrue(wrapper.find('img.atlantis').exists());
 		assert.isTrue(wrapper.find('img.tear').exists());
-		assert.isTrue(wrapper.find('slideupmodal-stub').exists());
+		assert.isTrue(wrapper.find('slide-up-modal-stub').exists());
 	});
 
 	it('Saves starting route when opened', async () => {

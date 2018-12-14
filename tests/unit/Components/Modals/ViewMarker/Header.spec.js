@@ -33,7 +33,7 @@ describe('ViewMarker/Header.vue', () => {
 
 
 	it('Formats date properly', () => {
-		marker.time = new Date(2018, 11, 24, 10, 33, 30, 0);
+		marker.time = new Date(Date.UTC(2018, 11, 24, 10, 33, 30, 0));
 		const wrapper = shallowMount(Header, {
 			propsData: {
 				marker
@@ -45,7 +45,7 @@ describe('ViewMarker/Header.vue', () => {
 
 
 	it('Formats date properly when hour is under 10', () => {
-		marker.time = new Date(2018, 11, 24, 5, 33, 30, 0);
+		marker.time = new Date(Date.UTC(2018, 11, 24, 5, 33, 30, 0));
 		const wrapper = shallowMount(Header, {
 			propsData: {
 				marker

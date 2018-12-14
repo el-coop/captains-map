@@ -67,7 +67,7 @@ describe('Map.vue', () => {
 				}
 			}
 		});
-		assert.equal(wrapper.findAll('mapmarker-stub').length, 3);
+		assert.equal(wrapper.findAll('map-marker-stub').length, 3);
 	});
 
 	it('renders second page of markers markers', () => {
@@ -85,7 +85,7 @@ describe('Map.vue', () => {
 				}
 			}
 		});
-		assert.equal(wrapper.findAll('mapmarker-stub').length, 3);
+		assert.equal(wrapper.findAll('map-marker-stub').length, 3);
 	});
 
 	it('renders userMarker', () => {
@@ -102,7 +102,7 @@ describe('Map.vue', () => {
 				}
 			}
 		});
-		assert.isTrue(wrapper.find('usermarker-stub').exists());
+		assert.isTrue(wrapper.find('user-marker-stub').exists());
 	});
 
 	it('reacts to zoom change', () => {

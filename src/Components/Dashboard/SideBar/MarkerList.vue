@@ -47,19 +47,10 @@
 		methods: {
 			async previousPage() {
 				await this.$store.dispatch('Markers/previousPage');
-				this.goToFirst();
 			},
 			async nextPage() {
 				await this.$store.dispatch('Markers/nextPage');
-				this.goToFirst();
 			},
-			goToFirst() {
-				if (!this.markers.length) {
-					return;
-				}
-				this.$bus.$emit('moving-map');
-				return Map.setView([this.markers[0].lat, this.markers[0].lng], 16);
-			}
 		}
 	}
 </script>
@@ -74,6 +65,7 @@
 
 	.buttons {
 		margin: 7px;
+
 		> .button {
 			flex: 1;
 		}

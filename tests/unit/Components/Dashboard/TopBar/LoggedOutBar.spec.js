@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar';
 import sinon from 'sinon';
 
-describe('LoggdOutBar.vue', () => {
+describe('LoggedOutBar.vue', () => {
 
 	const stubs = {
 		'font-awesome-icon': true
@@ -18,9 +18,9 @@ describe('LoggdOutBar.vue', () => {
 			stubs
 		});
 
-		assert.isTrue(wrapper.find('topbar-stub').exists());
-		assert.isTrue(wrapper.find('loginmodal-stub').exists());
-		assert.isTrue(wrapper.find('registermodal-stub').exists());
+		assert.isTrue(wrapper.find('top-bar-stub').exists());
+		assert.isTrue(wrapper.find('login-modal-stub').exists());
+		assert.isTrue(wrapper.find('register-modal-stub').exists());
 		assert.equal(wrapper.findAll('button.is-light.is-outlined').at(0).text(), 'Log In');
 		assert.equal(wrapper.findAll('button.is-light.is-outlined').at(1).text(), 'Register');
 	});

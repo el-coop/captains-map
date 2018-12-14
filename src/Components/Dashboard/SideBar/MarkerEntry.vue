@@ -55,14 +55,13 @@
 			},
 			dateDisplay(value) {
 				const date = new Date(value);
-				console.log(date);
 
-				let hour = date.getHours();
+				let hour = date.getUTCHours();
 				if (hour < 10) {
 					hour = `0${hour}`;
 				}
 
-				return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${hour}:${date.getMinutes()}`;
+				return `${date.getUTCDate()}/${date.getUTCMonth() + 1}/${date.getUTCFullYear()} ${hour}:${date.getUTCMinutes()}`;
 			}
 		},
 

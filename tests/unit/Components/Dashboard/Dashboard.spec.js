@@ -43,10 +43,10 @@ describe('Dashboard.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('markerbordersfilter-stub').exists());
-		assert.isTrue(wrapper.find('viewmarker-stub').exists());
-		assert.isTrue(wrapper.find('markerlist-stub').exists());
-		assert.isFalse(wrapper.find('createmarker-stub').exists());
+		assert.isTrue(wrapper.find('marker-borders-filter-stub').exists());
+		assert.isTrue(wrapper.find('view-marker-stub').exists());
+		assert.isTrue(wrapper.find('marker-list-stub').exists());
+		assert.isFalse(wrapper.find('create-marker-stub').exists());
 	});
 
 	it('Renders with create-marker modal when edit mode', () => {
@@ -60,9 +60,9 @@ describe('Dashboard.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('viewmarker-stub').exists());
-		assert.isTrue(wrapper.find('markerlist-stub').exists());
-		assert.isTrue(wrapper.find('createmarker-stub').exists());
+		assert.isTrue(wrapper.find('view-marker-stub').exists());
+		assert.isTrue(wrapper.find('marker-list-stub').exists());
+		assert.isTrue(wrapper.find('create-marker-stub').exists());
 	});
 
 	it('Registers listeners', () => {
@@ -140,7 +140,7 @@ describe('Dashboard.vue', () => {
 		wrapper.vm.closeSidebar();
 
 		assert.isFalse(wrapper.vm.$data.openSidebar);
-		assert.isFalse(wrapper.find('markerlist-stub').exists());
+		assert.isFalse(wrapper.find('marker-list-stub').exists());
 
 	});
 
@@ -208,7 +208,7 @@ describe('Dashboard.vue', () => {
 		wrapper.find('button').trigger('click');
 
 		assert.isTrue(wrapper.vm.$data.openSidebar);
-		assert.isTrue(wrapper.find('markerlist-stub').exists());
+		assert.isTrue(wrapper.find('marker-list-stub').exists());
 	});
 
 	it('It toggles list off when clicked and list is on', () => {
@@ -238,8 +238,8 @@ describe('Dashboard.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('loggedoutbar-stub').exists());
-		assert.isFalse(wrapper.find('loggedinbar-stub').exists());
+		assert.isTrue(wrapper.find('logged-out-bar-stub').exists());
+		assert.isFalse(wrapper.find('logged-in-bar-stub').exists());
 	});
 
 
@@ -252,8 +252,8 @@ describe('Dashboard.vue', () => {
 			mocks
 		});
 
-		assert.isFalse(wrapper.find('loggedoutbar-stub').exists());
-		assert.isTrue(wrapper.find('loggedinbar-stub').exists());
+		assert.isFalse(wrapper.find('logged-out-bar-stub').exists());
+		assert.isTrue(wrapper.find('logged-in-bar-stub').exists());
 	});
 
 	it('Toggles profile class when there is a user', () => {

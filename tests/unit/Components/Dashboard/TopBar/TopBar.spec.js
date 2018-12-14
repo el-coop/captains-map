@@ -29,7 +29,7 @@ describe('TopBar.vue', () => {
 			mocks
 		});
 
-		assert.isFalse(wrapper.find('profileopen-stub').exists());
+		assert.isFalse(wrapper.find('profile-open-stub').exists());
 		assert.include(wrapper.find('img').element.src,'globe-icon');
 	});
 
@@ -39,7 +39,7 @@ describe('TopBar.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('profileopen-stub').exists());
+		assert.isTrue(wrapper.find('profile-open-stub').exists());
 		assert.isFalse(wrapper.find('img').exists());
 	});
 });

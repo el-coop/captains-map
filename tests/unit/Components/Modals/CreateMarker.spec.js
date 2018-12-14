@@ -21,11 +21,11 @@ describe('CreateMarker.vue', () => {
 			propsData
 		});
 
-		assert.isTrue(wrapper.find('createmarkertypetoggle-stub').exists());
-		assert.isTrue(wrapper.find('createmarkerfilefield-stub').exists());
-		assert.isTrue(wrapper.find('createmarkertypetoggle-stub').exists());
-		assert.isTrue(wrapper.find('createmarkerdatetimefield-stub').exists());
-		assert.isTrue(wrapper.find('createmarkertypefield-stub').exists());
+		assert.isTrue(wrapper.find('create-marker-type-toggle-stub').exists());
+		assert.isTrue(wrapper.find('create-marker-file-field-stub').exists());
+		assert.isTrue(wrapper.find('create-marker-type-toggle-stub').exists());
+		assert.isTrue(wrapper.find('create-marker-date-time-field-stub').exists());
+		assert.isTrue(wrapper.find('create-marker-type-field-stub').exists());
 	});
 
 	it('Reads errors', () => {

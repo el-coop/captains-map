@@ -18,7 +18,8 @@ describe('MarkerEntry.vue', () => {
 			lng: 1,
 			user: {
 				username: 'test'
-			}
+			},
+			time: '2018-10-06 15:43:57'
 
 		};
 	});
