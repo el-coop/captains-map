@@ -46,10 +46,8 @@ describe('CreateMarker/FileField.vue', () => {
 			}
 		});
 
-		assert.deepEqual(wrapper.emitted().input[0][0],{
+		assert.deepEqual(wrapper.emitted().input[0][0], {
 			name: 'name'
 		});
 	});
-
-
 });

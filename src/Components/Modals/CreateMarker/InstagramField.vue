@@ -4,8 +4,7 @@
 		<div class="control">
 			<input type="text" id="instagram" class="input" v-model="path"
 				   name="media[path]">
-			<p class="help is-danger" v-if="error">You most give a valid instagram
-				link.</p>
+			<p class="help is-danger" v-if="error">You most give a valid instagram link.</p>
 		</div>
 	</div>
 </template>
@@ -38,7 +37,3 @@
 		}
 	}
 </script>
-
-<style scoped>
-
-</style>
