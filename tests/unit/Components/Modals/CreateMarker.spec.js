@@ -146,6 +146,6 @@ describe('CreateMarker.vue', () => {
 
 	});
 
-	it('Test all create video field components');
+	it('Test all create field components');
 
 });
