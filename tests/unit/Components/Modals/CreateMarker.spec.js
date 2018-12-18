@@ -145,7 +145,5 @@ describe('CreateMarker.vue', () => {
 		});
 
 	});
-
-	it('Test all create field components');
-
+	
 });
