@@ -1,9 +1,5 @@
-.slide-up-opacity-enter-active {
-	transition: all .8s ease;
-}
-
-.slide-up-opacity-leave-active {
-	transition: all .8s ease;
+.slide-up-opacity-enter-active, .slide-up-opacity-leave-active {
+	transition: opacity .8s ease, transform .8s ease;
 }
 
 .slide-up-opacity-enter, .slide-up-opacity-leave-to {

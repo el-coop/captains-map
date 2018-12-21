@@ -5,7 +5,8 @@
 				<img class="profile-image" :src="profile.image"/>
 			</div>
 			<div class="media-content">
-				<p class="is-4" v-text="marker.user.username"/>
+				<a @click="linkClicked"
+				   class="has-text-white is-4" v-text="marker.user.username"/>
 				<p class="is-7 has-text-weight-normal" v-text="marker.type"/>
 				<p class="is-7 has-text-weight-light has-text-grey-lighter"
 				   v-text="dateDisplay"></p>
@@ -30,6 +31,13 @@
 						image: globe
 					}
 				}
+			}
+		},
+
+		methods: {
+			linkClicked() {
+				this.$modal.hide('view-marker');
+				this.$router.push(`/${this.marker.user.username}`);
 			}
 		},
 
