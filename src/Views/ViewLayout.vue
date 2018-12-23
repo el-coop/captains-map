@@ -25,6 +25,9 @@
 
 				this.$store.commit('Markers/setBorders', false);
 				this.$store.commit('Markers/setUser', this.$route.params.username || '');
+				if (this.$route.params.username) {
+					this.$store.dispatch('Profile/load', this.$route.params.username);
+				}
 			},
 
 			async loadMarkers() {

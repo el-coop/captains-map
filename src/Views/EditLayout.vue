@@ -29,6 +29,7 @@
 				this.$modal.hide('404');
 				this.$store.commit('Markers/setBorders', false);
 				this.$store.commit('Markers/setUser', auth.getUserDetails().username);
+				this.$store.dispatch('Profile/load', auth.getUserDetails().username);
 			},
 
 			async loadMarkers() {

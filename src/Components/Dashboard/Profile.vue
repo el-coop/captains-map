@@ -1,15 +1,24 @@
 <template>
 	<div class="dashboard__control profile" :class="{'profile--open': isOpen}">
-		<div class="media">
+		<div class="media h-100	">
 			<div class="media-left">
 				<figure class="image is-128x128">
-					<img :src="user.image || logo">
+					<img :src="user.path || logo">
 				</figure>
 			</div>
-			<div class="media-content">
-				<div>
-					<h4 class="title is-4" v-text="user.name"></h4>
-					<p v-text="user.bio"></p>
+			<div class="media-content is-flex-1">
+				<div class="is-flex-column h-100">
+					<h4 class="title is-4" v-text="user.username"></h4>
+					<ajax-form v-if="isEdit" method="post" :action="`bio/${user.username}`"
+							   @submitting="loading = true"
+							   @submitted="displaySuccess" class="is-flex-1 is-flex-column">
+						<div class="field is-flex-1">
+							<textarea v-model="description" name="description" class="textarea h-100"></textarea>
+
+						</div>
+						<button class="button is-primary is-fullwidth" :class="{'is-loading': loading}">Save</button>
+					</ajax-form>
+					<p class="is-flex-1" v-else v-text="user.description"></p>
 				</div>
 			</div>
 			<div class="media-right is-hidden-touch">
@@ -23,21 +32,45 @@
 
 <script>
 	import globe from '../../assets/images/globe-icon.png';
+	import AjaxForm from "@/Components/Utilities/AjaxForm";
+	import Auth from '@/Services/authentication.service';
 
 	export default {
 		name: "profile",
-
+		components: {AjaxForm},
 		data() {
 			return {
-				logo: globe
+				logo: globe,
+				description: '',
+				loading: false,
+			}
+		},
+
+		methods: {
+			displaySuccess(response) {
+				this.loading = false;
+				if (response.status === 200) {
+					this.$toast.success(' ', 'Profile updated.');
+				} else {
+					this.$toast.error('Please try again at a later time', 'Update failed.');
+				}
 			}
 		},
 
 		computed: {
+			isEdit() {
+				if (!Auth.getUserDetails() || !this.user.username) {
+					return false;
+				}
+				return Auth.getUserDetails().username === this.user.username;
+			},
 			isOpen() {
 				return this.$store.state.Profile.open;
 			},
 			user() {
+				if (this.$store.state.Profile.user) {
+					this.description = this.$store.state.Profile.user.description;
+				}
 				return this.$store.state.Profile.user;
 			}
 		},
@@ -48,15 +81,21 @@
 	@import "~$scss/variables";
 
 	.media {
-		display: block;
 		padding: 1em;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
 
 		.image {
 			margin: auto;
 		}
 
 		@media #{$above-tablet} {
-			display: flex;
+			flex-direction: row;
+		}
+
+		textarea {
+			max-height: unset;
 		}
 	}
 

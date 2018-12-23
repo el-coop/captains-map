@@ -1,6 +1,7 @@
 <template>
 	<div class="profile-open" @click="$store.commit('Profile/toggle')">
-		<button class="button is-light is-outlined is-borderless is-light-hover">
+		<button class="button is-light is-outlined is-borderless is-light-hover"
+				:class="{'is-loading': ! user.username}">
 			<figure class="image is-32x32 icon">
 				<img class="is-rounded" :src="user.image || logo">
 			</figure>&nbsp;

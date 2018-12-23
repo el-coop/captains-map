@@ -5,8 +5,8 @@ export default {
 
 	state: {
 		user: {
-			username: 'nur',
-			bio: 'lorem ipsum'
+			username: '',
+			description: ''
 		},
 		open: false
 	},
@@ -15,4 +15,19 @@ export default {
 			state.open = !state.open;
 		}
 	},
+
+	actions: {
+		async load({state}, username) {
+			if (username !== state.user.username) {
+				state.user = {};
+				const {data} = await $http.get(`bio/${username}`);
+				state.user = {
+					username,
+					description: data.description,
+					path: data.path
+				};
+			}
+		}
+	}
+
 }
