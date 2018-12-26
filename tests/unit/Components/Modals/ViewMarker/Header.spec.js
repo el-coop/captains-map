@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import Header from '@/Components/Modals/ViewMarker/Header';
+import globe from '@/assets/images/globe-icon.png';
 
 describe('ViewMarker/Header.vue', () => {
 	let marker;
@@ -11,6 +12,9 @@ describe('ViewMarker/Header.vue', () => {
 			user_id: 1,
 			user: {
 				username: 'test',
+				bio: {
+					path: '/path'
+				}
 			},
 			media: {
 				type: 'image',
@@ -53,5 +57,26 @@ describe('ViewMarker/Header.vue', () => {
 		});
 
 		assert.equal(wrapper.vm.dateDisplay, '24/12/2018 05:33');
+	});
+
+	it('Shows user profile picture when supplied', () => {
+		const wrapper = shallowMount(Header, {
+			propsData: {
+				marker
+			}
+		});
+
+		assert.equal(wrapper.find('img.is-rounded').element.src, '/api/path');
+	});
+
+	it('Shows globe when no profile picture exists', () => {
+		marker.user.bio.path = null;
+		const wrapper = shallowMount(Header, {
+			propsData: {
+				marker
+			}
+		});
+
+		assert.equal(wrapper.find('img.is-rounded').element.src, globe);
 	});
 });

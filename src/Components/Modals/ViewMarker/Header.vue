@@ -2,7 +2,9 @@
 	<div slot="header" class="card-header-title">
 		<div class="media">
 			<div class="media-left">
-				<img class="profile-image" :src="profile.image"/>
+				<figure class="image is-64x64">
+					<img class="profile-image is-rounded" :src="imageSrc"/>
+				</figure>
 			</div>
 			<div class="media-content">
 				<a @click="linkClicked"
@@ -51,6 +53,13 @@
 				}
 
 				return `${date.getUTCDate()}/${date.getUTCMonth() + 1}/${date.getUTCFullYear()} ${hour}:${date.getUTCMinutes()}`;
+			},
+
+			imageSrc() {
+				if (!this.marker.user.bio) {
+					return globe;
+				}
+				return this.marker.user.bio.path ? `/api${this.marker.user.bio.path}` : globe;
 			}
 
 		}

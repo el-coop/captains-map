@@ -6,26 +6,30 @@ export default {
 	state: {
 		user: {
 			username: '',
-			description: ''
+			description: '',
+			path: null
 		},
 		open: false
 	},
 	mutations: {
 		toggle(state) {
 			state.open = !state.open;
+		},
+		updateBio(state, user) {
+			state.user = user;
 		}
 	},
 
 	actions: {
-		async load({state}, username) {
+		async load({commit, state}, username) {
 			if (username !== state.user.username) {
-				state.user = {};
+				commit('updateBio', {});
 				const {data} = await $http.get(`bio/${username}`);
-				state.user = {
+				commit('updateBio', {
 					username,
 					description: data.description,
 					path: data.path
-				};
+				});
 			}
 		}
 	}

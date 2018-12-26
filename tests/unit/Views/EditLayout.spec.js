@@ -67,8 +67,9 @@ describe('EditLayout.vue', () => {
 			assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
 			assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', 'test'));
 
-			assert.isTrue(mocks.$store.dispatch.calledOnce);
+			assert.isTrue(mocks.$store.dispatch.calledTwice);
 			assert.isTrue(mocks.$store.dispatch.calledWith('Markers/load'));
+			assert.isTrue(mocks.$store.dispatch.calledWith('Profile/load'));
 
 			assert.isTrue(goToCurrentLocationStub.calledOnce);
 			assert.isTrue(goToCurrentLocationStub.calledWith());

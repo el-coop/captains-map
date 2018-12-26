@@ -2,25 +2,32 @@ import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import ProfileOpen from '@/Components/Dashboard/TopBar/ProfileOpen';
 import sinon from 'sinon';
-import auth from '@/Services/authentication.service';
+import globe from '@/assets/images/globe-icon.png';
+
 
 describe('ProfileOpen.vue', () => {
 
 	let mocks;
+	let stubs;
 
 	beforeEach(() => {
 		mocks = {
 			$store: {
 				state: {
-					Markers: {
-						username: 'test'
+					Profile: {
+						user: {
+							username: 'test',
+							path: '/testpath'
+						}
 					}
-				}
+				},
+				commit: sinon.stub()
 			}
 		};
-		sinon.stub(auth, 'getUserDetails').returns({
-			username: 'test'
-		});
+
+		stubs = {
+			fontAwesomeIcon: true
+		};
 	});
 
 	afterEach(() => {
@@ -28,13 +35,39 @@ describe('ProfileOpen.vue', () => {
 	});
 
 
-	it('Renders username and globe icon', () => {
+	it('Renders username and logo when they exist', () => {
 		const wrapper = shallowMount(ProfileOpen, {
-			mocks
+			mocks,
+			stubs
 		});
 
+		assert.equal(wrapper.find('img').element.src, '/api/testpath');
 		assert.equal(wrapper.find('span.button-text').text(), 'test');
-		assert.include(wrapper.find('img').element.src, 'globe-icon');
+	});
+
+
+	it('Renders globe when no image exists', () => {
+		mocks.$store.state.Profile.user.path = null;
+		const wrapper = shallowMount(ProfileOpen, {
+			mocks,
+			stubs
+		});
+
+		assert.equal(wrapper.find('img').element.src, globe);
+		assert.equal(wrapper.find('span.button-text').text(), 'test');
+	});
+
+	it('Triggers toggle on store when clicked', () => {
+		mocks.$store.state.Profile.user.path = null;
+		const wrapper = shallowMount(ProfileOpen, {
+			mocks,
+			stubs
+		});
+
+		wrapper.find('.profile-open').trigger('click');
+
+		assert.isTrue(mocks.$store.commit.calledOnce);
+		assert.isTrue(mocks.$store.commit.calledWith('Profile/toggle'));
 	});
 
 });

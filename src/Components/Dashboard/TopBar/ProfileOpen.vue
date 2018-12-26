@@ -3,7 +3,7 @@
 		<button class="button is-light is-outlined is-borderless is-light-hover"
 				:class="{'is-loading': ! user.username}">
 			<figure class="image is-32x32 icon">
-				<img class="is-rounded" :src="user.image || logo">
+				<img class="is-rounded" :src="imageSrc">
 			</figure>&nbsp;
 			<span class="is-size-7-tablet button-text"
 				  v-text="user.username"></span>
@@ -30,9 +30,11 @@
 				return this.$store.state.Profile.open
 			},
 
+			imageSrc() {
+				return this.user.path ? `/api${this.user.path}` : globe;
+			},
 			user() {
 				return this.$store.state.Profile.user;
-
 			}
 		}
 	}
@@ -60,6 +62,17 @@
 				padding-bottom: 0.1em;
 			}
 
+			figure.image {
+				display: flex;
+				justify-content: center;
+
+				> img {
+					max-height: 100%;
+					max-width: 100%;
+					width: auto;
+					height: auto;
+				}
+			}
 		}
 
 		@media (min-width: $tablet) {

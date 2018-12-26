@@ -179,6 +179,15 @@ describe('ViewLayout.vue', () => {
 		assert.isTrue(mocks.$store.commit.calledTwice);
 		assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
 		assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', 'test'));
+
+		assert.isTrue(mocks.$store.dispatch.calledTwice);
+		assert.isTrue(mocks.$store.dispatch.calledWith('Markers/load', {
+			startingId: false,
+			pageIncluding: true
+		}));
+
+		assert.isTrue(mocks.$store.dispatch.calledWith('Profile/load'));
+
 	});
 
 	it('Reloads markers when route changes', async () => {

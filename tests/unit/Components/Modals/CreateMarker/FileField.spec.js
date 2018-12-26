@@ -33,7 +33,9 @@ describe('CreateMarker/FileField.vue', () => {
 	});
 
 
-	it('It emits input and display name when image selected', async () => {
+	it('It emits input with display name when image is selected, shows preview', async () => {
+		global.URL = {};
+		global.URL.createObjectURL = sinon.stub().returns('test');
 		const wrapper = shallowMount(FileField, {
 			stubs
 		});
@@ -49,5 +51,14 @@ describe('CreateMarker/FileField.vue', () => {
 		assert.deepEqual(wrapper.emitted().input[0][0], {
 			name: 'name'
 		});
+
+		assert.isTrue(global.URL.createObjectURL.calledOnce);
+		assert.isTrue(global.URL.createObjectURL.calledWith({
+			name: 'name'
+		}));
+
+		assert.equal(wrapper.find('img').element.src, 'test');
+
+		delete global.URL;
 	});
 });
