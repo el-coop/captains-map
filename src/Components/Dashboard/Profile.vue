@@ -119,6 +119,10 @@
 			margin: 0 0 1em 0;
 		}
 
+		.media-content {
+			overflow: visible;
+		}
+
 		@media #{$above-tablet} {
 			flex-direction: row;
 
