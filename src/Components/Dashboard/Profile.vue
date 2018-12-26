@@ -121,6 +121,11 @@
 
 		.media-content {
 			overflow: visible;
+
+			p {
+				white-space: pre-wrap;
+				word-wrap: break-word;
+			}
 		}
 
 		@media #{$above-tablet} {
