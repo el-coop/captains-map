@@ -7,7 +7,7 @@
 				</figure>
 			</div>
 			<div class="media-content">
-				<a @click="linkClicked"
+				<a @click.stop.prevent="linkClicked"
 				   class="has-text-white is-4" v-text="marker.user.username"/>
 				<p class="is-7 has-text-weight-normal" v-text="marker.type"/>
 				<p class="is-7 has-text-weight-light has-text-grey-lighter"
@@ -37,9 +37,8 @@
 		},
 
 		methods: {
-			linkClicked() {
-				this.$modal.hide('view-marker');
-				this.$router.push(`/${this.marker.user.username}`);
+			async linkClicked() {
+				this.$emit('view-user-page');
 			}
 		},
 

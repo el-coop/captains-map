@@ -115,7 +115,7 @@ describe('ViewMarker.vue', () => {
 		assert.isTrue($modal.hide.calledWith('view-marker'));
 	});
 
-	it('Shows toas when deleteing a marker fails', async () => {
+	it('Shows toast when deleteing a marker fails', async () => {
 		const $toast = {
 			error: sinon.spy()
 		};
@@ -138,5 +138,79 @@ describe('ViewMarker.vue', () => {
 		assert.isTrue(dispatchStub.calledWith('Markers/delete', 1));
 		assert.isTrue($toast.error.calledOnce);
 		assert.isTrue($toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
+	});
+
+	it('Queues navigation when requested and closes modal', async () => {
+
+		const $modal = {
+			hide: sinon.stub()
+		};
+
+		const wrapper = shallowMount(ViewMarker, {
+			propsData: {
+				marker
+			},
+			mocks: {
+				$modal
+			}
+		});
+
+		wrapper.find('view-marker-header-stub').vm.$emit('view-user-page');
+
+		assert.equal(wrapper.vm.nextPage, '/test');
+		assert.isTrue($modal.hide.calledOnce);
+		assert.isTrue($modal.hide.calledWith('view-marker'));
+
+	});
+
+	it('Navigates to user page when queued', async () => {
+
+		const $router = {
+			push: sinon.stub()
+		};
+
+		const wrapper = shallowMount(ViewMarker, {
+			propsData: {
+				marker
+			},
+			mocks: {
+				$router
+			}
+		});
+
+		wrapper.setData({
+			nextPage: '/test'
+		});
+
+		wrapper.vm.queuedNavigation();
+
+		assert.isTrue($router.push.calledOnce);
+		assert.isTrue($router.push.calledWith('/test'));
+		assert.isFalse(wrapper.vm.nextPage);
+
+
+	});
+
+	it('Doesnt navigate when no navigation is queued', async () => {
+
+		const $router = {
+			push: sinon.stub()
+		};
+
+		const wrapper = shallowMount(ViewMarker, {
+			propsData: {
+				marker
+			},
+			mocks: {
+				$router
+			}
+		});
+
+
+		wrapper.vm.queuedNavigation();
+
+		assert.isFalse($router.push.called);
+
+
 	});
 });

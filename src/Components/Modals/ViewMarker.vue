@@ -1,7 +1,7 @@
 <template>
-	<slide-up-modal name="view-marker" :route-name="routeName">
+	<slide-up-modal name="view-marker" :route-name="routeName" @closed="queuedNavigation">
 		<template v-if="marker">
-			<view-marker-header slot="header" :marker="marker"/>
+			<view-marker-header slot="header" :marker="marker" @view-user-page="navigateToUser"/>
 			<component slot="image" :is="marker.media.type === 'instagram' ? 'instagram': 'photo'"
 					   :path="marker.media.path" :marker-id="marker.media.id"
 					   :alt="`${marker.user.username} | ${marker.description}`"/>
@@ -41,7 +41,8 @@
 
 		data() {
 			return {
-				deleting: false
+				deleting: false,
+				nextPage: false
 			}
 		},
 
@@ -56,6 +57,18 @@
 					this.$toast.error('Please try again at a later time', 'Delete failed.');
 				}
 			},
+
+			navigateToUser() {
+				this.nextPage = `/${this.marker.user.username}`;
+				this.$modal.hide('view-marker');
+			},
+
+			queuedNavigation() {
+				if (this.nextPage) {
+					this.$router.push(this.nextPage);
+					this.nextPage = false;
+				}
+			}
 
 		},
 

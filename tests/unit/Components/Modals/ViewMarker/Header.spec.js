@@ -79,4 +79,17 @@ describe('ViewMarker/Header.vue', () => {
 
 		assert.equal(wrapper.find('img.is-rounded').element.src, globe);
 	});
+
+
+
+	it('Emits event when user clicks profile link', () => {
+		const wrapper = shallowMount(Header, {
+			propsData: {
+				marker
+			}
+		});
+
+		wrapper.find('a').trigger('click');
+		assert.isOk(wrapper.emitted()['view-user-page']);
+	});
 });
