@@ -42,7 +42,7 @@
 		}
 
 		> .button {
-			opacity: 0.25;
+			opacity: 0.4;
 			position: absolute;
 			right: 1em;
 			bottom: 1em;
