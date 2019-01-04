@@ -18,7 +18,8 @@ import {
 	faSignOutAlt,
 	faUserAlt,
 	faChevronDown,
-	faSignInAlt
+	faSignInAlt,
+	faExternalLinkSquareAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import Meta from 'vue-meta';
@@ -26,7 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueClipboard from 'vue-clipboard2';
 import VueIziToast from 'vue-izitoast';
 
-library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faSignOutAlt, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia, faUserAlt, faChevronDown, faSignInAlt);
+library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faSignOutAlt, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia, faUserAlt, faChevronDown, faSignInAlt, faExternalLinkSquareAlt);
 
 Vue.use(VModal);
 Vue.use(Meta);
