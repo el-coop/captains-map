@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import globe from '@/assets/images/globe-icon.png';
 import auth from '@/Services/authentication.service';
 
-describe('Dashboard.vue', () => {
+describe('Profile.vue', () => {
 
 	let mocks;
 	let stubs;
@@ -46,7 +46,7 @@ describe('Dashboard.vue', () => {
 
 		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
 		assert.isFalse(wrapper.find('ajax-form-stub').exists());
-		assert.equal(wrapper.find('img').element.src, globe);
+		assert.equal(wrapper.find('img').element.src, `http://localhost${globe}`);
 		assert.equal(wrapper.find('h4').text(), 'test');
 		assert.equal(wrapper.find('p.is-flex-1').text(), 'description');
 	});
@@ -62,7 +62,7 @@ describe('Dashboard.vue', () => {
 
 		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
 		assert.isFalse(wrapper.find('ajax-form-stub').exists());
-		assert.equal(wrapper.find('img').element.src, '/api/path');
+		assert.equal(wrapper.find('img').element.src, 'http://localhost/api/path');
 		assert.equal(wrapper.find('h4').text(), 'test');
 		assert.equal(wrapper.find('p.is-flex-1').text(), 'description');
 	});

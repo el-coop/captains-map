@@ -12,6 +12,7 @@ describe('ViewMarker/Content.vue', () => {
 
 	beforeEach(() => {
 		global.navigator.share = false;
+		global.window.open = sinon.stub;
 
 		marker = {
 			id: 1,
@@ -42,6 +43,7 @@ describe('ViewMarker/Content.vue', () => {
 	afterEach(() => {
 		sinon.restore();
 		delete global.navigator.share;
+		delete global.window.open;
 	});
 
 	it('Renders', () => {
