@@ -13,6 +13,12 @@ const caches = {
 		size: 4980736 * 5,
 		storeName: 'tiles',
 		description: 'Offline map tiles',
+	}),
+	uploads: localForage.createInstance({
+		name: 'Captains Map',
+		size: 4980736 * 10,
+		storeName: 'uploads',
+		description: 'Uploads storage while waiting for success'
 	})
 };
 

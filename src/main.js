@@ -11,5 +11,9 @@ Vue.use(Router);
 new Vue({
 	router,
 	store,
+	beforeCreate() {
+		this.$store.dispatch('Uploads/init');
+	},
 	render: h => h(App)
 }).$mount('#app');
+

@@ -3,6 +3,10 @@
 		<div class="map" ref="map">
 			<user-marker-control/>
 			<user-marker v-if="userMarker"/>
+			<upload-marker v-for="marker in uploadMarkers" :marker="marker"
+						   :key="`uploads_${Date.now()}_${marker.uploadTime}`"/>
+			<upload-marker v-for="marker in erroredMarkers" :marker="marker"
+						   :key="`errors_${Date.now()}_${marker.uploadTime}`" status="error"/>
 			<marker-cluster ref="userMarker">
 				<map-marker v-for="marker in markers" :layer="$refs.userMarker" :marker="marker"
 							:key="`${Date.now()}_${marker.id}`"/>
@@ -18,6 +22,7 @@
 	import UserMarker from '@/Components/Map/Markers/UserMarker';
 	import UserMarkerControl from "@/Components/Map/Controls/UserMarkerControl";
 	import MarkerCluster from "@/Components/Map/Layers/MarkerCluster";
+	import UploadMarker from "@/Components/Map/Markers/UploadMarker";
 
 	export default {
 		name: "map-view",
@@ -32,6 +37,7 @@
 		},
 
 		components: {
+			UploadMarker,
 			MarkerCluster,
 			UserMarkerControl,
 			MapMarker,
@@ -81,6 +87,12 @@
 			},
 			userMarker() {
 				return this.$store.state.Markers.userMarker;
+			},
+			uploadMarkers() {
+				return this.$store.state.Uploads.queue;
+			},
+			erroredMarkers() {
+				return this.$store.state.Uploads.errored;
 			},
 		},
 

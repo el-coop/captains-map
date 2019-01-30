@@ -1,5 +1,5 @@
 import axios from "axios";
-import userStore from '@/store/user';
+import Store from '@/store';
 
 import Cache from '@/Services/cache.service';
 
@@ -12,7 +12,7 @@ class HttpService {
 
 	issueLogout(error) {
 		if ((error.response && error.response.data.clearToken) || false) {
-			userStore.actions.logout();
+			Store.dispatch('User/logout');
 		}
 		return Promise.reject(error);
 	}
@@ -20,6 +20,7 @@ class HttpService {
 	setCsrfToken(response) {
 		if (response.headers.csrftoken || false) {
 			this.setHeader('X-CSRF-TOKEN', response.headers.csrftoken);
+			Store.dispatch('CSRFReady');
 		}
 		return response;
 	}
@@ -56,7 +57,9 @@ class HttpService {
 
 	async post(url, data = {}, headers = {}) {
 		try {
-			return await axios.post(`${host}/${url}`, data, headers);
+			return await axios.post(`${host}/${url}`, data, {
+				headers
+			});
 		} catch (error) {
 			return error.response;
 		}

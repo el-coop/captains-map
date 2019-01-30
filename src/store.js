@@ -3,13 +3,22 @@ import Vuex from 'vuex';
 import User from '@/store/user';
 import Markers from '@/store/markers';
 import Profile from '@/store/profile';
+import Uploads from '@/store/uploads';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
 	modules: {
 		User,
 		Markers,
-		Profile
+		Profile,
+		Uploads
 	},
-})
+	actions: {
+		CSRFReady({dispatch}) {
+			dispatch('Uploads/processQueue');
+		}
+	}
+});
+
+export default store;

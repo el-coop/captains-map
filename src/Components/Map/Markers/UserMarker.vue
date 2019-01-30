@@ -51,7 +51,7 @@
 				this.lng = location.latlng.lng;
 
 				if (!this.mapObject) {
-					if(document.querySelector('#geolocation-notification')){
+					if (document.querySelector('#geolocation-notification')) {
 						this.$toast.hide('#geolocation-notification');
 					}
 					this.$toast.info('You can now go to your location by holding the location icon. (right click on desktop)', '');
@@ -69,7 +69,9 @@
 			},
 
 			goToMarker() {
-				Map.setView([this.lat, this.lng]);
+				if (this.lat) {
+					Map.setView([this.lat, this.lng]);
+				}
 			}
 		},
 	}

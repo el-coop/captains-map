@@ -1,11 +1,8 @@
 <template>
-	<ajax-form :headers="formHeaders" @submitting="loading = true" @submitted="submitted" @errors="getErrors"
-			   :extra-data="{
-            lat: latLng.lat,
-            lng: latLng.lng,
-            time: form.dateTime,
-		    'media.file': null
-        }" action="marker/create">
+	<form :headers="formHeaders" @submitting="loading = true" @submit.prevent="queueUpload"
+		  @submitted="submitted"
+		  @errors="getErrors"
+		  action="marker/create">
 		<slide-up-modal name="create-marker" @closed="resetForm" route-name="edit">
 			<p slot="header" class="card-header-title">Create new marker</p>
 			<template slot="content">
@@ -35,11 +32,11 @@
 				</p>
 			</template>
 		</slide-up-modal>
-	</ajax-form>
+	</form>
 </template>
 
 <script>
-	import AjaxForm from "@/Components/Utilities/AjaxForm";
+	import FormDataMixin from "@/Components/Utilities/FormDataMixin";
 	import SlideUpModal from "@/Components/Utilities/SlideUpModal";
 	import CreateMarkerTypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
 	import CreateMarkerFileField from "@/Components/Modals/CreateMarker/FileField";
@@ -49,6 +46,9 @@
 
 	export default {
 		name: "new-marker-modal",
+		mixins: [
+			FormDataMixin
+		],
 
 		components: {
 			CreateMarkerDateTimeField,
@@ -57,7 +57,6 @@
 			CreateMarkerFileField,
 			CreateMarkerTypeToggle,
 			SlideUpModal,
-			AjaxForm,
 		},
 
 		props: {
@@ -79,6 +78,11 @@
 					dateTime: new Date(),
 					type: 'Visited'
 				},
+				extraData: {
+					lat: this.latLng.lat,
+					lng: this.latLng.lng,
+					time: new Date(),
+				},
 				loading: false,
 				formHeaders: {
 					'Content-Type': 'multipart/form-data'
@@ -87,7 +91,15 @@
 			}
 		},
 
+
 		methods: {
+			async queueUpload() {
+				this.loading = true;
+				const data = this.getData();
+				await this.$store.dispatch('Uploads/upload', data);
+				this.loading = false;
+				this.$modal.hide('create-marker');
+			},
 
 			getErrors(errors) {
 				this.errors = errors;
@@ -120,6 +132,17 @@
 				};
 			}
 		},
+
+		watch: {
+			latLng(value) {
+				this.extraData.lat = value.lat;
+				this.extraData.lng = value.lng;
+			},
+
+			'form.dateTime'(value) {
+				this.extraData.time = value;
+			}
+		}
 
 	}
 </script>
