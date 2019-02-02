@@ -45,11 +45,13 @@
 				this.mapObject.id = this.marker.id;
 			},
 
-			onClick() {
-				this.$bus.$emit('map-right-click',{
+			async onClick() {
+				this.$bus.$emit('map-right-click', {
 					lat: this.lat,
-
+					lng: this.lng
 				});
+				await this.$nextTick();
+				this.$bus.$emit('edit-marker', this.marker);
 			}
 
 		},
@@ -58,8 +60,12 @@
 			path() {
 				if (this.marker['media[type]'] === 'instagram') {
 					const regex = new RegExp(/https:\/\/www\.instagram\.com\/p\/(\w*)\/.*/i);
-					const path = regex.exec(this.marker['media[path]'])[1];
-					return `https://instagram.com/p/${path}/media/`;
+					const path = regex.exec(this.marker['media[path]']);
+					if (path) {
+						return `https://instagram.com/p/${path[1]}/media/`;
+					} else {
+						return '';
+					}
 				}
 				return 'data:image/jpeg;base64,' + btoa(this.marker['media[image]']);
 			}

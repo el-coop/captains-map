@@ -28,7 +28,7 @@ class UploadService {
 		const response = await http.post('marker/create', formData);
 		if (!response || response.status < 200 || response.status > 200) {
 			marker.error = {
-				status: response ? response.status : 500,
+				status: response ? response.status : 'offline',
 				data: response ? response.data : {}
 			};
 			await Store.dispatch("Uploads/uploadError", marker);
@@ -36,7 +36,7 @@ class UploadService {
 		}
 
 		const uploadedMarker = response.data;
-		uploadedMarker.uploadKey = marker.uploadTime;
+		uploadedMarker.uploadTime = marker.uploadTime;
 
 		await Store.dispatch("Uploads/uploaded", uploadedMarker);
 	}

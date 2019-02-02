@@ -3,6 +3,22 @@ import UploadService from '@/Services/UploadService';
 
 const uploads = cache.caches().uploads;
 
+const imageToBlob = function (image) {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.addEventListener('abort', (error) => {
+			reject(error);
+		});
+		reader.addEventListener('error', (error) => {
+			reject(error);
+		});
+		reader.addEventListener('loadend', (event) => {
+			resolve(reader.result);
+		});
+		reader.readAsBinaryString(image);
+	});
+};
+
 export default {
 	namespaced: true,
 
@@ -26,6 +42,13 @@ export default {
 				return item.uploadTime === key;
 			});
 			state.queue.splice(index, 1);
+		},
+
+		removeFromErrored(state, key) {
+			const index = state.errored.findIndex((item) => {
+				return item.uploadTime === key;
+			});
+			state.errored.splice(index, 1);
 		},
 
 	},
@@ -68,6 +91,24 @@ export default {
 			UploadService.processQueue();
 		},
 
+		async returnToQueue({state, commit}, data) {
+			if (data['media[type]'] === 'image') {
+				if (data['media[image]']) {
+					data['media[image]'] = await imageToBlob(data['media[image]']);
+				} else {
+					const oldData = state.errored.find((marker) => {
+						return marker.uploadTime === data.uploadTime;
+					});
+					data['media[image]'] = oldData['media[image]'];
+				}
+			}
+			commit("removeFromErrored", data.uploadTime);
+			commit("pushToQueue", data);
+
+			UploadService.processQueue();
+
+		},
+
 		async uploadError({commit}, marker) {
 			this._vm.$toast.error('Please try again later', 'Upload failed');
 			commit('removeFromQueue', marker.uploadTime);
@@ -76,13 +117,14 @@ export default {
 		},
 
 		async uploaded({commit}, data) {
-			await uploads.removeItem(data.uploadKey);
+			await uploads.removeItem(data.uploadTime);
 
-			commit('removeFromQueue', data.uploadKey);
+			commit('removeFromQueue', data.uploadTime);
 			commit('Markers/addAtStart', data, {
 				root: true
 			});
 		}
-	}
+	},
+
 
 }

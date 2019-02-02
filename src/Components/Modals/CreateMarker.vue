@@ -1,14 +1,13 @@
 <template>
 	<form :headers="formHeaders" @submitting="loading = true" @submit.prevent="queueUpload"
-		  @submitted="submitted"
-		  @errors="getErrors"
 		  action="marker/create">
 		<slide-up-modal name="create-marker" @closed="resetForm" route-name="edit">
 			<p slot="header" class="card-header-title">Create new marker</p>
 			<template slot="content">
 				<create-marker-type-toggle v-model="form.media.type"/>
 				<create-marker-file-field v-if="form.media.type === 'image'" v-model="form.media.file"
-										  :error="errors ? errors['media.file'] : ''"/>
+										  :error="errors ? errors['media.file'] : ''"
+										  :init-preview="form.media.preview"/>
 				<create-marker-instagram-field v-if="form.media.type === 'instagram'" v-model="form.media.path"
 											   :error="errors ? errors['media.path'] : ''"/>
 				<create-marker-date-time-field v-model="form.dateTime" :error="errors? errors['time'] : ''"/>
@@ -50,6 +49,14 @@
 			FormDataMixin
 		],
 
+		created() {
+			this.$bus.$on('edit-marker', this.prefill);
+		},
+
+		beforeDestroy() {
+			this.$bus.$off('edit-marker', this.prefill);
+		},
+
 		components: {
 			CreateMarkerDateTimeField,
 			CreateMarkerTypeField,
@@ -68,11 +75,13 @@
 
 		data() {
 			return {
+				uploadId: null,
 				form: {
 					media: {
 						type: 'image',
 						file: null,
-						path: ''
+						path: '',
+						preview: ''
 					},
 					description: '',
 					dateTime: new Date(),
@@ -96,7 +105,12 @@
 			async queueUpload() {
 				this.loading = true;
 				const data = this.getData();
-				await this.$store.dispatch('Uploads/upload', data);
+				if (this.uploadId) {
+					data.uploadTime = this.uploadId;
+					await this.$store.dispatch('Uploads/returnToQueue', data);
+				} else {
+					await this.$store.dispatch('Uploads/upload', data);
+				}
 				this.loading = false;
 				this.$modal.hide('create-marker');
 			},
@@ -105,17 +119,22 @@
 				this.errors = errors;
 			},
 
-			submitted(response) {
-				this.loading = false;
-				if (response.status !== 200) {
-					if (!response.data.errors) {
-						this.$toast.error('Please try again at a later time', 'Creation failed.');
-					}
-					return;
+			prefill(data) {
+				this.uploadId = data.uploadTime;
+				this.form.description = data.description;
+				this.form.type = data.type;
+				this.form.dateTime = data.time;
+				this.form.media.type = data['media[type]'];
+				this.form.media.path = data['media[path]'];
+				if(data['media[type]'] === 'image'){
+					this.form.media.preview = 'data:image/jpeg;base64,' + btoa(data['media[image]']);
 				}
-				this.$store.commit('Markers/addAtStart', response.data);
-
-				this.$modal.hide('create-marker');
+				if (data.error.status === 422) {
+					this.errors = {};
+					data.error.data.errors.forEach((error) => {
+						this.errors[error.param] = error.msg;
+					});
+				}
 			},
 
 			resetForm() {
@@ -130,7 +149,7 @@
 					dateTime: new Date(),
 					type: 'Visited'
 				};
-			}
+			},
 		},
 
 		watch: {
