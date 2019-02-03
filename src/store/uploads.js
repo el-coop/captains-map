@@ -69,26 +69,20 @@ export default {
 		},
 
 		async upload({commit}, data) {
-			if (data['media[type]'] === 'image') {
-				data['media[image]'] = await new Promise((resolve, reject) => {
-					const reader = new FileReader();
-					reader.addEventListener('abort', (error) => {
-						reject(error);
-					});
-					reader.addEventListener('error', (error) => {
-						reject(error);
-					});
-					reader.addEventListener('loadend', (event) => {
-						resolve(reader.result);
-					});
-					reader.readAsBinaryString(data['media[image]']);
-				});
+			if (data['media[type]'] === 'image' && data['media[image]']) {
+				data['media[image]'] = await imageToBlob(data['media[image]']);
 			}
 
 			data.uploadTime = Date.now();
 			await uploads.setItem(data.uploadTime, data);
 			commit("pushToQueue", data);
 			UploadService.processQueue();
+		},
+
+		async cancelUpload({commit}, uploadTime) {
+			await uploads.removeItem(uploadTime);
+			commit("removeFromErrored", uploadTime);
+
 		},
 
 		async returnToQueue({state, commit}, data) {

@@ -22,7 +22,10 @@
 			</template>
 			<template slot="footer">
 				<p class="card-footer-item">
-                    <span>
+					<button class="button is-danger is-fullwidth" @click="cancelUpload" v-if="uploadId" type="button">
+						Cancel upload
+					</button>
+					<span v-else>
                         <a href="#" @click="$modal.hide('create-marker')">Close</a>
                     </span>
 				</p>
@@ -115,8 +118,9 @@
 				this.$modal.hide('create-marker');
 			},
 
-			getErrors(errors) {
-				this.errors = errors;
+			async cancelUpload() {
+				await this.$store.dispatch('Uploads/cancelUpload', this.uploadId);
+				this.$modal.hide('create-marker');
 			},
 
 			prefill(data) {
@@ -126,7 +130,7 @@
 				this.form.dateTime = data.time;
 				this.form.media.type = data['media[type]'];
 				this.form.media.path = data['media[path]'];
-				if(data['media[type]'] === 'image'){
+				if (data['media[type]'] === 'image') {
 					this.form.media.preview = 'data:image/jpeg;base64,' + btoa(data['media[image]']);
 				}
 				if (data.error.status === 422) {
@@ -138,6 +142,7 @@
 			},
 
 			resetForm() {
+				this.uploadId = null;
 				this.errors = null;
 				this.form = {
 					media: {
