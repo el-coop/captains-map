@@ -20,37 +20,29 @@
 	}
 }
 
-.map__marker--upload {
+.map__marker--upload, .map__marker--error {
 	position: relative;
 	overflow: hidden;
 
 	&:after {
-		content: 'UPLOADING';
-		background-color: black;
-		opacity: 0.7;
 		width: 100%;
+		height: 100%;
 		text-align: center;
 		position: absolute;
 		left: 0;
+		top: 0;
 		font-size: $size-7;
 	}
 }
 
+.map__marker--upload:after {
+	content: 'QUEUE';
+	background-color: transparentize($black, 0.4);
+}
 
-.map__marker--error {
-	position: relative;
-	overflow: hidden;
-
-	&:after {
-		content: 'ERROR';
-		background-color: $red;
-		opacity: 0.7;
-		width: 100%;
-		text-align: center;
-		position: absolute;
-		left: 0;
-		font-size: $size-7;
-	}
+.map__marker--error:after {
+	content: 'ERROR';
+	background-color: transparentize($red, 0.4);
 }
 
 .map__icon-wrapper {
@@ -84,13 +76,6 @@
 		&-Other {
 			@extend .map__icon;
 			border-color: $white-ter;
-		}
-
-		&-upload {
-			filter: sepia(100%) blur(0.75px);
-		}
-		&-error {
-			filter: grayscale(100%) blur(0.75px);
 		}
 	}
 }

@@ -27,6 +27,13 @@ export default {
 		errored: []
 	},
 
+	getters: {
+		allFiles(state) {
+			return state.queue.concat(state.errored);
+
+		}
+	},
+
 	mutations: {
 
 		pushToQueue(state, data) {
@@ -55,7 +62,7 @@ export default {
 
 	actions: {
 		processQueue() {
-			UploadService.processQueue();
+			//UploadService.processQueue();
 		},
 
 		async init({state}) {
@@ -76,7 +83,7 @@ export default {
 			data.uploadTime = Date.now();
 			await uploads.setItem(data.uploadTime, data);
 			commit("pushToQueue", data);
-			UploadService.processQueue();
+			//UploadService.processQueue();
 		},
 
 		async cancelUpload({commit}, uploadTime) {

@@ -1,8 +1,8 @@
 <template>
-	<div class="media" :class="marker.type" @click="showMarker">
+	<div class="media" :class="className" @click="showMarker">
 		<figure class="media-left">
 			<p class="image">
-				<img :src="src" :alt="`${marker.user.username} ${marker.type}`">
+				<img :src="src" :alt="`${marker.user ? marker.user.username : ''} ${this.marker.type}`.trim()">
 			</p>
 		</figure>
 		<div class="media-content">
@@ -19,9 +19,11 @@
 
 <script>
 	import map from '@/Services/LeafletMapService';
+	import HandlesDataDisplayMixin from "@/Components/Utilities/HandlesDataDisplayMixin";
 
 	export default {
 		name: "marker-entry",
+		mixins: [HandlesDataDisplayMixin],
 
 		props: {
 			marker: {
@@ -32,64 +34,21 @@
 
 		data() {
 			return {
-				image: null,
-				src: null,
-				observer: null
+				src: this.calculateImage(),
+				className: this.marker.type,
 			}
 		},
-
-		mounted() {
-			if (this.marker.media.type == 'instagram') {
-				this.src = `https://instagram.com/p/${this.marker.media.path}/media/`;
-			} else {
-				this.src = `/api${this.marker.media.path.replace('images', 'thumbnails')}`;
-			}
-
-		},
-
 
 		methods: {
+			calculateImage() {
+				return this.calculateVerifiedImage(this.marker);
+			},
 			showMarker() {
 				this.$bus.$emit('moving-map');
 				map.move([this.marker.lat, this.marker.lng], 16);
 			},
-			dateDisplay(value) {
-				const date = new Date(value);
 
-				let hour = date.getUTCHours();
-				if (hour < 10) {
-					hour = `0${hour}`;
-				}
-
-				return `${date.getUTCDate()}/${date.getUTCMonth() + 1}/${date.getUTCFullYear()} ${hour}:${date.getUTCMinutes()}`;
-			}
 		},
-
-		filters: {
-			truncate(text, length) {
-				let hasEnters = false;
-				if (text.indexOf('\n') > 0) {
-					text = text.substring(0, text.indexOf('\n'));
-					hasEnters = true;
-				}
-				if (text.length <= length - 4) {
-					return text + (hasEnters ? ' ...' : '');
-				}
-				let tcText = text.slice(0, length - 3);
-				let last = tcText.length;
-
-
-				while (last > 0 && tcText[last] !== ' ' && tcText[last] !== '.') {
-					last--;
-				}
-
-				last = last || length - 3;
-
-				tcText = tcText.slice(0, last);
-
-				return tcText + '...';
-			},
-		}
 	}
 </script>
 
@@ -116,11 +75,47 @@
 
 			background-color: $grey-light;
 		}
+
+		.image {
+			max-width: 64px;
+			max-height: 100px;
+		}
+
+		&.error, &.queued {
+			.image {
+				position: relative;
+				overflow: hidden;
+
+				&:after {
+					width: 100%;
+					height: 100%;
+					text-align: center;
+					position: absolute;
+					left: 0;
+					top: 0;
+					font-size: $size-7;
+				}
+			}
+		}
+
+		&.error {
+			.image:after {
+				content: 'ERROR';
+				background-color: transparentize($red, 0.4);
+			}
+		}
+
+
+		&.queued {
+			.image:after {
+				content: 'QUEUE';
+				background-color: transparentize($black, 0.4);
+			}
+		}
+
+
 	}
 
-	.image {
-		max-width: 64px;
-	}
 
 	strong {
 		color: $white;

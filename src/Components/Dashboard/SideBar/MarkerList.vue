@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<uploads-list v-if="$store.getters['Uploads/allFiles'].length"/>
 		<marker-borders-filter class="is-hidden-touch"/>
 		<div class="loader" v-if="loading"></div>
 		<ul v-if="! loading">
@@ -16,14 +17,14 @@
 
 <script>
 	import MarkerEntry from "@/Components/Dashboard/SideBar/MarkerEntry";
-	import Map from '@/Services/LeafletMapService';
 	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter";
+	import UploadsList from "@/Components/Dashboard/SideBar/UploadsList";
 
 	const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
 	export default {
-		components: {MarkerBordersFilter, MarkerEntry},
 		name: "marker-list",
+		components: {MarkerBordersFilter, MarkerEntry, UploadsList},
 
 		computed: {
 			markers() {
