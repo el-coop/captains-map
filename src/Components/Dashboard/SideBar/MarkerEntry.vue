@@ -79,6 +79,7 @@
 		.image {
 			max-width: 64px;
 			max-height: 100px;
+			overflow: hidden;
 		}
 
 		&.error, &.queued {
@@ -107,9 +108,30 @@
 
 
 		&.queued {
+			filter: grayscale(100);
+
 			.image:after {
 				content: 'QUEUE';
 				background-color: transparentize($black, 0.4);
+			}
+		}
+
+		&.uploading {
+			filter: grayscale(100);
+
+			.image:after {
+				animation: spinAround 500ms infinite linear;
+				border: 0.25em solid $grey-lighter;
+				border-radius: $radius-rounded;
+				border-right-color: transparent;
+				border-top-color: transparent;
+				content: "";
+				display: block;
+				top: calc(50% - 1em);
+				left: calc(50% - 1em);
+				width: 2em;
+				height: 2em;
+				position: absolute;
 			}
 		}
 

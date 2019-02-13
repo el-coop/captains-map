@@ -8,7 +8,7 @@
 		props: {
 			status: {
 				type: String,
-				default: 'upload'
+				default: 'queued'
 			}
 		},
 

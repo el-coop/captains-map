@@ -20,7 +20,7 @@
 	}
 }
 
-.map__marker--upload, .map__marker--error {
+.map__marker--queued, .map__marker--error {
 	position: relative;
 	overflow: hidden;
 
@@ -35,7 +35,7 @@
 	}
 }
 
-.map__marker--upload:after {
+.map__marker--queued:after {
 	content: 'QUEUE';
 	background-color: transparentize($black, 0.4);
 }

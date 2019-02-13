@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<uploads-list v-if="$store.getters['Uploads/allFiles'].length"/>
+		<uploads-list v-if="$store.getters['Uploads/allFiles'].length && $router.currentRoute.name === 'edit'"/>
 		<marker-borders-filter class="is-hidden-touch"/>
 		<div class="loader" v-if="loading"></div>
 		<ul v-if="! loading">

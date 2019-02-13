@@ -40,7 +40,7 @@
 		display: flex;
 		justify-content: stretch;
 		flex-direction: column-reverse;
-		align-items: start;
+		align-items: flex-start;
 		@media (min-width: $tablet) {
 			flex-direction: row;
 			justify-content: space-between;

@@ -11,8 +11,11 @@ class UploadService {
 		}
 		working = true;
 
-		while (Object.keys(Store.state.Uploads.queue).length) {
-			await this.upload(Store.state.Uploads.queue[Object.keys(Store.state.Uploads.queue)[0]]);
+		while (Store.state.Uploads.queue.length > 0) {
+			const currentMarker = Store.state.Uploads.queue[0];
+			Store.commit('Uploads/markAsWorking', currentMarker.uploadTime);
+			await this.upload(currentMarker);
+			Store.commit('Uploads/markAsWorking', null);
 		}
 		working = false;
 	}
@@ -27,6 +30,7 @@ class UploadService {
 		}
 		const response = await http.post('marker/create', formData);
 		if (!response || response.status < 200 || response.status > 200) {
+			console.log('here',response);
 			marker.error = {
 				status: response ? response.status : 'offline',
 				data: response ? response.data : {}

@@ -3,10 +3,14 @@
 		<div class="map" ref="map">
 			<user-marker-control/>
 			<user-marker v-if="userMarker"/>
+
 			<upload-marker v-for="marker in uploadMarkers" :marker="marker"
-						   :key="`uploads_${Date.now()}_${marker.uploadTime}`"/>
+						   :key="`uploads_${Date.now()}_${marker.uploadTime}`"
+						   v-if="$router.currentRoute.name === 'edit'"/>
+
 			<upload-marker v-for="marker in erroredMarkers" :marker="marker"
-						   :key="`errors_${Date.now()}_${marker.uploadTime}`" status="error"/>
+						   :key="`errors_${Date.now()}_${marker.uploadTime}`" status="error"
+						   v-if="$router.currentRoute.name === 'edit'"/>
 			<marker-cluster ref="userMarker">
 				<map-marker v-for="marker in markers" :layer="$refs.userMarker" :marker="marker"
 							:key="`${Date.now()}_${marker.id}`"/>

@@ -11,8 +11,8 @@
 		name: "Logout",
 
 		methods: {
-			logout() {
-				this.$store.dispatch('User/logout');
+			async logout() {
+				await this.$store.dispatch('User/logout');
 			}
 		}
 	}

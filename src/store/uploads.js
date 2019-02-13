@@ -2,6 +2,7 @@ import cache from '@/Services/cache.service';
 import UploadService from '@/Services/UploadService';
 
 const uploads = cache.caches().uploads;
+let readyToProcess = false;
 
 const imageToBlob = function (image) {
 	return new Promise((resolve, reject) => {
@@ -24,7 +25,8 @@ export default {
 
 	state: {
 		queue: [],
-		errored: []
+		errored: [],
+		workingId: null
 	},
 
 	getters: {
@@ -58,14 +60,22 @@ export default {
 			state.errored.splice(index, 1);
 		},
 
+		markAsWorking(state, id) {
+			state.workingId = id;
+		}
+
 	},
 
 	actions: {
 		processQueue() {
-			//UploadService.processQueue();
+			if (!readyToProcess) {
+				console.log('here');
+				return readyToProcess = true;
+			}
+			UploadService.processQueue();
 		},
 
-		async init({state}) {
+		async init({state, dispatch}) {
 			await uploads.iterate((data) => {
 				if (data.error) {
 					state.errored.push(data);
@@ -73,6 +83,7 @@ export default {
 					state.queue.push(data);
 				}
 			});
+			dispatch('processQueue');
 		},
 
 		async upload({commit}, data) {
@@ -83,7 +94,7 @@ export default {
 			data.uploadTime = Date.now();
 			await uploads.setItem(data.uploadTime, data);
 			commit("pushToQueue", data);
-			//UploadService.processQueue();
+			UploadService.processQueue();
 		},
 
 		async cancelUpload({commit}, uploadTime) {
@@ -124,6 +135,13 @@ export default {
 			commit('Markers/addAtStart', data, {
 				root: true
 			});
+		},
+
+		async purge({state}) {
+			await uploads.clear();
+			state.queue = [];
+			state.errored = [];
+			state.workingId = null;
 		}
 	},
 
