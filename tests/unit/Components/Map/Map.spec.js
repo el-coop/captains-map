@@ -3,9 +3,34 @@ import { shallowMount } from '@vue/test-utils';
 import Map from '@/Components/Map/Map.vue';
 import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
+
 const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
 describe('Map.vue', () => {
+
+	let mocks;
+
+	beforeEach(() => {
+		mocks = {
+			$store: {
+				state: {
+					Markers: {
+						markers: [],
+						page: 0
+					},
+					Uploads: {
+						queue: [],
+						errored: []
+					}
+				}
+			},
+			$router: {
+				currentRoute: {
+					name: 'view'
+				}
+			}
+		};
+	});
 
 	afterEach(() => {
 		sinon.restore();
@@ -13,16 +38,7 @@ describe('Map.vue', () => {
 
 	it('renders without markers', () => {
 		const wrapper = shallowMount(Map, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: [],
-							page: 0
-						}
-					}
-				}
-			}
+			mocks
 		});
 		assert.isTrue(wrapper.find('.map').exists());
 		assert.isFalse(wrapper.find('usermarker-stub').exists());
@@ -33,16 +49,7 @@ describe('Map.vue', () => {
 		const mapInitStub = sinon.stub(mapService, 'init');
 		const mapOnStub = sinon.stub(mapService, 'on');
 		const wrapper = shallowMount(Map, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: [],
-							page: 0
-						}
-					}
-				}
-			}
+			mocks
 		});
 		assert.isTrue(mapInitStub.calledOnce);
 		assert.isTrue(mapInitStub.calledWith(wrapper.vm.$refs.map, wrapper.vm.$props.center, wrapper.vm.$props.zoom));
@@ -53,70 +60,37 @@ describe('Map.vue', () => {
 	});
 
 	it('renders markers', () => {
+		mocks.$store.state.Markers.markers = [
+			{id: 1}, {id: 2}, {id: 3}
+		];
 		const wrapper = shallowMount(Map, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: [
-								{id:1}, {id:2}, {id:3}
-							],
-							page: 0
-						}
-					}
-				}
-			}
+			mocks
 		});
 		assert.equal(wrapper.findAll('map-marker-stub').length, 3);
 	});
 
 	it('renders second page of markers markers', () => {
-		const markers = new Array(pageSize).fill({});
-		markers.push({id:1},{id:2},{id:3})
+		mocks.$store.state.Markers.markers = new Array(pageSize).fill({});
+		mocks.$store.state.Markers.markers.push({id: 1}, {id: 2}, {id: 3});
+		mocks.$store.state.Markers.page = 1;
 		const wrapper = shallowMount(Map, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers,
-							page: 1
-						}
-					}
-				}
-			}
+			mocks
 		});
 		assert.equal(wrapper.findAll('map-marker-stub').length, 3);
 	});
 
 	it('renders userMarker', () => {
+		mocks.$store.state.Markers.userMarker = true;
+
 		const wrapper = shallowMount(Map, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: [],
-							userMarker: true,
-							page: 0
-						}
-					}
-				}
-			}
+			mocks
 		});
 		assert.isTrue(wrapper.find('user-marker-stub').exists());
 	});
 
 	it('reacts to zoom change', () => {
 		const wrapper = shallowMount(Map, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: [],
-							page: 0
-						}
-					}
-				}
-			}
+			mocks
 		});
 
 		wrapper.vm.handleZoom({
@@ -152,30 +126,87 @@ describe('Map.vue', () => {
 	});
 
 	it('reacts to right click event', () => {
-		const $bus = {
-			$emit() {
-
-			}
+		mocks.$bus = {
+			$emit: sinon.stub()
 		};
-		const busEmit = sinon.stub($bus, '$emit');
 		const wrapper = shallowMount(Map, {
-			mocks: {
-				$bus,
-				$store: {
-					state: {
-						Markers: {
-							markers: [],
-							page: 0
-						}
-					}
-				}
-			}
+			mocks
 		});
 		const event = sinon.stub();
 
 
 		wrapper.vm.rightClick(event);
-		assert.isTrue(busEmit.calledOnce);
-		assert.isTrue(busEmit.calledWith('map-right-click', {event}));
+		assert.isTrue(mocks.$bus.$emit.calledOnce);
+		assert.isTrue(mocks.$bus.$emit.calledWith('map-right-click', {event}));
+	});
+
+	it('renders the queue markers when it has entries and mode is edit', () => {
+		mocks.$store.state.Uploads.queue = [{
+			uploadTime: 1
+		}, {
+			uploadTime: 2
+		}];
+		mocks.$router.currentRoute.name = 'edit';
+
+		const wrapper = shallowMount(Map, {
+			mocks
+		});
+
+		const queueMarkers = wrapper.findAll('upload-marker-stub');
+
+		assert.equal(queueMarkers.length, 2);
+		assert.equal(queueMarkers.filter((element) => {
+			return element.attributes().status === 'queued';
+		}).length, 2);
+	});
+
+	it('doesnt render the queue markers when it has entries and mode isnt edit', () => {
+		mocks.$store.state.Uploads.queue = [{
+			uploadTime: 1
+		}, {
+			uploadTime: 2
+		}];
+		const wrapper = shallowMount(Map, {
+			mocks
+		});
+
+		const queueMarkers = wrapper.findAll('upload-marker-stub');
+
+		assert.equal(queueMarkers.length, 0);
+	});
+
+	it('renders the errored markers when it has entries and mode is edit', () => {
+		mocks.$store.state.Uploads.errored = [{
+			uploadTime: 1
+		}, {
+			uploadTime: 2
+		}];
+		mocks.$router.currentRoute.name = 'edit';
+
+		const wrapper = shallowMount(Map, {
+			mocks
+		});
+
+		const queueMarkers = wrapper.findAll('upload-marker-stub');
+
+		assert.equal(queueMarkers.length, 2);
+		assert.equal(queueMarkers.filter((element) => {
+			return element.attributes().status === 'error';
+		}).length, 2);
+	});
+
+	it('doesnt render the errored markers it has entries and mode isnt edit', () => {
+		mocks.$store.state.Uploads.errored = [{
+			uploadTime: 1
+		}, {
+			uploadTime: 2
+		}];
+		const wrapper = shallowMount(Map, {
+			mocks
+		});
+
+		const queueMarkers = wrapper.findAll('upload-marker-stub');
+
+		assert.equal(queueMarkers.length, 0);
 	});
 });

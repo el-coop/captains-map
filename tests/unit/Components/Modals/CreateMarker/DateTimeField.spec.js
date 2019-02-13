@@ -53,7 +53,7 @@ describe('CreateMarker/DateTimeField.vue', () => {
 		}
 
 
-		assert.deepEqual(wrapper.vm.getCurrentDate(), `${expectedDate.getFullYear()}-${month}-${day}`);
+		assert.deepEqual(wrapper.vm.formatDate(Date.now()), `${expectedDate.getFullYear()}-${month}-${day}`);
 	});
 
 	it('It gets current time formatted', () => {
@@ -70,7 +70,7 @@ describe('CreateMarker/DateTimeField.vue', () => {
 			minutes = `0${minutes}`;
 		}
 
-		assert.deepEqual(wrapper.vm.getCurrentTime(), `${hour}:${minutes}`);
+		assert.deepEqual(wrapper.vm.formatTime(Date.now()), `${hour}:${minutes}`);
 	});
 
 	it('It emits input when time is changed', () => {

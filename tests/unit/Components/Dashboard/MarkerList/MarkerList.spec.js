@@ -7,6 +7,30 @@ import Map from '@/Services/LeafletMapService';
 const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
 describe('MarkerList.vue', () => {
+	let mocks;
+
+	beforeEach(() => {
+		mocks = {
+			$store: {
+				state: {
+					Markers: {
+						markers: [],
+						hasNext: false,
+						page: 0,
+						serverPage: 0
+					},
+				},
+				getters: {
+					'Uploads/allFiles': []
+				}
+			},
+			$router: {
+				currentRoute: {
+					name: 'edit'
+				}
+			}
+		}
+	});
 
 	afterEach(() => {
 		sinon.restore();
@@ -14,18 +38,7 @@ describe('MarkerList.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: [],
-							hasNext: false,
-							page: 0,
-							serverPage: 0
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		assert.isTrue(wrapper.find('marker-borders-filter-stub').exists());
@@ -34,20 +47,10 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Shows loader when loading', () => {
+		mocks.$store.state.Markers.loading = true;
+
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: [],
-							hasNext: false,
-							page: 0,
-							loading: true,
-							serverPage: 0
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		assert.isFalse(wrapper.find('ul').exists());
@@ -55,24 +58,10 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Renders list of markers and hides pagination when no hasNext', () => {
-		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: [{
-								id: 1
-							}, {
-								id: 2
-							}],
+		mocks.$store.state.Markers.markers = new Array(2).fill({lat: 0, lng: 0});
 
-							hasNext: false,
-							page: 0,
-							serverPage: 0
-						},
-					}
-				}
-			}
+		const wrapper = shallowMount(MarkerList, {
+			mocks
 		});
 
 		assert.equal(wrapper.findAll('marker-entry-stub').length, 2);
@@ -80,23 +69,11 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Renders markers and pagination buttons when there is next', () => {
+		mocks.$store.state.Markers.markers = new Array(2).fill({lat: 0, lng: 0});
+		mocks.$store.state.Markers.hasNext = true;
+
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: [{
-								id: 1
-							}, {
-								id: 2
-							}],
-							hasNext: true,
-							page: 0,
-							serverPage: 0
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		assert.equal(wrapper.findAll('marker-entry-stub').length, 2);
@@ -104,19 +81,11 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Renders markers and pagination buttons when not on last page', () => {
+		mocks.$store.state.Markers.markers = new Array(pageSize * 5).fill({lat: 0, lng: 0});
+		mocks.$store.state.Markers.page = 2;
+
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: new Array(pageSize * 5).fill({}),
-							hasNext: false,
-							page: 2,
-							serverPage: 0
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		assert.equal(wrapper.findAll('marker-entry-stub').length, 5);
@@ -124,19 +93,11 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Disables next button when needs to be', async () => {
+		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$store.state.Markers.page = 2;
+
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: new Array(pageSize * 3).fill({}),
-							hasNext: false,
-							page: 2,
-							serverPage: 0
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		await wrapper.vm.$nextTick();
@@ -147,19 +108,10 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Disables prev button when needs to be', async () => {
+		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: new Array(pageSize * 3).fill({}),
-							hasNext: false,
-							page: 0,
-							serverPage: 0
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		await wrapper.vm.$nextTick();
@@ -170,19 +122,12 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Enables both buttons', async () => {
+		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$store.state.Markers.hasNext = true;
+		mocks.$store.state.Markers.page = 1;
+
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: new Array(pageSize * 3).fill({}),
-							hasNext: true,
-							page: 1,
-							serverPage: 0
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		await wrapper.vm.$nextTick();
@@ -191,19 +136,12 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Enables previous button when page is 0 and server page is bigger', async () => {
+		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$store.state.Markers.hasNext = true;
+		mocks.$store.state.Markers.serverPage = 2;
+
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: new Array(pageSize * 3).fill({}),
-							hasNext: true,
-							page: 0,
-							serverPage: 2
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		await wrapper.vm.$nextTick();
@@ -212,26 +150,19 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Loads next page', async () => {
+		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$store.state.Markers.hasNext = true;
+		mocks.$store.state.Markers.page = 1;
+
 		const storeDispatchSpy = sinon.spy();
-		const mapSetViewStub = sinon.stub(Map, 'setView');
+		sinon.stub(Map, 'setView');
 		const $bus = {
 			$emit: sinon.spy()
 		};
+		mocks.$store.dispatch = storeDispatchSpy;
+		mocks.$bus = $bus;
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: new Array(pageSize * 3).fill({lat: 0, lng: 0}),
-							hasNext: true,
-							page: 1,
-							serverPage: 0
-						},
-					},
-					dispatch: storeDispatchSpy
-				},
-				$bus
-			}
+			mocks
 		});
 
 		await wrapper.vm.nextPage();
@@ -240,26 +171,19 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Loads prev page', async () => {
+		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$store.state.Markers.hasNext = true;
+		mocks.$store.state.Markers.page = 1;
+
 		const storeDispatchSpy = sinon.spy();
-		const mapSetViewStub = sinon.stub(Map, 'setView');
+		sinon.stub(Map, 'setView');
 		const $bus = {
 			$emit: sinon.spy()
 		};
+		mocks.$store.dispatch = storeDispatchSpy;
+		mocks.$bus = $bus;
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: new Array(pageSize * 3).fill({lat: 0, lng: 0}),
-							hasNext: true,
-							page: 1,
-							serverPage: 0
-						},
-					},
-					dispatch: storeDispatchSpy
-				},
-				$bus
-			}
+			mocks
 		});
 
 		await wrapper.vm.previousPage();
@@ -268,20 +192,13 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Calls nextPage on click', () => {
+		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$store.state.Markers.hasNext = true;
+		mocks.$store.state.Markers.page = 1;
+
 		const nextPageStub = sinon.stub(MarkerList.methods, 'nextPage');
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: new Array(pageSize * 3).fill({lat: 0, lng: 0}),
-							hasNext: true,
-							page: 1,
-							serverPage: 0
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		wrapper.findAll('.button').at(1).trigger('click');
@@ -289,23 +206,35 @@ describe('MarkerList.vue', () => {
 	});
 
 	it('Calls previousPage on click', () => {
+		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$store.state.Markers.hasNext = true;
+		mocks.$store.state.Markers.page = 1;
+
 		const previousPageStub = sinon.stub(MarkerList.methods, 'previousPage');
 		const wrapper = shallowMount(MarkerList, {
-			mocks: {
-				$store: {
-					state: {
-						Markers: {
-							markers: new Array(pageSize * 3).fill({lat: 0, lng: 0}),
-							hasNext: true,
-							page: 1,
-							serverPage: 0
-						},
-					}
-				}
-			}
+			mocks
 		});
 
 		wrapper.findAll('.button').at(0).trigger('click');
 		assert.isTrue(previousPageStub.calledOnce);
+	});
+
+	it('Shows upload list when there are pending uploads and current route is edit', () => {
+		mocks.$store.getters["Uploads/allFiles"] = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+
+		const wrapper = shallowMount(MarkerList, {
+			mocks
+		});
+		assert.isTrue(wrapper.find('uploads-list-stub').exists());
+	});
+
+	it('Doesnt Show upload list when there are pending uploads and current route is not edit', () => {
+		mocks.$store.getters["Uploads/allFiles"] = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$router.currentRoute.name = 'view';
+
+		const wrapper = shallowMount(MarkerList, {
+			mocks
+		});
+		assert.isFalse(wrapper.find('uploads-list-stub').exists());
 	});
 });

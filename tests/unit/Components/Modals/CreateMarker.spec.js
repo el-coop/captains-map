@@ -12,13 +12,30 @@ describe('CreateMarker.vue', () => {
 		}
 	};
 
+	let mocks;
+
+	beforeEach(() => {
+		mocks = {
+			$bus: {
+				$on: sinon.stub()
+			},
+			$store: {
+				dispatch: sinon.stub()
+			},
+			$modal: {
+				hide: sinon.spy()
+			}
+		}
+	});
+
 	afterEach(() => {
 		sinon.restore();
 	});
 
-	it('Renders', () => {
+	it('Renders and initializes listeners', () => {
 		const wrapper = shallowMount(CreateMarker, {
-			propsData
+			propsData,
+			mocks
 		});
 
 		assert.isTrue(wrapper.find('create-marker-type-toggle-stub').exists());
@@ -26,97 +43,153 @@ describe('CreateMarker.vue', () => {
 		assert.isTrue(wrapper.find('create-marker-type-toggle-stub').exists());
 		assert.isTrue(wrapper.find('create-marker-date-time-field-stub').exists());
 		assert.isTrue(wrapper.find('create-marker-type-field-stub').exists());
+		assert.isTrue(mocks.$bus.$on.calledOnce);
+		assert.isTrue(mocks.$bus.$on.calledWith('edit-marker', wrapper.vm.prefill));
 	});
 
-	it('Reads errors', () => {
-		const wrapper = shallowMount(CreateMarker, {
-			propsData
-		});
-
-		const errors = {
-			error: 'test'
-		};
-
-		wrapper.vm.getErrors(errors);
-
-		assert.deepEqual(wrapper.vm.$data.errors, errors);
-	});
-
-	it('Reacts to submission', () => {
-		const $store = {
-			commit: sinon.spy()
-		};
-		const $modal = {
-			hide: sinon.spy()
-		};
+	it('Adds new marker to upload queue', async () => {
 		const wrapper = shallowMount(CreateMarker, {
 			propsData,
-			mocks: {
-				$store,
-				$modal
-			}
-		});
-		const marker = {
-			id: 1
-		};
-
-
-		wrapper.vm.submitted({
-			status: 200,
-			data: {
-				marker
-			}
+			mocks
 		});
 
-		assert.isTrue($store.commit.calledOnce);
-		assert.isTrue($store.commit.calledWith('Markers/addAtStart'));
+		const data = wrapper.vm.getData();
 
-		assert.isTrue($modal.hide.calledOnce);
-		assert.isTrue($modal.hide.calledWith('create-marker'));
+		wrapper.find('form').trigger('submit');
+
+		await wrapper.vm.$nextTick();
+
+		assert.isTrue(mocks.$store.dispatch.calledOnce);
+		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/upload', data));
+
+		assert.isTrue(mocks.$modal.hide.calledOnce);
+		assert.isTrue(mocks.$modal.hide.calledWith('create-marker'));
 	});
 
-	it('Reacts to failed submission', () => {
-		const $store = {
-			commit: sinon.spy()
-		};
-		const $modal = {
-			hide: sinon.spy()
-		};
-
-		const $toast = {
-			error: sinon.spy()
-		};
-
+	it('Returns old marker to upload queue', async () => {
 		const wrapper = shallowMount(CreateMarker, {
 			propsData,
-			mocks: {
-				$store,
-				$modal,
-				$toast
-			}
-		});
-		const marker = {
-			id: 1
-		};
-
-
-		wrapper.vm.submitted({
-			status: 201,
-			data: {
-				marker
-			}
+			mocks
 		});
 
-		assert.isTrue($toast.error.calledOnce);
-		assert.isTrue($toast.error.calledWith('Please try again at a later time', 'Creation failed.'));
+		wrapper.setData({
+			uploadId: 1
+		});
 
-		assert.isTrue($store.commit.notCalled);
-		assert.isTrue($modal.hide.notCalled);
+		wrapper.find('form').trigger('submit');
+
+		await wrapper.vm.$nextTick();
+		const data = wrapper.vm.getData();
+		data.uploadTime = 1;
+
+		assert.isTrue(mocks.$store.dispatch.calledOnce);
+		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/returnToQueue', data));
+
+		assert.isTrue(mocks.$modal.hide.calledOnce);
+		assert.isTrue(mocks.$modal.hide.calledWith('create-marker'));
 	});
+
+	it('Shows cancel button when working with errored marker', () => {
+		const wrapper = shallowMount(CreateMarker, {
+			propsData,
+			mocks
+		});
+
+		wrapper.setData({
+			uploadId: 1
+		});
+
+		assert.isTrue(wrapper.find('button.is-danger').exists());
+	});
+
+	it('Cancels marker upload', async () => {
+		const wrapper = shallowMount(CreateMarker, {
+			propsData,
+			mocks
+		});
+
+		wrapper.setData({
+			uploadId: 1
+		});
+
+		wrapper.find('button.is-danger').trigger('click');
+
+		await wrapper.vm.$nextTick();
+
+		assert.isTrue(mocks.$store.dispatch.calledOnce);
+		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/cancelUpload', 1));
+
+		assert.isTrue(mocks.$modal.hide.calledOnce);
+		assert.isTrue(mocks.$modal.hide.calledWith('create-marker'));
+	});
+
+	it('Prefills data', () => {
+		const wrapper = shallowMount(CreateMarker, {
+			propsData,
+			mocks
+		});
+
+		wrapper.vm.prefill({
+			uploadTime: 1,
+			description: 'test',
+			type: 'Planned',
+			time: 2,
+			'media[type]': 'instagram',
+			'media[path]': 'path',
+			error: {
+				status: 500
+			}
+		});
+
+		assert.equal(wrapper.vm.$data.uploadId, 1);
+		assert.deepEqual(wrapper.vm.$data.form, {
+			media: {
+				file: null,
+				preview: "",
+				type: 'instagram',
+				path: 'path'
+			},
+			description: 'test',
+			type: 'Planned',
+			dateTime: 2,
+		});
+	});
+
+	it('Prefills errors', async () => {
+		const wrapper = shallowMount(CreateMarker, {
+			propsData,
+			mocks
+		});
+
+		wrapper.vm.prefill({
+			uploadTime: 1,
+			description: 'test',
+			type: 'Planned',
+			time: 2,
+			'media[type]': 'instagram',
+			'media[path]': 'path',
+			error: {
+				status: 422,
+				data: {
+					errors: [{
+						param: 'media.path',
+						msg: 'invalid'
+					}]
+				}
+			}
+		});
+
+		assert.deepEqual(wrapper.vm.$data.errors, {
+			'media.path': 'invalid'
+		});
+
+	});
+
 
 	it('Resets form', () => {
 		const wrapper = shallowMount(CreateMarker, {
-			propsData
+			propsData,
+			mocks
 		});
 
 		wrapper.setData({
@@ -128,7 +201,6 @@ describe('CreateMarker.vue', () => {
 			}
 		});
 
-		// wrapper.find('ajaxform-stub').trigger('errors',errors);
 		wrapper.vm.resetForm();
 
 		assert.equal(wrapper.vm.$data.errors, null);
@@ -145,5 +217,5 @@ describe('CreateMarker.vue', () => {
 		});
 
 	});
-	
+
 });

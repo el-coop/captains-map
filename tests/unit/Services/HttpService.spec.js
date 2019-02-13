@@ -4,7 +4,7 @@ import axios from 'axios';
 import moxios from 'moxios';
 import http from '@/Services/http.service';
 import cache from '@/Services/cache.service';
-import userStore from '@/store/user';
+import Store from '@/store';
 
 describe('Http service', () => {
 	beforeEach(() => {
@@ -16,7 +16,9 @@ describe('Http service', () => {
 		moxios.uninstall();
 	});
 
-	it('Saves CSRF token', async () => {
+	it('Saves CSRF token and notify app', async () => {
+		const storeStub = sinon.stub(Store, 'dispatch');
+
 		moxios.wait(() => {
 			let request = moxios.requests.mostRecent();
 			request.respondWith({
@@ -28,10 +30,12 @@ describe('Http service', () => {
 		});
 		await http.get('test');
 		assert.equal(axios.defaults.headers.common['X-CSRF-TOKEN'], 'test');
+		assert.isTrue(storeStub.calledOnce);
+		assert.isTrue(storeStub.calledWith('CSRFReady'));
 	});
 
 	it('Issues as logout when clearToken error is found', async () => {
-		const logoutStub = sinon.stub(userStore.actions, 'logout');
+		const storeStub = sinon.stub(Store, 'dispatch');
 		moxios.wait(() => {
 			let request = moxios.requests.mostRecent();
 			request.respondWith({
@@ -42,7 +46,8 @@ describe('Http service', () => {
 			});
 		});
 		await http.get('test');
-		assert.isTrue(logoutStub.calledOnce);
+		assert.isTrue(storeStub.calledOnce);
+		assert.isTrue(storeStub.calledWith('User/logout'));
 	});
 
 	it('returns the get response and caches', async () => {
