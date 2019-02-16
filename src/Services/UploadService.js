@@ -29,8 +29,7 @@ class UploadService {
 			formData.set('media[image]', this[stringToBlob](marker['media[image]']), 'upload.jpg');
 		}
 		const response = await http.post('marker/create', formData);
-		if (!response || response.status < 200 || response.status > 200) {
-			console.log('here',response);
+		if (!response || response.status < 200 || response.status > 299) {
 			marker.error = {
 				status: response ? response.status : 'offline',
 				data: response ? response.data : {}
