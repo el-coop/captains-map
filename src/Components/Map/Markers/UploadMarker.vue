@@ -29,10 +29,9 @@
 				}
 				this.$bus.$emit('map-right-click', {
 					lat: this.lat,
-					lng: this.lng
+					lng: this.lng,
+					marker: this.marker,
 				});
-				await this.$nextTick();
-				this.$bus.$emit('edit-marker', this.marker);
 			}
 		},
 	}

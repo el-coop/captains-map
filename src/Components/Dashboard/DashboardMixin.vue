@@ -12,7 +12,8 @@
 				latLng: {},
 				selectedMarker: null,
 				openSidebar: window.matchMedia("(min-width: 769px)").matches,
-				mountModal: false
+				mountModal: false,
+				editedMarker: null
 			}
 		},
 
@@ -50,6 +51,7 @@
 				} else {
 					this.latLng = data.event.latlng;
 				}
+				this.editedMarker = data.marker || null;
 				this.$modal.show('create-marker');
 			},
 

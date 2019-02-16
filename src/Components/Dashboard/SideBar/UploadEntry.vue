@@ -12,34 +12,30 @@
 		},
 
 		created() {
-			if (this.$store.state.Uploads.workingId === this.marker.uploadTime) {
-				this.className = 'uploading';
-				return;
-			}
-			this.className = this.marker.error ? 'error' : 'queued';
+			this.setStatus();
 		},
 
 		methods: {
 			calculateImage() {
 				return this.calculateUnverifiedImage(this.marker);
 			},
-		},
 
-		watch: {
-			'$store.state.Uploads.workingId'(value) {
-				if (value === this.marker.uploadTime) {
-					this.className = 'uploading';
-					return;
-				}
-				this.className = this.marker.error ? 'error' : 'queued';
-			},
-
-			'marker.error'(value) {
+			setStatus() {
 				if (this.$store.state.Uploads.workingId === this.marker.uploadTime) {
 					this.className = 'uploading';
 					return;
 				}
 				this.className = this.marker.error ? 'error' : 'queued';
+			}
+		},
+
+		watch: {
+			'$store.state.Uploads.workingId'() {
+				this.setStatus();
+			},
+
+			'marker.error'() {
+				this.setStatus();
 			}
 		}
 

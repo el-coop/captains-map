@@ -203,7 +203,7 @@ describe('ViewLayout.vue', () => {
 			router
 		});
 
-		router.push('/test');
+		router.push(router.history.current.path === '/test' ? '/test1' : 'test');
 
 		await wrapper.vm.$nextTick();
 

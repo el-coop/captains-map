@@ -5,16 +5,33 @@ import sinon from 'sinon';
 
 describe('CreateMarker.vue', () => {
 
-	const propsData = {
-		latLng: {
-			lat: 1,
-			lng: 1,
+	const marker = {
+		uploadTime: 1,
+		description: 'test',
+		type: 'Planned',
+		time: 2,
+		'media[type]': 'instagram',
+		'media[path]': 'path',
+		error: {
+			status: 422,
+			data: {
+				errors: [{
+					param: 'media.path',
+					msg: 'invalid'
+				}]
+			}
 		}
 	};
-
+	let propsData;
 	let mocks;
 
 	beforeEach(() => {
+		propsData = {
+			latLng: {
+				lat: 1,
+				lng: 1,
+			}
+		};
 		mocks = {
 			$bus: {
 				$on: sinon.stub()
@@ -43,8 +60,6 @@ describe('CreateMarker.vue', () => {
 		assert.isTrue(wrapper.find('create-marker-type-toggle-stub').exists());
 		assert.isTrue(wrapper.find('create-marker-date-time-field-stub').exists());
 		assert.isTrue(wrapper.find('create-marker-type-field-stub').exists());
-		assert.isTrue(mocks.$bus.$on.calledOnce);
-		assert.isTrue(mocks.$bus.$on.calledWith('edit-marker', wrapper.vm.prefill));
 	});
 
 	it('Adds new marker to upload queue', async () => {
@@ -67,13 +82,10 @@ describe('CreateMarker.vue', () => {
 	});
 
 	it('Returns old marker to upload queue', async () => {
+		propsData.marker = marker;
 		const wrapper = shallowMount(CreateMarker, {
 			propsData,
 			mocks
-		});
-
-		wrapper.setData({
-			uploadId: 1
 		});
 
 		wrapper.find('form').trigger('submit');
@@ -90,26 +102,23 @@ describe('CreateMarker.vue', () => {
 	});
 
 	it('Shows cancel button when working with errored marker', () => {
+		propsData.marker = marker;
+
 		const wrapper = shallowMount(CreateMarker, {
 			propsData,
 			mocks
-		});
-
-		wrapper.setData({
-			uploadId: 1
 		});
 
 		assert.isTrue(wrapper.find('button.is-danger').exists());
 	});
 
 	it('Cancels marker upload', async () => {
+		propsData.marker = marker;
+
+
 		const wrapper = shallowMount(CreateMarker, {
 			propsData,
 			mocks
-		});
-
-		wrapper.setData({
-			uploadId: 1
 		});
 
 		wrapper.find('button.is-danger').trigger('click');
@@ -124,24 +133,15 @@ describe('CreateMarker.vue', () => {
 	});
 
 	it('Prefills data', () => {
+		propsData.marker = marker;
+
 		const wrapper = shallowMount(CreateMarker, {
 			propsData,
 			mocks
 		});
 
-		wrapper.vm.prefill({
-			uploadTime: 1,
-			description: 'test',
-			type: 'Planned',
-			time: 2,
-			'media[type]': 'instagram',
-			'media[path]': 'path',
-			error: {
-				status: 500
-			}
-		});
+		wrapper.vm.prefill();
 
-		assert.equal(wrapper.vm.$data.uploadId, 1);
 		assert.deepEqual(wrapper.vm.$data.form, {
 			media: {
 				file: null,
@@ -156,28 +156,14 @@ describe('CreateMarker.vue', () => {
 	});
 
 	it('Prefills errors', async () => {
+		propsData.marker = marker;
+
 		const wrapper = shallowMount(CreateMarker, {
 			propsData,
 			mocks
 		});
 
-		wrapper.vm.prefill({
-			uploadTime: 1,
-			description: 'test',
-			type: 'Planned',
-			time: 2,
-			'media[type]': 'instagram',
-			'media[path]': 'path',
-			error: {
-				status: 422,
-				data: {
-					errors: [{
-						param: 'media.path',
-						msg: 'invalid'
-					}]
-				}
-			}
-		});
+		wrapper.vm.prefill();
 
 		assert.deepEqual(wrapper.vm.$data.errors, {
 			'media.path': 'invalid'

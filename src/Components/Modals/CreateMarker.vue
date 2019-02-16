@@ -1,7 +1,7 @@
 <template>
 	<form :headers="formHeaders" @submitting="loading = true" @submit.prevent="queueUpload"
 		  action="marker/create">
-		<slide-up-modal name="create-marker" @closed="resetForm" route-name="edit">
+		<slide-up-modal name="create-marker" @before-open="prefill" route-name="edit">
 			<p slot="header" class="card-header-title">Create new marker</p>
 			<template slot="content">
 				<create-marker-type-toggle v-model="form.media.type"/>
@@ -22,7 +22,8 @@
 			</template>
 			<template slot="footer">
 				<p class="card-footer-item">
-					<button class="button is-danger is-fullwidth" @click="cancelUpload" v-if="uploadId" type="button">
+					<button class="button is-danger is-fullwidth" @click="cancelUpload" v-if="this.marker"
+							type="button">
 						Cancel upload
 					</button>
 					<span v-else>
@@ -52,14 +53,6 @@
 			FormDataMixin
 		],
 
-		created() {
-			this.$bus.$on('edit-marker', this.prefill);
-		},
-
-		beforeDestroy() {
-			this.$bus.$off('edit-marker', this.prefill);
-		},
-
 		components: {
 			CreateMarkerDateTimeField,
 			CreateMarkerTypeField,
@@ -73,12 +66,14 @@
 			latLng: {
 				type: Object,
 				required: true
+			},
+			marker: {
+				type: Object,
 			}
 		},
 
 		data() {
 			return {
-				uploadId: null,
 				form: {
 					media: {
 						type: 'image',
@@ -108,8 +103,8 @@
 			async queueUpload() {
 				this.loading = true;
 				const data = this.getData();
-				if (this.uploadId) {
-					data.uploadTime = this.uploadId;
+				if (this.marker) {
+					data.uploadTime = this.marker.uploadTime;
 					await this.$store.dispatch('Uploads/returnToQueue', data);
 				} else {
 					await this.$store.dispatch('Uploads/upload', data);
@@ -119,30 +114,32 @@
 			},
 
 			async cancelUpload() {
-				await this.$store.dispatch('Uploads/cancelUpload', this.uploadId);
+				await this.$store.dispatch('Uploads/cancelUpload', this.marker.uploadTime);
 				this.$modal.hide('create-marker');
 			},
 
-			prefill(data) {
-				this.uploadId = data.uploadTime;
-				this.form.description = data.description;
-				this.form.type = data.type;
-				this.form.dateTime = data.time;
-				this.form.media.type = data['media[type]'];
-				this.form.media.path = data['media[path]'];
-				if (data['media[type]'] === 'image') {
-					this.form.media.preview = 'data:image/jpeg;base64,' + btoa(data['media[image]']);
+			prefill() {
+				if (!this.marker) {
+					this.resetForm();
+					return;
 				}
-				if (data.error.status === 422) {
+				this.form.description = this.marker.description;
+				this.form.type = this.marker.type;
+				this.form.dateTime = this.marker.time;
+				this.form.media.type = this.marker['media[type]'];
+				this.form.media.path = this.marker['media[path]'];
+				if (this.marker['media[type]'] === 'image') {
+					this.form.media.preview = 'data:image/jpeg;base64,' + btoa(this.marker['media[image]']);
+				}
+				if (this.marker.error.status === 422) {
 					this.errors = {};
-					data.error.data.errors.forEach((error) => {
+					this.marker.error.data.errors.forEach((error) => {
 						this.errors[error.param] = error.msg;
 					});
 				}
 			},
 
 			resetForm() {
-				this.uploadId = null;
 				this.errors = null;
 				this.form = {
 					media: {
@@ -161,6 +158,10 @@
 			latLng(value) {
 				this.extraData.lat = value.lat;
 				this.extraData.lng = value.lng;
+			},
+
+			marker() {
+				this.prefill();
 			},
 
 			'form.dateTime'(value) {
