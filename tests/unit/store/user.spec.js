@@ -11,11 +11,11 @@ describe('User Store', () => {
 		sinon.restore();
 	});
 
-	it('Calls log out and redirects on logout', () => {
+	it('Calls log out and redirects on logout', async () => {
 		const logoutStub = sinon.stub(auth, 'logout');
 		const routerStub = sinon.stub(router, 'go');
 
-		userStore.actions.logout();
+		await userStore.actions.logout();
 
 		assert.isTrue(logoutStub.calledOnce);
 		assert.isTrue(routerStub.calledWith('/'));

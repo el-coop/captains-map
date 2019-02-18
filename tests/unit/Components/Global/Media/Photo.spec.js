@@ -17,7 +17,7 @@ describe('Photo.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('img').exists());
-		assert.equal(wrapper.find('img').element.src, '/api/test');
+		assert.equal(wrapper.find('img').element.src, 'http://localhost/api/test');
 	});
 
 	it('Opens image in new window when button is clicked', () => {

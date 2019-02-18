@@ -27,7 +27,7 @@
 				</button>
 			</marker-borders-filter>
 		</div>
-		<create-marker v-if="editMode" :latLng="latLng"/>
+		<create-marker v-if="editMode" :latLng="latLng" :marker="editedMarker"/>
 		<view-marker :marker="selectedMarker"/>
 	</div>
 </template>

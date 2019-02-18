@@ -66,7 +66,7 @@ describe('ViewMarker/Header.vue', () => {
 			}
 		});
 
-		assert.equal(wrapper.find('img.is-rounded').element.src, '/api/path');
+		assert.equal(wrapper.find('img.is-rounded').element.src, 'http://localhost/api/path');
 	});
 
 	it('Shows globe when no profile picture exists', () => {
@@ -77,9 +77,8 @@ describe('ViewMarker/Header.vue', () => {
 			}
 		});
 
-		assert.equal(wrapper.find('img.is-rounded').element.src, globe);
+		assert.equal(wrapper.find('img.is-rounded').element.src, `http://localhost${globe}`);
 	});
-
 
 
 	it('Emits event when user clicks profile link', () => {

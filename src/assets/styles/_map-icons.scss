@@ -20,6 +20,31 @@
 	}
 }
 
+.map__marker--queued, .map__marker--error {
+	position: relative;
+	overflow: hidden;
+
+	&:after {
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		position: absolute;
+		left: 0;
+		top: 0;
+		font-size: $size-7;
+	}
+}
+
+.map__marker--queued:after {
+	content: 'QUEUE';
+	background-color: transparentize($black, 0.4);
+}
+
+.map__marker--error:after {
+	content: 'ERROR';
+	background-color: transparentize($red, 0.4);
+}
+
 .map__icon-wrapper {
 	height: 35px;
 	@media #{$above-phone} {

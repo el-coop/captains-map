@@ -1,3 +1,5 @@
+import Store from '@/store';
+
 class AuthenticationService {
 
 	saveUser(user) {
@@ -35,7 +37,8 @@ class AuthenticationService {
 		}
 	}
 
-	logout() {
+	async logout() {
+		await Store.dispatch('Uploads/purge');
 		this.user = null;
 		localStorage.removeItem('captains-map.user_id');
 		localStorage.removeItem('captains-map.username');

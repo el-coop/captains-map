@@ -1,17 +1,13 @@
 <template>
-	<ajax-form :headers="formHeaders" @submitting="loading = true" @submitted="submitted" @errors="getErrors"
-			   :extra-data="{
-            lat: latLng.lat,
-            lng: latLng.lng,
-            time: form.dateTime,
-		    'media.file': null
-        }" action="marker/create">
-		<slide-up-modal name="create-marker" @closed="resetForm" route-name="edit">
+	<form :headers="formHeaders" @submitting="loading = true" @submit.prevent="queueUpload"
+		  action="marker/create">
+		<slide-up-modal name="create-marker" @before-open="prefill" route-name="edit">
 			<p slot="header" class="card-header-title">Create new marker</p>
 			<template slot="content">
 				<create-marker-type-toggle v-model="form.media.type"/>
 				<create-marker-file-field v-if="form.media.type === 'image'" v-model="form.media.file"
-										  :error="errors ? errors['media.file'] : ''"/>
+										  :error="errors ? errors['media.file'] : ''"
+										  :init-preview="form.media.preview"/>
 				<create-marker-instagram-field v-if="form.media.type === 'instagram'" v-model="form.media.path"
 											   :error="errors ? errors['media.path'] : ''"/>
 				<create-marker-date-time-field v-model="form.dateTime" :error="errors? errors['time'] : ''"/>
@@ -26,7 +22,11 @@
 			</template>
 			<template slot="footer">
 				<p class="card-footer-item">
-                    <span>
+					<button class="button is-danger is-fullwidth" @click="cancelUpload" v-if="this.marker"
+							type="button">
+						Cancel upload
+					</button>
+					<span v-else>
                         <a href="#" @click="$modal.hide('create-marker')">Close</a>
                     </span>
 				</p>
@@ -35,11 +35,11 @@
 				</p>
 			</template>
 		</slide-up-modal>
-	</ajax-form>
+	</form>
 </template>
 
 <script>
-	import AjaxForm from "@/Components/Utilities/AjaxForm";
+	import FormDataMixin from "@/Components/Utilities/FormDataMixin";
 	import SlideUpModal from "@/Components/Utilities/SlideUpModal";
 	import CreateMarkerTypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
 	import CreateMarkerFileField from "@/Components/Modals/CreateMarker/FileField";
@@ -49,6 +49,9 @@
 
 	export default {
 		name: "new-marker-modal",
+		mixins: [
+			FormDataMixin
+		],
 
 		components: {
 			CreateMarkerDateTimeField,
@@ -57,13 +60,15 @@
 			CreateMarkerFileField,
 			CreateMarkerTypeToggle,
 			SlideUpModal,
-			AjaxForm,
 		},
 
 		props: {
 			latLng: {
 				type: Object,
 				required: true
+			},
+			marker: {
+				type: Object,
 			}
 		},
 
@@ -73,11 +78,17 @@
 					media: {
 						type: 'image',
 						file: null,
-						path: ''
+						path: '',
+						preview: ''
 					},
 					description: '',
 					dateTime: new Date(),
 					type: 'Visited'
+				},
+				extraData: {
+					lat: this.latLng.lat,
+					lng: this.latLng.lng,
+					time: new Date(),
 				},
 				loading: false,
 				formHeaders: {
@@ -87,23 +98,45 @@
 			}
 		},
 
-		methods: {
 
-			getErrors(errors) {
-				this.errors = errors;
+		methods: {
+			async queueUpload() {
+				this.loading = true;
+				const data = this.getData();
+				if (this.marker) {
+					data.uploadTime = this.marker.uploadTime;
+					await this.$store.dispatch('Uploads/returnToQueue', data);
+				} else {
+					await this.$store.dispatch('Uploads/upload', data);
+				}
+				this.loading = false;
+				this.$modal.hide('create-marker');
 			},
 
-			submitted(response) {
-				this.loading = false;
-				if (response.status !== 200) {
-					if (!response.data.errors) {
-						this.$toast.error('Please try again at a later time', 'Creation failed.');
-					}
+			async cancelUpload() {
+				await this.$store.dispatch('Uploads/cancelUpload', this.marker.uploadTime);
+				this.$modal.hide('create-marker');
+			},
+
+			prefill() {
+				if (!this.marker) {
+					this.resetForm();
 					return;
 				}
-				this.$store.commit('Markers/addAtStart', response.data);
-
-				this.$modal.hide('create-marker');
+				this.form.description = this.marker.description;
+				this.form.type = this.marker.type;
+				this.form.dateTime = this.marker.time;
+				this.form.media.type = this.marker['media[type]'];
+				this.form.media.path = this.marker['media[path]'];
+				if (this.marker['media[type]'] === 'image') {
+					this.form.media.preview = 'data:image/jpeg;base64,' + btoa(this.marker['media[image]']);
+				}
+				if (this.marker.error.status === 422) {
+					this.errors = {};
+					this.marker.error.data.errors.forEach((error) => {
+						this.errors[error.param] = error.msg;
+					});
+				}
 			},
 
 			resetForm() {
@@ -118,8 +151,23 @@
 					dateTime: new Date(),
 					type: 'Visited'
 				};
-			}
+			},
 		},
+
+		watch: {
+			latLng(value) {
+				this.extraData.lat = value.lat;
+				this.extraData.lng = value.lng;
+			},
+
+			marker() {
+				this.prefill();
+			},
+
+			'form.dateTime'(value) {
+				this.extraData.time = value;
+			}
+		}
 
 	}
 </script>

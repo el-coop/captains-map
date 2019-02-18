@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import auth from '@/Services/authentication.service';
+import Store from '@/store';
 
 describe('Authentication Service', () => {
 	afterEach('Reset sinon and settings', () => {
@@ -109,21 +110,25 @@ describe('Authentication Service', () => {
 		assert.isNotTrue(auth.isLoggedIn());
 	});
 
-	it('Logs out user and deletes from local sotrage', () => {
+	it('Logs out user, purges uploads and deletes data from local sotrage', async () => {
+		const storeStub = sinon.stub(Store, 'dispatch');
+
 		global.localStorage = {
-			removeItem() {
-			}
+			removeItem: sinon.stub()
 		};
-		const removeItemStub = sinon.stub(global.localStorage, 'removeItem');
 		auth.user = {
 			id: 1,
 			username: 'test',
 			exp: Date.now()
 		};
-		auth.logout();
-		sinon.assert.calledWith(removeItemStub, 'captains-map.user_id');
-		sinon.assert.calledWith(removeItemStub, 'captains-map.username');
-		sinon.assert.calledWith(removeItemStub, 'captains-map.exp');
+		await auth.logout();
+
+		assert.isTrue(storeStub.calledOnce);
+		assert.isTrue(storeStub.calledWith('Uploads/purge'));
+		assert.isTrue(global.localStorage.removeItem.calledThrice);
+		sinon.assert.calledWith(global.localStorage.removeItem, 'captains-map.user_id');
+		sinon.assert.calledWith(global.localStorage.removeItem, 'captains-map.username');
+		sinon.assert.calledWith(global.localStorage.removeItem, 'captains-map.exp');
 		assert.isNull(auth.user);
 	});
 

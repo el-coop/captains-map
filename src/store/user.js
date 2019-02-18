@@ -6,8 +6,8 @@ export default {
 	namespaced: true,
 	mutations: {},
 	actions: {
-		logout() {
-			Auth.logout();
+		async logout() {
+			await Auth.logout();
 			router.go('/');
 		},
 		async login({commit}, form) {

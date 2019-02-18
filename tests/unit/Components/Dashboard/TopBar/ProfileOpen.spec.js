@@ -41,7 +41,7 @@ describe('ProfileOpen.vue', () => {
 			stubs
 		});
 
-		assert.equal(wrapper.find('img').element.src, '/api/testpath');
+		assert.equal(wrapper.find('img').element.src, 'http://localhost/api/testpath');
 		assert.equal(wrapper.find('span.button-text').text(), 'test');
 	});
 
@@ -53,7 +53,7 @@ describe('ProfileOpen.vue', () => {
 			stubs
 		});
 
-		assert.equal(wrapper.find('img').element.src, globe);
+		assert.equal(wrapper.find('img').element.src, `http://localhost${globe}`);
 		assert.equal(wrapper.find('span.button-text').text(), 'test');
 	});
 

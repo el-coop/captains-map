@@ -34,8 +34,8 @@
 				return new Date(`${this.date} ${this.time}`);
 			},
 
-			getCurrentDate() {
-				const date = new Date();
+			formatDate(date) {
+				date = new Date(date);
 
 				let day = date.getDate();
 				if (day < 10) {
@@ -51,8 +51,8 @@
 				return `${date.getFullYear()}-${month}-${day}`;
 			},
 
-			getCurrentTime() {
-				const date = new Date();
+			formatTime(date) {
+				date = new Date(date);
 
 				let hour = date.getHours();
 				if (hour < 10) {
@@ -70,8 +70,8 @@
 
 		data() {
 			return {
-				date: this.getCurrentDate(),
-				time: this.getCurrentTime(),
+				date: this.formatDate(this.value),
+				time: this.formatTime(this.value),
 			}
 		},
 

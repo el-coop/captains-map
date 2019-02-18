@@ -57,7 +57,7 @@ describe('CreateMarker/FileField.vue', () => {
 			name: 'name'
 		}));
 
-		assert.equal(wrapper.find('img').element.src, 'test');
+		assert.equal(wrapper.find('img').element.src, 'http://localhost/test');
 
 		delete global.URL;
 	});
