@@ -2,9 +2,11 @@ import cache from '@/Services/cache.service';
 import UploadService from '@/Services/UploadService';
 
 const uploads = cache.caches().uploads;
-let readyToProcess = false;
 
 const imageToBlob = function (image) {
+	if (typeof FileReader === "undefined") {
+		return image
+	}
 	return new Promise((resolve, reject) => {
 		const reader = new FileReader();
 		reader.addEventListener('abort', (error) => {
@@ -26,7 +28,8 @@ export default {
 	state: {
 		queue: [],
 		errored: [],
-		workingId: null
+		workingId: null,
+		loaded: false
 	},
 
 	getters: {
@@ -67,12 +70,10 @@ export default {
 	},
 
 	actions: {
-		processQueue() {
-			if (!readyToProcess) {
-				console.log('here');
-				return readyToProcess = true;
+		processQueue({state, rootState}) {
+			if (state.loaded && rootState.hasCsrf) {
+				UploadService.processQueue();
 			}
-			UploadService.processQueue();
 		},
 
 		async init({state, dispatch}) {
@@ -83,6 +84,7 @@ export default {
 					state.queue.push(data);
 				}
 			});
+			state.loaded = true;
 			dispatch('processQueue');
 		},
 
@@ -144,6 +146,4 @@ export default {
 			state.workingId = null;
 		}
 	},
-
-
 }

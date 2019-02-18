@@ -7,6 +7,15 @@ import Uploads from '@/store/uploads';
 
 Vue.use(Vuex);
 
+export const actions = {
+	CSRFReady({dispatch, state}) {
+		if (!state.hasCsrf) {
+			state.hasCsrf = true;
+			dispatch('Uploads/processQueue');
+		}
+	}
+}
+
 const store = new Vuex.Store({
 	modules: {
 		User,
@@ -14,11 +23,10 @@ const store = new Vuex.Store({
 		Profile,
 		Uploads
 	},
-	actions: {
-		CSRFReady({dispatch}) {
-			dispatch('Uploads/processQueue');
-		}
-	}
+	state: {
+		hasCsrf: false
+	},
+	actions
 });
 
 export default store;
