@@ -1,6 +1,6 @@
 <template>
 	<top-bar>
-		<template slot="left">
+		<template #left>
 			<div class="drawer-mobile" :class="{'drawer-mobile--open' : drawerOpen}">
 				<button class="button is-danger is-outlined is-marginless is-borderless is-hidden-tablet"
 						@click="drawerOpen=false">
@@ -11,7 +11,7 @@
 				<search-bar/>
 			</div>
 		</template>
-		<template slot="right">
+		<template #right>
 			<div class="buttons is-marginless">
 				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover is-hidden-tablet"
 						@click="drawerOpen = true">

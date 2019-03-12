@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
 import sinon from 'sinon';
 import auth from '@/Services/authentication.service';
@@ -11,7 +11,8 @@ describe('LoggedInBar.vue', () => {
 
 	beforeEach(() => {
 		stubs = {
-			'font-awesome-icon': true
+			'font-awesome-icon': true,
+			'profile-open': true
 		};
 		mocks = {
 			$router: {
@@ -39,20 +40,20 @@ describe('LoggedInBar.vue', () => {
 
 
 	it('Renders with disabled home button in home', () => {
-		const wrapper = shallowMount(LoggedInBar, {
+		const wrapper = mount(LoggedInBar, {
 			stubs,
 			mocks
 		});
 
 		assert.equal(wrapper.find('.button.is-light.is-outlined:disabled > span:last-child').text(), 'Home');
-		assert.isTrue(wrapper.find('top-bar-stub').exists());
-		assert.isTrue(wrapper.find('logout-stub').exists());
-		assert.isTrue(wrapper.find('search-bar-stub').exists());
+		assert.isTrue(wrapper.find('.top-bar').exists());
+		assert.isTrue(wrapper.find('.button.is-danger.is-outlined').exists());
+		assert.isTrue(wrapper.find('.search-field').exists());
 	});
 
 	it('Changes route when edit button clicked', () => {
 
-		const wrapper = shallowMount(LoggedInBar, {
+		const wrapper = mount(LoggedInBar, {
 			stubs,
 			mocks
 		});
@@ -66,20 +67,20 @@ describe('LoggedInBar.vue', () => {
 
 	it('Renders with disabled edit button in edit page', () => {
 		mocks.$router.currentRoute.path = "/edit";
-		const wrapper = shallowMount(LoggedInBar, {
+		const wrapper = mount(LoggedInBar, {
 			stubs,
 			mocks
 		});
 		assert.equal(wrapper.find('.button.is-light.is-outlined:disabled > span:last-child').text(), 'test');
 
-		assert.isTrue(wrapper.find('logout-stub').exists());
-		assert.isTrue(wrapper.find('search-bar-stub').exists());
+		assert.isTrue(wrapper.find('.button.is-danger.is-outlined').exists());
+		assert.isTrue(wrapper.find('.search-field').exists());
 	});
 
 	it('Changes route when home button clicked clicked', () => {
 		mocks.$store.state.Markers.username = "test";
 
-		const wrapper = shallowMount(LoggedInBar, {
+		const wrapper = mount(LoggedInBar, {
 			stubs,
 			mocks
 		});
@@ -91,7 +92,7 @@ describe('LoggedInBar.vue', () => {
 	});
 
 	it('Toggles drawer in', () => {
-		const wrapper = shallowMount(LoggedInBar, {
+		const wrapper = mount(LoggedInBar, {
 			stubs,
 			mocks
 		});
@@ -102,7 +103,7 @@ describe('LoggedInBar.vue', () => {
 	});
 
 	it('Toggles drawer out', () => {
-		const wrapper = shallowMount(LoggedInBar, {
+		const wrapper = mount(LoggedInBar, {
 			stubs,
 			mocks
 		});

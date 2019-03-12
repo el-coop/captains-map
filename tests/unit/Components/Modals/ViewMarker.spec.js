@@ -1,11 +1,19 @@
 import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, mount } from '@vue/test-utils';
 import ViewMarker from '@/Components/Modals/ViewMarker';
 import sinon from 'sinon';
 import auth from '@/Services/authentication.service';
 
 describe('ViewMarker.vue', () => {
 	let marker;
+	const stubs = {
+		modal: true,
+		'view-marker-header': true,
+		'view-marker-content': true,
+		'photo': true,
+		'font-awesome-icon': true,
+		'instagram': true
+	};
 
 	beforeEach(() => {
 		marker = {
@@ -27,13 +35,14 @@ describe('ViewMarker.vue', () => {
 	});
 
 	it('Renders with photo content', () => {
-		const wrapper = shallowMount(ViewMarker, {
+		const wrapper = mount(ViewMarker, {
 			propsData: {
 				marker
-			}
+			},
+			stubs
 		});
 
-		assert.isTrue(wrapper.find('slide-up-modal-stub').exists());
+		assert.isTrue(wrapper.find('modal-stub').exists());
 		assert.isTrue(wrapper.find('view-marker-header-stub').exists());
 		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
 		assert.isTrue(wrapper.find('photo-stub').exists());
@@ -42,13 +51,14 @@ describe('ViewMarker.vue', () => {
 
 	it('Renders with instagram content', () => {
 		marker.media.type = 'instagram';
-		const wrapper = shallowMount(ViewMarker, {
+		const wrapper = mount(ViewMarker, {
 			propsData: {
 				marker
-			}
+			},
+			stubs
 		});
 
-		assert.isTrue(wrapper.find('slide-up-modal-stub').exists());
+		assert.isTrue(wrapper.find('modal-stub').exists());
 		assert.isTrue(wrapper.find('view-marker-header-stub').exists());
 		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
 		assert.isTrue(wrapper.find('instagram-stub').exists());
@@ -58,10 +68,11 @@ describe('ViewMarker.vue', () => {
 		sinon.stub(auth, 'getUserDetails').returns({
 			id: 1
 		});
-		const wrapper = shallowMount(ViewMarker, {
+		const wrapper = mount(ViewMarker, {
 			propsData: {
 				marker
 			},
+			stubs
 		});
 
 		assert.isTrue(wrapper.find('button.is-danger').exists());
@@ -146,13 +157,14 @@ describe('ViewMarker.vue', () => {
 			hide: sinon.stub()
 		};
 
-		const wrapper = shallowMount(ViewMarker, {
+		const wrapper = mount(ViewMarker, {
 			propsData: {
 				marker
 			},
 			mocks: {
 				$modal
-			}
+			},
+			stubs
 		});
 
 		wrapper.find('view-marker-header-stub').vm.$emit('view-user-page');

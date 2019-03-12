@@ -1,23 +1,27 @@
 import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, mount } from '@vue/test-utils';
 import NotFound from '@/Components/Modals/404.vue';
 import sinon from 'sinon';
 
 describe('404.vue', () => {
 	it('renders', () => {
-		const wrapper = shallowMount(NotFound, {
+		const wrapper = mount(NotFound, {
 			mocks: {
 				$router: {
 					currentRoute: {
 						fullPath: 'path'
 					}
 				}
+			},
+			stubs: {
+				'modal': true,
+				'font-awesome-icon': true
 			}
 		});
 
 		assert.isTrue(wrapper.find('img.atlantis').exists());
 		assert.isTrue(wrapper.find('img.tear').exists());
-		assert.isTrue(wrapper.find('slide-up-modal-stub').exists());
+		assert.isTrue(wrapper.find('modal-stub').exists());
 	});
 
 	it('Saves starting route when opened', async () => {

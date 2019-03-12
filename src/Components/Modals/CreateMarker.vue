@@ -2,8 +2,10 @@
 	<form :headers="formHeaders" @submitting="loading = true" @submit.prevent="queueUpload"
 		  action="marker/create">
 		<slide-up-modal name="create-marker" @before-open="prefill" route-name="edit">
-			<p slot="header" class="card-header-title">Create new marker</p>
-			<template slot="content">
+			<template #header>
+				<p class="card-header-title">Create new marker</p>
+			</template>
+			<template #content>
 				<create-marker-type-toggle v-model="form.media.type"/>
 				<create-marker-file-field v-if="form.media.type === 'image'" v-model="form.media.file"
 										  :error="errors ? errors['media.file'] : ''"
@@ -20,9 +22,9 @@
 					</div>
 				</div>
 			</template>
-			<template slot="footer">
+			<template #footer>
 				<p class="card-footer-item">
-					<button class="button is-danger is-fullwidth" @click="cancelUpload" v-if="this.marker"
+					<button class="button is-danger is-fullwidth" @click="cancelUpload" v-if="marker"
 							type="button">
 						Cancel upload
 					</button>

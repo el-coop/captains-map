@@ -1,6 +1,6 @@
 <template>
 	<top-bar>
-		<template slot="right">
+		<template #right>
 			<div class="buttons is-marginless">
 				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
 						@click="$modal.show('login')">

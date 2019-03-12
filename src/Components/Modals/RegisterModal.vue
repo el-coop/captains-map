@@ -1,7 +1,9 @@
 <template>
 	<slide-up-modal name="register">
-		<p slot="header" class="card-header-title">Register</p>
-		<template slot="content">
+		<template #header>
+			<p class="card-header-title">Register</p>
+		</template>
+		<template #content>
 			<p class="title">
 				Registration is closed at the moment
 			</p>
@@ -15,7 +17,7 @@
 				possible.
 			</p>
 		</template>
-		<template slot="footer">
+		<template #footer>
 			<p class="card-footer-item">
                     <span>
                         <a href="#" @click="$modal.hide('register')">Close</a>

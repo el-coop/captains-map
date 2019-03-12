@@ -1,5 +1,5 @@
 <template>
-	<div slot="header" class="card-header-title">
+	<div class="card-header-title">
 		<div class="media">
 			<div class="media-left">
 				<figure class="image is-64x64">

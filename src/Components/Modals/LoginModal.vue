@@ -1,7 +1,9 @@
 <template>
 	<slide-up-modal name="login">
-		<p slot="header" class="card-header-title">Login</p>
-		<template slot="content">
+		<template #header>
+			<p class="card-header-title">Login</p>
+		</template>
+		<template #content>
 			<div class="field">
 				<label>Username</label>
 				<div class="control">
@@ -16,7 +18,7 @@
 				</p>
 			</div>
 		</template>
-		<template slot="footer">
+		<template #footer>
 			<p class="card-footer-item">
                     <span>
                         <a href="#" @click="$modal.hide('login')">Close</a>

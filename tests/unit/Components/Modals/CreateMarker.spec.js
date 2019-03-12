@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, mount } from '@vue/test-utils';
 import CreateMarker from '@/Components/Modals/CreateMarker';
 import sinon from 'sinon';
 
@@ -24,6 +24,14 @@ describe('CreateMarker.vue', () => {
 	};
 	let propsData;
 	let mocks;
+	const stubs = {
+		modal: true,
+		'font-awesome-icon': true,
+		'create-marker-type-toggle': true,
+		'create-marker-file-field': true,
+		'create-marker-date-time-field': true,
+		'create-marker-type-field': true
+	};
 
 	beforeEach(() => {
 		propsData = {
@@ -50,14 +58,14 @@ describe('CreateMarker.vue', () => {
 	});
 
 	it('Renders and initializes listeners', () => {
-		const wrapper = shallowMount(CreateMarker, {
+		const wrapper = mount(CreateMarker, {
 			propsData,
-			mocks
+			mocks,
+			stubs
 		});
 
 		assert.isTrue(wrapper.find('create-marker-type-toggle-stub').exists());
 		assert.isTrue(wrapper.find('create-marker-file-field-stub').exists());
-		assert.isTrue(wrapper.find('create-marker-type-toggle-stub').exists());
 		assert.isTrue(wrapper.find('create-marker-date-time-field-stub').exists());
 		assert.isTrue(wrapper.find('create-marker-type-field-stub').exists());
 	});
@@ -104,9 +112,10 @@ describe('CreateMarker.vue', () => {
 	it('Shows cancel button when working with errored marker', () => {
 		propsData.marker = marker;
 
-		const wrapper = shallowMount(CreateMarker, {
+		const wrapper = mount(CreateMarker, {
 			propsData,
-			mocks
+			mocks,
+			stubs
 		});
 
 		assert.isTrue(wrapper.find('button.is-danger').exists());
@@ -115,10 +124,10 @@ describe('CreateMarker.vue', () => {
 	it('Cancels marker upload', async () => {
 		propsData.marker = marker;
 
-
-		const wrapper = shallowMount(CreateMarker, {
+		const wrapper = mount(CreateMarker, {
 			propsData,
-			mocks
+			mocks,
+			stubs
 		});
 
 		wrapper.find('button.is-danger').trigger('click');

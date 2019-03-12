@@ -113,6 +113,13 @@
 
 		.image {
 			margin: auto;
+
+			&.is-128x128 > img {
+				max-height: 100%;
+				max-width: 100%;
+				width: auto;
+				height: auto;
+			}
 		}
 
 		> .media-left {

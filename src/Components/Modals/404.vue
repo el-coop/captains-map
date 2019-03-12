@@ -1,7 +1,9 @@
 <template>
 	<slide-up-modal name="404" @before-close="navigateHome" @before-open="beforeOpen" route-name="404">
-		<p slot="header" class="card-header-title">404</p>
-		<template slot="content">
+		<template #header>
+			<p class="card-header-title">404</p>
+		</template>
+		<template #content>
 			<div class="content">
 				<h5 class="has-text-centered is-size-5 ">You uncovered Atlantis! Unfortunately it's not on our map.</h5>
 			</div>
@@ -10,7 +12,7 @@
 				<img :src="tear" class="tear">
 			</div>
 		</template>
-		<template slot="footer">
+		<template #footer>
 			<p class="card-footer-item">
 				<span>
 					<a @click="$modal.hide('404')">Take me out of here!</a>
@@ -59,6 +61,7 @@
 
 	.tear-wrapper {
 		position: relative;
+
 		& > .tear {
 			position: absolute;
 			height: 100%;

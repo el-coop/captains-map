@@ -1,23 +1,27 @@
 <template>
 	<slide-up-modal name="view-marker" :route-name="routeName" @closed="queuedNavigation">
-		<template v-if="marker">
-			<view-marker-header slot="header" :marker="marker" @view-user-page="navigateToUser"/>
-			<component slot="image" :is="marker.media.type === 'instagram' ? 'instagram': 'photo'"
+		<template #header v-if="marker">
+			<view-marker-header :marker="marker" @view-user-page="navigateToUser"/>
+		</template>
+		<template #image v-if="marker">
+			<component :is="marker.media.type === 'instagram' ? 'instagram': 'photo'"
 					   :path="marker.media.path" :marker-id="marker.media.id"
 					   :alt="`${marker.user.username} | ${marker.description}`"/>
-			<view-marker-content slot="content" :marker="marker"/>
+		</template>
+		<template #content v-if="marker">
+			<view-marker-content :marker="marker"/>
+		</template>
 
-			<template slot="footer">
-				<p class="card-footer-item">
-					<a @click="$modal.hide('view-marker')">Close</a>
-				</p>
-				<p class="card-footer-item" v-if="canDelete">
-					<button class="button is-danger is-fullwidth" @click="deleteMarker"
-							:class="{'is-loading': deleting}">
-						Delete
-					</button>
-				</p>
-			</template>
+		<template #footer v-if="marker">
+			<p class="card-footer-item">
+				<a @click="$modal.hide('view-marker')">Close</a>
+			</p>
+			<p class="card-footer-item" v-if="canDelete">
+				<button class="button is-danger is-fullwidth" @click="deleteMarker"
+						:class="{'is-loading': deleting}">
+					Delete
+				</button>
+			</p>
 		</template>
 	</slide-up-modal>
 </template>
