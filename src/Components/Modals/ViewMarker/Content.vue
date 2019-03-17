@@ -2,6 +2,7 @@
 	<div class="media">
 		<div class="media-content">
 			<div class="content">
+				<p v-if="marker.location" v-text="marker.location" class="is-size-6 has-text-grey-light has-text-weight-light"></p>
 				<p v-text="marker.description"></p>
 			</div>
 		</div>

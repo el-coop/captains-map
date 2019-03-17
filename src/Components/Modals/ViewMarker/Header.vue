@@ -8,9 +8,9 @@
 			</div>
 			<div class="media-content">
 				<a @click.stop.prevent="linkClicked"
-				   class="has-text-white is-4" v-text="marker.user.username"/>
-				<p class="is-7 has-text-weight-normal" v-text="marker.type"/>
-				<p class="is-7 has-text-weight-light has-text-grey-lighter"
+				   class="has-text-white is-size-5" v-text="marker.user.username"/>
+				<p class="has-text-weight-normal" v-text="marker.type"/>
+				<p class="has-text-weight-light has-text-grey-lighter is-size-7"
 				   v-text="dateDisplay"></p>
 			</div>
 		</div>

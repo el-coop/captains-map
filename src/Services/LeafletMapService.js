@@ -28,7 +28,7 @@ export class LeafletMapService {
 	}
 
 	getBorders() {
-		if(this.map){
+		if (this.map) {
 			return this.map.getBounds();
 		}
 
@@ -136,12 +136,27 @@ export class LeafletMapService {
 
 
 	static async locate(address) {
-		let response = {
-			data: []
-		};
+		let response;
 		try {
 			response = await http.get(`geocode/${address}`);
 		} catch (error) {
+
+		}
+		if (! response || response.status < 200 || response.status > 299) {
+			return [];
+		}
+		return response.data;
+	}
+
+	static async reverseGeocode(coords) {
+		let response;
+		try {
+			response = await http.get(`geocode/${coords.lat}/${coords.lng}`);
+		} catch (error) {
+
+		}
+		if (!response || response.status < 200 || response.status > 299) {
+			return [];
 		}
 		return response.data;
 	}

@@ -159,6 +159,7 @@ describe('CreateMarker.vue', () => {
 				path: 'path'
 			},
 			description: 'test',
+			location: '',
 			type: 'Planned',
 			dateTime: 2,
 		});

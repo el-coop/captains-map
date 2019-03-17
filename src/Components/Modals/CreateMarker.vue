@@ -14,6 +14,7 @@
 											   :error="errors ? errors['media.path'] : ''"/>
 				<create-marker-date-time-field v-model="form.dateTime" :error="errors? errors['time'] : ''"/>
 				<create-marker-type-field v-model="form.type" :error="errors? errors['type'] : ''"/>
+				<create-marker-location-field v-model="form.location" :latLng="latLng"></create-marker-location-field>
 				<div class="field">
 					<label for="description" class="label">Description</label>
 					<div class="control">
@@ -48,6 +49,7 @@
 	import CreateMarkerInstagramField from "@/Components/Modals/CreateMarker/InstagramField";
 	import CreateMarkerTypeField from "@/Components/Modals/CreateMarker/TypeField";
 	import CreateMarkerDateTimeField from "@/Components/Modals/CreateMarker/DateTimeField";
+	import CreateMarkerLocationField from "@/Components/Modals/CreateMarker/LocationField";
 
 	export default {
 		name: "new-marker-modal",
@@ -56,6 +58,7 @@
 		],
 
 		components: {
+			CreateMarkerLocationField,
 			CreateMarkerDateTimeField,
 			CreateMarkerTypeField,
 			CreateMarkerInstagramField,
@@ -83,6 +86,7 @@
 						path: '',
 						preview: ''
 					},
+					location: '',
 					description: '',
 					dateTime: new Date(),
 					type: 'Visited'
@@ -149,6 +153,7 @@
 						file: null,
 						path: ''
 					},
+					location: '',
 					description: '',
 					dateTime: new Date(),
 					type: 'Visited'

@@ -274,6 +274,27 @@ describe('Map Service', () => {
 		assert.deepEqual(response, data);
 	});
 
+	it('Returns empty on reverse geolocation error', async () => {
+		sinon.stub(Http, 'get').callsFake(() => {
+			throw new Error('error');
+		});
+
+		const response = await LeafletMapService.reverseGeocode({lat: 0, lng: 0});
+		assert.deepEqual(response, []);
+	});
+
+	it('Returns response data when address found', async () => {
+		const data = [
+			'test',
+		];
+		sinon.stub(Http, 'get').returns({
+			data
+		});
+
+		const response = await LeafletMapService.reverseGeocode({lat: 0, lng: 0});
+		assert.deepEqual(response, data);
+	});
+
 	it('Stops watching location', () => {
 		Map.map = {
 			stopLocate: sinon.spy(),

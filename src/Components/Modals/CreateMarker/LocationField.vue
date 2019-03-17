@@ -1,0 +1,88 @@
+<template>
+	<div class="field">
+		<label class="label" for="location">Location</label>
+		<div class="field has-addons dropdown is-hoverable">
+			<div class="control is-expanded">
+				<input type="text" id="location" class="input" v-model="content" @change="handleInput"
+					   name="location">
+			</div>
+			<div class="dropdown-menu">
+				<div class="dropdown-content" v-if="searched">
+					<a v-for="(result, index) in results" :key="index"
+					   class="dropdown-item"
+					   v-text="result"
+					   @click="content = result">
+					</a>
+					<p class="help is-danger dropdown-item" v-if="! results.length">
+						Could not find location
+					</p>
+				</div>
+			</div>
+			<div class="control">
+				<button class="button is-info" type="button" @click="search" :disabled="searched"
+						:class="{'is-loading': searching}">
+					<span class="icon">
+						<font-awesome-icon icon="search-location"/>
+					</span>
+				</button>
+			</div>
+
+		</div>
+		<p class="help is-danger" v-if="error">The location is invalid.</p>
+	</div>
+
+</template>
+
+<script>
+	import { LeafletMapService } from "@/Services/LeafletMapService";
+
+	export default {
+		name: "create-marker-location-field",
+
+		props: {
+			value: {
+				type: String,
+				default: ''
+			},
+			error: {
+				type: String,
+				default: '',
+			},
+			latLng: {
+				type: Object,
+				required: true
+			},
+		},
+
+		data() {
+			return {
+				content: this.value,
+				searched: false,
+				searching: false,
+				results: []
+			}
+		},
+
+		methods: {
+			handleInput() {
+				this.$emit('input', this.content);
+			},
+
+			async search() {
+				this.searching = true;
+				const response = await LeafletMapService.reverseGeocode(this.latLng);
+				response.forEach((address) => {
+					let formattedAddress = `${address.streetName}`;
+					if (address.streetNumber) {
+						formattedAddress += `, ${address.streetNumber}`
+					}
+					formattedAddress += ` - ${address.city}, ${address.country}`;
+					this.results.push(formattedAddress);
+				});
+				this.searched = true;
+				this.searching = false;
+
+			},
+		}
+	}
+</script>
