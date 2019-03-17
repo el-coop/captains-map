@@ -72,11 +72,25 @@
 				this.searching = true;
 				const response = await LeafletMapService.reverseGeocode(this.latLng);
 				response.forEach((address) => {
-					let formattedAddress = `${address.streetName}`;
+					let formattedAddress = '';
+					if (address.streetName) {
+						formattedAddress += address.streetName;
+					}
 					if (address.streetNumber) {
 						formattedAddress += `, ${address.streetNumber}`
 					}
-					formattedAddress += ` - ${address.city}, ${address.country}`;
+					if (address.city) {
+						if (formattedAddress !== '') {
+							formattedAddress += ' - ';
+						}
+						formattedAddress += address.city;
+					}
+					if (address.country) {
+						if (formattedAddress !== '') {
+							formattedAddress += ', ';
+						}
+						formattedAddress += address.country;
+					}
 					this.results.push(formattedAddress);
 				});
 				this.searched = true;
