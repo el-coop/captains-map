@@ -92,6 +92,10 @@
 						formattedAddress += address.country;
 					}
 					this.results.push(formattedAddress);
+
+					if (address.formattedAddress) {
+						this.results.push(address.formattedAddress);
+					}
 				});
 				this.searched = true;
 				this.searching = false;
