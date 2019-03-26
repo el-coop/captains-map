@@ -52,7 +52,6 @@ describe('Store', () => {
 
 	it('doesnt toggle user marker on when its not cached as toggled', async () => {
 		sinon.stub(cache, 'get').returns(false);
-		sinon.stub(router, 'replace');
 
 		const dispatch = sinon.stub();
 
@@ -63,7 +62,7 @@ describe('Store', () => {
 
 	it('Routes to edit when its been cached on edit', async () => {
 		const cacheStub = sinon.stub(cache, 'get');
-		const routerStub = sinon.stub(router,'replace');
+		const routerStub = sinon.stub(router,'push');
 		cacheStub.onFirstCall().returns(false);
 		cacheStub.onSecondCall().returns('/edit');
 
@@ -77,7 +76,7 @@ describe('Store', () => {
 
 	it('Doesnt change when no route is cached', async () => {
 		const cacheStub = sinon.stub(cache, 'get');
-		const routerStub = sinon.stub(router,'replace');
+		const routerStub = sinon.stub(router,'push');
 		cacheStub.onFirstCall().returns(false);
 		cacheStub.onSecondCall().returns(false);
 
@@ -90,7 +89,7 @@ describe('Store', () => {
 
 	it('Doesnt change when already on route', async () => {
 		const cacheStub = sinon.stub(cache, 'get');
-		const routerStub = sinon.stub(router,'replace');
+		const routerStub = sinon.stub(router,'push');
 		cacheStub.onFirstCall().returns(false);
 		cacheStub.onSecondCall().returns('/');
 
