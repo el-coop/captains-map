@@ -10,7 +10,7 @@ describe('UserMarkerControl.vue', () => {
 	beforeEach(() => {
 		mocks = {
 			$store: {
-				commit: sinon.spy(),
+				dispatch: sinon.spy(),
 				state: {
 					Markers: {
 						userMarker: false
@@ -84,8 +84,8 @@ describe('UserMarkerControl.vue', () => {
 
 		assert.isTrue(mocks.$toast.info.calledOnce);
 		assert.isTrue(mocks.$toast.info.calledWith('Calculating location, please wait.', ''));
-		assert.isTrue(mocks.$store.commit.calledOnce);
-		assert.isTrue(mocks.$store.commit.calledWith('Markers/toggleUserMarker'));
+		assert.isTrue(mocks.$store.dispatch.calledOnce);
+		assert.isTrue(mocks.$store.dispatch.calledWith('Markers/toggleUserMarker'));
 
 	});
 
@@ -111,8 +111,8 @@ describe('UserMarkerControl.vue', () => {
 
 		assert.isTrue(mocks.$toast.info.calledOnce);
 		assert.isTrue(mocks.$toast.info.calledWith('Turning off location service.', ''));
-		assert.isTrue(mocks.$store.commit.calledOnce);
-		assert.isTrue(mocks.$store.commit.calledWith('Markers/toggleUserMarker'));
+		assert.isTrue(mocks.$store.dispatch.calledOnce);
+		assert.isTrue(mocks.$store.dispatch.calledWith('Markers/toggleUserMarker'));
 	});
 
 	it('Adds control when created', () => {

@@ -94,13 +94,13 @@ export default {
 			}
 
 			data.uploadTime = Date.now();
-			await uploads.setItem(data.uploadTime, data);
+			await cache.store('uploads', data.uploadTime, data);
 			commit("pushToQueue", data);
 			UploadService.processQueue();
 		},
 
 		async cancelUpload({commit}, uploadTime) {
-			await uploads.removeItem(uploadTime);
+			await cache.forget('uploads', uploadTime);
 			commit("removeFromErrored", uploadTime);
 
 		},
@@ -127,11 +127,11 @@ export default {
 			this._vm.$toast.error('Please try again later', 'Upload failed');
 			commit('removeFromQueue', marker.uploadTime);
 			commit('pushToErrored', marker);
-			await uploads.setItem(marker.uploadTime, marker);
+			await cache.store('uploads', marker.uploadTime, marker);
 		},
 
 		async uploaded({commit}, data) {
-			await uploads.removeItem(data.uploadTime);
+			await cache.forget('uploads', data.uploadTime);
 
 			commit('removeFromQueue', data.uploadTime);
 			commit('Markers/addAtStart', data, {
@@ -140,7 +140,8 @@ export default {
 		},
 
 		async purge({state}) {
-			await uploads.clear();
+			await cache.clear('uploads');
+
 			state.queue = [];
 			state.errored = [];
 			state.workingId = null;

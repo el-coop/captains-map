@@ -5,7 +5,7 @@ import uploadsStore from '@/store/uploads';
 import cache from '@/Services/cache.service';
 import uploadService from '@/Services/UploadService';
 
-describe('Marker Store', () => {
+describe('Upload store', () => {
 
 	afterEach('Reset sinon and settings', () => {
 		sinon.restore();
@@ -162,7 +162,7 @@ describe('Marker Store', () => {
 		assert.isTrue(commit.calledOnce);
 		assert.isTrue(commit.calledWith('pushToQueue', marker));
 		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith(marker.uploadTime, marker));
+		assert.isTrue(cacheStub.calledWith(marker.uploadTime, {value: marker, expiry: null}));
 		assert.isTrue(uploadServiceStub.calledOnce);
 	});
 
@@ -270,7 +270,7 @@ describe('Marker Store', () => {
 		assert.isTrue(commit.calledWith('pushToErrored', marker));
 		assert.isTrue(commit.calledWith('removeFromQueue', 1));
 		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith(1, marker));
+		assert.isTrue(cacheStub.calledWith(1, {value: marker, expiry: null}));
 		assert.isTrue(uploadsStore.actions._vm.$toast.error.calledOnce);
 		assert.isTrue(uploadsStore.actions._vm.$toast.error.calledWith('Please try again later', 'Upload failed'));
 	});

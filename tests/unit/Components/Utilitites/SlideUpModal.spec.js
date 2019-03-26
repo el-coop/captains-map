@@ -65,4 +65,31 @@ describe('SlidaUpModal.vue', () => {
 		assert.isTrue(pushRoute.calledOnce);
 		assert.isTrue(pushRoute.calledWith('modal1'));
 	});
+
+	it('goes back when modal closes', () => {
+		const back = sinon.spy();
+		const wrapper = shallowMount(SlideUpModal, {
+			propsData: {
+				name: 'modal',
+				routeName: 'modal1'
+			},
+			stubs: {
+				modal: true,
+				'font-awesome-icon': true
+			},
+			mocks: {
+				$router: {
+					back
+				}
+			}
+		});
+
+		wrapper.setData({
+			isOpen: true
+		});
+
+		wrapper.vm.beforeClose();
+
+		assert.isTrue(back.calledOnce);
+	});
 });

@@ -97,4 +97,14 @@ describe('Cache Service', () => {
 			expiry
 		}));
 	});
+
+	it('Clears Cache', async () => {
+		const caches = cache.caches();
+		const clearCacheStub = sinon.stub(caches.request, 'clear');
+
+		const expiry = Date.now() + 100;
+		await cache.clear('request');
+
+		assert.isTrue(clearCacheStub.calledOnce);
+	});
 });

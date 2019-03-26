@@ -1,5 +1,5 @@
 <template>
-	<slide-up-modal name="login">
+	<slide-up-modal name="login" route-name="">
 		<template #header>
 			<p class="card-header-title">Login</p>
 		</template>

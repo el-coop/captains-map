@@ -2,6 +2,7 @@ import sinon from 'sinon';
 import { assert } from 'chai';
 import markersStore from '@/store/markers';
 import http from '@/Services/http.service';
+import cache from "@/Services/cache.service";
 
 const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
@@ -464,19 +465,27 @@ describe('Marker Store', () => {
 			userMarker: false
 		};
 
-		markersStore.mutations.toggleUserMarker(state);
+		const cacheStub = sinon.stub(cache, 'store');
+
+		markersStore.actions.toggleUserMarker({state});
 
 		assert.isTrue(state.userMarker);
+		assert.isTrue(cacheStub.calledWith('settings', 'userMarker', true));
+
 	});
 
 	it('Toggles userMarker off', () => {
 		const state = {
 			userMarker: true
 		};
+		const cacheStub = sinon.stub(cache, 'store');
 
-		markersStore.mutations.toggleUserMarker(state);
+		markersStore.actions.toggleUserMarker({state});
 
 		assert.isFalse(state.userMarker);
+
+		assert.isTrue(cacheStub.calledOnce);
+		assert.isTrue(cacheStub.calledWith('settings', 'userMarker', false));
 	});
 
 	it('Sets specific user', () => {

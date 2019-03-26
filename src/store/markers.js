@@ -1,6 +1,8 @@
 import $http from '../Services/http.service';
+import cache from "@/Services/cache.service";
 
 const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+
 
 export default {
 	namespaced: true,
@@ -35,10 +37,6 @@ export default {
 			state.page = 0
 			state.serverPage = 0;
 			state.hasNext = false;
-		},
-
-		toggleUserMarker(state) {
-			state.userMarker = !state.userMarker;
 		},
 
 		setUser(state, username) {
@@ -155,6 +153,11 @@ export default {
 				await dispatch('load', state.markers[state.markers.length - 1].id);
 				return commit('changePage', +1);
 			}
-		}
+		},
+
+		async toggleUserMarker({state}) {
+			state.userMarker = !state.userMarker;
+			await cache.store('settings', 'userMarker', state.userMarker);
+		},
 	}
 }

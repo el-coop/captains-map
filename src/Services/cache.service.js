@@ -1,5 +1,4 @@
 import localForage from 'localforage';
-import { LeafletMapService } from "./LeafletMapService";
 
 const caches = {
 	request: localForage.createInstance({
@@ -7,6 +6,12 @@ const caches = {
 		size: 4980736,
 		storeName: 'requests',
 		description: 'Cache API requests',
+	}),
+	settings: localForage.createInstance({
+		name: 'Captains Map',
+		size: 4980736 * (1/4),
+		storeName: 'settings',
+		description: 'Save user settings for consistent app feel',
 	}),
 	map: localForage.createInstance({
 		name: 'Captains Map',
@@ -16,7 +21,7 @@ const caches = {
 	}),
 	uploads: localForage.createInstance({
 		name: 'Captains Map',
-		size: 4980736 * 10,
+		size: 4980736 * 5,
 		storeName: 'uploads',
 		description: 'Uploads storage while waiting for success'
 	})
@@ -50,6 +55,15 @@ class Cache {
 		try {
 			const storage = caches[storageName];
 			await storage.removeItem(key);
+			return true;
+		} catch (error) {
+			return false;
+		}
+	}
+
+	async clear(storageName){
+		try {
+			await caches[storageName].clear();
 			return true;
 		} catch (error) {
 			return false;

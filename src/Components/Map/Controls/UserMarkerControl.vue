@@ -39,7 +39,7 @@
 				this.$toast.info(this.message, '', {
 					id: 'geolocation-notification',
 				});
-				this.$store.commit('Markers/toggleUserMarker');
+				this.$store.dispatch('Markers/toggleUserMarker');
 			},
 			goToUserMarker() {
 				if (this.active) {

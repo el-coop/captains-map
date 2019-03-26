@@ -13,6 +13,7 @@ new Vue({
 	store,
 	beforeCreate() {
 		this.$store.dispatch('Uploads/init');
+		this.$store.dispatch('initSettings');
 	},
 	render: h => h(App)
 }).$mount('#app');

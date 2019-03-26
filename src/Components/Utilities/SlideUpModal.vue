@@ -77,7 +77,11 @@
 				}
 			},
 			opened() {
-				this.$router.pushRoute(this.routeName || this.name);
+				let route = this.routeName;
+				if (this.routeName === null) {
+					route = this.name;
+				}
+				this.$router.pushRoute(route);
 			},
 
 			closed() {
