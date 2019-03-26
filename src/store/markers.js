@@ -1,5 +1,6 @@
 import $http from '../Services/http.service';
 import cache from "@/Services/cache.service";
+import axios from "axios";
 
 const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
@@ -15,7 +16,8 @@ export default {
 		page: 0,
 		serverPage: 0,
 		loading: false,
-		borders: false
+		borders: false,
+		loadingCancelToken: null
 	},
 	mutations: {
 		add(state, marker) {
@@ -83,7 +85,18 @@ export default {
 					route += `${startingId ? '&' : '?'}borders=` + JSON.stringify(state.borders);
 				}
 
-				const response = await $http.get(route);
+				if (state.loadingCancelToken) {
+					state.loadingCancelToken.cancel();
+				}
+				state.loadingCancelToken = axios.CancelToken.source();
+				const response = await $http.get(route, {
+					cancelToken: state.loadingCancelToken.token
+				});
+				if (response === 'canceled') {
+					return {
+						response: 'canceled'
+					};
+				}
 				if (response.status === 200 || response.status === 'cached') {
 					const markers = response.data.markers;
 					state.hasNext = response.data.pagination.hasNext;
@@ -95,9 +108,11 @@ export default {
 					});
 				}
 				state.loading = false;
+				state.loadingCancelToken = null;
 				return response;
 			} catch (error) {
 				state.loading = false;
+				state.loadingCancelToken = null;
 				return error;
 			}
 		},
@@ -106,7 +121,7 @@ export default {
 			let response;
 			try {
 				state.loading = true;
-				let route = `marker/${state.username}/${state.markers[0].id}/previous`
+				let route = `marker/${state.username}/${state.markers[0].id}/previous`;
 				if (state.borders) {
 					route += '?borders=' + JSON.stringify(state.borders);
 				}

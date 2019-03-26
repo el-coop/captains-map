@@ -39,6 +39,9 @@ class HttpService {
 			Cache.store('request', url, response.data);
 			return response;
 		} catch (responseError) {
+			if (axios.isCancel(responseError)) {
+				return 'canceled';
+			}
 			error = responseError;
 		}
 
