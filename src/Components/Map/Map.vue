@@ -33,6 +33,9 @@
 		props: {
 			center: {
 				type: Array,
+				default() {
+					return [0, 0];
+				}
 			},
 			zoom: {
 				type: Number,

@@ -163,14 +163,15 @@ describe('Map Service', () => {
 
 	it('Goes to users location', () => {
 		Map.map = {
-			locate: sinon.spy()
+			locate: sinon.spy(),
+			on: sinon.spy()
 		};
 		Map.goToCurrentLocation();
 
 		assert.isTrue(Map.map.locate.calledOnce);
 		assert.isTrue(Map.map.locate.calledWith({
 			watch: false,
-			setView: true,
+			setView: false,
 			maxZoom: 17,
 			enableHighAccuracy: true
 		}));

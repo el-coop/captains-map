@@ -13,7 +13,6 @@ export class LeafletMapService {
 	}
 
 	init(el, center, zoom) {
-
 		this.map = leaflet.map(el, {
 			center,
 			zoom,
@@ -86,12 +85,17 @@ export class LeafletMapService {
 	goToCurrentLocation() {
 		if (this.map) {
 			if (!this.location) {
+				const goToLocation = (location) => {
+					this.map.off('locationfound', event);
+					this.setView(location.latlng, 17)
+				};
 				this.map.locate({
 					watch: false,
-					setView: true,
+					setView: false,
 					maxZoom: 17,
 					enableHighAccuracy: true
 				});
+				this.map.on("locationfound", goToLocation);
 			} else {
 				this.setView(this.location, 17)
 			}
@@ -142,7 +146,7 @@ export class LeafletMapService {
 		} catch (error) {
 
 		}
-		if (! response || response.status < 200 || response.status > 299) {
+		if (!response || response.status < 200 || response.status > 299) {
 			return [];
 		}
 		return response.data;
