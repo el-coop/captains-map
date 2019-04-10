@@ -78,6 +78,7 @@ export default {
 
 		async init({state, dispatch}) {
 			await uploads.iterate((data) => {
+				data = data.value;
 				if (data.error) {
 					state.errored.push(data);
 				} else {
