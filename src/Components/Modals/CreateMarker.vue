@@ -134,6 +134,7 @@
 				this.form.dateTime = this.marker.time;
 				this.form.media.type = this.marker['media[type]'];
 				this.form.media.path = this.marker['media[path]'];
+				this.form.media.file = null;
 				if (this.marker['media[type]'] === 'image') {
 					this.form.media.preview = 'data:image/jpeg;base64,' + btoa(this.marker['media[image]']);
 				}

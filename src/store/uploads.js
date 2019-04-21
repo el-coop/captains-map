@@ -1,4 +1,5 @@
 import cache from '@/Services/cache.service';
+import auth from '@/Services/authentication.service';
 import UploadService from '@/Services/UploadService';
 
 const uploads = cache.caches().uploads;
@@ -106,9 +107,9 @@ export default {
 
 		},
 
-		async returnToQueue({state, commit}, data) {
+		async returnToQueue({state, commit, rootState}, data) {
 			if (data['media[type]'] === 'image') {
-				if (data['media[image]']) {
+				if (data['media[image]'] && data['media[image]'].size) {
 					data['media[image]'] = await imageToBlob(data['media[image]']);
 				} else {
 					const oldData = state.errored.find((marker) => {
@@ -120,7 +121,9 @@ export default {
 			commit("removeFromErrored", data.uploadTime);
 			commit("pushToQueue", data);
 
-			UploadService.processQueue();
+			if (rootState.hasCsrf) {
+				UploadService.processQueue();
+			}
 
 		},
 
@@ -146,6 +149,19 @@ export default {
 			state.queue = [];
 			state.errored = [];
 			state.workingId = null;
+		},
+
+		uploadOfflineError({dispatch, state}) {
+			if (auth.isLoggedIn()) {
+				const offlines = state.errored.filter((marker) => {
+					return marker.error.status === 'offline';
+				});
+				offlines.forEach((marker) => {
+					const returningMarker = JSON.parse(JSON.stringify(marker));
+					delete returningMarker['media[image]'];
+					dispatch('returnToQueue', returningMarker);
+				});
+			}
 		}
 	},
 }

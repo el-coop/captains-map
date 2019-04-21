@@ -16,6 +16,18 @@
 			NotFound
 		},
 		name: 'App',
+		created() {
+			window.addEventListener('online', this.onlineEvent);
+		},
+		beforeDestroy() {
+			window.removeEventListener('online', this.onlineEvent);
+
+		},
+		methods: {
+			onlineEvent() {
+				this.$store.dispatch('Uploads/uploadOfflineError');
+			},
+		},
 		metaInfo: {
 
 			title: 'Home',

@@ -33,6 +33,9 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 		xhr.open('get', tile.src);
 		xhr.responseType = 'blob';
 		xhr.onload = () => {
+			if (typeof FileReader === "undefined") {
+				return;
+			}
 			const fr = new FileReader();
 
 			fr.onload = async function () {

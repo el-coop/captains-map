@@ -9,7 +9,7 @@ const caches = {
 	}),
 	settings: localForage.createInstance({
 		name: 'Captains Map',
-		size: 4980736 * (1/4),
+		size: 4980736 * (1 / 4),
 		storeName: 'settings',
 		description: 'Save user settings for consistent app feel',
 	}),
@@ -35,13 +35,13 @@ class Cache {
 	async get(storageName, key, defaultValue = null) {
 		const storage = caches[storageName];
 		try {
-			const data = await storage.getItem(key);
+			const data = await storage.getItem('' + key);
 			if (!data) {
 				return defaultValue;
 			}
 
 			if (data.expiry && data.expiry < Date.now()) {
-				this.forget(storageName, key);
+				this.forget(storageName, '' + key);
 				return defaultValue;
 			}
 
@@ -54,14 +54,14 @@ class Cache {
 	async forget(storageName, key) {
 		try {
 			const storage = caches[storageName];
-			await storage.removeItem(key);
+			await storage.removeItem('' + key);
 			return true;
 		} catch (error) {
 			return false;
 		}
 	}
 
-	async clear(storageName){
+	async clear(storageName) {
 		try {
 			await caches[storageName].clear();
 			return true;
@@ -77,7 +77,7 @@ class Cache {
 		}
 
 		try {
-			await storage.setItem(key, {
+			await storage.setItem('' + key, {
 				value,
 				expiry
 			});

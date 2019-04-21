@@ -119,9 +119,7 @@ describe('ViewMarker.vue', () => {
 		});
 
 		await wrapper.vm.deleteMarker();
-
-		assert.isTrue(dispatchStub.calledOnce);
-		assert.isTrue(dispatchStub.calledWith('Markers/delete', 1));
+``
 		assert.isTrue($modal.hide.calledOnce);
 		assert.isTrue($modal.hide.calledWith('view-marker'));
 	});

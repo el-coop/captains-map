@@ -4,6 +4,8 @@ import Store from '@/store';
 import uploadsStore from '@/store/uploads';
 import cache from '@/Services/cache.service';
 import uploadService from '@/Services/UploadService';
+import auth from '@/Services/authentication.service';
+
 
 describe('Upload store', () => {
 
@@ -119,14 +121,20 @@ describe('Upload store', () => {
 		const dispatch = sinon.stub();
 		sinon.stub(cache.caches().uploads, 'iterate').callsFake((callback) => {
 			callback({
-				id: 1,
-				error: 'bla'
+				value: {
+					id: 1,
+					error: 'bla'
+				}
 			});
 			callback({
-				id: 2,
+				value: {
+					id: 2,
+				}
 			});
 			callback({
-				id: 3,
+				value: {
+					id: 3,
+				}
 			});
 		});
 
@@ -162,7 +170,7 @@ describe('Upload store', () => {
 		assert.isTrue(commit.calledOnce);
 		assert.isTrue(commit.calledWith('pushToQueue', marker));
 		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith(marker.uploadTime, {value: marker, expiry: null}));
+		assert.isTrue(cacheStub.calledWith(marker.uploadTime + '', {value: marker, expiry: null}));
 		assert.isTrue(uploadServiceStub.calledOnce);
 	});
 
@@ -175,7 +183,7 @@ describe('Upload store', () => {
 		assert.isTrue(commit.calledOnce);
 		assert.isTrue(commit.calledWith('removeFromErrored', 1));
 		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith(1));
+		assert.isTrue(cacheStub.calledWith('1'));
 	});
 
 	it('returns marker to queue', async () => {
@@ -189,12 +197,39 @@ describe('Upload store', () => {
 			'media[type]': 'instagram'
 		};
 
-		await uploadsStore.actions.returnToQueue({state, commit}, marker);
+		await uploadsStore.actions.returnToQueue({
+			state, commit, rootState: {
+				hasCsrf: true
+			}
+		}, marker);
 
 		assert.isTrue(commit.calledTwice);
 		assert.isTrue(commit.calledWith('pushToQueue', marker));
 		assert.isTrue(commit.calledWith('removeFromErrored', 1));
 		assert.isTrue(uploadServiceStub.calledOnce);
+	});
+
+	it('returns marker to queue but doesnt process when no csrf', async () => {
+		const commit = sinon.stub();
+		const state = {};
+		const uploadServiceStub = sinon.stub(uploadService, 'processQueue');
+
+		const marker = {
+			id: 1,
+			uploadTime: 1,
+			'media[type]': 'instagram'
+		};
+
+		await uploadsStore.actions.returnToQueue({
+			state, commit, rootState: {
+				hasCsrf: false
+			}
+		}, marker);
+
+		assert.isTrue(commit.calledTwice);
+		assert.isTrue(commit.calledWith('pushToQueue', marker));
+		assert.isTrue(commit.calledWith('removeFromErrored', 1));
+		assert.isFalse(uploadServiceStub.calledOnce);
 	});
 
 	it('loads old image when new one isnt provided', async () => {
@@ -213,7 +248,11 @@ describe('Upload store', () => {
 			'media[type]': 'image'
 		};
 
-		await uploadsStore.actions.returnToQueue({state, commit}, marker);
+		await uploadsStore.actions.returnToQueue({
+			state, commit, rootState: {
+				hasCsrf: true
+			}
+		}, marker);
 
 		assert.isTrue(commit.calledTwice);
 		assert.isTrue(commit.calledWith('pushToQueue', marker));
@@ -236,16 +275,20 @@ describe('Upload store', () => {
 			id: 1,
 			uploadTime: 1,
 			'media[type]': 'image',
-			'media[image]': 'gla'
+			'media[image]': {name: 'gla', size: 10}
 		};
 
-		await uploadsStore.actions.returnToQueue({state, commit}, marker);
+		await uploadsStore.actions.returnToQueue({
+			state, commit, rootState: {
+				hasCsrf: true
+			}
+		}, marker);
 
 		assert.isTrue(commit.calledTwice);
 		assert.isTrue(commit.calledWith('pushToQueue', marker));
 		assert.isTrue(commit.calledWith('removeFromErrored', 1));
 		assert.isTrue(uploadServiceStub.calledOnce);
-		assert.equal(marker['media[image]'], 'gla');
+		assert.deepEqual(marker['media[image]'], {name: 'gla', size: 10});
 	});
 
 	it('moves marker from queue to error', async () => {
@@ -270,7 +313,7 @@ describe('Upload store', () => {
 		assert.isTrue(commit.calledWith('pushToErrored', marker));
 		assert.isTrue(commit.calledWith('removeFromQueue', 1));
 		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith(1, {value: marker, expiry: null}));
+		assert.isTrue(cacheStub.calledWith('1', {value: marker, expiry: null}));
 		assert.isTrue(uploadsStore.actions._vm.$toast.error.calledOnce);
 		assert.isTrue(uploadsStore.actions._vm.$toast.error.calledWith('Please try again later', 'Upload failed'));
 	});
@@ -293,7 +336,7 @@ describe('Upload store', () => {
 		}));
 		assert.isTrue(commit.calledWith('removeFromQueue', 1));
 		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith(1));
+		assert.isTrue(cacheStub.calledWith('1'));
 	});
 
 	it('Purges queue', async () => {
@@ -310,5 +353,44 @@ describe('Upload store', () => {
 			errored: [],
 			workingId: null,
 		});
+	});
+
+	it('Doesnt retry uploads with offline errors when logged out', () => {
+		sinon.stub(auth, 'isLoggedIn').returns(false);
+
+		const state = {
+			errored: [{id: 2, status: 'offline'}],
+		};
+		const dispatch = sinon.stub();
+
+		uploadsStore.actions.uploadOfflineError({state, dispatch});
+		assert.isFalse(dispatch.called);
+	});
+
+	it('Retries uploads with offline errors when logged in', () => {
+		sinon.stub(auth, 'isLoggedIn').returns(true);
+
+		const state = {
+			errored: [{id: 2, error: {status: 'offline'}}, {id: 3, error: {status: 'offline'}}],
+		};
+		const dispatch = sinon.stub();
+
+		uploadsStore.actions.uploadOfflineError({state, dispatch});
+		assert.isTrue(dispatch.calledTwice);
+		assert.isTrue(dispatch.firstCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}}));
+		assert.isTrue(dispatch.secondCall.calledWith('returnToQueue', {id: 3, error: {status: 'offline'}}));
+	});
+
+	it('Retries only uploads with offline error', () => {
+		sinon.stub(auth, 'isLoggedIn').returns(true);
+
+		const state = {
+			errored: [{id: 2, error: {status: 'offline'}}, {id: 3, error: {status: '500'}}],
+		};
+		const dispatch = sinon.stub();
+
+		uploadsStore.actions.uploadOfflineError({state, dispatch});
+		assert.isTrue(dispatch.calledOnce);
+		assert.isTrue(dispatch.firstCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}}));
 	});
 });
