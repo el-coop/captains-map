@@ -725,4 +725,41 @@ describe('Marker Store', () => {
 		});
 	});
 
+	it('updates user markers profile photo when updated', () => {
+		const state = {
+			markers: [
+				{
+					user: {
+						id: 1,
+						username: 'test',
+						bio: {
+							path: 'old'
+						}
+					}
+				}, {
+					user: {
+						id: 2,
+						username: 'test',
+						bio: {
+							path: 'old'
+						}
+					}
+				}, {
+					user: {
+						id: 3,
+						username: 'test1',
+						bio: {
+							path: 'old'
+						}
+					}
+				},
+			],
+		};
+
+		markersStore.mutations.updateProfilePic(state, {username: 'test', path: 'new'});
+
+		assert.equal(state.markers[0].user.bio.path, 'new');
+		assert.equal(state.markers[1].user.bio.path, 'new');
+		assert.equal(state.markers[2].user.bio.path, 'old');
+	});
 });

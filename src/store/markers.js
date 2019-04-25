@@ -36,7 +36,7 @@ export default {
 
 		clear(state) {
 			state.markers = [];
-			state.page = 0
+			state.page = 0;
 			state.serverPage = 0;
 			state.hasNext = false;
 		},
@@ -53,6 +53,14 @@ export default {
 
 		setBorders(state, borders) {
 			state.borders = borders;
+		},
+
+		updateProfilePic(state, {username, path}) {
+			state.markers.forEach((marker) => {
+				if (marker.user.username === username) {
+					marker.user.bio.path = path;
+				}
+			});
 		}
 
 	},

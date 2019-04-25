@@ -63,6 +63,12 @@
 				this.loading = false;
 				if (response.status > 199 && response.status < 300) {
 					this.$toast.success(' ', 'Profile updated.');
+					if (this.user.path !== response.data.path) {
+						this.$store.commit('Markers/updateProfilePic', {
+							username: this.user.username,
+							path: response.data.path
+						});
+					}
 					this.$store.commit('Profile/updateBio', {
 						username: this.user.username,
 						description: response.data.description,

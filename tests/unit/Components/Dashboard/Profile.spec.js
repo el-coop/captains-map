@@ -126,7 +126,7 @@ describe('Profile.vue', () => {
 		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Update failed.'));
 	});
 
-	it('Reacts to success submission', async () => {
+	it('Reacts to success submission with image update', async () => {
 
 		sinon.stub(auth, 'getUserDetails').returns({
 			username: 'test'
@@ -142,17 +142,21 @@ describe('Profile.vue', () => {
 			status: 200,
 			data: {
 				description: 'desc',
-				path: 'path'
+				path: 'patha'
 			}
 		});
 
 		assert.isTrue(mocks.$toast.success.calledOnce);
 		assert.isTrue(mocks.$toast.success.calledWith(' ', 'Profile updated.'));
-		assert.isTrue(mocks.$store.commit.calledOnce);
-		assert.isTrue(mocks.$store.commit.calledWith('Profile/updateBio', {
+		assert.isTrue(mocks.$store.commit.calledTwice);
+		assert.isTrue(mocks.$store.commit.firstCall.calledWith('Markers/updateProfilePic', {
+			username: 'test',
+			path: 'patha'
+		}));
+		assert.isTrue(mocks.$store.commit.secondCall.calledWith('Profile/updateBio', {
 			username: 'test',
 			description: 'desc',
-			path: 'path'
+			path: 'patha'
 		}));
 	});
 
