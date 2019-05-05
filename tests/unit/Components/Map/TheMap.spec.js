@@ -1,12 +1,12 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import Map from '@/Components/Map/Map.vue';
+import Map from '@/Components/Map/TheMap.vue';
 import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
 
 const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
-describe('Map.vue', () => {
+describe('TheMap.vue', () => {
 
 	let mocks;
 
@@ -85,7 +85,7 @@ describe('Map.vue', () => {
 		const wrapper = shallowMount(Map, {
 			mocks
 		});
-		assert.isTrue(wrapper.find('user-marker-stub').exists());
+		assert.isTrue(wrapper.find('mapusermarker-stub').exists());
 	});
 
 	it('reacts to zoom change', () => {

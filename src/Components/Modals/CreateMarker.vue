@@ -43,7 +43,7 @@
 
 <script>
 	import FormDataMixin from "@/Components/Utilities/FormDataMixin";
-	import SlideUpModal from "@/Components/Utilities/SlideUpModal";
+	import SlideUpModal from "@/Components/Utilities/BaseModal";
 	import CreateMarkerTypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
 	import CreateMarkerFileField from "@/Components/Modals/CreateMarker/FileField";
 	import CreateMarkerInstagramField from "@/Components/Modals/CreateMarker/InstagramField";

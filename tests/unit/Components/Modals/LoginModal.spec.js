@@ -4,19 +4,21 @@ import LoginModal from '@/Components/Modals/LoginModal';
 import sinon from 'sinon';
 
 describe('LoginModal.vue', () => {
+	const stubs = {
+		VModal: true,
+		FontAwesomeIcon: true
+	};
+
 	afterEach(() => {
 		sinon.restore();
 	});
 
 	it('renders', () => {
 		const wrapper = mount(LoginModal, {
-			stubs: {
-				modal: true,
-				fontAwesomeIcon: true
-			}
+			stubs
 		});
 
-		assert.isTrue(wrapper.find('modal-stub').exists());
+		assert.isTrue(wrapper.find('vmodal-stub').exists());
 		assert.include(wrapper.html(), 'Login');
 	});
 
@@ -27,10 +29,7 @@ describe('LoginModal.vue', () => {
 			}
 		};
 		const wrapper = mount(LoginModal, {
-			stubs: {
-				modal: true,
-				fontAwesomeIcon: true
-			},
+			stubs,
 			mocks
 		});
 
@@ -47,10 +46,7 @@ describe('LoginModal.vue', () => {
 			}
 		};
 		const wrapper = mount(LoginModal, {
-			stubs: {
-				modal: true,
-				fontAwesomeIcon: true
-			},
+			stubs,
 			mocks
 		});
 
@@ -85,10 +81,7 @@ describe('LoginModal.vue', () => {
 			}
 		};
 		const wrapper = mount(LoginModal, {
-			stubs: {
-				modal: true,
-				fontAwesomeIcon: true
-			},
+			stubs,
 			mocks
 		});
 

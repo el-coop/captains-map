@@ -1,8 +1,8 @@
 <template>
 	<div :class="`zoom-${zoomStatus}`">
 		<div class="map" ref="map">
-			<user-marker-control/>
-			<user-marker v-if="userMarker"/>
+			<MapUserMarkerControl/>
+			<MapUserMarker v-if="userMarker"/>
 
 			<upload-marker v-for="marker in uploadMarkers" :marker="marker"
 						   :key="`uploads_${Date.now()}_${marker.uploadTime}`"
@@ -11,8 +11,8 @@
 			<upload-marker v-for="marker in erroredMarkers" :marker="marker"
 						   :key="`errors_${Date.now()}_${marker.uploadTime}`" status="error"
 						   v-if="$router.currentRoute.name === 'edit'"/>
-			<marker-cluster ref="userMarker">
-				<map-marker v-for="marker in markers" :layer="$refs.userMarker" :marker="marker"
+			<marker-cluster ref="markerCluster">
+				<map-marker v-for="marker in markers" :layer="$refs.markerCluster" :marker="marker"
 							:key="`${Date.now()}_${marker.id}`"/>
 			</marker-cluster>
 		</div>
@@ -22,14 +22,24 @@
 <script>
 
 	import Map from '@/Services/LeafletMapService';
+	import MapUserMarkerControl from "@/Components/Map/Controls/MapUserMarkerControl";
+	import MapUserMarker from '@/Components/Map/Markers/MapUserMarker';
+
 	import MapMarker from '@/Components/Map/Markers/MapMarker';
-	import UserMarker from '@/Components/Map/Markers/UserMarker';
-	import UserMarkerControl from "@/Components/Map/Controls/UserMarkerControl";
 	import MarkerCluster from "@/Components/Map/Layers/MarkerCluster";
 	import UploadMarker from "@/Components/Map/Markers/UploadMarker";
 
 	export default {
-		name: "map-view",
+		name: "TheMap",
+
+		components: {
+			MapUserMarkerControl,
+			UploadMarker,
+			MarkerCluster,
+			MapMarker,
+			MapUserMarker
+		},
+
 		props: {
 			center: {
 				type: Array,
@@ -43,12 +53,10 @@
 			},
 		},
 
-		components: {
-			UploadMarker,
-			MarkerCluster,
-			UserMarkerControl,
-			MapMarker,
-			UserMarker
+		data() {
+			return {
+				zoomStatus: 'normal'
+			}
 		},
 
 		methods: {
@@ -80,11 +88,6 @@
 			}
 		},
 
-		data() {
-			return {
-				zoomStatus: 'normal'
-			}
-		},
 
 		computed: {
 			markers() {
@@ -107,17 +110,10 @@
 			Map.init(this.$refs.map, this.center, this.zoom);
 			Map.on('contextmenu', this.rightClick);
 			Map.on('zoomend', this.handleZoom);
+		},
+
+		beforeDestroy() {
+			Map.off();
 		}
 	}
 </script>
-
-<style scoped>
-	.map {
-		position: absolute;
-		height: 100%;
-		width: 100vw;
-		top: 0;
-		left: 0;
-		z-index: 1;
-	}
-</style>

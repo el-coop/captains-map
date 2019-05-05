@@ -1,7 +1,7 @@
 <template>
-	<div class="leaflet-bar leaflet-control user-marker-control map__marker">
-		<a @click="toggleMarker" @contextmenu.stop.prevent="goToUserMarker" :class="{active}">
-			<font-awesome-icon icon="globe"/>
+	<div class="leaflet-bar leaflet-control map__user-marker-control-wrapper map__marker">
+		<a @click="toggleMarker" @contextmenu.stop.prevent="goToUserMarker" :class="{'map__user-marker-control--active' : active}">
+			<FontAwesomeIcon icon="globe"/>
 		</a>
 	</div>
 </template>
@@ -27,7 +27,7 @@
 	});
 
 	export default {
-		name: "UserMarkerControl",
+		name: "MapUserMarkerControl",
 		mixins: [MapObjectMixin],
 
 		methods: {
@@ -35,12 +35,14 @@
 				this.mapObject = new LControl({position: 'bottomleft'});
 				this.mapObject.setElement(this.$el);
 			},
+
 			toggleMarker() {
 				this.$toast.info(this.message, '', {
 					id: 'geolocation-notification',
 				});
 				this.$store.dispatch('Markers/toggleUserMarker');
 			},
+
 			goToUserMarker() {
 				if (this.active) {
 					this.$bus.$emit('goToUserMarker');
@@ -61,19 +63,3 @@
 		}
 	}
 </script>
-
-<style lang="scss" scoped>
-	@import "~$scss/variables";
-
-	.leaflet-control.user-marker-control {
-		margin-bottom: $gap * 0.8;
-
-		@media #{$above-tablet}{
-			margin-bottom: 10px;
-		}
-
-		& > .active {
-			background-color: $link;
-		}
-	}
-</style>

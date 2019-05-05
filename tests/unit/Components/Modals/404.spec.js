@@ -4,6 +4,12 @@ import NotFound from '@/Components/Modals/404.vue';
 import sinon from 'sinon';
 
 describe('404.vue', () => {
+
+	const stubs = {
+		VModal: true,
+		FontAwesomeIcon: true
+	};
+
 	it('renders', () => {
 		const wrapper = mount(NotFound, {
 			mocks: {
@@ -13,87 +19,29 @@ describe('404.vue', () => {
 					}
 				}
 			},
-			stubs: {
-				'modal': true,
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
-		assert.isTrue(wrapper.find('img.atlantis').exists());
-		assert.isTrue(wrapper.find('img.tear').exists());
-		assert.isTrue(wrapper.find('modal-stub').exists());
+		assert.isTrue(wrapper.find('img.four04-wrapper__image').exists());
+		assert.isTrue(wrapper.find('img.four04-wrapper__cover').exists());
+		assert.isTrue(wrapper.find('vmodal-stub').exists());
 	});
 
-	it('Saves starting route when opened', async () => {
-		const wrapper = shallowMount(NotFound, {
-			stubs: {
-				'font-awesome-icon': true,
-				'modal': true
-			},
-			mocks: {
-				$router: {
-					currentRoute: {
-						fullPath: 'path'
-					}
-				}
-			}
-		});
-
-		wrapper.vm.$children[0].$emit('before-open');
-		assert.equal(wrapper.vm.$data.openRoute, 'path');
-	});
-
-	it('It changes navigates when closed on the same route as opened', async () => {
+	it('It changes navigates when closed', async () => {
 		const $router = {
-			currentRoute: {
-				fullPath: 'path'
-			},
-			push(push) {
-
-			}
+			push: sinon.stub()
 		};
-		const routerStub = sinon.stub($router, 'push');
+
 		const wrapper = shallowMount(NotFound, {
-			stubs: {
-				'font-awesome-icon': true,
-				'modal': true
-			},
+			stubs,
 			mocks: {
 				$router
 			}
 		});
 
-		wrapper.vm.$children[0].$emit('before-open');
 		wrapper.vm.$children[0].$emit('before-close');
 
-		assert.isTrue(routerStub.calledWith('/'));
+		assert.isTrue($router.push.calledWith('/'));
 	});
 
-
-	it('It doesnt changes navigation when closed on a route different from opened', () => {
-		const $router = {
-			currentRoute: {
-				fullPath: 'path'
-			},
-			push(push) {
-
-			}
-		};
-		const routerStub = sinon.stub($router, 'push');
-		const wrapper = shallowMount(NotFound, {
-			stubs: {
-				'font-awesome-icon': true,
-				'modal': true
-			},
-			mocks: {
-				$router
-			}
-		});
-
-		wrapper.vm.$children[0].$emit('before-open');
-		$router.currentRoute.fullPath = 'test';
-		wrapper.vm.$children[0].$emit('before-close');
-
-		assert.isFalse(routerStub.calledWith('/'));
-	});
 });

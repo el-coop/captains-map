@@ -1,11 +1,15 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import UserMarkerControl from '@/Components/Map/Controls/UserMarkerControl';
+import UserMarkerControl from '@/Components/Map/Controls/MapUserMarkerControl';
 import sinon from 'sinon';
 
-describe('UserMarkerControl.vue', () => {
+describe('MapUserMarkerControl.vue', () => {
 
 	let mocks;
+
+	const stubs = {
+		FontAwesomeIcon: true
+	};
 
 	beforeEach(() => {
 		mocks = {
@@ -32,9 +36,7 @@ describe('UserMarkerControl.vue', () => {
 		};
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks
 		});
 
@@ -53,13 +55,11 @@ describe('UserMarkerControl.vue', () => {
 
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('.active').exists());
+		assert.isTrue(wrapper.find('.map__user-marker-control--active').exists());
 	});
 
 	it('Toggles on user marker on click', async () => {
@@ -74,9 +74,7 @@ describe('UserMarkerControl.vue', () => {
 		};
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks
 		});
 
@@ -101,9 +99,7 @@ describe('UserMarkerControl.vue', () => {
 		mocks.$store.state.Markers.userMarker = true;
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks
 		});
 
@@ -123,9 +119,7 @@ describe('UserMarkerControl.vue', () => {
 		};
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks
 		});
 
@@ -143,9 +137,7 @@ describe('UserMarkerControl.vue', () => {
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
 
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks
 		});
 
@@ -167,10 +159,7 @@ describe('UserMarkerControl.vue', () => {
 
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
-
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks
 		});
 		wrapper.find('a').trigger('contextmenu');
@@ -191,10 +180,7 @@ describe('UserMarkerControl.vue', () => {
 		};
 		const wrapper = shallowMount(UserMarkerControl, {
 			parentComponent: parent,
-
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks
 		});
 		wrapper.find('a').trigger('contextmenu');

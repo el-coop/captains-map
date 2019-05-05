@@ -252,6 +252,32 @@ describe('Map Service', () => {
 		Map.queuedActions = [];
 	});
 
+	it('Removes event listeners', () => {
+		const callback = function () {
+		};
+		Map.map = {
+			off: sinon.spy()
+		};
+
+		Map.off('event', callback);
+
+		assert.isTrue(Map.map.off.calledOnce);
+		assert.isTrue(Map.map.off.calledWith('event', callback));
+	});
+
+
+	it('It queues removal of event listeners ', () => {
+		const callback = function () {
+		};
+		Map.map = null;
+
+		Map.off('event', callback);
+
+		assert.isTrue(Map.queuedActions.length === 1);
+		assert.deepEqual(Map.queuedActions, [['off', ['event', callback]]]);
+		Map.queuedActions = [];
+	});
+
 
 	it('Returns empty on address lcoation answer error', async () => {
 		sinon.stub(Http, 'get').callsFake(() => {

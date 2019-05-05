@@ -25,8 +25,8 @@ describe('CreateMarker.vue', () => {
 	let propsData;
 	let mocks;
 	const stubs = {
-		modal: true,
-		'font-awesome-icon': true,
+		VModal: true,
+		FontAwesomeIcon: true,
 		'create-marker-type-toggle': true,
 		'create-marker-file-field': true,
 		'create-marker-date-time-field': true,

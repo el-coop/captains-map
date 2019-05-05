@@ -1,19 +1,20 @@
 <template>
 	<div class="map__user-marker map__marker" @click="onClick">
-		<user-accuracy-marker v-if="accuracy !== null && lat !== null && lng !== null" :accuracy="accuracy" :lat="lat"
-							  :lng="lng"/>
+		<MapUserAccuracyMarker v-if="! isOld && accuracy !== null && lat !== null && lng !== null" :accuracy="accuracy"
+							   :lat="lat"
+							   :lng="lng"/>
 	</div>
 </template>
 
 <script>
 	import MapObjectMixin from '@/Components/Map/MapObjectMixin';
-	import UserMarkerMixin from '@/Components/Map/Markers/UserMarkerMixin';
+	import UserMarkerMixin from '@/Components/Map/Markers/MapUserMarkerMixin';
 	import Map from '@/Services/LeafletMapService';
-	import UserAccuracyMarker from "@/Components/Map/Markers/UserAccuracyMarker";
+	import MapUserAccuracyMarker from "@/Components/Map/Markers/MapUserAccuracyMarker";
 
 	export default {
-		name: "UserMarker",
-		components: {UserAccuracyMarker},
+		name: "MapUserMarker",
+		components: {MapUserAccuracyMarker},
 		mixins: [MapObjectMixin, UserMarkerMixin],
 
 		data() {
@@ -21,7 +22,10 @@
 				lat: null,
 				lng: null,
 				accuracy: 100,
-				iconSize: 20
+				iconSize: 20,
+				timestamp: 0,
+				isOld: false,
+				checkOldInterval: null
 			}
 		},
 
@@ -30,6 +34,7 @@
 		},
 
 		beforeDestroy() {
+			clearInterval(this.checkOldInterval);
 			this.$bus.$off('goToUserMarker', this.goToMarker);
 			Map.stopLocate();
 		},
@@ -37,11 +42,14 @@
 		methods: {
 			setUp() {
 				Map.watchLocation(this.setLocation.bind(this));
-
 			},
 
 			setLocation(location) {
+				if (!this.checkOldInterval) {
+					this.checkOldInterval = setInterval(this.checkIfOld.bind(this), 60 * 1000);
+				}
 				this.accuracy = location.accuracy;
+				this.timestamp = location.timestamp;
 
 				if (!location.latlng || (this.lat === location.latlng.lat && this.lng === location.latlng.lng)) {
 					return;
@@ -58,7 +66,8 @@
 					this.prepareMapObject(location.latlng.lat, location.latlng.lng);
 					this.addToMap();
 				}
-				this.mapObject.setLatLng(location.latlng);
+				this.setLatLng(this.lat, this.lng);
+				this.checkIfOld();
 			},
 			addObject(marker) {
 				this.$parent.addObject(marker);
@@ -72,18 +81,18 @@
 				if (this.lat) {
 					Map.setView([this.lat, this.lng]);
 				}
+			},
+
+			checkIfOld() {
+				if (this.timestamp < (Date.now() - 5 * 60 * 1000)) {
+					this.addClass('map__user-marker--old');
+					this.isOld = true;
+				} else {
+					this.removeClass('map__user-marker--old');
+					this.isOld = false;
+					window.clearInterval(this.checkOldInterval);
+				}
 			}
 		},
 	}
 </script>
-
-<style lang="scss" scoped>
-	.map__user-marker {
-		box-shadow: inset 0 0 5px #06f, inset 0 0 5px #06f, inset 0 0 5px #06f, 0 0 5px #06f, 0 0 5px #06f, 0 0 5px #06f;
-		background-color: darken(#06f, 0.1);
-		border-radius: 50%;
-		border: 1px solid #fff;
-		width: 100%;
-		height: 100%;
-	}
-</style>

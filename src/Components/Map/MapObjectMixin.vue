@@ -50,6 +50,21 @@
 			},
 			onClick() {
 				this.$bus.$emit(this.event, this.payload);
+			},
+
+			setIcon(icon) {
+				this.mapObject.setIcon(icon);
+			},
+
+			addClass(addedClass) {
+				this.mapObject.getElement().firstChild.classList.add(addedClass);
+			},
+			removeClass(removedClass) {
+				this.mapObject.getElement().firstChild.classList.remove(removedClass);
+			},
+
+			setLatLng(lat, lng) {
+				this.mapObject.setLatLng({lat, lng});
 			}
 		}
 
