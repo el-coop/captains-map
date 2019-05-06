@@ -86,7 +86,7 @@ export class LeafletMapService {
 		if (this.map) {
 			if (!this.location) {
 				const goToLocation = (location) => {
-					this.map.off('locationfound', event);
+					this.map.off('locationfound', goToLocation);
 					this.setView(location.latlng, 17)
 				};
 				this.map.locate({
@@ -138,6 +138,13 @@ export class LeafletMapService {
 		}
 	}
 
+	off(event, callback) {
+		if (this.map) {
+			this.map.off(event, callback);
+		} else {
+			this.queuedActions.push(['off', [event, callback]]);
+		}
+	}
 
 	static async locate(address) {
 		let response;

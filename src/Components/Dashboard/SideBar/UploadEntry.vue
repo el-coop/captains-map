@@ -11,10 +11,6 @@
 			}
 		},
 
-		created() {
-			this.setStatus();
-		},
-
 		methods: {
 			calculateImage() {
 				return this.calculateUnverifiedImage(this.marker);
@@ -30,8 +26,11 @@
 		},
 
 		watch: {
-			'$store.state.Uploads.workingId'() {
-				this.setStatus();
+			'$store.state.Uploads.workingId': {
+				handler() {
+					this.setStatus();
+				},
+				immediate: true
 			},
 
 			'marker.error'() {

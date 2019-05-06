@@ -1,21 +1,22 @@
 <template>
 	<div id="app">
-		<map-view/>
-		<router-view/>
-		<not-found/>
+		<TheMap/>
+		<RouterView/>
+		<NotFound/>
 	</div>
 </template>
 
 <script>
 	import NotFound from '@/Components/Modals/404';
-	import MapView from '@/Components/Map/Map';
+	import TheMap from '@/Components/Map/TheMap';
 
 	export default {
+		name: 'App',
+
 		components: {
-			MapView,
+			TheMap,
 			NotFound
 		},
-		name: 'App',
 		created() {
 			window.addEventListener('online', this.onlineEvent);
 		},
@@ -29,7 +30,6 @@
 			},
 		},
 		metaInfo: {
-
 			title: 'Home',
 			titleTemplate: '%s | Captains Map',
 		}

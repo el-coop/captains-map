@@ -1,22 +1,24 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import SlideUpModal from '@/Components/Utilities/SlideUpModal';
+import SlideUpModal from '@/Components/Utilities/BaseModal';
 import sinon from 'sinon';
 
 describe('SlidaUpModal.vue', () => {
+
+	const stubs = {
+		VModal: true,
+		FontAwesomeIcon: true
+	};
 
 	it('Renders', () => {
 		const wrapper = shallowMount(SlideUpModal, {
 			propsData: {
 				name: 'modal'
 			},
-			stubs: {
-				modal: true,
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
-		assert.isTrue(wrapper.find('modal-stub').exists());
+		assert.isTrue(wrapper.find('vmodal-stub').exists());
 	});
 
 	it('It changes route', () => {
@@ -25,10 +27,7 @@ describe('SlidaUpModal.vue', () => {
 			propsData: {
 				name: 'modal'
 			},
-			stubs: {
-				modal: true,
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks: {
 				$router: {
 					pushRoute
@@ -49,10 +48,7 @@ describe('SlidaUpModal.vue', () => {
 				name: 'modal',
 				routeName: 'modal1'
 			},
-			stubs: {
-				modal: true,
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks: {
 				$router: {
 					pushRoute
@@ -73,10 +69,7 @@ describe('SlidaUpModal.vue', () => {
 				name: 'modal',
 				routeName: 'modal1'
 			},
-			stubs: {
-				modal: true,
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks: {
 				$router: {
 					back

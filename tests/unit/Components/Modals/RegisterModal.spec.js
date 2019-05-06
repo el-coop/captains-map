@@ -4,19 +4,22 @@ import RegisterModal from '@/Components/Modals/RegisterModal';
 import sinon from 'sinon';
 
 describe('RegisterModal.vue', () => {
+
+	const stubs = {
+		VModal: true,
+		FontAwesomeIcon: true
+	};
+
 	afterEach(() => {
 		sinon.restore();
 	});
 
 	it('renders', () => {
 		const wrapper = mount(RegisterModal, {
-			stubs: {
-				modal: true,
-				fontAwesomeIcon: true
-			}
+			stubs
 		});
 
-		assert.isTrue(wrapper.find('modal-stub').exists());
+		assert.isTrue(wrapper.find('vmodal-stub').exists());
 		assert.include(wrapper.html(), 'Registration is closed at the moment');
 	});
 
@@ -27,10 +30,7 @@ describe('RegisterModal.vue', () => {
 			}
 		};
 		const wrapper = mount(RegisterModal, {
-			stubs: {
-				modal: true,
-				fontAwesomeIcon: true
-			},
+			stubs,
 			mocks
 		});
 

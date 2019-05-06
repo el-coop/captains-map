@@ -78,7 +78,7 @@ describe('Dashboard.vue', () => {
 
 		assert.isTrue(mocks.$bus.$on.calledWith('moving-map'));
 		assert.isTrue(mocks.$bus.$on.calledWith('marker-click'));
-		assert.isTrue(mocks.$bus.$on.calledWith('map-right-click'));
+		assert.isTrue(mocks.$bus.$on.calledWith('map-create-marker'));
 		assert.isTrue(mocks.$bus.$on.calledWith('user-marker-click'));
 	});
 
@@ -97,7 +97,7 @@ describe('Dashboard.vue', () => {
 
 		assert.isTrue(mocks.$bus.$off.calledWith('moving-map'));
 		assert.isTrue(mocks.$bus.$off.calledWith('marker-click'));
-		assert.isTrue(mocks.$bus.$off.calledWith('map-right-click'));
+		assert.isTrue(mocks.$bus.$off.calledWith('map-create-marker'));
 		assert.isTrue(mocks.$bus.$off.calledWith('user-marker-click'));
 	});
 

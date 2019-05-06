@@ -1,10 +1,10 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import MarkerCluster from '@/Components/Map/Layers/MarkerCluster';
+import MapMarkerCluster from '@/Components/Map/Layers/MapMarkerCluster';
 import sinon from 'sinon';
 import leaflet from 'leaflet';
 
-describe('MarkerCluster.vue', () => {
+describe('MapMarkerCluster.vue', () => {
 
 	afterEach(() => {
 		sinon.restore();
@@ -17,7 +17,7 @@ describe('MarkerCluster.vue', () => {
 			}
 		};
 		leaflet.markerClusterGroup = sinon.spy();
-		const wrapper = shallowMount(MarkerCluster, {
+		const wrapper = shallowMount(MapMarkerCluster, {
 			parentComponent: parent
 		});
 
@@ -36,7 +36,7 @@ describe('MarkerCluster.vue', () => {
 		};
 		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
 
-		shallowMount(MarkerCluster, {
+		shallowMount(MapMarkerCluster, {
 			parentComponent: parent
 		});
 
@@ -59,7 +59,7 @@ describe('MarkerCluster.vue', () => {
 		const marker = {};
 		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
 
-		const wrapper = shallowMount(MarkerCluster, {
+		const wrapper = shallowMount(MapMarkerCluster, {
 			parentComponent: parent
 		});
 
@@ -82,7 +82,7 @@ describe('MarkerCluster.vue', () => {
 		const marker = {};
 		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
 
-		const wrapper = shallowMount(MarkerCluster, {
+		const wrapper = shallowMount(MapMarkerCluster, {
 			parentComponent: parent
 		});
 
@@ -91,8 +91,8 @@ describe('MarkerCluster.vue', () => {
 		wrapper.vm.addObject(marker);
 
 
-		assert.equal(wrapper.vm.queue.length,1);
-		assert.deepEqual(wrapper.vm.queue[0],marker);
+		assert.equal(wrapper.vm.queuedActions.length,1);
+		assert.deepEqual(wrapper.vm.queuedActions[0],['addObject',[marker]]);
 	});
 
 	it('Removes layer from cluster', () => {
@@ -107,7 +107,7 @@ describe('MarkerCluster.vue', () => {
 		const marker = {};
 		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
 
-		const wrapper = shallowMount(MarkerCluster, {
+		const wrapper = shallowMount(MapMarkerCluster, {
 			parentComponent: parent
 		});
 
@@ -125,7 +125,7 @@ describe('MarkerCluster.vue', () => {
 				removeObject: sinon.spy(),
 			}
 		};
-		const wrapper = shallowMount(MarkerCluster, {
+		const wrapper = shallowMount(MapMarkerCluster, {
 			parentComponent: parent,
 		});
 
@@ -164,7 +164,7 @@ describe('MarkerCluster.vue', () => {
 			}
 		};
 		const divIconStub = sinon.stub(leaflet,'divIcon');
-		const wrapper = shallowMount(MarkerCluster, {
+		const wrapper = shallowMount(MapMarkerCluster, {
 			parentComponent: parent,
 		});
 

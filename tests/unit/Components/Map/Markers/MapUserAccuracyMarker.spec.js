@@ -1,11 +1,10 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import UserAccuracyMarker from '@/Components/Map/Markers/UserAccuracyMarker';
+import MapUserAccuracyMarker from '@/Components/Map/Markers/MapUserAccuracyMarker';
 import leaflet from 'leaflet';
-import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
 
-describe('UserAccuracyMarker.vue', () => {
+describe('MapUserAccuracyMarker.vue', () => {
 
 	afterEach(() => {
 		sinon.restore();
@@ -25,7 +24,7 @@ describe('UserAccuracyMarker.vue', () => {
 			}
 		};
 
-		const wrapper = shallowMount(UserAccuracyMarker, {
+		const wrapper = shallowMount(MapUserAccuracyMarker, {
 			parentComponent: parent,
 			propsData: {
 				accuracy: 100,
@@ -61,7 +60,7 @@ describe('UserAccuracyMarker.vue', () => {
 			}
 		};
 
-		const wrapper = shallowMount(UserAccuracyMarker, {
+		const wrapper = shallowMount(MapUserAccuracyMarker, {
 			parentComponent: parent,
 			propsData: {
 				accuracy: 100,
@@ -81,8 +80,8 @@ describe('UserAccuracyMarker.vue', () => {
 		});
 
 		assert.isTrue(marker.setLatLng.calledTwice);
-		assert.isTrue(marker.setLatLng.calledWith([11, 10]));
-		assert.isTrue(marker.setLatLng.calledWith([11, 12]));
+		assert.isTrue(marker.setLatLng.calledWith({lat: 11, lng: 10}));
+		assert.isTrue(marker.setLatLng.calledWith({lat: 11, lng: 12}));
 	});
 
 	it('updates icon size when accuracy changes', () => {
@@ -102,7 +101,7 @@ describe('UserAccuracyMarker.vue', () => {
 			}
 		};
 
-		const wrapper = shallowMount(UserAccuracyMarker, {
+		const wrapper = shallowMount(MapUserAccuracyMarker, {
 			parentComponent: parent,
 			propsData: {
 				accuracy: 100,
@@ -135,7 +134,7 @@ describe('UserAccuracyMarker.vue', () => {
 			}
 		};
 
-		const wrapper = shallowMount(UserAccuracyMarker, {
+		const wrapper = shallowMount(MapUserAccuracyMarker, {
 			parentComponent: parent,
 			propsData: {
 				accuracy: 100,
@@ -165,7 +164,7 @@ describe('UserAccuracyMarker.vue', () => {
 			}
 		};
 
-		const wrapper = shallowMount(UserAccuracyMarker, {
+		const wrapper = shallowMount(MapUserAccuracyMarker, {
 			parentComponent: parent,
 			mocks: {
 				$bus,

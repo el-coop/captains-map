@@ -1,0 +1,20 @@
+.v--modal-overlay {
+	pointer-events: visible;
+}
+
+.v--modal-box {
+	max-height: 100%;
+	overflow: visible !important;
+}
+
+.v--modal {
+	background: transparent !important;
+}
+
+.v--modal__close{
+	color: $grey-light;
+
+	&:hover {
+		color: $white;
+	}
+}

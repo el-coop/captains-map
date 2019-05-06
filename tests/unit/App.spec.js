@@ -5,17 +5,18 @@ import sinon from "sinon";
 
 describe('App.vue', () => {
 
+	const stubs = {
+		RouterView: true
+	};
 
 	it('renders', () => {
 		const wrapper = shallowMount(App, {
-			stubs: {
-				'router-view': true
-			}
+			stubs
 		});
 
-		assert.isTrue(wrapper.find('map-view-stub').exists());
-		assert.isTrue(wrapper.find('not-found-stub').exists());
-		assert.isTrue(wrapper.find('router-view-stub').exists());
+		assert.isTrue(wrapper.find('themap-stub').exists());
+		assert.isTrue(wrapper.find('notfound-stub').exists());
+		assert.isTrue(wrapper.find('routerview-stub').exists());
 
 	});
 
@@ -24,9 +25,7 @@ describe('App.vue', () => {
 		global.window.addEventListener = sinon.stub();
 
 		const wrapper = shallowMount(App, {
-			stubs: {
-				'router-view': true
-			}
+			stubs
 		});
 
 		assert.isTrue(global.window.addEventListener.calledOnce);
@@ -37,9 +36,7 @@ describe('App.vue', () => {
 		const dispatchStub = sinon.stub().returns(true);
 
 		const wrapper = shallowMount(App, {
-			stubs: {
-				'router-view': true
-			},
+			stubs,
 			mocks: {
 				$store: {
 					dispatch: dispatchStub
@@ -60,9 +57,7 @@ describe('App.vue', () => {
 		global.window.removeEventListener = sinon.stub();
 
 		const wrapper = shallowMount(App, {
-			stubs: {
-				'router-view': true
-			}
+			stubs
 		});
 
 		wrapper.destroy();

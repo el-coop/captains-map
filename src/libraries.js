@@ -30,9 +30,9 @@ import VueIziToast from 'vue-izitoast';
 
 library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faSignOutAlt, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia, faUserAlt, faChevronDown, faSignInAlt, faExternalLinkSquareAlt, faSearchLocation);
 
-Vue.use(VModal);
+Vue.use(VModal, {componentName: "VModal"});
 Vue.use(Meta);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('FontAwesomeIcon', FontAwesomeIcon);
 Vue.use(HttpService);
 Vue.use(VueClipboard);
 Vue.use(VueIziToast, {

@@ -55,11 +55,12 @@ describe('UploadService.js', () => {
 			}
 		});
 
-		const formData = new FormData();
 		await uploadService.upload(marker);
 
 		assert.isTrue(postStub.calledOnce);
-		assert.isTrue(postStub.calledWith('marker/create', formData));
+		assert.isTrue(postStub.calledWith('marker/create'));
+		assert.equal(postStub.firstCall.args[1].get('media[type]'), 'instagram');
+		assert.equal(postStub.firstCall.args[1].get('uploadTime'), 1);
 
 		assert.isTrue(dispatchStub.calledOnce);
 		assert.isTrue(dispatchStub.calledWith("Uploads/uploaded", {

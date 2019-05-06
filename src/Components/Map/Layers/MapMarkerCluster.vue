@@ -13,13 +13,12 @@
 	}
 
 	export default {
-		name: "MarkerCluster",
+		name: "MapMarkerCluster",
 		mixins: [MapObjectMixin],
 
 		data() {
 			return {
 				mapObject: null,
-				queue: []
 			}
 		},
 
@@ -28,11 +27,6 @@
 				this.mapObject = new leaflet.markerClusterGroup({
 					iconCreateFunction: this.createIcon.bind(this)
 				});
-				while (this.queue.length) {
-					const marker = this.queue.pop();
-					this.addObject(marker);
-
-				}
 			},
 
 			createIcon(cluster) {
@@ -60,7 +54,7 @@
 				if (this.mapObject) {
 					this.mapObject.addLayer(marker);
 				} else {
-					this.queue.push(marker)
+					this.queuedActions.push(['addObject', [marker]])
 				}
 			},
 

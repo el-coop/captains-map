@@ -27,7 +27,7 @@
 </template>
 
 <script>
-	import SlideUpModal from "@/Components/Utilities/SlideUpModal";
+	import SlideUpModal from "@/Components/Utilities/BaseModal";
 	import auth from '@/Services/authentication.service';
 	import Photo from '@/Components/Global/Media/Photo';
 	import Instagram from '@/Components/Global/Media/Instagram';

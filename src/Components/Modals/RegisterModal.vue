@@ -20,7 +20,7 @@
 		<template #footer>
 			<p class="card-footer-item">
                     <span>
-                        <a href="#" @click="$modal.hide('register')">Close</a>
+                        <a @click="$modal.hide('register')">Close</a>
                     </span>
 			</p>
 			<p class="card-footer-item">
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-	import SlideUpModal from "@/Components/Utilities/SlideUpModal";
+	import SlideUpModal from "@/Components/Utilities/BaseModal";
 
 	export default {
 		name: "register-modal",

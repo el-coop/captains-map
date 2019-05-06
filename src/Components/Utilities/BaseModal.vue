@@ -1,5 +1,5 @@
 <template>
-	<modal :name="name" transition="slide-up-opacity" :height="height" :adaptive="true"
+	<VModal :name="name" transition="slide-up-opacity" :height="height" :adaptive="true"
 		   :width="width"
 		   :scrollable="true"
 		   :pivotY="pivotY"
@@ -11,9 +11,9 @@
 		<div class="card">
 			<div class="card-header dashboard__control--dark">
 				<slot name="header"/>
-				<a class="card-header-icon" @click="$modal.hide(name)">
+				<a class="card-header-icon v--modal__close" @click="$modal.hide(name)">
                     <span class="icon">
-                        <font-awesome-icon icon="times-circle"/>
+                        <FontAwesomeIcon icon="times-circle"/>
                     </span>
 				</a>
 			</div>
@@ -27,12 +27,12 @@
 				<slot name="footer"/>
 			</footer>
 		</div>
-	</modal>
+	</VModal>
 </template>
 
 <script>
 	export default {
-		name: "slide-up-modal",
+		name: "base-modal",
 
 		props: {
 			name: {
@@ -58,15 +58,21 @@
 		},
 
 		mounted() {
-			window.addEventListener('popstate', () => {
+			window.addEventListener('popstate', this.hideOnBack);
+		},
+
+		beforeDestroy() {
+			window.removeEventListener('popstate', this.hideOnBack);
+		},
+
+		methods: {
+			hideOnBack() {
 				if (this.isOpen) {
 					this.isOpen = false;
 					this.$modal.hide(this.name);
 				}
-			});
-		},
+			},
 
-		methods: {
 			beforeOpen() {
 				this.isOpen = true;
 				this.$emit('before-open');
@@ -98,18 +104,3 @@
 		},
 	}
 </script>
-
-<style lang="scss" scoped>
-	@import "~$scss/variables";
-
-	.card {
-
-		a.card-header-icon {
-			color: $white-ter;
-
-			&:hover {
-				color: $white-bis;
-			}
-		}
-	}
-</style>

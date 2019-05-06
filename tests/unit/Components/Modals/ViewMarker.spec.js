@@ -7,11 +7,11 @@ import auth from '@/Services/authentication.service';
 describe('ViewMarker.vue', () => {
 	let marker;
 	const stubs = {
-		modal: true,
+		VModal: true,
 		'view-marker-header': true,
 		'view-marker-content': true,
 		'photo': true,
-		'font-awesome-icon': true,
+		FontAwesomeIcon: true,
 		'instagram': true
 	};
 
@@ -42,7 +42,7 @@ describe('ViewMarker.vue', () => {
 			stubs
 		});
 
-		assert.isTrue(wrapper.find('modal-stub').exists());
+		assert.isTrue(wrapper.find('vmodal-stub').exists());
 		assert.isTrue(wrapper.find('view-marker-header-stub').exists());
 		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
 		assert.isTrue(wrapper.find('photo-stub').exists());
@@ -58,7 +58,7 @@ describe('ViewMarker.vue', () => {
 			stubs
 		});
 
-		assert.isTrue(wrapper.find('modal-stub').exists());
+		assert.isTrue(wrapper.find('vmodal-stub').exists());
 		assert.isTrue(wrapper.find('view-marker-header-stub').exists());
 		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
 		assert.isTrue(wrapper.find('instagram-stub').exists());

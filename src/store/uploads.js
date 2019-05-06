@@ -118,6 +118,7 @@ export default {
 					data['media[image]'] = oldData['media[image]'];
 				}
 			}
+			data.error = null;
 			commit("removeFromErrored", data.uploadTime);
 			commit("pushToQueue", data);
 
