@@ -20,13 +20,13 @@
 		created() {
 			this.$bus.$on('moving-map', this.closeSidebar);
 			this.$bus.$on('marker-click', this.showMarker);
-			this.$bus.$on('map-right-click', this.createMarker);
+			this.$bus.$on('map-create-marker', this.createMarker);
 			this.$bus.$on('user-marker-click', this.createMarker);
 		},
 		beforeDestroy() {
 			this.$bus.$off('marker-click', this.showMarker);
 			this.$bus.$off('moving-map', this.closeSidebar);
-			this.$bus.$off('map-right-click', this.createMarker);
+			this.$bus.$off('map-create-marker', this.createMarker);
 			this.$bus.$off('user-marker-click', this.createMarker);
 		},
 

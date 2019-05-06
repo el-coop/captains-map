@@ -11,7 +11,7 @@ describe('MapUserMarker.vue', () => {
 	let mocks;
 	let mapObject;
 	let parent;
-	let divIcon
+	let divIcon;
 
 	beforeEach(() => {
 		mocks = {

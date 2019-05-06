@@ -64,3 +64,40 @@
 		}
 	}
 }
+
+
+.map--zoom-far {
+	.map__icon-wrapper {
+		height: 20px;
+	}
+
+	.map__cluster-wrapper-counter {
+		font-size: 0.8rem;
+		width: 1.2rem;
+		height: 1.2rem;
+	}
+}
+
+.map--zoom-medium {
+	.map__icon-wrapper {
+		height: 25px;
+		@media #{$above-phone} {
+			height: 30px;
+		}
+	}
+
+	.map__cluster-wrapper-counter {
+		font-size: 0.9rem;
+		width: 1.3rem;
+		height: 1.3rem;
+	}
+}
+
+.map--zoom-close {
+	.map__icon-wrapper {
+		height: 45px;
+		@media #{$above-phone} {
+			height: 50px;
+		}
+	}
+}

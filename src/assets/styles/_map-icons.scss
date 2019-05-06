@@ -13,6 +13,28 @@
 	}
 }
 
+.map__marker--uploading {
+	position: relative;
+	overflow: hidden;
+	filter: grayscale(100);
+
+	&:after {
+		background-color: transparentize($black, 0.4);
+		animation: spinAround 500ms infinite linear;
+		border: 0.25em solid $grey-lighter;
+		border-radius: $radius-rounded;
+		border-right-color: transparent;
+		border-top-color: transparent;
+		content: "";
+		display: block;
+		top: calc(50% - 0.7em);
+		left: calc(50% - 0.7em);
+		width: 1.4em;
+		height: 1.4em;
+		position: absolute;
+	}
+}
+
 .map__marker--queued:after {
 	content: 'QUEUE';
 	background-color: transparentize($black, 0.4);
@@ -58,38 +80,3 @@
 	}
 }
 
-.zoom-far {
-	.map__icon-wrapper {
-		height: 20px;
-	}
-
-	.map__cluster-wrapper-counter {
-		font-size: 0.8rem;
-		width: 1.2rem;
-		height: 1.2rem;
-	}
-}
-
-.zoom-medium {
-	.map__icon-wrapper {
-		height: 25px;
-		@media #{$above-phone} {
-			height: 30px;
-		}
-	}
-
-	.map__cluster-wrapper-counter {
-		font-size: 0.9rem;
-		width: 1.3rem;
-		height: 1.3rem;
-	}
-}
-
-.zoom-close {
-	.map__icon-wrapper {
-		height: 45px;
-		@media #{$above-phone} {
-			height: 50px;
-		}
-	}
-}

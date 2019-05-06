@@ -1,19 +1,16 @@
 <template>
-	<div :class="`zoom-${zoomStatus}`">
+	<div :class="zoomStatus">
 		<div class="map" ref="map">
-			<MapUserMarkerControl/>
-			<MapUserMarker v-if="userMarker"/>
+			<MapUserMarkerControl key="userMarkerController"/>
+			<MapUserMarker v-if="userMarker" key="userMarker"/>
 
-			<upload-marker v-for="marker in uploadMarkers" :marker="marker"
-						   :key="`uploads_${Date.now()}_${marker.uploadTime}`"
-						   v-if="$router.currentRoute.name === 'edit'"/>
-
-			<upload-marker v-for="marker in erroredMarkers" :marker="marker"
-						   :key="`errors_${Date.now()}_${marker.uploadTime}`" status="error"
-						   v-if="$router.currentRoute.name === 'edit'"/>
-			<marker-cluster ref="markerCluster">
+			<template v-if="$router.currentRoute.name === 'edit'">
+				<MapUploadMarker v-for="marker in uploadMarkers" :marker="marker"
+								 :key="`uploads_${marker.uploadTime}`"/>
+			</template>
+			<marker-cluster ref="markerCluster" key="cluster">
 				<map-marker v-for="marker in markers" :layer="$refs.markerCluster" :marker="marker"
-							:key="`${Date.now()}_${marker.id}`"/>
+							:key="`marker_${marker.id}`"/>
 			</marker-cluster>
 		</div>
 	</div>
@@ -24,17 +21,17 @@
 	import Map from '@/Services/LeafletMapService';
 	import MapUserMarkerControl from "@/Components/Map/Controls/MapUserMarkerControl";
 	import MapUserMarker from '@/Components/Map/Markers/MapUserMarker';
+	import MapUploadMarker from "@/Components/Map/Markers/MapUploadMarker";
 
 	import MapMarker from '@/Components/Map/Markers/MapMarker';
 	import MarkerCluster from "@/Components/Map/Layers/MarkerCluster";
-	import UploadMarker from "@/Components/Map/Markers/UploadMarker";
 
 	export default {
 		name: "TheMap",
 
 		components: {
 			MapUserMarkerControl,
-			UploadMarker,
+			MapUploadMarker,
 			MarkerCluster,
 			MapMarker,
 			MapUserMarker
@@ -55,13 +52,14 @@
 
 		data() {
 			return {
-				zoomStatus: 'normal'
+				zoomStatus: 'map--zoom-normal',
+				initialized: false
 			}
 		},
 
 		methods: {
 			rightClick(event) {
-				this.$bus.$emit('map-right-click', {
+				this.$bus.$emit('map-create-marker', {
 					event
 				});
 			},
@@ -69,15 +67,15 @@
 			handleZoom(event) {
 				let zoomLevel = event.target._animateToZoom;
 				if (zoomLevel < 5) {
-					return this.zoomStatus = 'far';
+					return this.zoomStatus = 'map--zoom-far';
 				}
 				if (zoomLevel < 10) {
-					return this.zoomStatus = 'medium';
+					return this.zoomStatus = 'map--zoom-medium';
 				}
 				if (zoomLevel < 15) {
-					return this.zoomStatus = 'normal';
+					return this.zoomStatus = 'map--zoom-normal';
 				}
-				return this.zoomStatus = 'close';
+				return this.zoomStatus = 'map--zoom-close';
 			},
 
 			addObject(object) {
@@ -99,10 +97,7 @@
 				return this.$store.state.Markers.userMarker;
 			},
 			uploadMarkers() {
-				return this.$store.state.Uploads.queue;
-			},
-			erroredMarkers() {
-				return this.$store.state.Uploads.errored;
+				return this.$store.getters['Uploads/allFiles'];
 			},
 		},
 
@@ -114,6 +109,6 @@
 
 		beforeDestroy() {
 			Map.off();
-		}
+		},
 	}
 </script>

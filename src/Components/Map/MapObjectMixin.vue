@@ -7,7 +7,8 @@
 				event: 'marker-click',
 				eventPayload: {},
 				mapObject: null,
-				iconSize: 'auto'
+				iconSize: 'auto',
+				queuedActions: []
 			}
 		},
 
@@ -15,6 +16,7 @@
 			this.setUp();
 			if (this.mapObject) {
 				this.addToMap();
+				this.runQueuedActions();
 			}
 		},
 
@@ -38,33 +40,52 @@
 				}).on('click', this.onClick.bind(this));
 			},
 
-			addToMap() {
-				if (this.mapObject) {
-					this.$parent.addObject(this.mapObject);
+			runQueuedActions() {
+				let action;
+				while (action = this.queuedActions.pop()) {
+					this[action[0]](...action[1]);
 				}
 			},
+
+			addToMap() {
+				this.$parent.addObject(this.mapObject);
+			},
 			removeFromMap() {
-				if (this.mapObject) {
-					this.$parent.removeObject(this.mapObject);
-				}
+				this.$parent.removeObject(this.mapObject);
 			},
 			onClick() {
 				this.$bus.$emit(this.event, this.payload);
 			},
 
 			setIcon(icon) {
-				this.mapObject.setIcon(icon);
+				if (this.mapObject) {
+					this.mapObject.setIcon(icon);
+				} else {
+					this.queuedActions.push(['setIcon', [icon]]);
+				}
 			},
 
 			addClass(addedClass) {
-				this.mapObject.getElement().firstChild.classList.add(addedClass);
+				if (this.mapObject) {
+					this.mapObject.getElement().firstChild.classList.add(addedClass);
+				} else {
+					this.queuedActions.push(['addClass', [addedClass]]);
+				}
 			},
 			removeClass(removedClass) {
-				this.mapObject.getElement().firstChild.classList.remove(removedClass);
+				if (this.mapObject) {
+					this.mapObject.getElement().firstChild.classList.remove(removedClass);
+				} else {
+					this.queuedActions.push(['removeClass', [removedClass]]);
+				}
 			},
 
 			setLatLng(lat, lng) {
-				this.mapObject.setLatLng({lat, lng});
+				if (this.mapObject) {
+					this.mapObject.setLatLng({lat, lng});
+				} else {
+					this.queuedActions.push(['setLatLng', [lat, lng]]);
+				}
 			}
 		}
 
