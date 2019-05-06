@@ -8,10 +8,10 @@
 				<MapUploadMarker v-for="marker in uploadMarkers" :marker="marker"
 								 :key="`uploads_${marker.uploadTime}`"/>
 			</template>
-			<marker-cluster ref="markerCluster" key="cluster">
-				<map-marker v-for="marker in markers" :layer="$refs.markerCluster" :marker="marker"
-							:key="`marker_${marker.id}`"/>
-			</marker-cluster>
+			<MapMarkerCluster key="cluster">
+				<MapMarker v-for="marker in markers" :marker="marker"
+						   :key="`marker_${marker.id}`"/>
+			</MapMarkerCluster>
 		</div>
 	</div>
 </template>
@@ -24,7 +24,7 @@
 	import MapUploadMarker from "@/Components/Map/Markers/MapUploadMarker";
 
 	import MapMarker from '@/Components/Map/Markers/MapMarker';
-	import MarkerCluster from "@/Components/Map/Layers/MarkerCluster";
+	import MapMarkerCluster from "@/Components/Map/Layers/MapMarkerCluster";
 
 	export default {
 		name: "TheMap",
@@ -32,7 +32,7 @@
 		components: {
 			MapUserMarkerControl,
 			MapUploadMarker,
-			MarkerCluster,
+			MapMarkerCluster,
 			MapMarker,
 			MapUserMarker
 		},

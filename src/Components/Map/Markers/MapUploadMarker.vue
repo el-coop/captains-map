@@ -5,6 +5,10 @@
 		name: "MapUploadMarker",
 		extends: MapMarker,
 
+		mounted(){
+			this.setStatus();
+		},
+
 		methods: {
 			calculateSrc() {
 				return this.calculateUnverifiedImage(this.marker)
@@ -43,11 +47,8 @@
 				this.setStatus();
 			},
 
-			'marker.error': {
-				handler() {
-					this.setStatus();
-				},
-				immediate: true
+			'marker.error'() {
+				this.setStatus();
 			}
 		}
 	}

@@ -5,7 +5,7 @@ import leaflet from 'leaflet';
 import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
 
-describe.only('MapUploadMarker.vue', () => {
+describe('MapUploadMarker.vue', () => {
 	const parent = {
 		methods: {
 			addObject: sinon.spy(),
@@ -69,13 +69,13 @@ describe.only('MapUploadMarker.vue', () => {
 		const createIconStub = sinon.stub(leaflet, 'divIcon');
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(mapObject);
 		const wrapper = shallowMount(MapUploadMarker, {
-			sync: false,
 			parentComponent: parent,
 			propsData: {
 				marker
 			},
 			mocks
 		});
+
 		assert.isTrue(wrapper.find('div').exists());
 		assert.isTrue(createIconStub.calledOnce);
 		assert.isTrue(createIconStub.calledWith({
@@ -100,7 +100,6 @@ describe.only('MapUploadMarker.vue', () => {
 		};
 		shallowMount(MapUploadMarker, {
 			parentComponent: parent,
-			sync: false,
 			propsData: {
 				marker,
 			},
@@ -111,13 +110,12 @@ describe.only('MapUploadMarker.vue', () => {
 		assert.isTrue(divIcon.firstChild.classList.add.calledWith('map__marker--error'));
 	});
 
-	it('Sets marker to upload when it is being worked', () => {
+	it('Sets marker to upload when it is being worked', async () => {
 		sinon.stub(leaflet, 'divIcon');
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 
 		const wrapper = shallowMount(MapUploadMarker, {
 			parentComponent: parent,
-			sync: false,
 			propsData: {
 				marker,
 			},
@@ -126,9 +124,10 @@ describe.only('MapUploadMarker.vue', () => {
 
 		mocks.$store.state.Uploads.workingId = 2;
 
-		wrapper.vm.setStatus();
+		await wrapper.vm.$nextTick();
 
 		assert.isTrue(divIcon.firstChild.classList.add.calledTwice);
+		assert.isTrue(divIcon.firstChild.classList.add.firstCall.calledWith('map__marker--queued'));
 		assert.isTrue(divIcon.firstChild.classList.add.secondCall.calledWith('map__marker--uploading'));
 	});
 
@@ -137,12 +136,15 @@ describe.only('MapUploadMarker.vue', () => {
 		sinon.stub(mapService, 'addObject');
 
 		const wrapper = shallowMount(MapUploadMarker, {
-			sync: false,
 			parentComponent: parent,
 			propsData: {
 				marker
 			},
 			mocks
+		});
+
+		wrapper.setData({
+			mapObject
 		});
 
 		wrapper.destroy();
@@ -157,7 +159,6 @@ describe.only('MapUploadMarker.vue', () => {
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 
 		const wrapper = shallowMount(MapUploadMarker, {
-			sync: false,
 			parentComponent: parent,
 			mocks,
 			propsData: {
@@ -179,7 +180,6 @@ describe.only('MapUploadMarker.vue', () => {
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 
 		const wrapper = shallowMount(MapUploadMarker, {
-			sync: false,
 			parentComponent: parent,
 			mocks,
 			propsData: {

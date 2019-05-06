@@ -123,7 +123,7 @@ describe('UploadEntry.vue', () => {
 		assert.isTrue(wrapper.find('.uploading').exists());
 	});
 
-	it('Sets classname to error when has errors', async () => {
+	it('Sets classname to error when has errors', () => {
 		marker.error = {
 			test: 'best'
 		};

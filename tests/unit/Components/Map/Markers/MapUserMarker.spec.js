@@ -162,7 +162,6 @@ describe('MapUserMarker.vue', () => {
 			lat: 0,
 			lng: 0
 		}));
-		console.log(divIcon.firstChild.classList.remove.args);
 		assert.isTrue(divIcon.firstChild.classList.remove.calledOnce);
 		assert.isTrue(divIcon.firstChild.classList.remove.calledWith('map__user-marker--old'));
 	});

@@ -74,7 +74,7 @@ describe('TheMap.vue', () => {
 		const wrapper = shallowMount(TheMap, {
 			mocks
 		});
-		assert.equal(wrapper.findAll('map-marker-stub').length, 3);
+		assert.equal(wrapper.findAll('mapmarker-stub').length, 3);
 	});
 
 	it('renders second page of markers markers', () => {
@@ -84,7 +84,7 @@ describe('TheMap.vue', () => {
 		const wrapper = shallowMount(TheMap, {
 			mocks
 		});
-		assert.equal(wrapper.findAll('map-marker-stub').length, 3);
+		assert.equal(wrapper.findAll('mapmarker-stub').length, 3);
 	});
 
 	it('renders userMarker', () => {
