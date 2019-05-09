@@ -1,6 +1,6 @@
 <template>
 	<div class="map__icon-wrapper map__marker">
-		<img :src="src" :class="markerClass"
+		<img :src="src" class="map__icon" :class="markerClass"
 			 :alt="alt">
 	</div>
 </template>

@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import EditLayout from '@/Views/EditLayout.vue';
+import EditLayout from '@/Views/EditPage.vue';
 import { assert } from 'chai';
 import sinon from "sinon";
 import map from "@/Services/LeafletMapService";

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import ViewLayout from '@/Views/ViewLayout.vue';
+import ViewLayout from '@/Views/ViewPage.vue';
 import { assert } from 'chai';
 import map from '@/Services/LeafletMapService';
 import sinon from 'sinon';
@@ -8,7 +8,7 @@ import router from '@/router';
 
 describe('ViewLayout.vue', () => {
 	let mocks;
-
+	//
 	beforeEach(() => {
 		mocks = {
 			$store: {

@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import Dashboard from '@/Components/Dashboard/Dashboard';
+import Dashboard from '@/Components/Dashboard/TheDashboard';
 import sinon from 'sinon';
 import Auth from '@/Services/authentication.service';
 

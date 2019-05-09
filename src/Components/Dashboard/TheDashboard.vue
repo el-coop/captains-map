@@ -1,15 +1,16 @@
 <template>
 	<div class="dashboard" :class="{'dashboard--with-profile': hasUsername}">
 		<div class="dashboard__header dashboard__control dashboard__control--dark">
-			<logged-in-bar v-if="loggedIn"/>
-			<logged-out-bar v-else/>
+			<LoggedInBar v-if="loggedIn"/>
+			<LoggedOutBar v-else/>
 		</div>
+
 		<div class="dashboard__body">
-			<profile v-if="hasUsername"></profile>
+			<Profile v-if="hasUsername"></Profile>
 			<div v-else></div>
 			<transition name="slide-up">
 				<div class="dashboard__control dashboard__body-sidebar" v-if="openSidebar">
-					<marker-list/>
+					<MarkerList/>
 					<div class="content copyright">
 						Map data available thanks to © OpenStreetMap contributors.<br>
 						© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> | © <a
@@ -19,44 +20,73 @@
 				</div>
 			</transition>
 		</div>
+
 		<div class="dashboard__control dashboard__footer is-hidden-tablet">
-			<marker-borders-filter class="h-100">
+			<MarkerBordersFilter class="h-100">
 				<button class="button is-light is-outlined is-marginless is-faded has-icon-top"
 						@click="openSidebar = !openSidebar">
-					<font-awesome-icon icon="list" size="sm"/>
+					<FontAwesomeIcon icon="list" size="sm"/>
 					<span class="is-size-7">Show {{ openSidebar ? 'Map' : 'List'}}</span>
 				</button>
-			</marker-borders-filter>
+			</MarkerBordersFilter>
 		</div>
-		<create-marker v-if="editMode" :latLng="latLng" :marker="editedMarker"/>
-		<view-marker :marker="selectedMarker"/>
+
+		<ViewMarker :marker="selectedMarker"/>
 	</div>
 </template>
 
 <script>
-	import DashboardMixin from '@/Components/Dashboard/DashboardMixin';
 	import MarkerList from "@/Components/Dashboard/SideBar/MarkerList";
 	import ViewMarker from "@/Components/Modals/ViewMarker";
 	import Profile from "@/Components/Dashboard/Profile";
-	import CreateMarker from "@/Components/Modals/CreateMarker";
 	import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
 	import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar';
 	import auth from '@/Services/authentication.service';
 	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter";
 
 	export default {
-		name: "dashboard",
+		name: "TheDashboard",
 
-		mixins: [DashboardMixin],
 
 		components: {
 			MarkerBordersFilter,
 			Profile,
 			ViewMarker,
-			CreateMarker,
 			MarkerList,
 			LoggedInBar,
 			LoggedOutBar
+		},
+
+
+		data() {
+			return {
+				selectedMarker: null,
+				openSidebar: window.matchMedia("(min-width: 769px)").matches,
+				mountModal: false,
+			}
+		},
+
+		created() {
+			this.$bus.$on('moving-map', this.closeSidebar);
+			this.$bus.$on('marker-click', this.showMarker);
+		},
+		beforeDestroy() {
+			this.$bus.$off('marker-click', this.showMarker);
+			this.$bus.$off('moving-map', this.closeSidebar);
+		},
+
+		methods: {
+			showMarker(marker) {
+				this.selectedMarker = marker;
+				this.$modal.show('view-marker');
+			},
+
+			closeSidebar() {
+				if (!window.matchMedia("(min-width: 769px)").matches) {
+					this.openSidebar = false;
+				}
+			},
+
 		},
 
 		computed: {

@@ -83,6 +83,7 @@ export default {
 				}
 				let route = `marker/${state.username}`;
 				if (startingId) {
+					console.log(startingId);
 					if (pageIncluding) {
 						route += `/${startingId}`;
 					} else {
