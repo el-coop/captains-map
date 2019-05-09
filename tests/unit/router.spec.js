@@ -27,7 +27,7 @@ describe('router', () => {
 			return item.path === '/edit';
 		});
 		assert.isNotNull(editRoute);
-		assert.equal(editRoute.component.name,'edit-layout');
+		assert.equal(editRoute.component.name,'EditPage');
 	});
 
 
@@ -36,6 +36,6 @@ describe('router', () => {
 			return item.path === '/:username?/:marker?';
 		});
 		assert.isNotNull(viewRoute);
-		assert.equal(viewRoute.component.name,'view-layout');
+		assert.equal(viewRoute.component.name,'ViewPage');
 	});
 });

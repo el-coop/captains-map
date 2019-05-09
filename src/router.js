@@ -1,6 +1,6 @@
 import Router from 'vue-router';
-import ViewLayout from '@/Views/ViewLayout';
-import EditLayout from '@/Views/EditLayout';
+import ViewPage from '@/Views/ViewPage';
+import EditPage from '@/Views/EditPage';
 import Auth from '@/Middleware/Auth.middleware';
 import cache from "@/Services/cache.service";
 
@@ -10,13 +10,13 @@ const router = new Router({
 		{
 			path: '/edit',
 			name: 'edit',
-			component: EditLayout,
+			component: EditPage,
 			beforeEnter: Auth.handle
 		},
 		{
 			path: '/:username?/:marker?',
 			name: 'view',
-			component: ViewLayout
+			component: ViewPage
 		},
 	]
 });

@@ -1,5 +1,5 @@
 <template>
-	<slide-up-modal name="register" route-name="">
+	<BaseModal name="register" route-name="">
 		<template #header>
 			<p class="card-header-title">Register</p>
 		</template>
@@ -29,14 +29,14 @@
                     </span>
 			</p>
 		</template>
-	</slide-up-modal>
+	</BaseModal>
 </template>
 
 <script>
-	import SlideUpModal from "@/Components/Utilities/BaseModal";
+	import BaseModal from "@/Components/Utilities/BaseModal";
 
 	export default {
-		name: "register-modal",
-		components: {SlideUpModal},
+		name: "RegisterModal",
+		components: {BaseModal},
 	}
 </script>

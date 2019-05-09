@@ -1,5 +1,5 @@
 <template>
-	<slide-up-modal name="login" route-name="">
+	<BaseModal name="login" route-name="">
 		<template #header>
 			<p class="card-header-title">Login</p>
 		</template>
@@ -20,9 +20,9 @@
 		</template>
 		<template #footer>
 			<p class="card-footer-item">
-                    <span>
-                        <a href="#" @click="$modal.hide('login')">Close</a>
-                    </span>
+				<span>
+					<a href="#" @click="$modal.hide('login')">Close</a>
+				</span>
 			</p>
 			<p class="card-footer-item">
 				<button class="button is-primary is-fullwidth" @click="login"
@@ -31,16 +31,15 @@
 				</button>
 			</p>
 		</template>
-	</slide-up-modal>
+	</BaseModal>
 </template>
 
 <script>
-	import AjaxForm from "@/Components/Utilities/AjaxForm";
-	import SlideUpModal from "@/Components/Utilities/BaseModal";
+	import BaseModal from "@/Components/Utilities/BaseModal";
 
 	export default {
-		components: {SlideUpModal, AjaxForm},
-		name: "login-modal",
+		components: {BaseModal},
+		name: "LoginModal",
 
 		data() {
 			return {
@@ -68,7 +67,3 @@
 		}
 	}
 </script>
-
-<style scoped>
-
-</style>

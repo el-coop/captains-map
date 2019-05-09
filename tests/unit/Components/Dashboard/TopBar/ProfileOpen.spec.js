@@ -26,7 +26,7 @@ describe('ProfileOpen.vue', () => {
 		};
 
 		stubs = {
-			fontAwesomeIcon: true
+			FontAwesomeIcon: true
 		};
 	});
 
@@ -42,7 +42,7 @@ describe('ProfileOpen.vue', () => {
 		});
 
 		assert.equal(wrapper.find('img').element.src, 'http://localhost/api/testpath');
-		assert.equal(wrapper.find('span.button-text').text(), 'test');
+		assert.equal(wrapper.find('.profile-open__button-text').text(), 'test');
 	});
 
 
@@ -54,7 +54,7 @@ describe('ProfileOpen.vue', () => {
 		});
 
 		assert.equal(wrapper.find('img').element.src, `http://localhost${globe}`);
-		assert.equal(wrapper.find('span.button-text').text(), 'test');
+		assert.equal(wrapper.find('.profile-open__button-text').text(), 'test');
 	});
 
 	it('Triggers toggle on store when clicked', () => {

@@ -45,38 +45,3 @@
 	background-color: transparentize($red, 0.4);
 }
 
-.map__icon-wrapper {
-	height: 35px;
-	@media #{$above-phone} {
-		height: 40px;
-	}
-	background-color: $background;
-	pointer-events: visible;
-
-	.map__icon {
-		height: 100%;
-		border-style: solid;
-		border-width: 2px;
-
-		&-Visited {
-			@extend .map__icon;
-			border-color: $turquoise;
-		}
-
-		&-Plan {
-			@extend .map__icon;
-			border-color: $cyan;
-		}
-
-		&-Suggestion {
-			@extend .map__icon;
-			border-color: $red;
-		}
-
-		&-Other {
-			@extend .map__icon;
-			border-color: $white-ter;
-		}
-	}
-}
-

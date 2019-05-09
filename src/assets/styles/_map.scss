@@ -10,6 +10,7 @@
 		display: none;
 	}
 
+
 	&__cluster-wrapper {
 		position: relative;
 
@@ -63,6 +64,39 @@
 			border: 1px solid darken(#06f, 0.1);
 		}
 	}
+
+	&__icon-wrapper {
+		height: 35px;
+		@media #{$above-phone} {
+			height: 40px;
+		}
+		background-color: $background;
+		pointer-events: visible;
+	}
+
+	&__icon {
+		height: 100%;
+		border-style: solid;
+		border-width: 2px;
+
+		&-Visited {
+			border-color: $turquoise;
+		}
+
+		&-Plan {
+			border-color: $cyan;
+		}
+
+		&-Suggestion {
+			border-color: $red;
+		}
+
+		&-Other {
+			border-color: $white-ter;
+		}
+	}
+
+
 }
 
 
