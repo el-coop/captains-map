@@ -6,7 +6,7 @@
 		</div>
 
 		<div class="dashboard__body">
-			<Profile v-if="hasUsername"></Profile>
+			<Profile v-if="hasUsername"/>
 			<div v-else></div>
 			<transition name="slide-up">
 				<div class="dashboard__control dashboard__body-sidebar" v-if="openSidebar">

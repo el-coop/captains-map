@@ -36,7 +36,7 @@
 	import BaseModal from "@/Components/Utilities/BaseModal";
 
 	export default {
-		name: "register-modal",
+		name: "RegisterModal",
 		components: {BaseModal},
 	}
 </script>
