@@ -1,9 +1,9 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import TopBar from '@/Components/Dashboard/TopBar/TopBar';
+import TheTopBar from '@/Components/Dashboard/TopBar/TheTopBar';
 import sinon from 'sinon';
 
-describe('TopBar.vue', () => {
+describe('TheTopBar.vue', () => {
 
 	let mocks;
 
@@ -25,21 +25,21 @@ describe('TopBar.vue', () => {
 
 
 	it('Renders without profile when no username', () => {
-		const wrapper = shallowMount(TopBar, {
+		const wrapper = shallowMount(TheTopBar, {
 			mocks
 		});
 
-		assert.isFalse(wrapper.find('profile-open-stub').exists());
+		assert.isFalse(wrapper.find('ProfileOpen-stub').exists());
 		assert.include(wrapper.find('img').element.src,'globe-icon');
 	});
 
 	it('Renders profile when no username', () => {
 		mocks.$store.state.Markers.username = 'test';
-		const wrapper = shallowMount(TopBar, {
+		const wrapper = shallowMount(TheTopBar, {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('profile-open-stub').exists());
+		assert.isTrue(wrapper.find('ProfileOpen-stub').exists());
 		assert.isFalse(wrapper.find('img').exists());
 	});
 });

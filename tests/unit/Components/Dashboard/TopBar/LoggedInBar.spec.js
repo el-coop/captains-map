@@ -12,7 +12,7 @@ describe('LoggedInBar.vue', () => {
 	beforeEach(() => {
 		stubs = {
 			'font-awesome-icon': true,
-			'profile-open': true
+			ProfileOpen: true
 		};
 		mocks = {
 			$router: {

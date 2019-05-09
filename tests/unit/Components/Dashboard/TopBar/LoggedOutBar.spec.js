@@ -6,9 +6,9 @@ import sinon from 'sinon';
 describe('LoggedOutBar.vue', () => {
 
 	const stubs = {
-		'font-awesome-icon': true,
-		'login-modal': true,
-		'register-modal': true,
+		FontAwesomeIcon: true,
+		LoginModal: true,
+		RegisterModal: true,
 	};
 	let mocks;
 
@@ -42,8 +42,8 @@ describe('LoggedOutBar.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('.top-bar').exists());
-		assert.isTrue(wrapper.find('login-modal-stub').exists());
-		assert.isTrue(wrapper.find('register-modal-stub').exists());
+		assert.isTrue(wrapper.find('loginmodal-stub').exists());
+		assert.isTrue(wrapper.find('registermodal-stub').exists());
 		assert.equal(wrapper.findAll('button.is-light.is-outlined').at(0).text(), 'Log In');
 		assert.equal(wrapper.findAll('button.is-light.is-outlined').at(1).text(), 'Register');
 	});

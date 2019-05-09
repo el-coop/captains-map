@@ -32,7 +32,7 @@
 
 <script>
 	export default {
-		name: "base-modal",
+		name: "BaseModal",
 
 		props: {
 			name: {

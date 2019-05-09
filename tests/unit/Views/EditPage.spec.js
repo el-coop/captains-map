@@ -6,8 +6,9 @@ import map from "@/Services/LeafletMapService";
 import auth from '@/Services/authentication.service';
 import Vue from 'vue';
 
-describe.only('EditPage.vue', () => {
+describe('EditPage.vue', () => {
 	let mocks;
+	let goToCurrentLocationStub;
 
 	beforeEach(() => {
 		mocks = {
@@ -38,6 +39,7 @@ describe.only('EditPage.vue', () => {
 		sinon.stub(auth, 'getUserDetails').returns({
 			username: 'test'
 		});
+		goToCurrentLocationStub = sinon.stub(map, 'goToCurrentLocation');
 	});
 
 
@@ -81,7 +83,6 @@ describe.only('EditPage.vue', () => {
 
 	it('Loads Markers', async () => {
 		{
-			const goToCurrentLocationStub = sinon.stub(map, 'goToCurrentLocation');
 			await shallowMount(EditPage, {
 				mocks
 			});
@@ -103,7 +104,6 @@ describe.only('EditPage.vue', () => {
 	});
 
 	it('Shows cache toast when loaded from cache', async () => {
-		sinon.stub(map, 'goToCurrentLocation');
 		mocks.$store.dispatch.returns({
 			status: 'cached'
 		});

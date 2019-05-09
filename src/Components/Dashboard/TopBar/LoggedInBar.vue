@@ -46,7 +46,7 @@
 	import Logout from "@/Components/Utilities/Logout";
 	import SearchBar from "@/Components/Dashboard/TopBar/SearchBar";
 	import auth from '@/Services/authentication.service';
-	import TopBar from "@/Components/Dashboard/TopBar/TopBar";
+	import TopBar from "@/Components/Dashboard/TopBar/TheTopBar";
 
 	export default {
 		name: "LoggedInBar",
