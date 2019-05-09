@@ -1,14 +1,14 @@
 import VueRouter from 'vue-router';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import ViewLayout from '@/Views/ViewPage.vue';
+import ViewPage from '@/Views/ViewPage.vue';
 import { assert } from 'chai';
 import map from '@/Services/LeafletMapService';
 import sinon from 'sinon';
 import router from '@/router';
 
-describe('ViewLayout.vue', () => {
+describe('ViewPage.vue', () => {
 	let mocks;
-	//
+
 	beforeEach(() => {
 		mocks = {
 			$store: {
@@ -42,21 +42,22 @@ describe('ViewLayout.vue', () => {
 
 	it('Renders', () => {
 		const loadMarkersSpy = sinon.spy();
-		const wrapper = shallowMount(ViewLayout, {
+		const wrapper = shallowMount(ViewPage, {
 			methods: {
 				loadMarkers: loadMarkersSpy
 			},
+			mocks
 		});
 
 		assert.isTrue(wrapper.find('.layout').exists());
-		assert.isTrue(wrapper.find('dashboard-stub').exists());
+		assert.isTrue(wrapper.find('TheDashboard-stub').exists());
 		assert.isTrue(loadMarkersSpy.calledOnce);
 	});
 
 	it('Loads Markers', async () => {
 		{
 			const mapSetViewStub = sinon.stub(map, 'setView');
-			await shallowMount(ViewLayout, {
+			await shallowMount(ViewPage, {
 				mocks
 			});
 
@@ -82,7 +83,7 @@ describe('ViewLayout.vue', () => {
 		mocks.$store.dispatch.returns({
 			status: 404
 		});
-		await shallowMount(ViewLayout, {
+		await shallowMount(ViewPage, {
 			mocks
 		});
 
@@ -98,7 +99,7 @@ describe('ViewLayout.vue', () => {
 		mocks.$toast = {
 			info: sinon.spy()
 		};
-		await shallowMount(ViewLayout, {
+		await shallowMount(ViewPage, {
 			mocks
 		});
 
@@ -109,7 +110,7 @@ describe('ViewLayout.vue', () => {
 	it('Goes to user location when no markers loaded', async () => {
 		const goToLocationStub = sinon.stub(map, 'goToCurrentLocation');
 		mocks.$store.state.Markers.markers = [];
-		await shallowMount(ViewLayout, {
+		await shallowMount(ViewPage, {
 			mocks
 		});
 
@@ -129,7 +130,7 @@ describe('ViewLayout.vue', () => {
 		}];
 
 		mocks.$route.params.marker = 2;
-		await shallowMount(ViewLayout, {
+		await shallowMount(ViewPage, {
 			mocks
 		});
 
@@ -150,7 +151,7 @@ describe('ViewLayout.vue', () => {
 		}];
 
 		mocks.$route.params.marker = 3;
-		await shallowMount(ViewLayout, {
+		await shallowMount(ViewPage, {
 			mocks
 		});
 
@@ -172,7 +173,7 @@ describe('ViewLayout.vue', () => {
 		sinon.stub(map, 'setView');
 
 		mocks.$route.params.username = 'test';
-		await shallowMount(ViewLayout, {
+		await shallowMount(ViewPage, {
 			mocks
 		});
 
@@ -192,15 +193,17 @@ describe('ViewLayout.vue', () => {
 
 	it('Reloads markers when route changes', async () => {
 		const loadMarkersSpy = sinon.spy();
+		delete mocks.$route;
 
 		const localVue = createLocalVue();
 		localVue.use(VueRouter);
-		const wrapper = await shallowMount(ViewLayout, {
+		const wrapper = await shallowMount(ViewPage, {
 			methods: {
 				loadMarkers: loadMarkersSpy
 			},
 			localVue,
-			router
+			router,
+			mocks
 		});
 
 		router.push(router.history.current.path === '/test' ? '/test1' : 'test');

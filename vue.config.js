@@ -6,11 +6,6 @@ module.exports = {
 			alias: {
 				'$scss': path.resolve(__dirname, 'src/assets/styles'),
 			}
-		},
-		optimization: {
-			splitChunks: {
-				chunks: 'all'
-			}
 		}
 	},
 	devServer: {
