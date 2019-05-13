@@ -11,7 +11,7 @@ describe('LoggedInBar.vue', () => {
 
 	beforeEach(() => {
 		stubs = {
-			'font-awesome-icon': true,
+			FontAwesomeIcon: true,
 			ProfileOpen: true
 		};
 		mocks = {
@@ -48,7 +48,7 @@ describe('LoggedInBar.vue', () => {
 		assert.equal(wrapper.find('.button.is-light.is-outlined:disabled > span:last-child').text(), 'Home');
 		assert.isTrue(wrapper.find('.top-bar').exists());
 		assert.isTrue(wrapper.find('.button.is-danger.is-outlined').exists());
-		assert.isTrue(wrapper.find('.search-field').exists());
+		assert.isTrue(wrapper.find('.search-bar').exists());
 	});
 
 	it('Changes route when edit button clicked', () => {
@@ -74,7 +74,7 @@ describe('LoggedInBar.vue', () => {
 		assert.equal(wrapper.find('.button.is-light.is-outlined:disabled > span:last-child').text(), 'test');
 
 		assert.isTrue(wrapper.find('.button.is-danger.is-outlined').exists());
-		assert.isTrue(wrapper.find('.search-field').exists());
+		assert.isTrue(wrapper.find('.search-bar').exists());
 	});
 
 	it('Changes route when home button clicked clicked', () => {
@@ -89,32 +89,6 @@ describe('LoggedInBar.vue', () => {
 
 		assert.isTrue(mocks.$router.push.calledOnce);
 		assert.isTrue(mocks.$router.push.calledWith('/'));
-	});
-
-	it('Toggles drawer in', () => {
-		const wrapper = mount(LoggedInBar, {
-			stubs,
-			mocks
-		});
-
-		wrapper.findAll('.button.is-light.is-outlined').at(0).trigger('click');
-
-		assert.isTrue(wrapper.find('.drawer-mobile--open').exists());
-	});
-
-	it('Toggles drawer out', () => {
-		const wrapper = mount(LoggedInBar, {
-			stubs,
-			mocks
-		});
-
-		wrapper.setData({
-			drawerOpen: true
-		});
-
-		wrapper.findAll('.button.is-danger.is-outlined').at(0).trigger('click');
-
-		assert.isFalse(wrapper.find('.drawer-mobile--open').exists());
 	});
 
 });

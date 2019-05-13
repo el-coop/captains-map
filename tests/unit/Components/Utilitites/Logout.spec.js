@@ -14,11 +14,11 @@ describe('Logout.vue', () => {
 	it('Renders', () => {
 		const wrapper = shallowMount(Logout, {
 			stubs: {
-				'font-awesome-icon': true
+				FontAwesomeIcon: true
 			}
 		});
 
-		assert.isTrue(wrapper.find('font-awesome-icon-stub[icon=sign-out-alt]').exists());
+		assert.isTrue(wrapper.find('fontawesomeicon-stub[icon=sign-out-alt]').exists());
 	});
 
 	it('Logsout on click', () => {
@@ -37,7 +37,7 @@ describe('Logout.vue', () => {
 			store,
 			localVue,
 			stubs: {
-				'font-awesome-icon': true
+				FontAwesomeIcon: true
 			}
 		});
 
