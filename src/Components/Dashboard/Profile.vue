@@ -1,36 +1,36 @@
 <template>
 	<div class="dashboard__control profile" :class="{'profile--open': isOpen}">
-		<component :is="isEdit ? 'ajax-form' : 'div'" class="media h-100"
+		<component :is="isEdit ? 'ajax-form' : 'div'" class="media profile__media h-100"
 				   method="post" :action="`bio/${user.username}`"
 				   @submitting="submitting"
 				   :headers="formHeaders"
 				   @submitted="displayResponse">
-			<div class="media-left">
+			<div class="media-left profile__media-left">
 				<template v-if="isEdit">
-					<file-field name="image" v-model="file" :init-preview="imageSrc">
-					</file-field>
+					<FileField name="image" v-model="file" :init-preview="imageSrc">
+					</FileField>
 					<button class="button is-fullwidth is-danger" type="button" @click="file = null" v-if="file">Reset
 					</button>
 				</template>
-				<figure class="image is-128x128" v-else>
+				<figure class="image profile__media-image is-128x128" v-else>
 					<img :src="imageSrc">
 				</figure>
 			</div>
-			<div class="media-content is-flex-1">
+			<div class="media-content profile__media-content is-flex-1">
 				<div class="is-flex-column h-100">
 					<h4 class="title is-4" v-text="user.username"></h4>
 					<template v-if="isEdit">
 						<div class="field is-flex-1">
-							<textarea v-model="description" name="description" class="textarea h-100"></textarea>
+							<textarea v-model="description" name="description" class="textarea profile__media-textarea h-100"></textarea>
 						</div>
 						<button class="button is-primary is-fullwidth" :class="{'is-loading': loading}">Save</button>
 					</template>
-					<p class="is-flex-1" v-else v-text="user.description"></p>
+					<p class="is-flex-1 profile__media-content-text" v-else v-text="user.description"></p>
 				</div>
 			</div>
 			<div class="media-right is-hidden-touch">
-				<span class="icon profile-close" @click="$store.commit('Profile/toggle')">
-					<font-awesome-icon icon="times-circle"/>
+				<span class="icon profile__close" @click="$store.commit('Profile/toggle')">
+					<FontAwesomeIcon icon="times-circle"/>
 				</span>
 			</div>
 		</component>
@@ -44,7 +44,7 @@
 	import FileField from '@/Components/Modals/CreateMarker/FileField';
 
 	export default {
-		name: "profile",
+		name: "Profile",
 		components: {AjaxForm, FileField},
 		data() {
 			return {
@@ -107,73 +107,3 @@
 		},
 	}
 </script>
-
-<style lang="scss" scoped>
-	@import "~$scss/variables";
-
-	.media {
-		padding: 1em;
-		display: flex;
-		flex-direction: column;
-		align-items: stretch;
-
-		.image {
-			margin: auto;
-
-			&.is-128x128 > img {
-				max-height: 100%;
-				max-width: 100%;
-				width: auto;
-				height: auto;
-			}
-		}
-
-		> .media-left {
-			margin: 0 0 1em 0;
-		}
-
-		.media-content {
-			overflow: visible;
-
-			p {
-				white-space: pre-wrap;
-				word-wrap: break-word;
-			}
-		}
-
-		@media #{$above-tablet} {
-			flex-direction: row;
-
-			> .media-left {
-				margin: 0 1em 0 0;
-			}
-
-			> .media-content {
-				padding-left: 1em;
-				border-left: $grey-darker dotted 1px;
-			}
-		}
-
-		textarea {
-			max-height: unset;
-		}
-	}
-
-	.profile {
-		overflow: hidden;
-		box-shadow: 5px 5px 20px 10px rgba(0, 0, 0, 0.3);
-		flex: 1;
-		height: 0;
-		transition: height $animation-speed;
-		align-self: start;
-
-		&--open {
-			height: 100%;
-			overflow: auto;
-		}
-	}
-
-	.profile-close {
-		cursor: pointer;
-	}
-</style>

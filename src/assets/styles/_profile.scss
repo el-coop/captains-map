@@ -45,3 +45,72 @@
 
 	}
 }
+
+
+.profile {
+	overflow: hidden;
+	box-shadow: 5px 5px 20px 10px rgba(0, 0, 0, 0.3);
+	flex: 1;
+	height: 0;
+	transition: height $animation-speed;
+	align-self: start;
+
+	&--open {
+		height: 100%;
+		overflow: auto;
+	}
+
+	&__close {
+		cursor: pointer;
+	}
+
+	&__media {
+		padding: 1em;
+		flex-direction: column;
+		align-items: stretch;
+
+		@media #{$above-tablet} {
+			flex-direction: row;
+		}
+
+		&-left {
+			margin: 0 0 1em 0;
+
+			@media #{$above-tablet} {
+				margin: 0 1em 0 0;
+			}
+		}
+
+		&-image {
+			margin: auto;
+
+			&.is-128x128 > img {
+				max-height: 100%;
+				width: auto;
+				margin: auto;
+			}
+		}
+
+
+		&-content {
+			overflow: visible;
+			padding-bottom: 1em;
+
+
+			@media #{$above-tablet} {
+				padding-left: 1em;
+				border-left: $grey-darker dotted 2px;
+			}
+
+
+			&-text {
+				white-space: pre-wrap;
+				word-wrap: break-word;
+			}
+		}
+
+		&-textarea.textarea {
+			max-height: unset;
+		}
+	}
+}

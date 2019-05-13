@@ -1,16 +1,16 @@
 <template>
 	<div>
-		<uploads-list v-if="$store.getters['Uploads/allFiles'].length && $router.currentRoute.name === 'edit'"/>
-		<marker-borders-filter class="is-hidden-touch"/>
-		<div class="loader" v-if="loading"></div>
+		<UploadsList v-if="$store.getters['Uploads/allFiles'].length && $router.currentRoute.name === 'edit'"/>
+		<MarkerBordersFilter class="is-hidden-touch"/>
+		<div class="loader marker-list__loader" v-if="loading"></div>
 		<ul v-if="! loading">
-			<li v-for="marker in markers" class="media" :key="marker.id">
-				<marker-entry :marker="marker"></marker-entry>
+			<li v-for="marker in markers" class="media marker-list__media" :key="marker.id">
+				<MarkerEntry :marker="marker"/>
 			</li>
 		</ul>
-		<div class="buttons has-addons" v-if="(hasNext || hasPrev) && ! loading">
-			<button class="button is-light" @click="previousPage" :disabled="! hasPrev">< Previous</button>
-			<button class="button is-light" @click="nextPage" :disabled="! hasNext">Next ></button>
+		<div class="buttons marker-list__buttons has-addons" v-if="(hasNext || hasPrev) && ! loading">
+			<button class="button is-light is-flex-1" @click="previousPage" :disabled="! hasPrev">< Previous</button>
+			<button class="button is-light is-flex-1" @click="nextPage" :disabled="! hasNext">Next ></button>
 		</div>
 	</div>
 </template>
@@ -23,7 +23,7 @@
 	const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
 	export default {
-		name: "marker-list",
+		name: "MarkerList",
 		components: {MarkerBordersFilter, MarkerEntry, UploadsList},
 
 		computed: {
@@ -55,24 +55,3 @@
 		}
 	}
 </script>
-
-<style scoped lang="scss">
-	.media {
-		+ .media {
-			margin-top: 0;
-			padding-top: 0;
-		}
-	}
-
-	.buttons {
-		margin: 7px;
-
-		> .button {
-			flex: 1;
-		}
-	}
-
-	.loader {
-		margin: 1em auto;
-	}
-</style>

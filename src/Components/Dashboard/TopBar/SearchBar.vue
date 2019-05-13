@@ -50,7 +50,7 @@
 	import Map, { LeafletMapService } from '@/Services/LeafletMapService';
 
 	export default {
-		name: "search-bar",
+		name: "SearchBar",
 		data() {
 			return {
 				query: '',
