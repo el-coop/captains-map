@@ -4,6 +4,7 @@ $above-phone: "only screen and (min-width : 576px)";
 $above-tablet: "only screen and (min-width : #{$tablet})";
 $above-desktop: "only screen and (min-width : #{$desktop})";
 $above-wide-screen: "only screen and (min-width : #{$widescreen})";
+$gap: 64px;
 
 $background: transparentize($grey-darker, 0.1);
 $text: $white-ter;
