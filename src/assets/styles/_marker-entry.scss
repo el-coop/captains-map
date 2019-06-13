@@ -1,0 +1,36 @@
+.marker-entry {
+	width: 100%;
+	cursor: pointer;
+	padding: 0.5rem;
+
+	&:hover {
+		background-color: $grey-light;
+	}
+
+	&--Plan {
+		&:hover {
+			background-color: $cyan;
+		}
+	}
+
+
+	&--Visited {
+		&:hover {
+			background-color: $turquoise;
+		}
+	}
+
+	&--Suggestion {
+		&:hover {
+			background-color: $red;
+		}
+	}
+
+	&__image {
+		max-width: 64px;
+		max-height: 100px;
+		overflow: hidden;
+	}
+
+}
+

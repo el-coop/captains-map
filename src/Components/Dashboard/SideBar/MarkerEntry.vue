@@ -1,15 +1,15 @@
 <template>
-	<div class="media" :class="className" @click="showMarker">
+	<div class="media marker-entry" :class="className" @click="showMarker">
 		<figure class="media-left">
-			<p class="image">
-				<img :src="src" :alt="`${marker.user ? marker.user.username : ''} ${this.marker.type}`.trim()">
+			<p class="image marker-entry__image">
+				<img :src="src" :alt="imageAlt">
 			</p>
 		</figure>
 		<div class="media-content">
 			<div class="content">
 				<small class="has-text-weight-semibold is-block is-size-7" v-text="dateDisplay(marker.time)"></small>
 				<small>Type:&nbsp;</small>
-				<strong v-text="marker.type"></strong>
+				<strong class="has-text-white" v-text="marker.type"></strong>
 				<br>
 				<p>{{ marker.description | truncate(45) }}</p>
 			</div>
@@ -22,7 +22,7 @@
 	import HandlesDataDisplayMixin from "@/Components/Utilities/HandlesDataDisplayMixin";
 
 	export default {
-		name: "marker-entry",
+		name: "MarkerEntry",
 		mixins: [HandlesDataDisplayMixin],
 
 		props: {
@@ -35,7 +35,17 @@
 		data() {
 			return {
 				src: this.calculateImage(),
-				className: this.marker.type,
+				className: `marker-entry--${this.marker.type}`,
+			}
+		},
+
+		computed: {
+			imageAlt() {
+				let text = '';
+				if (this.marker.user) {
+					text = `${this.marker.user.username} `;
+				}
+				return text + this.marker.type;
 			}
 		},
 
@@ -56,31 +66,6 @@
 	@import "~$scss/variables";
 
 	.media {
-		width: 100%;
-		cursor: pointer;
-		padding: 0.5rem;
-
-		&:hover {
-			&.Plan {
-				background-color: $cyan;
-			}
-
-			&.Visited {
-				background-color: $turquoise;
-			}
-
-			&.Suggestion {
-				background-color: $red;
-			}
-
-			background-color: $grey-light;
-		}
-
-		.image {
-			max-width: 64px;
-			max-height: 100px;
-			overflow: hidden;
-		}
 
 		&.error, &.queued {
 			.image {
@@ -134,12 +119,5 @@
 				position: absolute;
 			}
 		}
-
-
-	}
-
-
-	strong {
-		color: $white;
 	}
 </style>

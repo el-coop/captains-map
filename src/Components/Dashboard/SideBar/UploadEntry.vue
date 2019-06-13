@@ -2,7 +2,7 @@
 	import MarkerEntry from "@/Components/Dashboard/SideBar/MarkerEntry";
 
 	export default {
-		name: "upload-entry",
+		name: "UploadEntry",
 		extends: MarkerEntry,
 
 		data() {
