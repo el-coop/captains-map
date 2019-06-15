@@ -22,8 +22,8 @@
 		</div>
 
 		<div class="dashboard__control dashboard__footer is-hidden-tablet">
-			<MarkerBordersFilter class="h-100">
-				<button class="button is-light is-outlined is-marginless is-faded has-icon-top"
+			<MarkerBordersFilter>
+				<button class="button is-light is-outlined is-marginless is-faded has-icon-top marker-border-filter__button"
 						@click="openSidebar = !openSidebar">
 					<FontAwesomeIcon icon="list" size="sm"/>
 					<span class="is-size-7">Show {{ openSidebar ? 'Map' : 'List'}}</span>

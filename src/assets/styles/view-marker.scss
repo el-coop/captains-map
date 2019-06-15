@@ -1,0 +1,13 @@
+.view-marker {
+	&-header__profile {
+		align-self: center;
+
+		&-image {
+			max-height: 64px;
+			max-width: 64px;
+			height: auto !important;
+			width: auto !important;
+			margin: auto;
+		}
+	}
+}

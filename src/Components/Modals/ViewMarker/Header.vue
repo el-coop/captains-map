@@ -1,17 +1,17 @@
 <template>
-	<div class="card-header-title">
+	<div class="card-header-title ">
 		<div class="media">
-			<div class="media-left">
+			<div class="media-left view-marker-header__profile">
 				<figure class="image is-64x64">
-					<img class="profile-image is-rounded" :src="imageSrc"/>
+					<img class="view-marker-header__profile-image is-rounded" :src="imageSrc"/>
 				</figure>
 			</div>
 			<div class="media-content">
 				<a @click.stop.prevent="linkClicked"
 				   class="has-text-white is-size-5" v-text="marker.user.username"/>
 				<p class="has-text-weight-normal" v-text="marker.type"/>
-				<p class="has-text-weight-light has-text-grey-lighter is-size-7"
-				   v-text="dateDisplay"></p>
+				<p class="has-text-weight-light has-text-grey-lighter is-size-6"
+				   v-text="dateDisplay"/>
 			</div>
 		</div>
 	</div>
@@ -19,9 +19,10 @@
 
 <script>
 	import globe from '@/assets/images/globe-icon.png';
+	import DataDisplay from '@/Components/Utilities/HandlesDataDisplayMixin';
 
 	export default {
-		name: "view-marker-header",
+		name: "ViewMarkerHeader",
 		props: {
 			marker: {
 				type: Object
@@ -37,21 +38,14 @@
 		},
 
 		methods: {
-			async linkClicked() {
+			linkClicked() {
 				this.$emit('view-user-page');
 			}
 		},
 
 		computed: {
 			dateDisplay() {
-				const date = new Date(this.marker.time);
-
-				let hour = date.getUTCHours();
-				if (hour < 10) {
-					hour = `0${hour}`;
-				}
-
-				return `${date.getUTCDate()}/${date.getUTCMonth() + 1}/${date.getUTCFullYear()} ${hour}:${date.getUTCMinutes()}`;
+				return DataDisplay.methods.dateDisplay(this.marker.time);
 			},
 
 			imageSrc() {
@@ -65,17 +59,3 @@
 
 	}
 </script>
-
-<style scoped>
-	.profile-image {
-		max-height: 50px;
-		max-width: 50px;
-	}
-
-	.image > img {
-		max-height: 400px;
-		height: auto;
-		max-width: 100%;
-	}
-
-</style>

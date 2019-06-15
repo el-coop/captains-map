@@ -9,6 +9,10 @@ describe('MarkerBoardersFilter.vue', () => {
 
 	let $store;
 
+	const stubs = {
+		FontAwesomeIcon: true
+	};
+
 	beforeEach(() => {
 		$store = {
 			commit: sinon.spy(),
@@ -30,9 +34,7 @@ describe('MarkerBoardersFilter.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		assert.equal(wrapper.findAll('button').length, 2);
@@ -42,9 +44,7 @@ describe('MarkerBoardersFilter.vue', () => {
 	it('Listens for map move end', () => {
 		const mapOnStub = sinon.stub(map, 'on');
 		shallowMount(MarkerBoardersFilter, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		assert.isTrue(mapOnStub.calledOnce);
@@ -64,9 +64,7 @@ describe('MarkerBoardersFilter.vue', () => {
 			}
 		});
 		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks: {
 				$store
 			}
@@ -92,9 +90,7 @@ describe('MarkerBoardersFilter.vue', () => {
 	it('Clears search boundaries', async () => {
 		const mapSetViewStub = sinon.stub(map, 'setView');
 		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks: {
 				$store
 			}
@@ -120,9 +116,7 @@ describe('MarkerBoardersFilter.vue', () => {
 
 	it('Sets location when map moved and state not equal everywhere', () => {
 		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 		wrapper.setData({
 			location: 'current'
@@ -135,9 +129,7 @@ describe('MarkerBoardersFilter.vue', () => {
 
 	it('Doesnt Set location when map moved and state equals everywhere', () => {
 		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		wrapper.vm.onMoveEnd();
