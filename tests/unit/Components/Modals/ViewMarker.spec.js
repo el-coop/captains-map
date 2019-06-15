@@ -9,7 +9,7 @@ describe('ViewMarker.vue', () => {
 	const stubs = {
 		VModal: true,
 		ViewMarkerHeader: true,
-		'view-marker-content': true,
+		ViewMarkerContent: true,
 		'photo': true,
 		FontAwesomeIcon: true,
 		'instagram': true
@@ -44,7 +44,7 @@ describe('ViewMarker.vue', () => {
 
 		assert.isTrue(wrapper.find('vmodal-stub').exists());
 		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
-		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
+		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
 		assert.isTrue(wrapper.find('photo-stub').exists());
 	});
 
@@ -60,7 +60,7 @@ describe('ViewMarker.vue', () => {
 
 		assert.isTrue(wrapper.find('vmodal-stub').exists());
 		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
-		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
+		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
 		assert.isTrue(wrapper.find('instagram-stub').exists());
 	});
 

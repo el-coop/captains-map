@@ -9,7 +9,7 @@
 					   :alt="`${marker.user.username} | ${marker.description}`"/>
 		</template>
 		<template #content v-if="marker">
-			<view-marker-content :marker="marker"/>
+			<ViewMarkerContent :marker="marker"/>
 		</template>
 
 		<template #footer v-if="marker">

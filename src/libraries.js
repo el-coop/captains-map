@@ -20,21 +20,20 @@ import {
 	faChevronDown,
 	faSignInAlt,
 	faExternalLinkSquareAlt,
-	faSearchLocation
+	faSearchLocation,
+	faShareAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import Meta from 'vue-meta';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import VueClipboard from 'vue-clipboard2';
 import VueIziToast from 'vue-izitoast';
 
-library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faSignOutAlt, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia, faUserAlt, faChevronDown, faSignInAlt, faExternalLinkSquareAlt, faSearchLocation);
+library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faSignOutAlt, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia, faUserAlt, faChevronDown, faSignInAlt, faExternalLinkSquareAlt, faSearchLocation, faShareAlt);
 
 Vue.use(VModal, {componentName: "VModal"});
 Vue.use(Meta);
 Vue.component('FontAwesomeIcon', FontAwesomeIcon);
 Vue.use(HttpService);
-Vue.use(VueClipboard);
 Vue.use(VueIziToast, {
 	position: 'bottomCenter',
 	timeout: 2500
