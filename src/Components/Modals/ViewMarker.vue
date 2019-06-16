@@ -4,7 +4,7 @@
 			<ViewMarkerHeader :marker="marker" @view-user-page="navigateToUser"/>
 		</template>
 		<template #image v-if="marker">
-			<component :is="marker.media.type === 'instagram' ? 'instagram': 'photo'"
+			<component :is="marker.media.type === 'instagram' ? 'Instagram': 'Photo'"
 					   :path="marker.media.path" :marker-id="marker.media.id"
 					   :alt="`${marker.user.username} | ${marker.description}`"/>
 		</template>

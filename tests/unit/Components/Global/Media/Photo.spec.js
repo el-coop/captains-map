@@ -5,15 +5,16 @@ import sinon from 'sinon';
 
 describe('Photo.vue', () => {
 
+	const stubs = {
+		FontAwesomeIcon: true
+	};
 
 	it('Renders', () => {
 		const wrapper = shallowMount(Photo, {
 			propsData: {
 				path: '/test'
 			},
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		assert.isTrue(wrapper.find('img').exists());
@@ -27,9 +28,7 @@ describe('Photo.vue', () => {
 			propsData: {
 				path: '/test'
 			},
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		wrapper.find('button').trigger('click');

@@ -10,9 +10,9 @@ describe('ViewMarker.vue', () => {
 		VModal: true,
 		ViewMarkerHeader: true,
 		ViewMarkerContent: true,
-		'photo': true,
+		Photo: true,
 		FontAwesomeIcon: true,
-		'instagram': true
+		Instagram: true
 	};
 
 	beforeEach(() => {
