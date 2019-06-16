@@ -1,5 +1,5 @@
 <template>
-	<div :class="{ 'centered-text-wrapper' : ! embedCode}">
+	<div :class="{ 'view-marker__instagram' : ! embedCode}">
 		<h4 class="title is-4" v-if="loading">Loading...</h4>
 		<span class="loader" v-if="loading"></span>
 		<div v-if="embedCode" v-html="embedCode"></div>
@@ -31,20 +31,23 @@
 			this.loading = false;
 			if (response.data) {
 				this.embedCode = response.data.html;
-				this.$nextTick(() => {
+				await this.$nextTick;
+				try {
+					window.__igEmbedLoaded = this.setHeight;
 					instgrm.Embeds.process();
-				});
+				} catch (e) {
+					delete window.__igEmbedLoaded;
+				}
+			}
+		},
+
+
+		methods: {
+			setHeight() {
+				const iframe = document.querySelector('iframe.instagram-media.instagram-media-rendered');
+				iframe.style.height = `${iframe.height}px`;
+				delete window.__igEmbedLoaded;
 			}
 		}
 	}
 </script>
-
-<style lang="scss" scoped>
-	.centered-text-wrapper {
-		padding: 1rem;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
-</style>

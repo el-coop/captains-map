@@ -1,8 +1,8 @@
 <template>
-	<figure class="image">
-		<img :src="`/api${path}`" :alt="alt">
-		<button class="button is-light" @click="openImage">
-			<font-awesome-icon icon="external-link-square-alt"></font-awesome-icon>
+	<figure class="image view-marker__image">
+		<img :src="`/api${path}`" :alt="alt" class="view-marker__image-img">
+		<button class="button is-light view-marker__image-button" @click="openImage">
+			<FontAwesomeIcon icon="external-link-square-alt"></FontAwesomeIcon>
 		</button>
 	</figure>
 </template>
@@ -29,28 +29,3 @@
 		}
 	}
 </script>
-
-<style lang="scss" scoped>
-	.image {
-		background-color: black;
-		position: relative;
-
-		> img {
-			max-width: 100%;
-			width: auto;
-			margin: auto;
-		}
-
-		> .button {
-			opacity: 0.4;
-			position: absolute;
-			right: 1em;
-			bottom: 1em;
-
-			&:hover {
-				opacity: 0.6;
-			}
-		}
-	}
-
-</style>

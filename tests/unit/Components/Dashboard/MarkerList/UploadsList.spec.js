@@ -2,11 +2,13 @@ import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import UploadsList from '@/Components/Dashboard/SideBar/UploadsList';
 import sinon from 'sinon';
-import Map from '@/Services/LeafletMapService';
 
 
 describe('UploadsList.vue', () => {
 	let mocks;
+	const stubs = {
+		FontAwesomeIcon: true
+	};
 
 	beforeEach(() => {
 		mocks = {
@@ -25,9 +27,7 @@ describe('UploadsList.vue', () => {
 	it('Renders', () => {
 		const wrapper = shallowMount(UploadsList, {
 			mocks,
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		assert.isTrue(wrapper.find('button.is-light').exists());
@@ -37,9 +37,7 @@ describe('UploadsList.vue', () => {
 	it('Shows list when button clicked', () => {
 		const wrapper = shallowMount(UploadsList, {
 			mocks,
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		wrapper.setData({
@@ -54,9 +52,7 @@ describe('UploadsList.vue', () => {
 	it('Closes list when button clicked and list open', () => {
 		const wrapper = shallowMount(UploadsList, {
 			mocks,
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		wrapper.setData({
@@ -70,15 +66,13 @@ describe('UploadsList.vue', () => {
 	it('Lists all the different upload entries', () => {
 		const wrapper = shallowMount(UploadsList, {
 			mocks,
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		wrapper.setData({
 			open: true
 		});
 
-		assert.equal(wrapper.findAll('upload-entry-stub').length, 3);
+		assert.equal(wrapper.findAll('uploadentry-stub').length, 3);
 	});
 });

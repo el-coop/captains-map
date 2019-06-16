@@ -1,42 +1,46 @@
 <template>
-	<div class="field has-addons is-full-touch">
+	<div class="field has-addons is-full-touch search-bar">
 		<div class="control">
 			<div class="dropdown is-hoverable is-rounded">
 				<div class="dropdown-trigger">
 					<button class="button">
-						<font-awesome-icon :icon="searchOptions[searchCategory].icon" fixed-width/>
+						<FontAwesomeIcon :icon="searchOptions[searchCategory].icon" fixed-width/>
 					</button>
 				</div>
-				<div class="dropdown-menu">
+				<div class="dropdown-menu search-bar__dropdown-menu">
 					<div class="dropdown-content">
-						<a class="dropdown-item" v-for="(settings, option) in searchOptions"
-						   @click="changeSearch(option)"
-						   v-if="option !== searchCategory">
-							<font-awesome-icon :icon="settings.icon"/>&nbsp;&nbsp;{{ option }}
+						<a class="dropdown-item search-bar__dropdown-item" v-for="category in availableSearchCategories"
+						   @click="changeSearch(category)">
+							<FontAwesomeIcon :icon="searchOptions[category].icon"/>
+							&nbsp&nbsp;{{ category }}
 						</a>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="control dropdown is-hoverable search-field" :class="{'is-active': openResults}">
+
+		<div class="control dropdown is-hoverable search-bar__field" :class="{'is-active': openResults}">
 			<input type="search" class="input dropdown-trigger" v-model="query" @keyup="searched = false"
-				   @keyup.enter="search"/>
-			<div class="dropdown-menu">
+				   @keyup.enter="search(searchOptions[searchCategory].funcName)"/>
+			<div class="dropdown-menu search-bar__dropdown-menu">
 				<div class="dropdown-content" v-if="results.length || searched">
-					<a v-for="(result, index) in results" :key="index" v-text="searchCategory === 'Users' ? result :
-					result.formattedAddress"
-					   class="dropdown-item"
+					<a v-for="(result, index) in results" :key="index" v-text="formatResult(result)"
+					   class="dropdown-item search-bar__dropdown-item"
 					   @click="resultClicked(result)">
 					</a>
-					<p class="help is-danger dropdown-item" v-if="! results.length && searched">
+					<p class="help is-danger dropdown-item search-bar__dropdown-item"
+					   v-if="! results.length && searched">
 						No results found for <span v-text="query"/>
 					</p>
 				</div>
 			</div>
 		</div>
+
 		<div class="control">
-			<button class="button" :class="{'is-loading': searching}" @click="search" @mouseenter="openResults = true" @mouseleave="openResults = false">
-				<font-awesome-icon icon="search"/>
+			<button class="button" :class="{'is-loading': searching}"
+					@click="search(searchOptions[searchCategory].funcName)" @mouseenter="openResults = true"
+					@mouseleave="openResults = false">
+				<FontAwesomeIcon icon="search"/>
 			</button>
 		</div>
 	</div>
@@ -46,7 +50,7 @@
 	import Map, { LeafletMapService } from '@/Services/LeafletMapService';
 
 	export default {
-		name: "search-bar",
+		name: "SearchBar",
 		data() {
 			return {
 				query: '',
@@ -68,8 +72,16 @@
 			}
 		},
 
+		computed: {
+			availableSearchCategories() {
+				return Object.keys(this.searchOptions).filter((key) => {
+					return key !== this.searchCategory;
+				});
+			}
+		},
+
 		methods: {
-			async search() {
+			async search(funcName) {
 				this.results = [];
 				if (this.query === '') {
 					return;
@@ -77,7 +89,7 @@
 
 				this.searching = true;
 
-				this.results = await this[this.searchOptions[this.searchCategory].funcName]();
+				this.results = await this[funcName]();
 
 				this.searching = false;
 				this.searched = true;
@@ -112,33 +124,15 @@
 				this.results = [];
 				this.searched = false;
 				this.searchCategory = category;
+			},
+
+			formatResult(result) {
+				if (this.searchCategory === 'Users') {
+					return result;
+				}
+
+				return result.formattedAddress;
 			}
 		},
 	}
 </script>
-
-<style lang="scss" scoped>
-	@import "~$scss/variables";
-
-	.dropdown-item {
-		white-space: normal;
-	}
-
-	.field.has-addons {
-		flex: 1;
-		margin: 0 0 5px 0;
-		padding: 0.2em 0.25em;
-
-		@media #{$above-tablet}{
-			margin: 0;
-		}
-	}
-
-	.dropdown-menu {
-		width: 100%;
-	}
-
-	.search-field {
-		flex: 1;
-	}
-</style>

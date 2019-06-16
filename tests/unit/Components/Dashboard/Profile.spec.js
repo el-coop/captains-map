@@ -30,7 +30,7 @@ describe('Profile.vue', () => {
 			}
 		};
 		stubs = {
-			'font-awesome-icon': true
+			FontAwesomeIcon: true
 		};
 	});
 
@@ -84,7 +84,7 @@ describe('Profile.vue', () => {
 
 		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
 		assert.isTrue(wrapper.find('ajax-form-stub').exists());
-		assert.equal(wrapper.find('file-field-stub').props().initPreview, '/api/path');
+		assert.equal(wrapper.find('filefield-stub').props().initPreview, '/api/path');
 		assert.equal(wrapper.find('h4').text(), 'test');
 		assert.equal(wrapper.find('textarea').element.value, 'description');
 	});

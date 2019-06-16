@@ -7,12 +7,15 @@ describe('ViewMarker/Content.vue', () => {
 	let marker;
 	let mocks;
 	const stubs = {
-		'font-awesome-icon': true
+		FontAwesomeIcon: true
 	};
 
 	beforeEach(() => {
 		global.navigator.share = false;
-		global.window.open = sinon.stub;
+		global.navigator.clipboard ={
+			writeText: sinon.stub()
+		};
+		global.window.open = sinon.stub();
 
 		marker = {
 			id: 1,
@@ -35,8 +38,7 @@ describe('ViewMarker/Content.vue', () => {
 			},
 			$toast: {
 				info: sinon.spy()
-			},
-			$copyText: sinon.spy()
+			}
 		}
 	});
 
@@ -44,6 +46,7 @@ describe('ViewMarker/Content.vue', () => {
 		sinon.restore();
 		delete global.navigator.share;
 		delete global.window.open;
+		delete global.navigator.clipboard;
 	});
 
 	it('Renders', () => {
@@ -73,15 +76,14 @@ describe('ViewMarker/Content.vue', () => {
 
 		await wrapper.vm.$nextTick();
 
-		assert.isTrue(mocks.$copyText.calledOnce);
-		assert.isTrue(mocks.$copyText.calledWith(`${window.location.protocol}//${window.location.host}href`));
+		assert.isTrue(global.navigator.clipboard.writeText.calledOnce);
+		assert.isTrue(global.navigator.clipboard.writeText.calledWith(`${window.location.protocol}//${window.location.host}href`));
 		assert.isTrue(mocks.$toast.info.calledOnce);
 		assert.isTrue(mocks.$toast.info.calledWith('You can paste it anywhere', 'Link copied'));
 	});
 
 
-	it('Shares to facebook when navigator.share is not available', async () => {
-		const windowOpenStub = sinon.stub(window, 'open');
+	it('Shares to facebook when navigator.share is not available and prints 2 buttons', async () => {
 		const wrapper = shallowMount(Content, {
 			propsData: {
 				marker
@@ -94,13 +96,13 @@ describe('ViewMarker/Content.vue', () => {
 
 		await wrapper.vm.$nextTick();
 
-		assert.isTrue(windowOpenStub.calledOnce);
-		assert.isTrue(windowOpenStub.calledWith(`https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}href`));
+		assert.equal(2,wrapper.findAll('button').length);
+		assert.isTrue(global.window.open.calledOnce);
+		assert.isTrue(global.window.open.calledWith(`https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}href`));
 	});
 
-	it('Shares when navigator.share is available', async () => {
+	it('Shares when navigator.share is available and shows only one button', async () => {
 		global.navigator.share = sinon.stub();
-		const windowOpenStub = sinon.stub(window, 'open');
 		const wrapper = shallowMount(Content, {
 			propsData: {
 				marker
@@ -109,11 +111,12 @@ describe('ViewMarker/Content.vue', () => {
 			stubs
 		});
 
-		wrapper.findAll('button').at(1).trigger('click');
+		wrapper.find('button').trigger('click');
 
 		await wrapper.vm.$nextTick();
 
-		assert.isTrue(windowOpenStub.notCalled);
+		assert.equal(1,wrapper.findAll('button').length);
+		assert.isTrue(global.window.open.notCalled);
 		assert.isTrue(global.navigator.share.calledOnce);
 		assert.isTrue(global.navigator.share.calledWith({
 			title: '',

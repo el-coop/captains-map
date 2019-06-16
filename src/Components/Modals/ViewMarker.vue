@@ -1,15 +1,15 @@
 <template>
-	<slide-up-modal name="view-marker" :route-name="routeName" @closed="queuedNavigation">
+	<SlideUpModal name="view-marker" :route-name="routeName">
 		<template #header v-if="marker">
-			<view-marker-header :marker="marker" @view-user-page="navigateToUser"/>
+			<ViewMarkerHeader :marker="marker" @view-user-page="navigateToUser"/>
 		</template>
 		<template #image v-if="marker">
-			<component :is="marker.media.type === 'instagram' ? 'instagram': 'photo'"
+			<component :is="marker.media.type === 'instagram' ? 'Instagram': 'Photo'"
 					   :path="marker.media.path" :marker-id="marker.media.id"
 					   :alt="`${marker.user.username} | ${marker.description}`"/>
 		</template>
 		<template #content v-if="marker">
-			<view-marker-content :marker="marker"/>
+			<ViewMarkerContent :marker="marker"/>
 		</template>
 
 		<template #footer v-if="marker">
@@ -23,7 +23,7 @@
 				</button>
 			</p>
 		</template>
-	</slide-up-modal>
+	</SlideUpModal>
 </template>
 
 <script>
@@ -35,7 +35,7 @@
 	import ViewMarkerContent from "@/Components/Modals/ViewMarker/Content";
 
 	export default {
-		name: "view-marker",
+		name: "ViewMarker",
 		components: {ViewMarkerContent, ViewMarkerHeader, SlideUpModal, Photo, Instagram},
 		props: {
 			marker: {
@@ -46,7 +46,6 @@
 		data() {
 			return {
 				deleting: false,
-				nextPage: false
 			}
 		},
 
@@ -62,18 +61,11 @@
 				}
 			},
 
-			navigateToUser() {
-				this.nextPage = `/${this.marker.user.username}`;
+			async navigateToUser() {
 				this.$modal.hide('view-marker');
+				await this.$nextTick;
+				this.$router.push(`/${this.marker.user.username}`);
 			},
-
-			queuedNavigation() {
-				if (this.nextPage) {
-					this.$router.push(this.nextPage);
-					this.nextPage = false;
-				}
-			}
-
 		},
 
 		computed: {

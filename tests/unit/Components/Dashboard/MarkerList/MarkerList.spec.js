@@ -41,7 +41,7 @@ describe('MarkerList.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('marker-borders-filter-stub').exists());
+		assert.isTrue(wrapper.find('markerbordersfilter-stub').exists());
 		assert.isTrue(wrapper.find('ul').exists());
 		assert.isFalse(wrapper.find('.loader').exists());
 	});
@@ -64,7 +64,7 @@ describe('MarkerList.vue', () => {
 			mocks
 		});
 
-		assert.equal(wrapper.findAll('marker-entry-stub').length, 2);
+		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
 		assert.isFalse(wrapper.findAll('.buttons').exists());
 	});
 
@@ -76,7 +76,7 @@ describe('MarkerList.vue', () => {
 			mocks
 		});
 
-		assert.equal(wrapper.findAll('marker-entry-stub').length, 2);
+		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
 		assert.isTrue(wrapper.find('.buttons').exists());
 	});
 
@@ -88,7 +88,7 @@ describe('MarkerList.vue', () => {
 			mocks
 		});
 
-		assert.equal(wrapper.findAll('marker-entry-stub').length, 5);
+		assert.equal(wrapper.findAll('markerentry-stub').length, 5);
 		assert.isTrue(wrapper.find('.buttons').exists());
 	});
 
@@ -225,7 +225,7 @@ describe('MarkerList.vue', () => {
 		const wrapper = shallowMount(MarkerList, {
 			mocks
 		});
-		assert.isTrue(wrapper.find('uploads-list-stub').exists());
+		assert.isTrue(wrapper.find('uploadslist-stub').exists());
 	});
 
 	it('Doesnt Show upload list when there are pending uploads and current route is not edit', () => {

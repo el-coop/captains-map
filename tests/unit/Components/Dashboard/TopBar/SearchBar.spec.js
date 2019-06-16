@@ -7,15 +7,18 @@ import sinon from 'sinon';
 
 
 describe('SearchBar.vue', () => {
+
+	const stubs = {
+		FontAwesomeIcon: true
+	};
+
 	afterEach(() => {
 		sinon.restore();
 	});
 
 	it('Renders', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		assert.isTrue(wrapper.find('.input.dropdown-trigger').exists());
@@ -24,9 +27,7 @@ describe('SearchBar.vue', () => {
 
 	it('Tracks input', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 		wrapper.find('.input.dropdown-trigger').element.value = 'a';
 		wrapper.find('.input.dropdown-trigger').trigger('input');
@@ -36,9 +37,7 @@ describe('SearchBar.vue', () => {
 
 	it('Changes search category to address', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		wrapper.setData({
@@ -52,9 +51,7 @@ describe('SearchBar.vue', () => {
 
 	it('Changes search category to users', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		wrapper.setData({
@@ -72,9 +69,7 @@ describe('SearchBar.vue', () => {
 		});
 		const searchUserStub = sinon.stub(http, 'get');
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		wrapper.setData({
@@ -106,9 +101,7 @@ describe('SearchBar.vue', () => {
 			]
 		});
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks: {
 				$http: http
 			}
@@ -136,9 +129,7 @@ describe('SearchBar.vue', () => {
 
 	it('Renders search result', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		assert.notInclude(wrapper.html(), 'test 1');
@@ -159,9 +150,7 @@ describe('SearchBar.vue', () => {
 
 	it('Renders no results for empty results', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		assert.notInclude(wrapper.html(), 'test 1');
@@ -176,9 +165,7 @@ describe('SearchBar.vue', () => {
 	it('Moves map when clicking on a address result', () => {
 		const moveStub = sinon.stub(Map, 'move');
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			}
+			stubs
 		});
 
 		wrapper.setData({
@@ -190,7 +177,7 @@ describe('SearchBar.vue', () => {
 			}]
 		});
 
-		wrapper.find('.search-field .dropdown-item').trigger('click');
+		wrapper.findAll('.search-bar__dropdown-item').at(1).trigger('click');
 		assert.isTrue(moveStub.calledWith([0, 0]));
 		assert.isTrue(moveStub.calledOnce);
 	});
@@ -199,9 +186,7 @@ describe('SearchBar.vue', () => {
 		const moveStub = sinon.stub(Map, 'move');
 		const routeSpy = sinon.spy();
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs,
 			mocks: {
 				$router: {
 					push: routeSpy
@@ -214,16 +199,14 @@ describe('SearchBar.vue', () => {
 			results: ['test']
 		});
 
-		wrapper.find('.search-field .dropdown-item').trigger('click');
+		wrapper.findAll('.search-bar__dropdown-item').at(1).trigger('click');
 		assert.isTrue(routeSpy.calledWith('test'));
 		assert.isFalse(moveStub.called);
 	});
 
 	it('Toggles dropdown on hen hover over search button', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs
 		});
 
 
@@ -233,9 +216,7 @@ describe('SearchBar.vue', () => {
 
 	it('Toggles dropdown off when hover over search button', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs: {
-				'font-awesome-icon': true
-			},
+			stubs
 		});
 
 		wrapper.setData({

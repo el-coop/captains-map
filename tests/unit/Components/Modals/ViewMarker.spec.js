@@ -8,11 +8,11 @@ describe('ViewMarker.vue', () => {
 	let marker;
 	const stubs = {
 		VModal: true,
-		'view-marker-header': true,
-		'view-marker-content': true,
-		'photo': true,
+		ViewMarkerHeader: true,
+		ViewMarkerContent: true,
+		Photo: true,
 		FontAwesomeIcon: true,
-		'instagram': true
+		Instagram: true
 	};
 
 	beforeEach(() => {
@@ -43,8 +43,8 @@ describe('ViewMarker.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('vmodal-stub').exists());
-		assert.isTrue(wrapper.find('view-marker-header-stub').exists());
-		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
+		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
+		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
 		assert.isTrue(wrapper.find('photo-stub').exists());
 	});
 
@@ -59,8 +59,8 @@ describe('ViewMarker.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('vmodal-stub').exists());
-		assert.isTrue(wrapper.find('view-marker-header-stub').exists());
-		assert.isTrue(wrapper.find('view-marker-content-stub').exists());
+		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
+		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
 		assert.isTrue(wrapper.find('instagram-stub').exists());
 	});
 
@@ -119,7 +119,7 @@ describe('ViewMarker.vue', () => {
 		});
 
 		await wrapper.vm.deleteMarker();
-``
+		``
 		assert.isTrue($modal.hide.calledOnce);
 		assert.isTrue($modal.hide.calledWith('view-marker'));
 	});
@@ -149,10 +149,13 @@ describe('ViewMarker.vue', () => {
 		assert.isTrue($toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
 	});
 
-	it('Queues navigation when requested and closes modal', async () => {
+	it('Navigates to user when requested and closes modal', async () => {
 
 		const $modal = {
 			hide: sinon.stub()
+		};
+		const $router = {
+			push: sinon.stub()
 		};
 
 		const wrapper = mount(ViewMarker, {
@@ -160,67 +163,21 @@ describe('ViewMarker.vue', () => {
 				marker
 			},
 			mocks: {
-				$modal
+				$modal,
+				$router
 			},
 			stubs
 		});
 
-		wrapper.find('view-marker-header-stub').vm.$emit('view-user-page');
+		wrapper.find('viewmarkerheader-stub').vm.$emit('view-user-page');
 
-		assert.equal(wrapper.vm.nextPage, '/test');
+		await wrapper.vm.$nextTick;
+
 		assert.isTrue($modal.hide.calledOnce);
 		assert.isTrue($modal.hide.calledWith('view-marker'));
 
-	});
-
-	it('Navigates to user page when queued', async () => {
-
-		const $router = {
-			push: sinon.stub()
-		};
-
-		const wrapper = shallowMount(ViewMarker, {
-			propsData: {
-				marker
-			},
-			mocks: {
-				$router
-			}
-		});
-
-		wrapper.setData({
-			nextPage: '/test'
-		});
-
-		wrapper.vm.queuedNavigation();
-
 		assert.isTrue($router.push.calledOnce);
 		assert.isTrue($router.push.calledWith('/test'));
-		assert.isFalse(wrapper.vm.nextPage);
-
-
-	});
-
-	it('Doesnt navigate when no navigation is queued', async () => {
-
-		const $router = {
-			push: sinon.stub()
-		};
-
-		const wrapper = shallowMount(ViewMarker, {
-			propsData: {
-				marker
-			},
-			mocks: {
-				$router
-			}
-		});
-
-
-		wrapper.vm.queuedNavigation();
-
-		assert.isFalse($router.push.called);
-
 
 	});
 });

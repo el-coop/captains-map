@@ -4,7 +4,7 @@ import Istangram from '@/Components/Global/Media/Instagram';
 import sinon from "sinon";
 
 
-describe('Istangram.vue', () => {
+describe('Instagram.vue', () => {
 
 	beforeEach(() => {
 		global.instgrm = {

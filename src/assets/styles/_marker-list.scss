@@ -1,0 +1,16 @@
+.marker-list {
+	&__loader {
+		margin: 1em auto;
+	}
+
+	&__media {
+		+ .media {
+			margin-top: 0;
+			padding-top: 0;
+		}
+	}
+
+	&__buttons {
+		margin: 7px;
+	}
+}
