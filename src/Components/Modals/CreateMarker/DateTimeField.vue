@@ -1,6 +1,6 @@
 <template>
 	<div class="field">
-		<label class="label">Time</label>
+		<label class="label" v-text="label" v-if="label"/>
 		<div class="field is-grouped">
 			<div class="control is-expanded">
 				<input type="date" class="input" v-model="date"/>
@@ -9,7 +9,7 @@
 				<input type="time" class="input" v-model="time"/>
 			</div>
 		</div>
-		<p class="help is-danger" v-if="error">Invalid date or time.</p>
+		<p class="help is-danger" v-if="error" v-text="error"/>
 	</div>
 </template>
 
@@ -24,6 +24,10 @@
 				}
 			},
 			error: {
+				type: String,
+				default: ''
+			},
+			label: {
 				type: String,
 				default: ''
 			}

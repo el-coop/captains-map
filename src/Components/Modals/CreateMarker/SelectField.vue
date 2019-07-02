@@ -1,8 +1,8 @@
 <template>
 	<div class="field">
-		<label for="type" class="label" v-text="label" />
+		<label :for="inputId" class="label" v-text="label" v-if="label"/>
 		<div class="select">
-			<select id="type" name="type" v-model="type">
+			<select :id="inputId" :name="name" v-model="type">
 				<option v-for="(option, key) in options" :value="key"
 						v-text="option"/>
 			</select>
@@ -30,21 +30,20 @@
 				type: Object,
 				required: true
 			},
+			name: {
+				type: String,
+				default: ''
+			},
 			label: {
 				type: String,
-				required: true
+				default: ''
 			}
 		},
 
+
 		data() {
 			return {
-				markerTypes: [
-					'Visited',
-					'Plan',
-					'Suggestion',
-					'Other'
-				]
-
+				inputId: `label_${this._uid}`
 			}
 		},
 

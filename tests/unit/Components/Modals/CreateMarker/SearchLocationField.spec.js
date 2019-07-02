@@ -1,10 +1,10 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import LocationField from '@/Components/Modals/CreateMarker/SearchLocationField';
+import SearchLocationField from '@/Components/Modals/CreateMarker/SearchLocationField';
 import sinon from "sinon";
 import { LeafletMapService } from "@/Services/LeafletMapService";
 
-describe('CreateMarker/LocationField.vue', () => {
+describe('CreateMarker/SearchLocationField.vue', () => {
 	const propsData = {
 		latLng: {
 			lat: 0,
@@ -12,10 +12,10 @@ describe('CreateMarker/LocationField.vue', () => {
 		}
 	};
 	const stubs = {
-		'font-awesome-icon': true
+		FontAwesomeIcon: true
 	};
 	it('Renders', () => {
-		const wrapper = shallowMount(LocationField, {
+		const wrapper = shallowMount(SearchLocationField, {
 			propsData,
 			stubs
 		});
@@ -27,7 +27,7 @@ describe('CreateMarker/LocationField.vue', () => {
 
 	it('Renders error', () => {
 		propsData.error = 'error';
-		const wrapper = shallowMount(LocationField, {
+		const wrapper = shallowMount(SearchLocationField, {
 			propsData,
 			stubs
 		});
@@ -40,7 +40,7 @@ describe('CreateMarker/LocationField.vue', () => {
 
 
 	it('It emits input when value changes', async () => {
-		const wrapper = shallowMount(LocationField, {
+		const wrapper = shallowMount(SearchLocationField, {
 			propsData,
 			stubs
 		});
@@ -60,7 +60,7 @@ describe('CreateMarker/LocationField.vue', () => {
 				country: 'country'
 			}];
 		});
-		const wrapper = shallowMount(LocationField, {
+		const wrapper = shallowMount(SearchLocationField, {
 			propsData,
 			stubs
 		});
@@ -80,7 +80,7 @@ describe('CreateMarker/LocationField.vue', () => {
 	});
 
 	it('Renders search result', () => {
-		const wrapper = shallowMount(LocationField, {
+		const wrapper = shallowMount(SearchLocationField, {
 			propsData,
 			stubs
 		});
@@ -98,7 +98,7 @@ describe('CreateMarker/LocationField.vue', () => {
 	});
 
 	it('Renders no results for empty results', () => {
-		const wrapper = shallowMount(LocationField, {
+		const wrapper = shallowMount(SearchLocationField, {
 			propsData,
 			stubs
 		});
@@ -111,7 +111,7 @@ describe('CreateMarker/LocationField.vue', () => {
 	});
 
 	it('Fills location when result is clicked', async () => {
-		const wrapper = shallowMount(LocationField, {
+		const wrapper = shallowMount(SearchLocationField, {
 			propsData,
 			stubs
 		});

@@ -17,9 +17,12 @@
 						   name="media[path]"
 						   v-model="form.media.path"
 						   :error="(errors && errors['media.path']) ? 'You most give a valid instagram link.' : ''"/>
-				<DateTimeField v-model="form.dateTime" :error="errors ? errors['time'] : ''"/>
+				<DateTimeField label="Time"
+							   v-model="form.dateTime"
+							   :error="(errors && errors['time']) ?  'Invalid date or time.' : ''"/>
 				<SelectField v-model="form.type" :error="errors ? errors['type'] : ''" :options="markerTypes"
-							 label="Type"/>
+							 label="Type"
+							 name="type"/>
 				<SearchLocationField v-model="form.location" :latLng="latLng"/>
 				<TextareaField label="Description" v-model="form.description" name="description"/>
 			</template>
