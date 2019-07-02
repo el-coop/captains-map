@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 describe('CreateMarker/FileField.vue', () => {
 	const stubs = {
-		'font-awesome-icon': true
+		FontAwesomeIcon: true
 	};
 
 	it('Renders', () => {

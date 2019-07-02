@@ -9,6 +9,7 @@ describe('CreateMarker.vue', () => {
 		uploadTime: 1,
 		description: 'test',
 		type: 'Planned',
+		location: 'location',
 		time: 2,
 		'media[type]': 'instagram',
 		'media[path]': 'path',
@@ -27,10 +28,10 @@ describe('CreateMarker.vue', () => {
 	const stubs = {
 		VModal: true,
 		FontAwesomeIcon: true,
-		'create-marker-type-toggle': true,
-		'create-marker-file-field': true,
-		'create-marker-date-time-field': true,
-		'create-marker-type-field': true
+		TypeToggle: true,
+		FileField: true,
+		DateTimeField: true,
+		SelectField: true
 	};
 
 	beforeEach(() => {
@@ -64,10 +65,10 @@ describe('CreateMarker.vue', () => {
 			stubs
 		});
 
-		assert.isTrue(wrapper.find('create-marker-type-toggle-stub').exists());
-		assert.isTrue(wrapper.find('create-marker-file-field-stub').exists());
-		assert.isTrue(wrapper.find('create-marker-date-time-field-stub').exists());
-		assert.isTrue(wrapper.find('create-marker-type-field-stub').exists());
+		assert.isTrue(wrapper.find('typetoggle-stub').exists());
+		assert.isTrue(wrapper.find('filefield-stub').exists());
+		assert.isTrue(wrapper.find('datetimefield-stub').exists());
+		assert.isTrue(wrapper.find('selectfield-stub').exists());
 	});
 
 	it('Adds new marker to upload queue', async () => {
@@ -159,7 +160,7 @@ describe('CreateMarker.vue', () => {
 				path: 'path'
 			},
 			description: 'test',
-			location: '',
+			location: 'location',
 			type: 'Planned',
 			dateTime: 2,
 		});

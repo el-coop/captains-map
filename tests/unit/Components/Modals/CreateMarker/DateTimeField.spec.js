@@ -14,11 +14,9 @@ describe('CreateMarker/DateTimeField.vue', () => {
 	it('Renders error', () => {
 		const wrapper = shallowMount(DateTimeField, {
 			propsData: {
-				error: 'Error'
+				error: 'Invalid date or time.'
 			},
 		});
-
-		const error = wrapper.find('.help.is-danger');
 
 		assert.isTrue(wrapper.find('.help.is-danger').exists());
 		assert.equal(wrapper.find('.help.is-danger').text(), 'Invalid date or time.');

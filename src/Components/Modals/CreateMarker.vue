@@ -1,69 +1,75 @@
 <template>
-	<form :headers="formHeaders" @submitting="loading = true" @submit.prevent="queueUpload"
-		  action="marker/create">
-		<slide-up-modal name="create-marker" @before-open="prefill" route-name="edit">
+	<form @submitting="loading = true" @submit.prevent="queueUpload">
+		<SlideUpModal name="create-marker" @before-open="prefill" route-name="edit">
+
 			<template #header>
 				<p class="card-header-title">Create new marker</p>
 			</template>
+
 			<template #content>
-				<create-marker-type-toggle v-model="form.media.type"/>
-				<create-marker-file-field v-if="form.media.type === 'image'" v-model="form.media.file"
-										  :error="errors ? errors['media.file'] : ''"
-										  :init-preview="form.media.preview"/>
-				<create-marker-instagram-field v-if="form.media.type === 'instagram'" v-model="form.media.path"
-											   :error="errors ? errors['media.path'] : ''"/>
-				<create-marker-date-time-field v-model="form.dateTime" :error="errors? errors['time'] : ''"/>
-				<create-marker-type-field v-model="form.type" :error="errors? errors['type'] : ''"/>
-				<create-marker-location-field v-model="form.location" :latLng="latLng"></create-marker-location-field>
-				<div class="field">
-					<label for="description" class="label">Description</label>
-					<div class="control">
-                        <textarea id="description" class="textarea" v-model="form.description"
-								  name="description"></textarea>
-					</div>
-				</div>
+				<TypeToggle v-model="form.media.type"/>
+				<FileField v-if="form.media.type === 'image'"
+						   v-model="form.media.file"
+						   :error="errors ? errors['media.file'] : ''"
+						   :init-preview="form.media.preview"/>
+				<TextField v-if="form.media.type === 'instagram'"
+						   label="Instagram Link"
+						   name="media[path]"
+						   v-model="form.media.path"
+						   :error="(errors && errors['media.path']) ? 'You most give a valid instagram link.' : ''"/>
+				<DateTimeField label="Time"
+							   v-model="form.dateTime"
+							   :error="(errors && errors['time']) ?  'Invalid date or time.' : ''"/>
+				<SelectField v-model="form.type" :error="errors ? errors['type'] : ''" :options="markerTypes"
+							 label="Type"
+							 name="type"/>
+				<SearchLocationField v-model="form.location" :latLng="latLng"/>
+				<TextareaField label="Description" v-model="form.description" name="description"/>
 			</template>
+
 			<template #footer>
 				<p class="card-footer-item">
-					<button class="button is-danger is-fullwidth" @click="cancelUpload" v-if="marker"
+					<button v-if="marker" class="button is-danger is-fullwidth" @click="cancelUpload"
 							type="button">
 						Cancel upload
 					</button>
 					<span v-else>
-                        <a href="#" @click="$modal.hide('create-marker')">Close</a>
+                        <a @click="$modal.hide('create-marker')">Close</a>
                     </span>
 				</p>
 				<p class="card-footer-item">
 					<button class="button is-primary is-fullwidth" :class="{'is-loading' : loading}">Submit</button>
 				</p>
 			</template>
-		</slide-up-modal>
+		</SlideUpModal>
 	</form>
 </template>
 
 <script>
 	import FormDataMixin from "@/Components/Utilities/FormDataMixin";
 	import SlideUpModal from "@/Components/Utilities/BaseModal";
-	import CreateMarkerTypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
-	import CreateMarkerFileField from "@/Components/Modals/CreateMarker/FileField";
-	import CreateMarkerInstagramField from "@/Components/Modals/CreateMarker/InstagramField";
-	import CreateMarkerTypeField from "@/Components/Modals/CreateMarker/TypeField";
-	import CreateMarkerDateTimeField from "@/Components/Modals/CreateMarker/DateTimeField";
-	import CreateMarkerLocationField from "@/Components/Modals/CreateMarker/LocationField";
+	import TypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
+	import FileField from "@/Components/Modals/CreateMarker/FileField";
+	import TextField from "@/Components/Modals/CreateMarker/TextField";
+	import SelectField from "@/Components/Modals/CreateMarker/SelectField";
+	import DateTimeField from "@/Components/Modals/CreateMarker/DateTimeField";
+	import SearchLocationField from "@/Components/Modals/CreateMarker/SearchLocationField";
+	import TextareaField from "@/Components/Modals/CreateMarker/TextareaField";
 
 	export default {
-		name: "new-marker-modal",
+		name: "CreateMarker",
 		mixins: [
 			FormDataMixin
 		],
 
 		components: {
-			CreateMarkerLocationField,
-			CreateMarkerDateTimeField,
-			CreateMarkerTypeField,
-			CreateMarkerInstagramField,
-			CreateMarkerFileField,
-			CreateMarkerTypeToggle,
+			TextareaField,
+			SearchLocationField,
+			DateTimeField,
+			SelectField,
+			TextField,
+			FileField,
+			TypeToggle,
 			SlideUpModal,
 		},
 
@@ -91,14 +97,12 @@
 					dateTime: new Date(),
 					type: 'Visited'
 				},
-				extraData: {
-					lat: this.latLng.lat,
-					lng: this.latLng.lng,
-					time: new Date(),
-				},
 				loading: false,
-				formHeaders: {
-					'Content-Type': 'multipart/form-data'
+				markerTypes: {
+					Visited: 'Visited',
+					Plan: 'Plan',
+					Suggestion: 'Suggestion',
+					Other: 'Other'
 				},
 				errors: null,
 			}
@@ -130,6 +134,7 @@
 					return;
 				}
 				this.form.description = this.marker.description;
+				this.form.location = this.marker.location;
 				this.form.type = this.marker.type;
 				this.form.dateTime = this.marker.time;
 				this.form.media.type = this.marker['media[type]'];
@@ -162,26 +167,21 @@
 			},
 		},
 
-		watch: {
-			latLng(value) {
-				this.extraData.lat = value.lat;
-				this.extraData.lng = value.lng;
-			},
+		computed: {
+			extraData() {
+				return {
+					lat: this.latLng.lat,
+					lng: this.latLng.lng,
+					time: this.form.dateTime,
+				};
+			}
+		},
 
+		watch: {
 			marker() {
 				this.prefill();
 			},
-
-			'form.dateTime'(value) {
-				this.extraData.time = value;
-			}
 		}
 
 	}
 </script>
-
-<style scoped lang="scss">
-	.field > .field {
-		margin-bottom: 0;
-	}
-</style>
