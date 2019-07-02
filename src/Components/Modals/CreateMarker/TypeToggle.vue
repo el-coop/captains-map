@@ -4,18 +4,18 @@
 		<ul>
 			<li :class="{ 'is-active': type === 'image'}">
 				<a @click="type = 'image'">
-                                <span class="icon is-small">
-                                    <font-awesome-icon icon="file-image"/>
-                                </span>
+					<span class="icon is-small">
+						<FontAwesomeIcon icon="file-image"/>
+					</span>
 					<span>Upload file</span>
 				</a>
 
 			</li>
 			<li :class="{ 'is-active': type === 'instagram'}">
 				<a @click="type = 'instagram'">
-                                <span class="icon">
-                                    <font-awesome-icon icon="camera-retro"/>
-                                </span>
+					<span class="icon">
+						<FontAwesomeIcon icon="camera-retro"/>
+					</span>
 					<span>Instagram</span>
 				</a>
 			</li>
@@ -25,7 +25,7 @@
 
 <script>
 	export default {
-		name: "create-marker-type-toggle",
+		name: "TypeToggle",
 
 		props: {
 			value: {

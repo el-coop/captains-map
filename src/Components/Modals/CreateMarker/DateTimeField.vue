@@ -15,7 +15,7 @@
 
 <script>
 	export default {
-		name: "create-marker-date-time-field",
+		name: "DateTimeField",
 
 		props: {
 			value: {

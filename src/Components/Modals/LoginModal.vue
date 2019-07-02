@@ -4,19 +4,14 @@
 			<p class="card-header-title">Login</p>
 		</template>
 		<template #content>
-			<div class="field">
-				<label>Username</label>
-				<div class="control">
-					<input class="input is-success" type="text" placeholder="Username" v-model="form.username" required>
-				</div>
-				<p class="help is-danger" v-if="error">The credentials are invalid</p>
-			</div>
-			<div class="field">
-				<label>Password</label>
-				<p class="control">
-					<input class="input" type="password" placeholder="Password" v-model="form.password" required>
-				</p>
-			</div>
+			<TextField label="Username"
+					   placeholder="Username"
+					   v-model="form.username"
+					   :error="error ? 'The credentials are invalid' : ''"/>
+			<TextField label="Password"
+					   placeholder="Password"
+					   type="password"
+					   v-model="form.password"/>
 		</template>
 		<template #footer>
 			<p class="card-footer-item">
@@ -36,9 +31,10 @@
 
 <script>
 	import BaseModal from "@/Components/Utilities/BaseModal";
+	import TextField from "@/Components/Modals/CreateMarker/TextField";
 
 	export default {
-		components: {BaseModal},
+		components: {TextField, BaseModal},
 		name: "LoginModal",
 
 		data() {

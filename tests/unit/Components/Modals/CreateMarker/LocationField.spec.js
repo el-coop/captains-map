@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import LocationField from '@/Components/Modals/CreateMarker/LocationField';
+import LocationField from '@/Components/Modals/CreateMarker/SearchLocationField';
 import sinon from "sinon";
 import { LeafletMapService } from "@/Services/LeafletMapService";
 

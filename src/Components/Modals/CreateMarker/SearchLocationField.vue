@@ -22,7 +22,7 @@
 				<button class="button is-info" type="button" @click="search" :disabled="searched"
 						:class="{'is-loading': searching}">
 					<span class="icon">
-						<font-awesome-icon icon="search-location"/>
+						<FontAwesomeIcon icon="search-location"/>
 					</span>
 				</button>
 			</div>
@@ -37,7 +37,7 @@
 	import { LeafletMapService } from "@/Services/LeafletMapService";
 
 	export default {
-		name: "create-marker-location-field",
+		name: "SearchLocationField",
 
 		props: {
 			value: {

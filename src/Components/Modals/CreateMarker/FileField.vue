@@ -1,15 +1,15 @@
 <template>
 	<div class="field">
 		<div class="file is-boxed has-name is-light">
-			<label class="file-label">
+			<label class="file-label file-field">
 				<input class="file-input" type="file" :name="name" @change="imageSelected" ref="input">
 				<span class="file-cta">
-					<figure class="image is-max128" v-if="preview">
-						<img :src="preview">
+					<figure class="image file-field__image" v-if="preview">
+						<img :src="preview" class="file-field__image-img">
 					</figure>
 					<template v-else>
 						<span class="file-icon">
-							<font-awesome-icon icon="upload"/>
+							<FontAwesomeIcon icon="upload"/>
 						</span>
 						<span class="file-label">
 							Choose an image
@@ -17,16 +17,16 @@
 					</template>
 				</span>
 				<span class="file-name"
-					  v-text="file ? file.name : 'Choose an image'"></span>
+					  v-text="file ? file.name : 'Choose an image'"/>
 			</label>
 		</div>
-		<p class="help is-danger" v-if="error" v-text="error"></p>
+		<p class="help is-danger" v-if="error" v-text="error"/>
 	</div>
 </template>
 
 <script>
 	export default {
-		name: "create-marker-file-field",
+		name: "FileField",
 
 		props: {
 			value: {
@@ -45,7 +45,7 @@
 			},
 			initPreview: {
 				default: false
-			}
+			},
 		},
 
 		data() {
@@ -87,22 +87,3 @@
 		}
 	}
 </script>
-
-<style scoped lang="scss">
-	.image.is-max128 {
-		max-height: 128px;
-		max-width: 128px;
-
-		> img {
-			height: auto;
-			width: auto;
-			margin: auto;
-			max-height: 100%;
-			max-width: 100%;
-		}
-	}
-
-	.file-label {
-		margin: auto;
-	}
-</style>

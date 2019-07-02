@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
-import TypeField from '@/Components/Modals/CreateMarker/TypeField';
+import TypeField from '@/Components/Modals/CreateMarker/SelectField';
 
 describe('CreateMarker/TypeField.vue', () => {
 

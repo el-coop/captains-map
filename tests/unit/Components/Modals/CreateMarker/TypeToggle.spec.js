@@ -5,7 +5,7 @@ import TypeToggle from '@/Components/Modals/CreateMarker/TypeToggle';
 describe('CreateMarker/TypeToggle.vue', () => {
 
 	const stubs = {
-		'font-awesome-icon': true
+		FontAwesomeIcon: true
 	};
 
 	it('Renders', () => {

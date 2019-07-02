@@ -27,8 +27,8 @@ describe('CreateMarker.vue', () => {
 	const stubs = {
 		VModal: true,
 		FontAwesomeIcon: true,
-		'create-marker-type-toggle': true,
-		'create-marker-file-field': true,
+		TypeToggle: true,
+		FileField: true,
 		'create-marker-date-time-field': true,
 		'create-marker-type-field': true
 	};
@@ -64,8 +64,8 @@ describe('CreateMarker.vue', () => {
 			stubs
 		});
 
-		assert.isTrue(wrapper.find('create-marker-type-toggle-stub').exists());
-		assert.isTrue(wrapper.find('create-marker-file-field-stub').exists());
+		assert.isTrue(wrapper.find('typetoggle-stub').exists());
+		assert.isTrue(wrapper.find('filefield-stub').exists());
 		assert.isTrue(wrapper.find('create-marker-date-time-field-stub').exists());
 		assert.isTrue(wrapper.find('create-marker-type-field-stub').exists());
 	});

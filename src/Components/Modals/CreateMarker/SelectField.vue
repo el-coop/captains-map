@@ -1,19 +1,19 @@
 <template>
 	<div class="field">
-		<label for="type" class="label">Type</label>
+		<label for="type" class="label" v-text="label" />
 		<div class="select">
 			<select id="type" name="type" v-model="type">
-				<option v-for="(markerType) in markerTypes" :value="markerType"
-						v-text="markerType"></option>
+				<option v-for="(option, key) in options" :value="key"
+						v-text="option"/>
 			</select>
 		</div>
-		<p class="help is-danger" v-if="error">Invalid marker type.</p>
+		<p class="help is-danger" v-if="error" v-text="error"/>
 	</div>
 </template>
 
 <script>
 	export default {
-		name: "create-marker-type-field",
+		name: "SelectField",
 
 		props: {
 			value: {
@@ -25,6 +25,14 @@
 			error: {
 				type: String,
 				default: ''
+			},
+			options: {
+				type: Object,
+				required: true
+			},
+			label: {
+				type: String,
+				required: true
 			}
 		},
 
