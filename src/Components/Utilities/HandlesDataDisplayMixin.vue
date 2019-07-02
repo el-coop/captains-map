@@ -1,4 +1,13 @@
 <script>
+
+	function zeroFormat(value) {
+		if (value < 10) {
+			return `0${value}`;
+		}
+
+		return value;
+	}
+
 	export default {
 		methods: {
 			calculateUnverifiedImage(src) {
@@ -25,12 +34,7 @@
 			dateDisplay(value) {
 				const date = new Date(value);
 
-				let hour = date.getUTCHours();
-				if (hour < 10) {
-					hour = `0${hour}`;
-				}
-
-				return `${date.getUTCDate()}/${date.getUTCMonth() + 1}/${date.getUTCFullYear()} ${hour}:${date.getUTCMinutes()}`;
+				return `${zeroFormat(date.getUTCDate())}/${zeroFormat(date.getUTCMonth() + 1)}/${date.getUTCFullYear()} ${zeroFormat(date.getUTCHours())}:${zeroFormat(date.getUTCMinutes())}`;
 			}
 		},
 

@@ -10,52 +10,10 @@
 </template>
 
 <script>
+	import FieldMixin from "@/Components/Utilities/FieldMixin";
+
 	export default {
 		name: "TextareaField",
-
-		props: {
-			value: {
-				type: String,
-				default: ''
-			},
-			error: {
-				type: String,
-				default: ''
-			},
-			label: {
-				type: String,
-				default: ''
-			},
-			placeholder: {
-				type: String,
-				default: ''
-			},
-			name: {
-				type: String,
-				default: ''
-			},
-			type: {
-				type: String,
-				default: 'text'
-			}
-		},
-
-		data() {
-			return {
-				inputId: `label_${this._uid}`
-			}
-		},
-
-
-		computed: {
-			val: {
-				get() {
-					return this.value;
-				},
-				set(value) {
-					this.$emit('input', value);
-				}
-			}
-		}
+		mixins: [FieldMixin],
 	}
 </script>

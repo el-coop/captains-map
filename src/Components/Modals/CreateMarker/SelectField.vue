@@ -2,7 +2,7 @@
 	<div class="field">
 		<label :for="inputId" class="label" v-text="label" v-if="label"/>
 		<div class="select">
-			<select :id="inputId" :name="name" v-model="type">
+			<select :id="inputId" :name="name" v-model="val">
 				<option v-for="(option, key) in options" :value="key"
 						v-text="option"/>
 			</select>
@@ -12,50 +12,17 @@
 </template>
 
 <script>
+	import FieldMixin from "@/Components/Utilities/FieldMixin";
+
 	export default {
 		name: "SelectField",
+		mixins: [FieldMixin],
 
 		props: {
-			value: {
-				type: String,
-				default() {
-					return null;
-				}
-			},
-			error: {
-				type: String,
-				default: ''
-			},
 			options: {
 				type: Object,
 				required: true
 			},
-			name: {
-				type: String,
-				default: ''
-			},
-			label: {
-				type: String,
-				default: ''
-			}
 		},
-
-
-		data() {
-			return {
-				inputId: `label_${this._uid}`
-			}
-		},
-
-		computed: {
-			type: {
-				get() {
-					return this.value;
-				},
-				set(value) {
-					this.$emit('input', value);
-				}
-			}
-		}
 	}
 </script>
