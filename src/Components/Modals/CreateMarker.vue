@@ -133,10 +133,13 @@
 					this.resetForm();
 					return;
 				}
+
+				const markerTime = new Date(this.marker.time);
+
 				this.form.description = this.marker.description;
 				this.form.location = this.marker.location;
 				this.form.type = this.marker.type;
-				this.form.dateTime = this.marker.time;
+				this.form.dateTime = markerTime.setMinutes(markerTime.getMinutes() + markerTime.getTimezoneOffset());
 				this.form.media.type = this.marker['media[type]'];
 				this.form.media.path = this.marker['media[path]'];
 				this.form.media.file = null;
