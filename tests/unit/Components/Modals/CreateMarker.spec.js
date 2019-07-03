@@ -10,7 +10,7 @@ describe('CreateMarker.vue', () => {
 		description: 'test',
 		type: 'Planned',
 		location: 'location',
-		time: 2,
+		time: new Date(2),
 		'media[type]': 'instagram',
 		'media[path]': 'path',
 		error: {
@@ -152,6 +152,8 @@ describe('CreateMarker.vue', () => {
 
 		wrapper.vm.prefill();
 
+		const date = new Date(2);
+
 		assert.deepEqual(wrapper.vm.$data.form, {
 			media: {
 				file: null,
@@ -162,7 +164,7 @@ describe('CreateMarker.vue', () => {
 			description: 'test',
 			location: 'location',
 			type: 'Planned',
-			dateTime: 2,
+			dateTime: date.setMinutes(date.getMinutes() + date.getTimezoneOffset()),
 		});
 	});
 
