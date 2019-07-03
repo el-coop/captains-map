@@ -30,7 +30,7 @@ describe('CreateMarker/DateTimeField.vue', () => {
 			time: '13:55'
 		});
 
-		const expectedTime = new Date('2018-12-17 13:55');
+		const expectedTime = new Date('2018-12-17T13:55Z');
 
 		assert.deepEqual(wrapper.vm.getDateTime(), expectedTime);
 	});
@@ -71,6 +71,14 @@ describe('CreateMarker/DateTimeField.vue', () => {
 		assert.deepEqual(wrapper.vm.formatTime(Date.now()), `${hour}:${minutes}`);
 	});
 
+	it('It emits input at start', () => {
+		const wrapper = shallowMount(DateTimeField);
+
+
+		assert.deepEqual(wrapper.emitted().input[0][0], wrapper.vm.getDateTime());
+	});
+
+
 	it('It emits input when time is changed', () => {
 		const wrapper = shallowMount(DateTimeField);
 
@@ -79,11 +87,11 @@ describe('CreateMarker/DateTimeField.vue', () => {
 		});
 
 
-		assert.deepEqual(wrapper.emitted().input[0][0], wrapper.vm.getDateTime());
+		assert.deepEqual(wrapper.emitted().input[1][0], wrapper.vm.getDateTime());
 	});
 
 
-	it('It emits input when date is changed', () => {
+	it('It emits input when date is changed', async() => {
 		const wrapper = shallowMount(DateTimeField);
 
 		wrapper.setData({
@@ -91,6 +99,6 @@ describe('CreateMarker/DateTimeField.vue', () => {
 		});
 
 
-		assert.deepEqual(wrapper.emitted().input[0][0], wrapper.vm.getDateTime());
+		assert.deepEqual(wrapper.emitted().input[1][0], wrapper.vm.getDateTime());
 	});
 });

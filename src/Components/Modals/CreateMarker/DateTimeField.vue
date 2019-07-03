@@ -35,7 +35,7 @@
 
 		methods: {
 			getDateTime() {
-				return new Date(`${this.date} ${this.time}`);
+				return new Date(`${this.date}T${this.time}Z`);
 			},
 
 			formatDate(date) {
@@ -80,8 +80,11 @@
 		},
 
 		watch: {
-			date(value) {
-				this.$emit('input', this.getDateTime());
+			date: {
+				immediate: true,
+				handler(value) {
+					this.$emit('input', this.getDateTime());
+				}
 			},
 			time(value) {
 				this.$emit('input', this.getDateTime());
