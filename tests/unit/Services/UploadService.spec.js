@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import { assert } from 'chai';
 import uploadService from '@/Services/UploadService';
 import Store from '@/store';
-import http from '@/Services/http.service';
+import http from '@/Services/HttpService';
 
 describe('UploadService.js', () => {
 

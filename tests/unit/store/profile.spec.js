@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import profileStore from '@/store/profile';
-import http from '@/Services/http.service';
+import http from '@/Services/HttpService';
 
 describe('User Store', () => {
 

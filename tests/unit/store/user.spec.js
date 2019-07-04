@@ -1,9 +1,9 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import auth from '@/Services/authentication.service';
+import auth from '@/Services/AuthenticationService';
 import userStore from '@/store/user';
 import router from '@/router';
-import http from '@/Services/http.service';
+import http from '@/Services/HttpService';
 
 describe('User Store', () => {
 

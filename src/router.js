@@ -1,8 +1,8 @@
 import Router from 'vue-router';
 import ViewPage from '@/Views/ViewPage';
 import EditPage from '@/Views/EditPage';
-import Auth from '@/Middleware/Auth.middleware';
-import cache from "@/Services/cache.service";
+import Auth from '@/Middleware/AuthMiddleware';
+import cache from "@/Services/Cache";
 
 const router = new Router({
 	mode: 'history',

@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import Profile from '@/Components/Dashboard/Profile';
 import sinon from 'sinon';
 import globe from '@/assets/images/globe-icon.png';
-import auth from '@/Services/authentication.service';
+import auth from '@/Services/AuthenticationService';
 
 describe('Profile.vue', () => {
 

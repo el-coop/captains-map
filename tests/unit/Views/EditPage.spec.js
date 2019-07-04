@@ -3,7 +3,7 @@ import EditPage from '@/Views/EditPage.vue';
 import { assert } from 'chai';
 import sinon from "sinon";
 import map from "@/Services/LeafletMapService";
-import auth from '@/Services/authentication.service';
+import auth from '@/Services/AuthenticationService';
 import Vue from 'vue';
 
 describe('EditPage.vue', () => {

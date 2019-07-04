@@ -1,5 +1,5 @@
 import leaflet from 'leaflet';
-import Cache from './cache.service';
+import Cache from './Cache';
 
 const TileLayerOffline = leaflet.TileLayer.extend({
 

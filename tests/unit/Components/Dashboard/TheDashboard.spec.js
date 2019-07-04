@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import TheDashboard from '@/Components/Dashboard/TheDashboard';
 import sinon from 'sinon';
-import Auth from '@/Services/authentication.service';
+import Auth from '@/Services/AuthenticationService';
 
 describe('TheDashboard.vue', () => {
 

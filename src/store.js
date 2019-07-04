@@ -4,7 +4,7 @@ import User from '@/store/user';
 import Markers from '@/store/markers';
 import Profile from '@/store/profile';
 import Uploads from '@/store/uploads';
-import cache from "@/Services/cache.service";
+import cache from "@/Services/Cache";
 import router from './router'
 
 Vue.use(Vuex);

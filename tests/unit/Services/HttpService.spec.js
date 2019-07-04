@@ -2,8 +2,8 @@ import sinon from 'sinon';
 import { assert } from 'chai';
 import axios from 'axios';
 import moxios from 'moxios';
-import http from '@/Services/http.service';
-import cache from '@/Services/cache.service';
+import http from '@/Services/HttpService';
+import cache from '@/Services/Cache';
 import Store from '@/store';
 
 describe('Http service', () => {

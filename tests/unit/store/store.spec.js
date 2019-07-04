@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import { actions } from '@/store';
-import cache from '@/Services/cache.service';
+import cache from '@/Services/Cache';
 import router from '@/router';
 
 describe('Store', () => {

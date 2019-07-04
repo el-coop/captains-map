@@ -2,9 +2,9 @@ import sinon from 'sinon';
 import { assert } from 'chai';
 import Store from '@/store';
 import uploadsStore from '@/store/uploads';
-import cache from '@/Services/cache.service';
+import cache from '@/Services/Cache';
 import uploadService from '@/Services/UploadService';
-import auth from '@/Services/authentication.service';
+import auth from '@/Services/AuthenticationService';
 
 
 describe('Upload store', () => {

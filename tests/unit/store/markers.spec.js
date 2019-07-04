@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import markersStore from '@/store/markers';
-import http from '@/Services/http.service';
-import cache from "@/Services/cache.service";
+import http from '@/Services/HttpService';
+import cache from "@/Services/Cache";
 
 const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 

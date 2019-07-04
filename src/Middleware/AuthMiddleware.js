@@ -1,4 +1,4 @@
-import Auth from '../Services/authentication.service';
+import Auth from '../Services/AuthenticationService';
 
 class AuthMiddleware {
 	handle(to, from, next) {

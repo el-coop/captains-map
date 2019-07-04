@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import SearchBar from '@/Components/Dashboard/TopBar/SearchBar';
 import Map, { LeafletMapService } from '@/Services/LeafletMapService';
-import http from '@/Services/http.service';
+import http from '@/Services/HttpService';
 import sinon from 'sinon';
 
 

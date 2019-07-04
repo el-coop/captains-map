@@ -41,7 +41,7 @@
 	import Profile from "@/Components/Dashboard/Profile";
 	import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
 	import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar';
-	import auth from '@/Services/authentication.service';
+	import auth from '@/Services/AuthenticationService';
 	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter";
 
 	export default {

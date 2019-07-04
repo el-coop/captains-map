@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import auth from '@/Services/authentication.service';
+import auth from '@/Services/AuthenticationService';
 import Store from '@/store';
 
 describe('Authentication Service', () => {

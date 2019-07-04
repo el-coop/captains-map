@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import Leaflet from 'leaflet';
 import { assert } from 'chai';
 import Map, { LeafletMapService } from '@/Services/LeafletMapService';
-import Http from '@/Services/http.service';
+import Http from '@/Services/HttpService';
 import { tileLayer, geocoder } from '@/Settings/leaflet.settings';
 
 const el = {};

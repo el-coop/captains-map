@@ -1,5 +1,5 @@
-import $http from '../Services/http.service';
-import Auth from '../Services/authentication.service';
+import $http from '../Services/HttpService';
+import Auth from '../Services/AuthenticationService';
 import router from '@/router';
 
 export default {

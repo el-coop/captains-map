@@ -7,7 +7,7 @@
 
 <script>
 	import TheDashboard from '@/Components/Dashboard/TheDashboard';
-	import auth from '@/Services/authentication.service';
+	import auth from '@/Services/AuthenticationService';
 	import map from '@/Services/LeafletMapService';
 	import LoadsMarkersMixin from "@/Views/LoadsMarkersMixin";
 	import CreateMarker from "@/Components/Modals/CreateMarker";

@@ -1,5 +1,5 @@
-import cache from '@/Services/cache.service';
-import auth from '@/Services/authentication.service';
+import cache from '@/Services/Cache';
+import auth from '@/Services/AuthenticationService';
 import UploadService from '@/Services/UploadService';
 import ImageService from '@/Services/ImageService';
 
