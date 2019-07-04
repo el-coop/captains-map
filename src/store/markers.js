@@ -4,6 +4,44 @@ import axios from "axios";
 
 const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
 
+function calculateRoute({username, borders}, settings) {
+	let route = `marker/${username}`;
+	if (settings.startingId) {
+		if (settings.pageIncluding) {
+			route += `/${settings.startingId}`;
+		} else {
+			route += `?startingId=${settings.startingId}`;
+		}
+	}
+	if (borders) {
+		route += `${settings.startingId ? '&' : '?'}borders=` + JSON.stringify(borders);
+	}
+	return route;
+}
+
+function addMarkers(response, state, commit) {
+	state.hasNext = response.data.pagination.hasNext;
+	if (typeof response.data.pagination.page !== "undefined") {
+		state.serverPage = response.data.pagination.page;
+	}
+	response.data.markers.forEach((item) => {
+		commit('add', item)
+	});
+}
+
+function calculateSettings(payload) {
+	const settings = {
+		startingId: false,
+		pageIncluding: false
+	};
+
+	if (!isNaN(payload)) {
+		settings.startingId = payload
+	} else {
+		Object.assign(settings, payload);
+	}
+	return settings;
+}
 
 export default {
 	namespaced: true,
@@ -65,64 +103,38 @@ export default {
 
 	},
 	actions: {
-		async load({commit, state}, payload = false) {
-			let startingId = false;
-			let pageIncluding = false;
-			if (payload) {
-				if (!isNaN(payload)) {
-					startingId = payload
-				} else {
-					startingId = payload.startingId || false;
-					pageIncluding = payload.pageIncluding || false;
-				}
-			}
+		async load({commit, state}, payload = {}) {
+			const settings = calculateSettings(payload);
+			let response;
 			try {
 				state.loading = true;
-				if (!startingId) {
+				if (!settings.startingId) {
 					commit('clear');
 				}
-				let route = `marker/${state.username}`;
-				if (startingId) {
-					if (pageIncluding) {
-						route += `/${startingId}`;
-					} else {
-						route += `?startingId=${startingId}`;
-					}
-				}
-				if (state.borders) {
-					route += `${startingId ? '&' : '?'}borders=` + JSON.stringify(state.borders);
-				}
+				const route = calculateRoute(state, settings);
 
 				if (state.loadingCancelToken) {
 					state.loadingCancelToken.cancel();
 				}
 				state.loadingCancelToken = axios.CancelToken.source();
-				const response = await $http.get(route, {
+				response = await $http.get(route, {
 					cancelToken: state.loadingCancelToken.token
 				});
 				if (response === 'canceled') {
 					return {
-						response: 'canceled'
+						response
 					};
 				}
 				if (response.status === 200 || response.status === 'cached') {
-					const markers = response.data.markers;
-					state.hasNext = response.data.pagination.hasNext;
-					if (typeof response.data.pagination.page !== "undefined") {
-						state.serverPage = response.data.pagination.page;
-					}
-					markers.forEach((item) => {
-						commit('add', item)
-					});
+					addMarkers(response, state, commit);
 				}
-				state.loading = false;
-				state.loadingCancelToken = null;
-				return response;
 			} catch (error) {
-				state.loading = false;
-				state.loadingCancelToken = null;
-				return error;
+				response = error;
 			}
+
+			state.loading = false;
+			state.loadingCancelToken = null;
+			return response;
 		},
 
 		async loadPrevious({commit, state}) {
