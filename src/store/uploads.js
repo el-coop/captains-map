@@ -1,27 +1,9 @@
 import cache from '@/Services/cache.service';
 import auth from '@/Services/authentication.service';
 import UploadService from '@/Services/UploadService';
+import ImageService from '@/Services/ImageService';
 
 const uploads = cache.caches().uploads;
-
-const imageToBlob = function (image) {
-	if (typeof FileReader === "undefined") {
-		return image
-	}
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.addEventListener('abort', (error) => {
-			reject(error);
-		});
-		reader.addEventListener('error', (error) => {
-			reject(error);
-		});
-		reader.addEventListener('loadend', (event) => {
-			resolve(reader.result);
-		});
-		reader.readAsBinaryString(image);
-	});
-};
 
 export default {
 	namespaced: true,
@@ -92,7 +74,7 @@ export default {
 
 		async upload({commit}, data) {
 			if (data['media[type]'] === 'image' && data['media[image]']) {
-				data['media[image]'] = await imageToBlob(data['media[image]']);
+				data['media[image]'] = await ImageService.imageToBlob(data['media[image]']);
 			}
 
 			data.uploadTime = Date.now();
@@ -110,7 +92,7 @@ export default {
 		async returnToQueue({state, commit, rootState}, data) {
 			if (data['media[type]'] === 'image') {
 				if (data['media[image]'] && data['media[image]'].size) {
-					data['media[image]'] = await imageToBlob(data['media[image]']);
+					data['media[image]'] = await ImageService.imageToBlob(data['media[image]']);
 				} else {
 					const oldData = state.errored.find((marker) => {
 						return marker.uploadTime === data.uploadTime;

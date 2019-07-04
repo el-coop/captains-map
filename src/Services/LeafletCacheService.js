@@ -14,8 +14,7 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 		try {
 			const data = await Cache.get('map', key);
 			if (data) {
-				tile.src = data;
-				return;
+				return tile.src = data;
 			}
 		} catch (error) {
 
@@ -28,24 +27,25 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 		return `x${coords.x}y${coords.y}z${coords.z}`;
 	},
 
-	cacheSrc(key, tile) {
-		const xhr = new XMLHttpRequest();
-		xhr.open('get', tile.src);
-		xhr.responseType = 'blob';
-		xhr.onload = () => {
-			if (typeof FileReader === "undefined") {
-				return;
-			}
+	async cacheSrc(key, tile) {
+		if (typeof FileReader === "undefined") {
+			return;
+		}
+
+		try {
+			const response = await fetch(tile.src);
+			const result = await response.blob();
 			const fr = new FileReader();
 
 			fr.onload = async function () {
 				Cache.store('map', key, this.result, 604800);
 			};
 
-			fr.readAsDataURL(xhr.response); // async call
-		};
+			fr.readAsDataURL(result);
+		} catch (e) {
 
-		xhr.send();
+		}
+
 	}
 });
 
