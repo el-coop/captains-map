@@ -1,7 +1,7 @@
 import axios from "axios";
 import Store from '@/store';
 
-import Cache from '@/Services/cache.service';
+import Cache from '@/Services/Cache';
 
 let host = "/api";
 

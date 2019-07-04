@@ -1,4 +1,4 @@
-import http from '@/Services/http.service';
+import http from '@/Services/HttpService';
 import Store from '@/store';
 import ImageService from '@/Services/ImageService'
 

@@ -27,10 +27,10 @@
 
 		watch: {
 			'$store.state.Uploads.workingId': {
+				immediate: true,
 				handler() {
 					this.setStatus();
-				},
-				immediate: true
+				}
 			},
 
 			'marker.error'() {

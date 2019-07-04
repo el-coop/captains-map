@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { mount } from '@vue/test-utils';
 import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
 import sinon from 'sinon';
-import auth from '@/Services/authentication.service';
+import auth from '@/Services/AuthenticationService';
 
 describe('LoggedInBar.vue', () => {
 

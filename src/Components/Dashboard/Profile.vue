@@ -40,7 +40,7 @@
 <script>
 	import globe from '../../assets/images/globe-icon.png';
 	import AjaxForm from "@/Components/Utilities/AjaxForm";
-	import Auth from '@/Services/authentication.service';
+	import Auth from '@/Services/AuthenticationService';
 	import FileField from '@/Components/Modals/CreateMarker/FileField';
 
 	export default {

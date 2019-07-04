@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VModal from 'vue-js-modal';
-import { installer as HttpService } from '@/Services/http.service';
+import { installer as HttpService } from '@/Services/HttpService';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
 	faUpload,

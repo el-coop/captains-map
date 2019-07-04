@@ -1,6 +1,6 @@
 import leaflet from 'leaflet';
 import '@/Services/LeafletCacheService'
-import http from '@/Services/http.service';
+import http from '@/Services/HttpService';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 import { tileLayer } from '@/Settings/leaflet.settings';

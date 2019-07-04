@@ -1,4 +1,4 @@
-import $http from '../Services/http.service';
+import $http from '../Services/HttpService';
 
 export default {
 	namespaced: true,

@@ -28,7 +28,7 @@
 
 <script>
 	import SlideUpModal from "@/Components/Utilities/BaseModal";
-	import auth from '@/Services/authentication.service';
+	import auth from '@/Services/AuthenticationService';
 	import Photo from '@/Components/Global/Media/Photo';
 	import Instagram from '@/Components/Global/Media/Instagram';
 	import ViewMarkerHeader from "@/Components/Modals/ViewMarker/Header";

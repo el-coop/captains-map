@@ -42,7 +42,7 @@
 <script>
 	import Logout from "@/Components/Utilities/Logout";
 	import SearchBar from "@/Components/Dashboard/TopBar/SearchBar";
-	import auth from '@/Services/authentication.service';
+	import auth from '@/Services/AuthenticationService';
 	import TopBar from "@/Components/Dashboard/TopBar/TheTopBar";
 	import DrawerMobile from "@/Components/Utilities/DrawerMobile";
 

@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { shallowMount, mount } from '@vue/test-utils';
 import ViewMarker from '@/Components/Modals/ViewMarker';
 import sinon from 'sinon';
-import auth from '@/Services/authentication.service';
+import auth from '@/Services/AuthenticationService';
 
 describe('ViewMarker.vue', () => {
 	let marker;
