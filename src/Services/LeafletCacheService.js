@@ -11,14 +11,14 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 
 	async getSrc(tile, coords) {
 		const key = this.getTileKey(coords);
-		// try {
-		// 	const data = await Cache.get('map', key);
-		// 	if (data) {
-		// 		return tile.src = data;
-		// 	}
-		// } catch (error) {
-		//
-		// }
+		try {
+			const data = await Cache.get('map', key);
+			if (data) {
+				return tile.src = data;
+			}
+		} catch (error) {
+
+		}
 
 		this.cacheSrc(key, tile);
 	},
