@@ -32,18 +32,22 @@ const TileLayerOffline = leaflet.TileLayer.extend({
 			return;
 		}
 
+		const tileUrl = tile.src;
+		tile.src = '';
+
 		try {
-			const response = await fetch(tile.src);
+			const response = await fetch(tileUrl);
 			const result = await response.blob();
 			const fr = new FileReader();
 
 			fr.onload = async function () {
+				tile.src = this.result;
 				Cache.store('map', key, this.result, 604800);
 			};
 
 			fr.readAsDataURL(result);
 		} catch (e) {
-
+			tile.src = tileUrl;
 		}
 
 	}
