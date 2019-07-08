@@ -25,6 +25,13 @@ module.exports = {
 		},
 		themeColor: '#209CEE',
 		msTileColor: '#363636',
-		appleMobileWebAppCapable: "yes"
+		appleMobileWebAppCapable: "yes",
+		iconPaths: {
+			favicon32: 'img/icons/favicon-32x32.png',
+			favicon16: 'img/icons/favicon-16x16.png',
+			appleTouchIcon: 'img/icons/icon-120x120.png',
+			maskIcon: 'img/icons/pinned.svg',
+			msTileImage: 'img/icons/icon-144x144.png'
+		}
 	}
 };
