@@ -4,7 +4,7 @@
 			<ProfileOpen v-if="hasUsername" class="top-bar__profile"/>
 			<figure class="image is-32x32 is-hidden-mobile" v-else>
 				<picture>
-					<source srcset="data:image/gif;base64,"
+					<source srcset="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
 							media="(max-width: 768px)">
 					<img class="is-rounded" :src="logo">
 				</picture>
