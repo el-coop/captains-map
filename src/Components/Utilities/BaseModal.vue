@@ -79,7 +79,7 @@
 				if (window.innerWidth < 769) {
 					this.pivotY = 0.001;
 				} else {
-					this.pivotY = 0.5;
+					this.pivotY = 0.4;
 				}
 			},
 			opened() {
