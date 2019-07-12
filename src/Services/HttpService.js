@@ -29,6 +29,7 @@ class HttpService {
 		axios.defaults.headers.common[key] = value;
 	}
 
+
 	async get(url, headers = {}) {
 		if (url.indexOf('http') !== 0) {
 			url = `${host}/${url}`;
@@ -58,22 +59,36 @@ class HttpService {
 
 	}
 
-	async post(url, data = {}, headers = {}) {
+	async post(url, data = {}, headers = {}, repeat = true) {
 		try {
 			return await axios.post(`${host}/${url}`, data, {
 				headers
 			});
 		} catch (error) {
+			if (error.response.data.message === 'invalid csrf token' && repeat) {
+				return await this.repeatWithCsrf('post', url, headers, data);
+			}
 			return error.response;
 		}
 	}
 
-	async delete(url, headers = {}) {
+	async delete(url, headers = {}, repeat = true) {
 		try {
 			return await axios.delete(`${host}/${url}`, headers);
 		} catch (error) {
+			if (error.response.data.message === 'invalid csrf token' && repeat) {
+				return await this.repeatWithCsrf('delete', url, headers);
+			}
 			return error.response;
 		}
+	}
+
+	async repeatWithCsrf(method, url, headers, data = {}) {
+		await this.get('getCsrf');
+		if (method === "delete") {
+			return await this.delete(url, headers, false);
+		}
+		return await this.post(url, data, headers, false);
 	}
 
 	static install(Vue) {
