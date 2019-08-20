@@ -79,20 +79,49 @@
 		border-style: solid;
 		border-width: 2px;
 
+		&:after {
+			content: attr(alt);
+			position: absolute;
+			height: 110%;
+			width: 110%;
+			top: 0;
+			left: 0;
+			background-color: rgba(54, 54, 54, 0.9);
+			border-style: solid;
+			border-width: 2px;
+			padding: calc(10% - 2px);
+		}
+
 		&-Visited {
 			border-color: $turquoise;
+
+			&:after {
+				border-color: $turquoise;
+			}
 		}
 
 		&-Plan {
 			border-color: $cyan;
+
+			&:after {
+				border-color: $cyan;
+			}
 		}
 
 		&-Suggestion {
 			border-color: $red;
+
+			&:after {
+				border-color: $red;
+			}
 		}
 
 		&-Other {
 			border-color: $white-ter;
+
+			&:after {
+				border-color: $white-ter;
+			}
 		}
 	}
 
