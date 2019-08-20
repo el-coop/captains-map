@@ -65,7 +65,7 @@ class HttpService {
 				headers
 			});
 		} catch (error) {
-			if (error.response.data.message === 'invalid csrf token' && repeat) {
+			if (error.response && error.response.data.message === 'invalid csrf token' && repeat) {
 				return await this.repeatWithCsrf('post', url, headers, data);
 			}
 			return error.response;
