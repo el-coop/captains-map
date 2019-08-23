@@ -1,7 +1,7 @@
 <template>
 	<div class="layout">
 		<TheDashboard/>
-		<CreateMarker :latLng="latLng" :marker="editedMarker"/>
+		<CreateMarker/>
 	</div>
 </template>
 
@@ -24,22 +24,6 @@
 			TheDashboard, CreateMarker
 		},
 
-		created() {
-			this.$bus.$on('map-create-marker', this.createMarker);
-			this.$bus.$on('user-marker-click', this.createMarker);
-		},
-		beforeDestroy() {
-			this.$bus.$off('map-create-marker', this.createMarker);
-			this.$bus.$off('user-marker-click', this.createMarker);
-		},
-
-		data() {
-			return {
-				latLng: {},
-				editedMarker: null
-			}
-		},
-
 		methods: {
 
 			envSetup() {
@@ -49,16 +33,6 @@
 
 			async markersLoaded() {
 				map.goToCurrentLocation();
-			},
-
-			createMarker(data) {
-				if (data.lat && data.lng) {
-					this.latLng = data;
-				} else {
-					this.latLng = data.event.latlng;
-				}
-				this.editedMarker = data.marker || null;
-				this.$modal.show('create-marker');
 			},
 		},
 

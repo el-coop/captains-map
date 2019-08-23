@@ -1,20 +1,16 @@
-.v--modal-overlay {
-	pointer-events: visible;
-}
+.modal {
+	pointer-events: all;
+	justify-content: start;
+	@media #{$above-phone} {
+		justify-content: center;
+	}
 
-.v--modal-box {
-	max-height: 100%;
-	overflow: visible !important;
-}
+	&__close {
+		color: $grey-light;
 
-.v--modal {
-	background: transparent !important;
-}
-
-.v--modal__close{
-	color: $grey-light;
-
-	&:hover {
-		color: $white;
+		&:hover {
+			color: $white;
+		}
 	}
 }
+

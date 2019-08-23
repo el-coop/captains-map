@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import VModal from 'vue-js-modal';
 import { installer as HttpService } from '@/Services/HttpService';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -30,7 +29,6 @@ import VueIziToast from 'vue-izitoast';
 
 library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faSignOutAlt, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia, faUserAlt, faChevronDown, faSignInAlt, faExternalLinkSquareAlt, faSearchLocation, faShareAlt);
 
-Vue.use(VModal, {componentName: "VModal"});
 Vue.use(Meta);
 Vue.component('FontAwesomeIcon', FontAwesomeIcon);
 Vue.use(HttpService);

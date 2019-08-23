@@ -1,5 +1,5 @@
 <template>
-	<BaseModal name="register" route-name="">
+	<BaseModal route-name="" :active="active" @close="$emit('change',false)">
 		<template #header>
 			<p class="card-header-title">Register</p>
 		</template>
@@ -20,7 +20,7 @@
 		<template #footer>
 			<p class="card-footer-item">
                     <span>
-                        <a @click="$modal.hide('register')">Close</a>
+                        <a @click="$emit('change',false)">Close</a>
                     </span>
 			</p>
 			<p class="card-footer-item">
@@ -38,5 +38,17 @@
 	export default {
 		name: "RegisterModal",
 		components: {BaseModal},
+
+		model: {
+			prop: 'active',
+			event: 'change'
+		},
+
+		props: {
+			active: {
+				type: Boolean,
+				default: false
+			},
+		},
 	}
 </script>

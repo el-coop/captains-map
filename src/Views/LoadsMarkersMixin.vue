@@ -10,7 +10,7 @@
 
 		methods: {
 			$_envSetup(){
-				this.$modal.hide('404');
+				this.$bus.$emit('env-setup');
 				this.$store.commit('Markers/setBorders', false);
 			},
 
@@ -21,7 +21,7 @@
 				}
 
 				if (response.status === 404) {
-					return this.$modal.show('404');
+					return this.$bus.$emit('404');
 				}
 
 				this.markersLoaded(response);

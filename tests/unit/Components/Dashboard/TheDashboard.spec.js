@@ -20,9 +20,6 @@ describe('TheDashboard.vue', () => {
 				$on: sinon.spy(),
 				$off: sinon.spy()
 			},
-			$modal: {
-				show: sinon.spy()
-			},
 			$store: {
 				state: {
 					Markers: {
@@ -59,7 +56,6 @@ describe('TheDashboard.vue', () => {
 		});
 
 		assert.isTrue(mocks.$bus.$on.calledWith('moving-map'));
-		assert.isTrue(mocks.$bus.$on.calledWith('marker-click'));
 	});
 
 	it('Unregisters listeners', () => {
@@ -74,26 +70,6 @@ describe('TheDashboard.vue', () => {
 		wrapper.destroy();
 
 		assert.isTrue(mocks.$bus.$off.calledWith('moving-map'));
-		assert.isTrue(mocks.$bus.$off.calledWith('marker-click'));
-	});
-
-	it('selects a marker to show and displays the modal', () => {
-		const wrapper = shallowMount(TheDashboard, {
-			stubs,
-			mocks
-		});
-
-		const marker = {
-			id: 1,
-			lat: 1,
-			lng: 1
-		};
-
-		wrapper.vm.showMarker(marker);
-
-		assert.deepEqual(wrapper.vm.$data.selectedMarker, marker);
-		assert.isTrue(mocks.$modal.show.calledOnce);
-		assert.isTrue(mocks.$modal.show.calledWith('view-marker'));
 	});
 
 	it('closes the sidebar', () => {

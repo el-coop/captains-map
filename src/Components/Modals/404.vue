@@ -1,5 +1,5 @@
 <template>
-	<BaseModal name="404" @before-close="$router.push('/')" route-name="404">
+	<BaseModal @close="$router.push('/')" route-name="404" v-model="modal">
 		<template #header>
 			<p class="card-header-title">404</p>
 		</template>
@@ -16,7 +16,7 @@
 		<template #footer>
 			<p class="card-footer-item">
 				<span>
-					<a @click="$modal.hide('404')">Take me out of here!</a>
+					<a @click="modal = false">Take me out of here!</a>
 				</span>
 			</p>
 		</template>
@@ -32,12 +32,33 @@
 		name: "NotFound",
 		components: {BaseModal},
 
+		mounted() {
+			this.$bus.$on('404', this.openModal);
+			this.$bus.$on('env-setup', this.closeModal);
+		},
+
+		beforeDestroy() {
+			this.$bus.$off('404', this.openModal);
+			this.$bus.$off('env-setup', this.closeModal);
+		},
+
 		data() {
 			return {
 				atlantis,
 				tear,
+				modal: false
 			}
 		},
+
+		methods: {
+			openModal() {
+				this.modal = true;
+			},
+			closeModal() {
+				this.modal = false;
+			}
+		}
+
 	}
 </script>
 

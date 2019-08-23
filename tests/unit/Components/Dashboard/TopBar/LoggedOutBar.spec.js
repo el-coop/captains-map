@@ -24,9 +24,6 @@ describe('LoggedOutBar.vue', () => {
 				getters: {
 					'Uploads/allFiles': []
 				}
-			},
-			$modal: {
-				show: sinon.spy()
 			}
 		};
 	});
@@ -48,16 +45,19 @@ describe('LoggedOutBar.vue', () => {
 		assert.equal(wrapper.findAll('button.is-light.is-outlined').at(1).text(), 'Register');
 	});
 
-	it('Calls login modal when log in clicked', () => {
+	it('Starts login modal when log in clicked', () => {
 		const wrapper = mount(LoggedOutBar, {
 			stubs,
 			mocks
 		});
 
+		wrapper.setData({
+			loginModal: false
+		});
+
 		wrapper.findAll('.button.is-light.is-outlined').at(0).trigger('click');
 
-		assert.isTrue(mocks.$modal.show.calledOnce);
-		assert.isTrue(mocks.$modal.show.calledWith('login'));
+		assert.isTrue(wrapper.vm.$data.loginModal);
 
 	});
 
@@ -67,10 +67,13 @@ describe('LoggedOutBar.vue', () => {
 			mocks
 		});
 
+		wrapper.setData({
+			registerModal: false
+		});
+
 		wrapper.findAll('.button.is-light.is-outlined').at(1).trigger('click');
 
-		assert.isTrue(mocks.$modal.show.calledOnce);
-		assert.isTrue(mocks.$modal.show.calledWith('register'));
+		assert.isTrue(wrapper.vm.$data.registerModal);
 
 	});
 });

@@ -5,49 +5,73 @@ import sinon from 'sinon';
 
 describe('LoginModal.vue', () => {
 	const stubs = {
-		VModal: true,
 		FontAwesomeIcon: true
+	};
+
+	const propsData = {
+		active: true
+	};
+
+	const mocks = {
+		$store: {
+			dispatch: sinon.stub().returns(false)
+		},
+		$router: {
+			push: sinon.spy()
+		}
 	};
 
 	afterEach(() => {
 		sinon.restore();
 	});
 
-	it('renders', () => {
+	it('renders modal when active', () => {
+		const wrapper = mount(LoginModal, {
+			propsData,
+			stubs
+		});
+
+		assert.isTrue(wrapper.find('.modal').exists());
+		assert.include(wrapper.html(), 'Login');
+	});
+
+	it('doesnt render modal when not active', () => {
 		const wrapper = mount(LoginModal, {
 			stubs
 		});
 
-		assert.isTrue(wrapper.find('vmodal-stub').exists());
-		assert.include(wrapper.html(), 'Login');
+		assert.isTrue(wrapper.find('.modal').exists());
+		assert.notInclude(wrapper.html(), 'Login');
 	});
 
 	it('closes modal on click', () => {
-		const mocks = {
-			$modal: {
-				hide: sinon.spy()
-			}
-		};
 		const wrapper = mount(LoginModal, {
 			stubs,
-			mocks
+			propsData,
 		});
 
-		wrapper.find('a').trigger('click');
+		wrapper.find('.card-footer-item a').trigger('click');
 
-		assert.isTrue(mocks.$modal.hide.calledOnce);
-		assert.isTrue(mocks.$modal.hide.calledWith('login'));
+		assert.equal(wrapper.emitted().change[0][0], false);
+	});
+
+	it('closes modal when emitted form modal', () => {
+		const wrapper = mount(LoginModal, {
+			stubs,
+			propsData,
+		});
+
+		wrapper.vm.$children[0].$emit('close');
+
+		assert.equal(wrapper.emitted().change[0][0], false);
 	});
 
 	it('Attempts logging in and shows errors', async () => {
-		const mocks = {
-			$store: {
-				dispatch: sinon.stub().returns(false)
-			}
-		};
+
 		const wrapper = mount(LoginModal, {
 			stubs,
-			mocks
+			mocks,
+			propsData
 		});
 
 		wrapper.setData({
@@ -72,17 +96,11 @@ describe('LoginModal.vue', () => {
 
 
 	it('Attempts logging in and changes route on success', async () => {
-		const mocks = {
-			$store: {
-				dispatch: sinon.stub().returns(true)
-			},
-			$router: {
-				push: sinon.spy()
-			}
-		};
+		mocks.$store.dispatch = sinon.stub().returns(true);
 		const wrapper = mount(LoginModal, {
 			stubs,
-			mocks
+			mocks,
+			propsData
 		});
 
 		wrapper.setData({
@@ -103,7 +121,6 @@ describe('LoginModal.vue', () => {
 
 		assert.isTrue(mocks.$router.push.calledOnce);
 		assert.isTrue(mocks.$router.push.calledWith('/edit'));
-
 
 	});
 });

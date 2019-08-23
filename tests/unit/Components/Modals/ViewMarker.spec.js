@@ -7,13 +7,27 @@ import auth from '@/Services/AuthenticationService';
 describe('ViewMarker.vue', () => {
 	let marker;
 	const stubs = {
-		VModal: true,
 		ViewMarkerHeader: true,
 		ViewMarkerContent: true,
 		Photo: true,
 		FontAwesomeIcon: true,
 		Instagram: true
 	};
+
+	const mocks = {
+		$bus: {
+			$on: sinon.stub(),
+			$off: sinon.stub(),
+		},
+		$router: {
+			pushRoute: sinon.stub(),
+			push: sinon.stub()
+		},
+		$toast: {
+			error: sinon.spy()
+		}
+	};
+
 
 	beforeEach(() => {
 		marker = {
@@ -34,15 +48,38 @@ describe('ViewMarker.vue', () => {
 		sinon.restore();
 	});
 
-	it('Renders with photo content', () => {
-		const wrapper = mount(ViewMarker, {
-			propsData: {
-				marker
-			},
-			stubs
+	it('Registers listeners', () => {
+		shallowMount(ViewMarker, {
+			stubs,
+			mocks
 		});
 
-		assert.isTrue(wrapper.find('vmodal-stub').exists());
+		assert.isTrue(mocks.$bus.$on.calledWith('marker-click'));
+	});
+
+	it('Unregisters listeners', () => {
+		const wrapper = shallowMount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.destroy();
+
+		assert.isTrue(mocks.$bus.$off.calledWith('marker-click'));
+	});
+
+	it('Renders with photo content', () => {
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+
+		assert.isTrue(wrapper.find('.modal').exists());
 		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
 		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
 		assert.isTrue(wrapper.find('photo-stub').exists());
@@ -52,16 +89,31 @@ describe('ViewMarker.vue', () => {
 	it('Renders with instagram content', () => {
 		marker.media.type = 'instagram';
 		const wrapper = mount(ViewMarker, {
-			propsData: {
-				marker
-			},
-			stubs
+			stubs,
+			mocks
 		});
-
-		assert.isTrue(wrapper.find('vmodal-stub').exists());
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+		assert.isTrue(wrapper.find('.modal').exists());
 		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
 		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
 		assert.isTrue(wrapper.find('instagram-stub').exists());
+	});
+
+	it('doesnt render when modal not active', () => {
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+		wrapper.setData({
+			modal: false,
+			marker
+		});
+		assert.isTrue(wrapper.find('.modal').exists());
+		assert.isFalse(wrapper.find('viewmarkerheader-stub').exists());
+		assert.isFalse(wrapper.find('viewmarkercontent-stub').exists());
 	});
 
 	it('Shows delete button for markers user', () => {
@@ -69,10 +121,13 @@ describe('ViewMarker.vue', () => {
 			id: 1
 		});
 		const wrapper = mount(ViewMarker, {
-			propsData: {
-				marker
-			},
+			mocks,
 			stubs
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
 		});
 
 		assert.isTrue(wrapper.find('button.is-danger').exists());
@@ -83,101 +138,121 @@ describe('ViewMarker.vue', () => {
 			id: 2
 		});
 		const wrapper = shallowMount(ViewMarker, {
-			propsData: {
-				marker
-			},
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
 		});
 
 		assert.isFalse(wrapper.find('button.is-danger').exists());
 	});
 
+	it('Closes modal with close button', async () => {
+		const wrapper = mount(ViewMarker, {
+			mocks,
+			stubs
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+
+		wrapper.find('.card-footer-item a').trigger('click');
+
+		assert.isFalse(wrapper.vm.$data.modal);
+	});
+
 	it('Calculates route name', () => {
 		const wrapper = shallowMount(ViewMarker, {
-			propsData: {
-				marker
-			},
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
 		});
 
 		assert.equal(wrapper.vm.routeName, 'test/1');
 	});
 
-	it('Deletes marker', async () => {
-		const $modal = {
-			hide: sinon.spy()
-		};
-		const dispatchStub = sinon.stub().returns(true);
+	it('Shows marker', async () => {
 		const wrapper = shallowMount(ViewMarker, {
-			propsData: {
-				marker
-			},
-			mocks: {
-				$store: {
-					dispatch: dispatchStub
-				},
-				$modal
-			}
+			mocks
+		});
+
+		wrapper.setData({
+			modal: false,
+		});
+
+		await wrapper.vm.showMarker(marker);
+
+		assert.isTrue(wrapper.vm.$data.modal);
+		assert.deepEqual(wrapper.vm.$data.marker, marker);
+	});
+
+	it('Deletes marker', async () => {
+		const dispatchStub = sinon.stub().returns(true);
+		mocks.$store = {
+			dispatch: dispatchStub
+		};
+		const wrapper = shallowMount(ViewMarker, {
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
 		});
 
 		await wrapper.vm.deleteMarker();
-		``
-		assert.isTrue($modal.hide.calledOnce);
-		assert.isTrue($modal.hide.calledWith('view-marker'));
+		assert.isFalse(wrapper.vm.$data.modal);
 	});
 
 	it('Shows toast when deleteing a marker fails', async () => {
-		const $toast = {
-			error: sinon.spy()
-		};
+
 		const dispatchStub = sinon.stub().returns(false);
+		mocks.$store = {
+			dispatch: dispatchStub
+		};
 		const wrapper = shallowMount(ViewMarker, {
-			propsData: {
-				marker
-			},
-			mocks: {
-				$store: {
-					dispatch: dispatchStub
-				},
-				$toast
-			}
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
 		});
 
 		await wrapper.vm.deleteMarker();
 
 		assert.isTrue(dispatchStub.calledOnce);
 		assert.isTrue(dispatchStub.calledWith('Markers/delete', 1));
-		assert.isTrue($toast.error.calledOnce);
-		assert.isTrue($toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
+		assert.isTrue(mocks.$toast.error.calledOnce);
+		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
 	});
 
 	it('Navigates to user when requested and closes modal', async () => {
-
-		const $modal = {
-			hide: sinon.stub()
-		};
-		const $router = {
-			push: sinon.stub()
-		};
-
 		const wrapper = mount(ViewMarker, {
-			propsData: {
-				marker
-			},
-			mocks: {
-				$modal,
-				$router
-			},
+			mocks,
 			stubs
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
 		});
 
 		wrapper.find('viewmarkerheader-stub').vm.$emit('view-user-page');
 
 		await wrapper.vm.$nextTick;
 
-		assert.isTrue($modal.hide.calledOnce);
-		assert.isTrue($modal.hide.calledWith('view-marker'));
+		assert.isTrue(mocks.$router.push.calledOnce);
+		assert.isTrue(mocks.$router.push.calledWith('/test'));
 
-		assert.isTrue($router.push.calledOnce);
-		assert.isTrue($router.push.calledWith('/test'));
+		assert.isFalse(wrapper.vm.$data.modal);
 
 	});
 });

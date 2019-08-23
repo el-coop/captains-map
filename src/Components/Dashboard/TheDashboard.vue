@@ -31,7 +31,7 @@
 			</MarkerBordersFilter>
 		</div>
 
-		<ViewMarker :marker="selectedMarker"/>
+		<ViewMarker/>
 	</div>
 </template>
 
@@ -68,19 +68,12 @@
 
 		created() {
 			this.$bus.$on('moving-map', this.closeSidebar);
-			this.$bus.$on('marker-click', this.showMarker);
 		},
 		beforeDestroy() {
-			this.$bus.$off('marker-click', this.showMarker);
 			this.$bus.$off('moving-map', this.closeSidebar);
 		},
 
 		methods: {
-			showMarker(marker) {
-				this.selectedMarker = marker;
-				this.$modal.show('view-marker');
-			},
-
 			closeSidebar() {
 				if (!window.matchMedia("(min-width: 769px)").matches) {
 					this.openSidebar = false;
