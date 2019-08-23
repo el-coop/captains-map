@@ -28,9 +28,8 @@ describe('ViewPage.vue', () => {
 			$route: {
 				params: {}
 			},
-			$modal: {
-				hide: sinon.spy(),
-				show: sinon.spy()
+			$bus: {
+				$emit: sinon.stub()
 			}
 		};
 	});
@@ -61,8 +60,7 @@ describe('ViewPage.vue', () => {
 				mocks
 			});
 
-			assert.isTrue(mocks.$modal.hide.calledOnce);
-			assert.isTrue(mocks.$modal.hide.calledWith('404'));
+			assert.isTrue(mocks.$bus.$emit.calledWith('env-setup'));
 
 			assert.isTrue(mocks.$store.commit.calledTwice);
 			assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
@@ -87,8 +85,7 @@ describe('ViewPage.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(mocks.$modal.show.calledOnce);
-		assert.isTrue(mocks.$modal.show.calledWith('404'));
+		assert.isTrue(mocks.$bus.$emit.calledWith('404'));
 	});
 
 	it('Shows cache toast when loaded from cache', async () => {
@@ -155,8 +152,7 @@ describe('ViewPage.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(mocks.$modal.show.calledOnce);
-		assert.isTrue(mocks.$modal.show.calledWith('404'));
+		assert.isTrue(mocks.$bus.$emit.calledWith('404'));
 		assert.isFalse(mapSetViewStub.called);
 	});
 

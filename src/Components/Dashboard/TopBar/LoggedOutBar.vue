@@ -3,19 +3,19 @@
 		<template #right>
 			<div class="buttons is-marginless">
 				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
-						@click="$modal.show('login')">
+						@click="loginModal = true">
 					<span class="icon is-small">
 						<font-awesome-icon icon="sign-in-alt"/>&nbsp;
 					</span>
 					<span class="is-size-7">Log In</span>
 				</button>
 				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
-						@click="$modal.show('register')">
+						@click="registerModal = true">
 					<span class="is-size-7">Register</span>
 				</button>
-				<LoginModal/>
-				<RegisterModal/>
 			</div>
+			<LoginModal v-model="loginModal"/>
+			<RegisterModal v-model="registerModal"/>
 		</template>
 	</TheTopBar>
 </template>
@@ -31,6 +31,13 @@
 			TheTopBar,
 			LoginModal,
 			RegisterModal
+		},
+
+		data() {
+			return {
+				loginModal: false,
+				registerModal: false,
+			};
 		}
 	}
 </script>

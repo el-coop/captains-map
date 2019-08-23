@@ -1,7 +1,6 @@
 <template>
 	<form @submitting="loading = true" @submit.prevent="queueUpload">
-		<SlideUpModal name="create-marker" @before-open="prefill" route-name="edit">
-
+		<BaseModal route-name="edit" v-model="modal">
 			<template #header>
 				<p class="card-header-title">Create new marker</p>
 			</template>
@@ -34,20 +33,20 @@
 						Cancel upload
 					</button>
 					<span v-else>
-                        <a @click="$modal.hide('create-marker')">Close</a>
+                        <a @click="modal=false">Close</a>
                     </span>
 				</p>
 				<p class="card-footer-item">
 					<button class="button is-primary is-fullwidth" :class="{'is-loading' : loading}">Submit</button>
 				</p>
 			</template>
-		</SlideUpModal>
+		</BaseModal>
 	</form>
 </template>
 
 <script>
 	import FormDataMixin from "@/Components/Utilities/FormDataMixin";
-	import SlideUpModal from "@/Components/Utilities/BaseModal";
+	import BaseModal from "@/Components/Utilities/BaseModal";
 	import TypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
 	import FileField from "@/Components/Modals/CreateMarker/FileField";
 	import TextField from "@/Components/Modals/CreateMarker/TextField";
@@ -70,21 +69,21 @@
 			TextField,
 			FileField,
 			TypeToggle,
-			SlideUpModal,
+			BaseModal,
 		},
 
-		props: {
-			latLng: {
-				type: Object,
-				required: true
-			},
-			marker: {
-				type: Object,
-			}
+		created() {
+			this.$bus.$on('map-create-marker', this.createMarker);
+			this.$bus.$on('user-marker-click', this.createMarker);
+		},
+		beforeDestroy() {
+			this.$bus.$off('map-create-marker', this.createMarker);
+			this.$bus.$off('user-marker-click', this.createMarker);
 		},
 
 		data() {
 			return {
+				latLng: {},
 				form: {
 					media: {
 						type: 'image',
@@ -104,7 +103,9 @@
 					Suggestion: 'Suggestion',
 					Other: 'Other'
 				},
+				modal: false,
 				errors: null,
+				marker: null,
 			}
 		},
 
@@ -120,12 +121,12 @@
 					await this.$store.dispatch('Uploads/upload', data);
 				}
 				this.loading = false;
-				this.$modal.hide('create-marker');
+				this.modal = false;
 			},
 
 			async cancelUpload() {
 				await this.$store.dispatch('Uploads/cancelUpload', this.marker.uploadTime);
-				this.$modal.hide('create-marker');
+				this.modal = false;
 			},
 
 			prefill() {
@@ -168,6 +169,17 @@
 					type: 'Visited'
 				};
 			},
+
+			createMarker(data) {
+				if (data.lat && data.lng) {
+					this.latLng = data;
+				} else {
+					this.latLng = data.event.latlng;
+				}
+				this.marker = data.marker || null;
+				this.prefill();
+				this.modal = true;
+			},
 		},
 
 		computed: {
@@ -179,12 +191,5 @@
 				};
 			}
 		},
-
-		watch: {
-			marker() {
-				this.prefill();
-			},
-		}
-
 	}
 </script>

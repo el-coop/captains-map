@@ -1,5 +1,5 @@
 <template>
-	<div class="card-header-title ">
+	<div class="card-header-title">
 		<div class="media">
 			<div class="media-left view-marker-header__profile">
 				<figure class="image is-64x64">

@@ -1,5 +1,5 @@
 <template>
-	<BaseModal name="login" route-name="">
+	<BaseModal route-name="" :active="active" @close="$emit('change',false)">
 		<template #header>
 			<p class="card-header-title">Login</p>
 		</template>
@@ -16,7 +16,7 @@
 		<template #footer>
 			<p class="card-footer-item">
 				<span>
-					<a href="#" @click="$modal.hide('login')">Close</a>
+					<a @click="$emit('change',false)">Close</a>
 				</span>
 			</p>
 			<p class="card-footer-item">
@@ -37,6 +37,18 @@
 		components: {TextField, BaseModal},
 		name: "LoginModal",
 
+		model: {
+			prop: 'active',
+			event: 'change'
+		},
+
+		props: {
+			active: {
+				type: Boolean,
+				default: false
+			},
+		},
+
 		data() {
 			return {
 				loading: false,
@@ -44,9 +56,10 @@
 					username: '',
 					password: ''
 				},
-				error: false
+				error: false,
 			}
 		},
+
 
 		methods: {
 			async login() {

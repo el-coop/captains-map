@@ -1,43 +1,46 @@
 <template>
-	<VModal :name="name" transition="slide-up-opacity" :height="height" :adaptive="true"
-		   :width="width"
-		   :scrollable="true"
-		   :pivotY="pivotY"
-		   @before-open="beforeOpen"
-		   @opened="opened"
-		   @closed="closed"
-		   @before-close="beforeClose"
-		   ref="modal">
-		<div class="card">
-			<div class="card-header dashboard__control--dark">
-				<slot name="header"/>
-				<a class="card-header-icon v--modal__close" @click="$modal.hide(name)">
-                    <span class="icon">
-                        <FontAwesomeIcon icon="times-circle"/>
-                    </span>
-				</a>
-			</div>
-			<div class="card-image" v-if="!! $slots.image">
-				<slot name="image"/>
-			</div>
-			<div class="card-content">
-				<slot name="content"/>
-			</div>
-			<footer class="card-footer">
-				<slot name="footer"/>
-			</footer>
+	<transition name="fade">
+		<div class="modal is-active" v-show="active">
+			<div class="modal-background" @click="close"/>
+			<transition name="slide-up-opacity">
+				<div class="modal-content" v-if="active">
+					<div class="card">
+						<div class="card-header dashboard__control--dark">
+							<slot name="header"/>
+							<a class="card-header-icon modal__close" @click="close">
+								<span class="icon">
+									<FontAwesomeIcon icon="times-circle"/>
+								</span>
+							</a>
+						</div>
+						<div class="card-image" v-if="!! $slots.image">
+							<slot name="image"/>
+						</div>
+						<div class="card-content">
+							<slot name="content"/>
+						</div>
+						<footer class="card-footer">
+							<slot name="footer"/>
+						</footer>
+					</div>
+				</div>
+			</transition>
 		</div>
-	</VModal>
+	</transition>
 </template>
 
 <script>
 	export default {
 		name: "BaseModal",
+		model: {
+			prop: 'active',
+			event: 'change'
+		},
 
 		props: {
-			name: {
-				type: String,
-				required: true
+			active: {
+				type: Boolean,
+				default: false
 			},
 			width: {
 				type: Number,
@@ -49,14 +52,6 @@
 			}
 		},
 
-		data() {
-			return {
-				pivotY: 0.5,
-				height: 'auto',
-				isOpen: false
-			};
-		},
-
 		mounted() {
 			window.addEventListener('popstate', this.hideOnBack);
 		},
@@ -66,41 +61,29 @@
 		},
 
 		methods: {
+			close() {
+				this.$router.back();
+				this.$emit('change', false);
+			},
 			hideOnBack() {
-				if (this.isOpen) {
-					this.isOpen = false;
-					this.$modal.hide(this.name);
+				if (this.active) {
+					this.$emit('change', false);
 				}
 			},
-
-			beforeOpen() {
-				this.isOpen = true;
-				this.$emit('before-open');
-				if (window.innerWidth < 769) {
-					this.pivotY = 0.001;
-				} else {
-					this.pivotY = 0.4;
-				}
-			},
-			opened() {
-				let route = this.routeName;
-				if (this.routeName === null) {
-					route = this.name;
-				}
-				this.$router.pushRoute(route);
-			},
-
-			closed() {
-				this.$emit('closed');
-			},
-
-			beforeClose() {
-				if (this.isOpen) {
-					this.isOpen = false;
-					this.$router.back();
-				}
-				this.$emit('before-close');
-			}
 		},
+
+		watch: {
+			active(value) {
+				if (value) {
+					let route = this.routeName;
+					if (this.routeName === null) {
+						route = this.name;
+					}
+					this.$router.pushRoute(route);
+				} else {
+					this.$emit('close');
+				}
+			}
+		}
 	}
 </script>

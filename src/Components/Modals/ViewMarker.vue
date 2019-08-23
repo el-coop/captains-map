@@ -1,5 +1,5 @@
 <template>
-	<SlideUpModal name="view-marker" :route-name="routeName">
+	<BaseModal :route-name="routeName" v-model="modal">
 		<template #header v-if="marker">
 			<ViewMarkerHeader :marker="marker" @view-user-page="navigateToUser"/>
 		</template>
@@ -14,7 +14,7 @@
 
 		<template #footer v-if="marker">
 			<p class="card-footer-item">
-				<a @click="$modal.hide('view-marker')">Close</a>
+				<a @click="modal = false">Close</a>
 			</p>
 			<p class="card-footer-item" v-if="canDelete">
 				<button class="button is-danger is-fullwidth" @click="deleteMarker"
@@ -23,11 +23,11 @@
 				</button>
 			</p>
 		</template>
-	</SlideUpModal>
+	</BaseModal>
 </template>
 
 <script>
-	import SlideUpModal from "@/Components/Utilities/BaseModal";
+	import BaseModal from "@/Components/Utilities/BaseModal";
 	import auth from '@/Services/AuthenticationService';
 	import Photo from '@/Components/Global/Media/Photo';
 	import Instagram from '@/Components/Global/Media/Instagram';
@@ -36,16 +36,20 @@
 
 	export default {
 		name: "ViewMarker",
-		components: {ViewMarkerContent, ViewMarkerHeader, SlideUpModal, Photo, Instagram},
-		props: {
-			marker: {
-				type: Object
-			},
+		components: {ViewMarkerContent, ViewMarkerHeader, BaseModal, Photo, Instagram},
+
+		created() {
+			this.$bus.$on('marker-click', this.showMarker);
+		},
+		beforeDestroy() {
+			this.$bus.$off('marker-click', this.showMarker);
 		},
 
 		data() {
 			return {
 				deleting: false,
+				marker: null,
+				modal: false,
 			}
 		},
 
@@ -55,16 +59,21 @@
 				const response = await this.$store.dispatch('Markers/delete', this.marker.id);
 				this.deleting = false;
 				if (response) {
-					return this.$modal.hide('view-marker');
+					this.modal = false;
 				} else {
 					this.$toast.error('Please try again at a later time', 'Delete failed.');
 				}
 			},
 
 			async navigateToUser() {
-				this.$modal.hide('view-marker');
+				this.modal = false;
 				await this.$nextTick;
 				this.$router.push(`/${this.marker.user.username}`);
+			},
+
+			showMarker(marker) {
+				this.marker = marker;
+				this.modal = true;
 			},
 		},
 

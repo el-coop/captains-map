@@ -49,7 +49,7 @@
 				if (marker) {
 					return map.setView([marker.lat, marker.lng], 16);
 				} else {
-					return this.$modal.show('404');
+					return this.$bus.$emit('404');
 				}
 			}
 		},
