@@ -10,13 +10,23 @@
 						<span v-text="file.name"/>
 					</div>
 				</div>
+				<div class="dropzone__preview has-text-centered" v-if="Object.keys(value).length < 5">
+					<span class="dropzone__icon">
+						<FontAwesomeIcon icon="upload"/>
+					</span>
+					<span>
+						Add images<br>
+						<span v-text="`${this.limit - Object.keys(value).length} Left`"/>
+					</span>
+				</div>
 			</template>
 			<template v-else>
 				<span class="dropzone__icon">
 					<FontAwesomeIcon icon="upload"/>
 				</span>
-				<span>
-					Choose an image
+				<span class="has-text-centered">
+					Add images<br>
+					<span v-text="`Maximum ${this.limit}`"/>
 				</span>
 			</template>
 		</label>
@@ -45,6 +55,10 @@
 				type: String,
 				default: 'media[images]'
 			},
+			limit: {
+				type: Number,
+				default: 5
+			}
 
 		},
 
@@ -52,9 +66,9 @@
 			async imageAdded(event) {
 				const filesObject = this.value;
 				const files = event.target.files;
-				for (let i = 0; i < files.length; i++) {
+				for (let i = 0; i < files.length && Object.values(filesObject).length < this.limit; i++) {
 					const file = files[i];
-					if(file.type.split('/')[0] === 'image'){
+					if (file.type.split('/')[0] === 'image') {
 						filesObject[`${file.name}-${Date.now()}`] = await UploadFile.makeFromFile(file);
 					}
 				}

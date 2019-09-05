@@ -12,12 +12,16 @@ describe('CreateMarker/MultiFileField.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				limit: 5
+			},
 			stubs
 		});
 
 		assert.isTrue(wrapper.find('.dropzone__input[type=file]').exists());
 		assert.isFalse(wrapper.find('.help.is-danger').exists());
-		assert.isTrue(wrapper.html().includes('Choose an image'));
+		assert.isTrue(wrapper.html().includes('Add images'));
+		assert.isTrue(wrapper.html().includes('Maximum 5'));
 	});
 
 	it('Renders error', () => {
@@ -47,13 +51,49 @@ describe('CreateMarker/MultiFileField.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find(`img[src="${value[1].preview}"]`).exists());
-		assert.include(wrapper.html(),value[1].name);
+		assert.include(wrapper.html(), value[1].name);
 		assert.isTrue(wrapper.find(`img[src="${value[2].preview}"]`).exists());
-		assert.include(wrapper.html(),value[2].name);
+		assert.include(wrapper.html(), value[2].name);
 
 		sinon.restore();
 	});
 
+	it('shows add images card when under limit', async () => {
+		const value = {
+			1: new UploadFile('name1', 'image1'),
+			2: new UploadFile('name2', 'image2')
+		};
+		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				value,
+				limit: 5
+			},
+			stubs
+		});
+
+		assert.isTrue(wrapper.html().includes('Add images'));
+		assert.isTrue(wrapper.html().includes('3 Left'));
+	});
+
+	it('Doesnt show add images card when at limit', async () => {
+		const value = {
+			0: new UploadFile('name0', 'image0'),
+			1: new UploadFile('name1', 'image1'),
+			2: new UploadFile('name2', 'image2'),
+			3: new UploadFile('name3', 'image3'),
+			4: new UploadFile('name4', 'image4'),
+		};
+		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				value,
+				limit: 5
+			},
+			stubs
+		});
+
+
+		assert.isFalse(wrapper.html().includes('Add images'));
+	});
 
 	it('Adds images', async () => {
 		const wrapper = shallowMount(MultiFileField, {
@@ -164,12 +204,50 @@ describe('CreateMarker/MultiFileField.vue', () => {
 		sinon.restore();
 	});
 
+	it('Doesnt allow more fields than the limit', async () => {
+		const value = {
+			0: new UploadFile('name0', 'image0'),
+			1: new UploadFile('name1', 'image1'),
+			2: new UploadFile('name2', 'image2'),
+			3: new UploadFile('name3', 'image3'),
+			4: new UploadFile('name4', 'image4'),
+		};
+
+		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				limit: 5,
+				value
+			},
+			stubs
+		});
+
+		await wrapper.vm.imageAdded({
+			target: {
+				files: [{
+					name: 'name6',
+					image: 'image',
+					type: 'image/jpeg'
+				}, {
+					name: 'name7',
+					image: 'image',
+					type: 'app/pdf'
+				}]
+			}
+		});
+
+		const emittedEvent = wrapper.emitted().input[0][0];
+		assert.deepEqual(Object.values(emittedEvent), Object.values(value));
+		assert.equal(Object.values(emittedEvent).length, 5);
+
+		sinon.restore();
+	});
+
 	it('Removes images', async () => {
 		const wrapper = shallowMount(MultiFileField, {
 			propsData: {
 				value: {
-					a: new UploadFile('name','image'),
-					b: new UploadFile('name1','image1'),
+					a: new UploadFile('name', 'image'),
+					b: new UploadFile('name1', 'image1'),
 				}
 			},
 			stubs
