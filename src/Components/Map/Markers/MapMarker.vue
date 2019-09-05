@@ -2,6 +2,7 @@
 	<div class="map__icon-wrapper map__marker">
 		<img :src="src" class="map__icon" :class="markerClass"
 			 :alt="alt">
+		<FontAwesomeIcon icon="images" v-if="marker.media.length > 1" class="map__icon-album"/>
 	</div>
 </template>
 
@@ -46,7 +47,11 @@
 
 		methods: {
 			calculateSrc() {
-				return this.calculateVerifiedImage(this.marker)
+				if (!this.marker.media || !this.marker.media.length) {
+					return '';
+				}
+
+				return this.calculateVerifiedImage(this.marker.media[0]);
 			},
 		},
 	}

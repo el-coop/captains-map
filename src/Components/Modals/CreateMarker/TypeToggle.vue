@@ -7,7 +7,7 @@
 					<span class="icon is-small">
 						<FontAwesomeIcon icon="file-image"/>
 					</span>
-					<span>Upload file</span>
+					<span>Upload files</span>
 				</a>
 
 			</li>

@@ -61,7 +61,7 @@ describe('LoginModal.vue', () => {
 			propsData,
 		});
 
-		wrapper.vm.$children[0].$emit('close');
+		wrapper.vm.$children[0].$emit('change',false);
 
 		assert.equal(wrapper.emitted().change[0][0], false);
 	});

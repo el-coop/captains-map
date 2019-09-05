@@ -33,6 +33,10 @@
 				}
 			},
 
+			'marker.media'() {
+				this.src = this.calculateUnverifiedImage(this.marker);
+			},
+
 			'marker.error'() {
 				this.setStatus();
 			}

@@ -2,17 +2,26 @@ import { assert } from 'chai';
 import { shallowMount, mount } from '@vue/test-utils';
 import CreateMarker from '@/Components/Modals/CreateMarker';
 import sinon from 'sinon';
+import UploadFile from "@/Classes/UploadFile";
 
 describe('CreateMarker.vue', () => {
 
 	const marker = {
 		uploadTime: 1,
+		lat: 0,
+		lng: 0,
 		description: 'test',
 		type: 'Planned',
 		location: 'location',
 		time: new Date(2),
-		'media[type]': 'instagram',
-		'media[path]': 'path',
+		media: {
+			type: 'instagram',
+			path: 'path',
+			files: [
+				new UploadFile('name', 'image'),
+				new UploadFile('name1', 'image1'),
+			]
+		},
 		error: {
 			status: 422,
 			data: {
@@ -31,7 +40,7 @@ describe('CreateMarker.vue', () => {
 	const stubs = {
 		FontAwesomeIcon: true,
 		TypeToggle: true,
-		FileField: true,
+		MultiFileField: true,
 		DateTimeField: true,
 		SelectField: true
 	};
@@ -100,13 +109,14 @@ describe('CreateMarker.vue', () => {
 
 		assert.isTrue(wrapper.vm.$data.modal);
 		assert.isNull(wrapper.vm.$data.marker);
-		assert.deepEqual(wrapper.vm.$data.latLng, latlng);
 		assert.deepInclude(wrapper.vm.$data.form, {
 			media: {
 				type: 'image',
-				file: null,
+				files: {},
 				path: ''
 			},
+			lat: 0,
+			lng: 0,
 			location: '',
 			description: '',
 			type: 'Visited'
@@ -137,18 +147,21 @@ describe('CreateMarker.vue', () => {
 
 		assert.isTrue(wrapper.vm.$data.modal);
 		assert.deepEqual(wrapper.vm.$data.marker, marker);
-		assert.deepEqual(wrapper.vm.$data.latLng, latlng);
 		assert.deepEqual(wrapper.vm.$data.form, {
 			media: {
-				file: null,
-				preview: "",
 				type: 'instagram',
-				path: 'path'
+				path: 'path',
+				files: [
+					new UploadFile('name', 'image'),
+					new UploadFile('name1', 'image1'),
+				]
 			},
+			lat: 0,
+			lng: 0,
 			description: 'test',
 			location: 'location',
 			type: 'Planned',
-			dateTime: date.setMinutes(date.getMinutes() + date.getTimezoneOffset()),
+			time: date.setMinutes(date.getMinutes() + date.getTimezoneOffset()),
 		});
 	});
 
@@ -163,7 +176,7 @@ describe('CreateMarker.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('typetoggle-stub').exists());
-		assert.isTrue(wrapper.find('filefield-stub').exists());
+		assert.isTrue(wrapper.find('multifilefield-stub').exists());
 		assert.isTrue(wrapper.find('datetimefield-stub').exists());
 		assert.isTrue(wrapper.find('selectfield-stub').exists());
 		assert.isTrue(wrapper.find('a').exists());
@@ -208,14 +221,12 @@ describe('CreateMarker.vue', () => {
 			modal: true
 		});
 
-		const data = wrapper.vm.getData();
-
 		wrapper.find('form').trigger('submit');
 
 		await wrapper.vm.$nextTick();
 
 		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/upload', data));
+		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/upload', wrapper.vm.$data.form));
 
 		assert.isFalse(wrapper.vm.$data.modal);
 	});
@@ -228,15 +239,16 @@ describe('CreateMarker.vue', () => {
 			modal: true,
 			marker
 		});
-
+		wrapper.vm.prefill();
 		wrapper.find('form').trigger('submit');
 
 		await wrapper.vm.$nextTick();
-		const data = wrapper.vm.getData();
-		data.uploadTime = 1;
 
 		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/returnToQueue', data));
+		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/returnToQueue', {
+			...wrapper.vm.$data.form,
+			uploadTime: marker.uploadTime
+		}));
 
 		assert.isFalse(wrapper.vm.$data.modal);
 	});
@@ -293,15 +305,19 @@ describe('CreateMarker.vue', () => {
 
 		assert.deepEqual(wrapper.vm.$data.form, {
 			media: {
-				file: null,
-				preview: "",
+				files: [
+					new UploadFile('name', 'image'),
+					new UploadFile('name1', 'image1'),
+				],
 				type: 'instagram',
 				path: 'path'
 			},
+			lat: 0,
+			lng: 0,
 			description: 'test',
 			location: 'location',
 			type: 'Planned',
-			dateTime: date.setMinutes(date.getMinutes() + date.getTimezoneOffset()),
+			time: date.setMinutes(date.getMinutes() + date.getTimezoneOffset()),
 		});
 	});
 
@@ -346,9 +362,9 @@ describe('CreateMarker.vue', () => {
 			type: 'Visited'
 		});
 
-		assert.include(wrapper.vm.$data.form.media, {
+		assert.deepEqual(wrapper.vm.$data.form.media, {
 			type: 'image',
-			file: null,
+			files: {},
 			path: ''
 		});
 

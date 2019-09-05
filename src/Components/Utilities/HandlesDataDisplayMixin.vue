@@ -11,23 +11,26 @@
 	export default {
 		methods: {
 			calculateUnverifiedImage(src) {
-				if (src['media[type]'] === 'instagram') {
+				if (src.media.type === 'instagram') {
 					const regex = new RegExp(/https:\/\/www\.instagram\.com\/p\/(\w*)\/.*/i);
-					const path = regex.exec(src['media[path]']);
+					const path = regex.exec(src.media.path);
 					if (path) {
 						return `https://instagram.com/p/${path[1]}/media/`;
 					} else {
 						return '';
 					}
 				}
-				return 'data:image/jpeg;base64,' + btoa(src['media[image]']);
+				if (!Object.values(src.media.files).length) {
+					return '';
+				}
+				return Object.values(src.media.files)[0].preview;
 			},
 
 			calculateVerifiedImage(src) {
-				if (src.media.type === 'instagram') {
-					return `https://instagram.com/p/${src.media.path}/media/`;
+				if (src.type === 'instagram') {
+					return `https://instagram.com/p/${src.path}/media/`;
 				} else {
-					return `/api${src.media.path.replace('images', 'thumbnails')}`;
+					return `/api${src.path.replace('images', 'thumbnails')}`;
 				}
 			},
 

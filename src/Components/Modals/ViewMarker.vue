@@ -1,12 +1,20 @@
 <template>
-	<BaseModal :route-name="routeName" v-model="modal">
+	<BaseModal :route-name="routeName" :manage-close-navigation="false" v-model="modal" @close="closedNavigation">
 		<template #header v-if="marker">
 			<ViewMarkerHeader :marker="marker" @view-user-page="navigateToUser"/>
 		</template>
-		<template #image v-if="marker">
-			<component :is="marker.media.type === 'instagram' ? 'Instagram': 'Photo'"
-					   :path="marker.media.path" :marker-id="marker.media.id"
-					   :alt="`${marker.user.username} | ${marker.description}`"/>
+		<template #image v-if="marker && marker.media.length">
+			<div v-if="marker.media.length > 1" class="click-pagination" :class="{'click-pagination--visible': showAlbumHint}">
+				<div class="click-pagination__button" @click="changeMedia(-1)">Back</div>
+				<div class="click-pagination__button" @click="changeMedia(1)">Next</div>
+			</div>
+			<template v-for="(media, mediaIndex) in marker.media">
+				<component v-if="currentMedia === mediaIndex"
+						   :is="media.type === 'instagram' ? 'Instagram': 'Photo'"
+						   :key="`media_${media.id}`"
+						   :path="media.path" :id="media.id"
+						   :alt="`${marker.user.username} | ${marker.description}`"/>
+			</template>
 		</template>
 		<template #content v-if="marker">
 			<ViewMarkerContent :marker="marker"/>
@@ -50,6 +58,9 @@
 				deleting: false,
 				marker: null,
 				modal: false,
+				userNavigation: false,
+				currentMedia: 0,
+				showAlbumHint: false
 			}
 		},
 
@@ -65,15 +76,43 @@
 				}
 			},
 
+			changeMedia(amount) {
+				this.currentMedia += amount;
+				if (this.currentMedia < 0) {
+					this.currentMedia = this.marker.media.length - 1;
+				}
+				if (this.currentMedia >= this.marker.media.length) {
+					this.currentMedia = 0;
+				}
+			},
+
 			async navigateToUser() {
 				this.modal = false;
-				await this.$nextTick;
-				this.$router.push(`/${this.marker.user.username}`);
+				this.userNavigation = true;
+			},
+
+			closedNavigation() {
+				if (this.userNavigation) {
+					this.userNavigation = false;
+					return this.$router.push(`/${this.marker.user.username}`);
+				}
+				if (this.$router.currentRoute.params.username) {
+					return this.$router.pushRoute(this.$router.currentRoute.params.username);
+				}
+				return this.$router.pushRoute(this.$router.currentRoute.path.replace('/', ''));
 			},
 
 			showMarker(marker) {
+				this.currentMedia = 0;
 				this.marker = marker;
 				this.modal = true;
+
+				if(marker.media.length > 1){
+					this.showAlbumHint = true;
+					setTimeout(() => {
+						this.showAlbumHint = false;
+					}, 1500);
+				}
 			},
 		},
 

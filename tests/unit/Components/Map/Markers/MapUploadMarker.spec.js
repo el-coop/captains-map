@@ -4,6 +4,7 @@ import MapUploadMarker from '@/Components/Map/Markers/MapUploadMarker';
 import leaflet from 'leaflet';
 import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
+import UploadFile from "@/Classes/UploadFile";
 
 describe('MapUploadMarker.vue', () => {
 	const parent = {
@@ -43,11 +44,13 @@ describe('MapUploadMarker.vue', () => {
 		mapObject = {
 			on: sinon.stub().returnsThis(),
 			setLatLng: sinon.stub(),
-			getElement: sinon.stub().returns(divIcon)
+			getElement: sinon.stub().returns(divIcon),
+			setIcon: sinon.stub()
 		};
 		marker = {
 			media: {
-				path: '/images/test.jpg'
+				type: 'instagram',
+				path: 'https://www.instagram.com/p/path/'
 			},
 			lat: 0,
 			lng: 0,
@@ -91,6 +94,40 @@ describe('MapUploadMarker.vue', () => {
 		assert.isTrue(divIcon.firstChild.classList.add.calledWith('map__marker--queued'));
 	});
 
+	it('Renders instagram marker path', () => {
+		sinon.stub(leaflet, 'divIcon');
+		sinon.stub(leaflet, 'marker').returns(mapObject);
+		const wrapper = shallowMount(MapUploadMarker, {
+			parentComponent: parent,
+			propsData: {
+				marker
+			},
+			mocks
+		});
+		assert.isTrue(wrapper.find('img[src="https://instagram.com/p/path/media/"]').exists());
+	});
+
+	it('Renders images marker preview', () => {
+		const file = new UploadFile('name', 'image');
+		marker.media = {
+			type: 'image',
+			path: '/images/test.jpg',
+			files: [
+				file
+			]
+		};
+		sinon.stub(leaflet, 'divIcon');
+		sinon.stub(leaflet, 'marker').returns(mapObject);
+		const wrapper = shallowMount(MapUploadMarker, {
+			parentComponent: parent,
+			propsData: {
+				marker
+			},
+			mocks
+		});
+		assert.isTrue(wrapper.find(`img[src="${file.preview}"]`).exists());
+	});
+
 	it('Renders the object with error status', () => {
 		sinon.stub(leaflet, 'divIcon');
 		sinon.stub(leaflet, 'marker').returns(mapObject);
@@ -129,6 +166,47 @@ describe('MapUploadMarker.vue', () => {
 		assert.isTrue(divIcon.firstChild.classList.add.calledTwice);
 		assert.isTrue(divIcon.firstChild.classList.add.firstCall.calledWith('map__marker--queued'));
 		assert.isTrue(divIcon.firstChild.classList.add.secondCall.calledWith('map__marker--uploading'));
+	});
+
+	it('Changes marker image when updated', async () => {
+		sinon.stub(leaflet, 'marker').returns(mapObject);
+		const marker2 = {
+			media: {
+				type: 'image',
+				path: '/images/test.jpg',
+				files: [
+					new UploadFile('name', 'image')
+				]
+			},
+			lat: 0,
+			lng: 0,
+			type: 'image',
+			user: {
+				username: 'test'
+			},
+			uploadTime: 2,
+			error: null,
+		};
+
+		const wrapper = shallowMount(MapUploadMarker, {
+			parentComponent: parent,
+			propsData: {
+				marker,
+			},
+			mocks
+		});
+
+		wrapper.setProps({
+			marker: marker2
+		});
+
+		await wrapper.vm.$nextTick();
+
+		assert.isTrue(mapObject.setIcon.calledOnce);
+		assert.isTrue(mapObject.setIcon.calledWith(leaflet.divIcon({
+			html: wrapper.html(),
+			iconSize: ['auto', 'auto']
+		})));
 	});
 
 	it('Removes marker when destroyed', () => {

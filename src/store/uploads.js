@@ -2,6 +2,7 @@ import cache from '@/Services/Cache';
 import auth from '@/Services/AuthenticationService';
 import UploadService from '@/Services/UploadService';
 import ImageService from '@/Services/ImageService';
+import UploadFile from "@/Classes/UploadFile";
 
 const uploads = cache.caches().uploads;
 
@@ -61,7 +62,11 @@ export default {
 
 		async init({state, dispatch}) {
 			await uploads.iterate((data) => {
-				data = data.value;
+				data = data.value
+				for (let prop in data.media.files) {
+					const file = data.media.files[prop];
+					data.media.files[prop] = new UploadFile(file.name, file.image);
+				}
 				if (data.error) {
 					state.errored.push(data);
 				} else {
@@ -73,13 +78,9 @@ export default {
 		},
 
 		async upload({commit}, data) {
-			if (data['media[type]'] === 'image' && data['media[image]']) {
-				data['media[image]'] = await ImageService.imageToBlob(data['media[image]']);
-			}
-
 			data.uploadTime = Date.now();
-			await cache.store('uploads', data.uploadTime, data);
 			commit("pushToQueue", data);
+			await cache.store('uploads', data.uploadTime, data);
 			UploadService.processQueue();
 		},
 
@@ -90,16 +91,6 @@ export default {
 		},
 
 		async returnToQueue({state, commit, rootState}, data) {
-			if (data['media[type]'] === 'image') {
-				if (data['media[image]'] && data['media[image]'].size) {
-					data['media[image]'] = await ImageService.imageToBlob(data['media[image]']);
-				} else {
-					const oldData = state.errored.find((marker) => {
-						return marker.uploadTime === data.uploadTime;
-					});
-					data['media[image]'] = oldData['media[image]'];
-				}
-			}
 			data.error = null;
 			commit("removeFromErrored", data.uploadTime);
 			commit("pushToQueue", data);

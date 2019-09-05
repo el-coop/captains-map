@@ -49,6 +49,10 @@
 			routeName: {
 				type: String,
 				default: null
+			},
+			manageCloseNavigation: {
+				type: Boolean,
+				default: true
 			}
 		},
 
@@ -62,7 +66,9 @@
 
 		methods: {
 			close() {
-				this.$router.back();
+				if (this.routeName !== null && this.manageCloseNavigation) {
+					this.$router.back();
+				}
 				this.$emit('change', false);
 			},
 			hideOnBack() {
@@ -75,11 +81,9 @@
 		watch: {
 			active(value) {
 				if (value) {
-					let route = this.routeName;
-					if (this.routeName === null) {
-						route = this.name;
+					if (this.routeName !== null) {
+						this.$router.pushRoute(this.routeName);
 					}
-					this.$router.pushRoute(route);
 				} else {
 					this.$emit('close');
 				}

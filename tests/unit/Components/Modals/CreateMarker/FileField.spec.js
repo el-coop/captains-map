@@ -33,7 +33,7 @@ describe('CreateMarker/FileField.vue', () => {
 	});
 
 
-	it('It emits input with display name when image is selected, shows preview', async () => {
+	it('Emits input with display name when image is selected, shows preview', async () => {
 		global.URL = {};
 		global.URL.createObjectURL = sinon.stub().returns('test');
 		const wrapper = shallowMount(FileField, {

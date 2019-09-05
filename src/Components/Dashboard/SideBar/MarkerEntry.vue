@@ -3,6 +3,7 @@
 		<figure class="media-left">
 			<p class="image marker-entry__image">
 				<img :src="src" :alt="imageAlt">
+				<FontAwesomeIcon icon="images" v-if="marker.media.length > 1" class="marker-entry__image-album"/>
 			</p>
 		</figure>
 		<div class="media-content">
@@ -51,7 +52,11 @@
 
 		methods: {
 			calculateImage() {
-				return this.calculateVerifiedImage(this.marker);
+				if (!this.marker.media || !this.marker.media.length) {
+					return '';
+				}
+
+				return this.calculateVerifiedImage(this.marker.media[0]);
 			},
 			showMarker() {
 				this.$bus.$emit('moving-map');

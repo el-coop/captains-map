@@ -1,8 +1,29 @@
 import http from '@/Services/HttpService';
 import Store from '@/store';
 import ImageService from '@/Services/ImageService'
+import UploadFile from "@/Classes/UploadFile";
 
 let working = false;
+
+function buildFormData(data, formData, parentKey) {
+	if (!formData) {
+		formData = new FormData();
+	}
+
+	if (data && typeof data === 'object' && !(data instanceof Date) && !(data instanceof File) && !(data instanceof UploadFile)) {
+		Object.keys(data).forEach(key => {
+			if(key !== 'preview' && key !== 'error' && key !== 'uploadTime'){
+				buildFormData(data[key], formData, parentKey ? `${parentKey}[${key}]` : key);
+			}
+		});
+	} else if (data && data instanceof UploadFile) {
+		formData.append(`media[files]`, ImageService.stringToBlob(data.image), `${data.name}.jpg`);
+	} else {
+		formData.append(parentKey, data);
+	}
+
+	return formData;
+}
 
 class UploadService {
 	async processQueue() {
@@ -21,13 +42,8 @@ class UploadService {
 	}
 
 	async upload(marker) {
-		const formData = new FormData();
-		for (const key in marker) {
-			formData.set(key, marker[key]);
-		}
-		if (marker['media[type]'] !== 'instagram') {
-			formData.set('media[image]', ImageService.stringToBlob(marker['media[image]']), 'upload.jpg');
-		}
+		const formData = buildFormData(marker);
+
 		const response = await http.post('marker/create', formData);
 		if (!response || response.status < 200 || response.status > 299) {
 			marker.error = {

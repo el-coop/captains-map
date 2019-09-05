@@ -48,13 +48,13 @@ describe('RegisterModal.vue', () => {
 		assert.equal(wrapper.emitted().change[0][0], false);
 	});
 
-	it('closes modal when emitted form modal', () => {
+	it('closes modal when change emitted form modal', () => {
 		const wrapper = mount(RegisterModal, {
 			stubs,
 			propsData,
 		});
 
-		wrapper.vm.$children[0].$emit('close');
+		wrapper.vm.$children[0].$emit('change', false);
 
 		assert.equal(wrapper.emitted().change[0][0], false);
 	});

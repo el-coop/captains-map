@@ -1,0 +1,185 @@
+import { assert } from 'chai';
+import { shallowMount } from '@vue/test-utils';
+import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField";
+import sinon from 'sinon';
+import ImageService from "@/Services/ImageService";
+import UploadFile from "@/Classes/UploadFile";
+
+describe('CreateMarker/MultiFileField.vue', () => {
+	const stubs = {
+		FontAwesomeIcon: true
+	};
+
+	it('Renders', () => {
+		const wrapper = shallowMount(MultiFileField, {
+			stubs
+		});
+
+		assert.isTrue(wrapper.find('.dropzone__input[type=file]').exists());
+		assert.isFalse(wrapper.find('.help.is-danger').exists());
+		assert.isTrue(wrapper.html().includes('Choose an image'));
+	});
+
+	it('Renders error', () => {
+		const wrapper = shallowMount(MultiFileField, {
+			stubs,
+			propsData: {
+				error: 'Error'
+			},
+		});
+
+
+		assert.isTrue(wrapper.find('.help.is-danger').exists());
+		assert.equal(wrapper.find('.help.is-danger').text(), 'Error');
+
+	});
+
+	it('show image previews', async () => {
+		const value = {
+			1: new UploadFile('name1', 'image1'),
+			2: new UploadFile('name2', 'image2')
+		};
+		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				value
+			},
+			stubs
+		});
+
+		assert.isTrue(wrapper.find(`img[src="${value[1].preview}"]`).exists());
+		assert.include(wrapper.html(),value[1].name);
+		assert.isTrue(wrapper.find(`img[src="${value[2].preview}"]`).exists());
+		assert.include(wrapper.html(),value[2].name);
+
+		sinon.restore();
+	});
+
+
+	it('Adds images', async () => {
+		const wrapper = shallowMount(MultiFileField, {
+			stubs
+		});
+
+		sinon.stub(ImageService, 'imageToBlob')
+			.onFirstCall().returns('image')
+			.onSecondCall().returns('image1');
+
+		await wrapper.vm.imageAdded({
+			target: {
+				files: [{
+					name: 'name',
+					image: 'image',
+					type: 'image/jpeg'
+				}, {
+					name: 'name1',
+					image: 'image',
+					type: 'image/jpeg'
+				}]
+			}
+		});
+
+		const emittedEvent = wrapper.emitted().input[0][0];
+		assert.deepEqual(Object.values(emittedEvent), [
+			new UploadFile('name', 'image'),
+			new UploadFile('name1', 'image1')
+		]);
+
+		sinon.restore();
+	});
+
+	it('Adds images when some images already selected', async () => {
+		const wrapper = shallowMount(MultiFileField, {
+			stubs
+		});
+
+		sinon.stub(ImageService, 'imageToBlob')
+			.onFirstCall().returns('image')
+			.onSecondCall().returns('image1');
+
+		wrapper.setProps({
+			value: {
+				'asd': new UploadFile('name2', 'image2')
+			}
+		});
+
+		await wrapper.vm.imageAdded({
+			target: {
+				files: [{
+					name: 'name',
+					image: 'image',
+					type: 'image/jpeg'
+				}, {
+					name: 'name1',
+					image: 'image',
+					type: 'image/jpeg'
+				}]
+			}
+		});
+
+		const emittedEvent = wrapper.emitted().input[0][0];
+		assert.deepEqual(Object.values(emittedEvent), [
+			new UploadFile('name2', 'image2'),
+			new UploadFile('name', 'image'),
+			new UploadFile('name1', 'image1'),
+		]);
+
+		sinon.restore();
+	});
+
+	it('Adds doesnt add non images', async () => {
+		const wrapper = shallowMount(MultiFileField, {
+			stubs
+		});
+
+		sinon.stub(ImageService, 'imageToBlob')
+			.onFirstCall().returns('image')
+			.onSecondCall().returns('image1');
+
+		wrapper.setProps({
+			value: {
+				'asd': new UploadFile('name2', 'image2')
+			}
+		});
+
+		await wrapper.vm.imageAdded({
+			target: {
+				files: [{
+					name: 'name',
+					image: 'image',
+					type: 'image/jpeg'
+				}, {
+					name: 'name1',
+					image: 'image',
+					type: 'app/pdf'
+				}]
+			}
+		});
+
+		const emittedEvent = wrapper.emitted().input[0][0];
+		assert.deepEqual(Object.values(emittedEvent), [
+			new UploadFile('name2', 'image2'),
+			new UploadFile('name', 'image'),
+		]);
+
+		sinon.restore();
+	});
+
+	it('Removes images', async () => {
+		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				value: {
+					a: new UploadFile('name','image'),
+					b: new UploadFile('name1','image1'),
+				}
+			},
+			stubs
+		});
+
+		wrapper.vm.removeImage('a');
+
+		const emittedEvent = wrapper.emitted().input[0][0];
+		assert.deepEqual(Object.values(emittedEvent), [
+			new UploadFile('name1', 'image1')
+		]);
+	});
+});

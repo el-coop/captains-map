@@ -3,12 +3,14 @@ import { shallowMount } from '@vue/test-utils';
 import UploadEntry from '@/Components/Dashboard/SideBar/UploadEntry';
 import sinon from 'sinon';
 import map from '@/Services/LeafletMapService';
+import UploadFile from "@/Classes/UploadFile";
 
 ;
 
 describe('UploadEntry.vue', () => {
 	let marker;
 	let mocks;
+	const file = new UploadFile('name', 'image');
 
 	beforeEach(() => {
 		mocks = {
@@ -21,9 +23,13 @@ describe('UploadEntry.vue', () => {
 			}
 		};
 		marker = {
-			'media[type]': 'image',
-			'media[path]': 'https://www.instagram.com/p/BlfyEoTDKxi/?taken-by=cucurrucho.bar',
-			'media[image]': '0',
+			media: {
+				type: 'image',
+				path: 'https://www.instagram.com/p/path/',
+				files: [
+					file
+				]
+			},
 			description: 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NP',
 			lat: 1,
 			lng: 1,
@@ -62,11 +68,11 @@ describe('UploadEntry.vue', () => {
 			}
 		});
 
-		assert.equal(wrapper.vm.$data.src, 'data:image/jpeg;base64,' + btoa(marker['media[image]']));
+		assert.equal(wrapper.vm.$data.src, file.preview);
 	});
 
 	it('Calculates image src for instagram type', () => {
-		marker['media[type]'] = 'instagram';
+		marker.media.type = 'instagram';
 
 		const wrapper = shallowMount(UploadEntry, {
 			mocks,
@@ -75,7 +81,7 @@ describe('UploadEntry.vue', () => {
 			}
 		});
 
-		assert.equal(wrapper.vm.$data.src, `https://instagram.com/p/BlfyEoTDKxi/media/`);
+		assert.equal(wrapper.vm.$data.src, `https://instagram.com/p/path/media/`);
 	});
 
 	it('Reacts to click', () => {
@@ -137,6 +143,42 @@ describe('UploadEntry.vue', () => {
 
 		assert.equal(wrapper.vm.$data.className, 'error');
 		assert.isTrue(wrapper.find('.error').exists());
+	});
+
+	it('Updates marker preview when changed', () => {
+		const marker2 = {
+			media: {
+				type: 'image',
+				path: 'https://www.instagram.com/p/path/',
+				files: [
+					new UploadFile('name1','image1')
+				]
+			},
+			description: 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NP',
+			lat: 1,
+			lng: 1,
+			user: {
+				username: 'test'
+			},
+			time: '2018-10-06 15:43:57',
+			uploadTime: 2
+		};
+
+		const wrapper = shallowMount(UploadEntry, {
+			mocks,
+			propsData: {
+				marker
+			}
+		});
+
+		assert.equal(wrapper.vm.$data.src, file.preview);
+
+		wrapper.setProps({
+			marker: marker2
+		});
+
+		assert.equal(wrapper.vm.$data.src, marker2.media.files[0].preview);
+
 	});
 });
 

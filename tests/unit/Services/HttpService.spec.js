@@ -96,6 +96,26 @@ describe('Http service', () => {
 		assert.isTrue(cacheStub.calledWith('request', '/api/test'));
 	});
 
+	it('Doesnt return cached response for 404 error', async () => {
+		const cacheStub = sinon.stub(cache, 'get');
+		moxios.wait(() => {
+			let request = moxios.requests.mostRecent();
+			request.respondWith({
+				status: 404,
+				headers: {},
+				response: {
+					message: 'test'
+				}
+			});
+		});
+		const response = await http.get('test');
+		assert.equal(response.status, 404);
+		assert.deepEqual(response.data, {
+			'message': 'test'
+		});
+		assert.isTrue(cacheStub.notCalled);
+	});
+
 
 	it('returns the response from get error and no cache', async () => {
 		sinon.stub(cache, 'get').callsFake(() => {

@@ -1,5 +1,5 @@
 <template>
-	<BaseModal route-name="" :active="active" @close="$emit('change',false)">
+	<BaseModal route-name="" :active="active" @change="$emit('change',$event)">
 		<template #header>
 			<p class="card-header-title">Register</p>
 		</template>

@@ -14,6 +14,7 @@ describe('CreateMarker/SearchLocationField.vue', () => {
 	const stubs = {
 		FontAwesomeIcon: true
 	};
+
 	it('Renders', () => {
 		const wrapper = shallowMount(SearchLocationField, {
 			propsData,
@@ -110,7 +111,7 @@ describe('CreateMarker/SearchLocationField.vue', () => {
 		assert.include(wrapper.html(), 'Could not find location');
 	});
 
-	it('Fills location when result is clicked', async () => {
+	it('Emits input when clicked', async () => {
 		const wrapper = shallowMount(SearchLocationField, {
 			propsData,
 			stubs
@@ -125,9 +126,22 @@ describe('CreateMarker/SearchLocationField.vue', () => {
 
 		wrapper.find('.dropdown-item').trigger('click');
 
-		await wrapper.vm.$nextTick;
+		assert.equal(wrapper.emitted().input[0][0], 'street, 1 - city, country');
+	});
 
-		assert.equal(wrapper.vm.$data.content, 'street, 1 - city, country');
+	it('Changes value when prop changes', async () => {
+		propsData.value = 'street, 1 - city, country';
+		const wrapper = shallowMount(SearchLocationField, {
+			propsData,
+			stubs
+		});
+
 		assert.equal(wrapper.find('#location[type=text]').element.value, 'street, 1 - city, country');
+
+		wrapper.setProps({
+			value: 'bla'
+		});
+
+		assert.equal(wrapper.find('#location[type=text]').element.value, 'bla');
 	});
 });

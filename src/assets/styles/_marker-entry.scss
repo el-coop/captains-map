@@ -9,7 +9,6 @@
 
 	&.error, &.queued {
 		.image {
-			position: relative;
 			overflow: hidden;
 
 			&:after {
@@ -30,12 +29,14 @@
 			background-color: transparentize($red, 0.4);
 		}
 	}
+
 	&.queued {
 		.image:after {
 			content: 'QUEUE';
 			background-color: transparentize($black, 0.4);
 		}
 	}
+
 	&.uploading {
 		filter: grayscale(100);
 
@@ -55,12 +56,12 @@
 		}
 	}
 
+
 	&--Plan {
 		&:hover {
 			background-color: $cyan;
 		}
 	}
-
 
 	&--Visited {
 		&:hover {
@@ -78,6 +79,18 @@
 		max-width: 64px;
 		max-height: 100px;
 		overflow: hidden;
+		position: relative;
+
+		&-album {
+			position: absolute;
+			left: 3%;
+			bottom: 1%;
+			width: 1rem !important;
+			height: 1rem !important;
+			text-align: center;
+			font-size: 1em;
+			opacity: 0.75;
+		}
 	}
 
 }
