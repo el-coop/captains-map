@@ -3,7 +3,7 @@
 		<label class="label" for="location">Location</label>
 		<div class="field has-addons dropdown is-hoverable">
 			<div class="control is-expanded">
-				<input type="text" id="location" class="input" v-model="content" @change="handleInput"
+				<input type="text" id="location" class="input" v-model="content"
 					   name="location">
 			</div>
 			<div class="dropdown-menu">
@@ -56,18 +56,24 @@
 
 		data() {
 			return {
-				content: this.value,
 				searched: false,
 				searching: false,
 				results: []
 			}
 		},
 
-		methods: {
-			handleInput() {
-				this.$emit('input', this.content);
-			},
+		computed:{
+			content:{
+				get(){
+					return this.value;
+				},
+				set(value){
+					this.$emit('input', value);
+				}
+			}
+		},
 
+		methods: {
 			async search() {
 				this.searching = true;
 				const response = await LeafletMapService.reverseGeocode(this.latLng);

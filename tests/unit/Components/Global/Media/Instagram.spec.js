@@ -29,7 +29,7 @@ describe('Instagram.vue', () => {
 		};
 		const wrapper = shallowMount(Istangram, {
 			propsData: {
-				markerId: 1
+				id: 1
 			},
 			mocks: {
 				$http,

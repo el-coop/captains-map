@@ -45,7 +45,9 @@ describe('UploadService.js', () => {
 	it('Uploads and notifies on success', async () => {
 		const marker = {
 			uploadTime: 1,
-			'media[type]': 'instagram'
+			media: [{
+				type: 'instagram'
+			}]
 		};
 
 		const postStub = sinon.stub(http, 'post').returns({
@@ -59,9 +61,7 @@ describe('UploadService.js', () => {
 
 		assert.isTrue(postStub.calledOnce);
 		assert.isTrue(postStub.calledWith('marker/create'));
-		assert.equal(postStub.firstCall.args[1].get('media[type]'), 'instagram');
-		assert.equal(postStub.firstCall.args[1].get('uploadTime'), 1);
-
+		assert.equal(postStub.firstCall.args[1].get('media[0][type]'), 'instagram');
 		assert.isTrue(dispatchStub.calledOnce);
 		assert.isTrue(dispatchStub.calledWith("Uploads/uploaded", {
 			uploadTime: 1,
@@ -100,7 +100,9 @@ describe('UploadService.js', () => {
 	it('Marks as offline error with no response', async () => {
 		const marker = {
 			uploadTime: 1,
-			'media[type]': 'instagram'
+			media: [{
+				type: 'instagram'
+			}]
 		};
 
 		sinon.stub(http, 'post').returns();
@@ -110,7 +112,9 @@ describe('UploadService.js', () => {
 		assert.isTrue(dispatchStub.calledOnce);
 		assert.isTrue(dispatchStub.calledWith("Uploads/uploadError", {
 			uploadTime: 1,
-			'media[type]': 'instagram',
+			media: [{
+				type: 'instagram'
+			}],
 			error: {
 				status: 'offline',
 				data: {}

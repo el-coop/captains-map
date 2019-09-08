@@ -9,10 +9,10 @@ describe('MarkerEntry.vue', () => {
 
 	beforeEach(() => {
 		marker = {
-			media: {
+			media: [{
 				type: 'image',
 				path: '/images/testPath'
-			},
+			}],
 			description: 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NP',
 			lat: 1,
 			lng: 1,
@@ -43,6 +43,27 @@ describe('MarkerEntry.vue', () => {
 
 	});
 
+	it('Shows album icon when more than one image', () => {
+		marker.media = [{
+			type: 'image',
+			path: '/images/testPath'
+		}, {
+			type: 'image',
+			path: '/images/testPath'
+		}];
+		const wrapper = shallowMount(MarkerEntry, {
+			propsData: {
+				marker
+			},
+			stubs: {
+				FontAwesomeIcon: true
+			}
+		});
+
+		assert.isTrue(wrapper.find('fontawesomeicon-stub').exists());
+
+	});
+
 	it('Calculates image src for image type', () => {
 		const wrapper = shallowMount(MarkerEntry, {
 			propsData: {
@@ -50,11 +71,11 @@ describe('MarkerEntry.vue', () => {
 			}
 		});
 
-		assert.equal(wrapper.vm.$data.src, `/api${marker.media.path.replace('images', 'thumbnails')}`);
+		assert.equal(wrapper.vm.$data.src, `/api${marker.media[0].path.replace('images', 'thumbnails')}`);
 	});
 
 	it('Calculates image src for instagram type', () => {
-		marker.media.type = 'instagram';
+		marker.media[0].type = 'instagram';
 
 		const wrapper = shallowMount(MarkerEntry, {
 			propsData: {
@@ -62,7 +83,7 @@ describe('MarkerEntry.vue', () => {
 			}
 		});
 
-		assert.equal(wrapper.vm.$data.src, `https://instagram.com/p/${marker.media.path}/media/`);
+		assert.equal(wrapper.vm.$data.src, `https://instagram.com/p/${marker.media[0].path}/media/`);
 	});
 
 	it('Reacts to click', () => {

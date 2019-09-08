@@ -5,6 +5,7 @@ import uploadsStore from '@/store/uploads';
 import cache from '@/Services/Cache';
 import uploadService from '@/Services/UploadService';
 import auth from '@/Services/AuthenticationService';
+import UploadFile from "@/Classes/UploadFile";
 
 
 describe('Upload store', () => {
@@ -123,17 +124,40 @@ describe('Upload store', () => {
 			callback({
 				value: {
 					id: 1,
-					error: 'bla'
+					error: 'bla',
+					media: {
+						files: {
+							file: {
+								name: 'name',
+								image: 'image'
+							},
+							file1: {
+								name: 'name1',
+								image: 'image1'
+							}
+						}
+					}
 				}
 			});
 			callback({
 				value: {
 					id: 2,
+					media: {
+						files: {
+							file2: {
+								name: 'name2',
+								image: 'image2'
+							}
+						}
+					}
 				}
 			});
 			callback({
 				value: {
 					id: 3,
+					media: {
+						files: {}
+					}
 				}
 			});
 		});
@@ -146,26 +170,42 @@ describe('Upload store', () => {
 		assert.isTrue(dispatch.calledWith('processQueue'));
 		assert.deepEqual(state.errored, [{
 			id: 1,
-			error: 'bla'
+			error: 'bla',
+			media: {
+				files: {
+					file: new UploadFile('name', 'image'),
+					file1: new UploadFile('name1', 'image1'),
+				}
+			}
 		}]);
 		assert.deepEqual(state.queue, [{
-			id: 2
+			id: 2,
+			media: {
+				files: {
+					file2: new UploadFile('name2', 'image2'),
+				}
+			}
 		}, {
-			id: 3
+			id: 3,
+			media: {
+				files: {}
+			}
 		}]);
 	});
 
-	it('marks marker for upload', async () => {
+	it('marks marker for upload and process queue', async () => {
 		const commit = sinon.stub();
 		const cacheStub = sinon.stub(cache.caches().uploads, 'setItem');
 		const uploadServiceStub = sinon.stub(uploadService, 'processQueue');
 
 		const marker = {
 			id: 1,
-			'media[type]': 'instagram'
+			'media[type]': 'instagram',
 		};
 
-		await uploadsStore.actions.upload({commit}, marker);
+		await uploadsStore.actions.upload({
+			commit
+		}, marker);
 
 		assert.isTrue(commit.calledOnce);
 		assert.isTrue(commit.calledWith('pushToQueue', marker));
@@ -230,65 +270,6 @@ describe('Upload store', () => {
 		assert.isTrue(commit.calledWith('pushToQueue', marker));
 		assert.isTrue(commit.calledWith('removeFromErrored', 1));
 		assert.isFalse(uploadServiceStub.calledOnce);
-	});
-
-	it('loads old image when new one isnt provided', async () => {
-		const commit = sinon.stub();
-		const state = {
-			errored: [{
-				uploadTime: 1,
-				'media[image]': 'bla'
-			}]
-		};
-		const uploadServiceStub = sinon.stub(uploadService, 'processQueue');
-
-		const marker = {
-			id: 1,
-			uploadTime: 1,
-			'media[type]': 'image'
-		};
-
-		await uploadsStore.actions.returnToQueue({
-			state, commit, rootState: {
-				hasCsrf: true
-			}
-		}, marker);
-
-		assert.isTrue(commit.calledTwice);
-		assert.isTrue(commit.calledWith('pushToQueue', marker));
-		assert.isTrue(commit.calledWith('removeFromErrored', 1));
-		assert.isTrue(uploadServiceStub.calledOnce);
-		assert.equal(marker['media[image]'], 'bla');
-	});
-
-	it('stays with new image when provided', async () => {
-		const commit = sinon.stub();
-		const state = {
-			errored: [{
-				uploadTime: 1,
-				'media[image]': 'bla'
-			}]
-		};
-		const uploadServiceStub = sinon.stub(uploadService, 'processQueue');
-
-		const marker = {
-			id: 1,
-			uploadTime: 1,
-			'media[type]': 'image',
-			'media[image]': {name: 'gla', size: 10}
-		};
-
-		await uploadsStore.actions.returnToQueue({
-			state, commit, rootState: {
-				hasCsrf: true
-			}
-		}, marker);
-
-		assert.isTrue(commit.calledTwice);
-		assert.isTrue(commit.calledWith('pushToQueue', marker));
-		assert.isTrue(commit.calledWith('removeFromErrored', 1));
-		assert.isTrue(uploadServiceStub.calledOnce);
-		assert.deepEqual(marker['media[image]'], {name: 'gla', size: 10});
 	});
 
 	it('moves marker from queue to error', async () => {

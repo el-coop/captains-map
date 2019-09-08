@@ -7,22 +7,21 @@
 
 			<template #content>
 				<TypeToggle v-model="form.media.type"/>
-				<FileField v-if="form.media.type === 'image'"
-						   v-model="form.media.file"
-						   :error="errors ? errors['media.file'] : ''"
-						   :init-preview="form.media.preview"/>
+				<MultiFileField v-if="form.media.type === 'image'"
+								v-model="form.media.files"
+								:error="errors ? errors['media.files'] : ''"/>
 				<TextField v-if="form.media.type === 'instagram'"
 						   label="Instagram Link"
 						   name="media[path]"
 						   v-model="form.media.path"
 						   :error="(errors && errors['media.path']) ? 'You most give a valid instagram link.' : ''"/>
 				<DateTimeField label="Time"
-							   v-model="form.dateTime"
+							   v-model="form.time"
 							   :error="(errors && errors['time']) ?  'Invalid date or time.' : ''"/>
 				<SelectField v-model="form.type" :error="errors ? errors['type'] : ''" :options="markerTypes"
 							 label="Type"
 							 name="type"/>
-				<SearchLocationField v-model="form.location" :latLng="latLng"/>
+				<SearchLocationField v-model="form.location" :latLng="{lat: form.lat, lng: form.lng}"/>
 				<TextareaField label="Description" v-model="form.description" name="description"/>
 			</template>
 
@@ -54,6 +53,7 @@
 	import DateTimeField from "@/Components/Modals/CreateMarker/DateTimeField";
 	import SearchLocationField from "@/Components/Modals/CreateMarker/SearchLocationField";
 	import TextareaField from "@/Components/Modals/CreateMarker/TextareaField";
+	import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField";
 
 	export default {
 		name: "CreateMarker",
@@ -62,6 +62,7 @@
 		],
 
 		components: {
+			MultiFileField,
 			TextareaField,
 			SearchLocationField,
 			DateTimeField,
@@ -83,17 +84,17 @@
 
 		data() {
 			return {
-				latLng: {},
 				form: {
 					media: {
 						type: 'image',
-						file: null,
+						files: {},
 						path: '',
-						preview: ''
 					},
+					lat: 0,
+					lng: 0,
 					location: '',
 					description: '',
-					dateTime: new Date(),
+					time: new Date(),
 					type: 'Visited'
 				},
 				loading: false,
@@ -113,12 +114,13 @@
 		methods: {
 			async queueUpload() {
 				this.loading = true;
-				const data = this.getData();
 				if (this.marker) {
-					data.uploadTime = this.marker.uploadTime;
-					await this.$store.dispatch('Uploads/returnToQueue', data);
+					await this.$store.dispatch('Uploads/returnToQueue', {
+						...this.form,
+						uploadTime: this.marker.uploadTime
+					});
 				} else {
-					await this.$store.dispatch('Uploads/upload', data);
+					await this.$store.dispatch('Uploads/upload', this.form);
 				}
 				this.loading = false;
 				this.modal = false;
@@ -134,19 +136,15 @@
 					this.resetForm();
 					return;
 				}
-
 				const markerTime = new Date(this.marker.time);
 
 				this.form.description = this.marker.description;
 				this.form.location = this.marker.location;
 				this.form.type = this.marker.type;
-				this.form.dateTime = markerTime.setMinutes(markerTime.getMinutes() + markerTime.getTimezoneOffset());
-				this.form.media.type = this.marker['media[type]'];
-				this.form.media.path = this.marker['media[path]'];
-				this.form.media.file = null;
-				if (this.marker['media[type]'] === 'image') {
-					this.form.media.preview = 'data:image/jpeg;base64,' + btoa(this.marker['media[image]']);
-				}
+				this.form.time = markerTime.setMinutes(markerTime.getMinutes() + markerTime.getTimezoneOffset());
+				this.form.media.type = this.marker.media.type;
+				this.form.media.path = this.marker.media.path;
+				this.form.media.files = this.marker.media.files;
 				if (this.marker.error.status === 422) {
 					this.errors = {};
 					this.marker.error.data.errors.forEach((error) => {
@@ -160,36 +158,30 @@
 				this.form = {
 					media: {
 						type: 'image',
-						file: null,
+						files: {},
 						path: ''
 					},
+					lat: this.form.lat,
+					lng: this.form.lng,
 					location: '',
 					description: '',
-					dateTime: new Date(),
+					time: new Date(),
 					type: 'Visited'
 				};
 			},
 
 			createMarker(data) {
 				if (data.lat && data.lng) {
-					this.latLng = data;
+					this.form.lat = data.lat;
+					this.form.lng = data.lng;
 				} else {
-					this.latLng = data.event.latlng;
+					this.form.lat = data.event.latlng.lat;
+					this.form.lng = data.event.latlng.lng;
 				}
 				this.marker = data.marker || null;
 				this.prefill();
 				this.modal = true;
 			},
-		},
-
-		computed: {
-			extraData() {
-				return {
-					lat: this.latLng.lat,
-					lng: this.latLng.lng,
-					time: this.form.dateTime,
-				};
-			}
 		},
 	}
 </script>

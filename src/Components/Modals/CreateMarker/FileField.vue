@@ -2,7 +2,7 @@
 	<div class="field">
 		<div class="file is-boxed has-name is-light">
 			<label class="file-label file-field">
-				<input class="file-input" type="file" :name="name" @change="imageSelected" ref="input">
+				<input class="file-input" type="file" :name="name" @change="imageSelected">
 				<span class="file-cta">
 					<figure class="image file-field__image" v-if="preview">
 						<img :src="preview" class="file-field__image-img">

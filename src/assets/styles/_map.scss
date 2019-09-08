@@ -25,6 +25,10 @@
 			height: 1.5rem;
 			text-align: center;
 		}
+
+		.map__icon-album {
+			display: none;
+		}
 	}
 
 	&__user-marker-control {
@@ -90,6 +94,17 @@
 			border-style: solid;
 			border-width: 2px;
 			padding: calc(10% - 2px);
+		}
+
+		&-album {
+			position: absolute;
+			left: 5%;
+			bottom: 1%;
+			width: 1.3rem !important;
+			height: 1.3rem !important;
+			text-align: center;
+			font-size: 1em;
+			opacity: 0.75;
 		}
 
 		&-Visited {

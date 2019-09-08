@@ -37,6 +37,7 @@
 
 	&__image {
 		background-color: black;
+		pointer-events: none;
 
 		&-img {
 			max-width: 100%;
@@ -50,6 +51,7 @@
 			position: absolute;
 			right: 1em;
 			bottom: 1em;
+			pointer-events: visible;
 
 			&:hover {
 				opacity: 0.6;

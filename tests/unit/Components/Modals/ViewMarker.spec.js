@@ -14,19 +14,7 @@ describe('ViewMarker.vue', () => {
 		Instagram: true
 	};
 
-	const mocks = {
-		$bus: {
-			$on: sinon.stub(),
-			$off: sinon.stub(),
-		},
-		$router: {
-			pushRoute: sinon.stub(),
-			push: sinon.stub()
-		},
-		$toast: {
-			error: sinon.spy()
-		}
-	};
+	let mocks;
 
 
 	beforeEach(() => {
@@ -36,10 +24,27 @@ describe('ViewMarker.vue', () => {
 			user: {
 				username: 'test',
 			},
-			media: {
+			media: [{
 				type: 'image',
 				path: 'test',
 				id: 1
+			}]
+		};
+		mocks = {
+			$bus: {
+				$on: sinon.stub(),
+				$off: sinon.stub(),
+			},
+			$router: {
+				pushRoute: sinon.stub(),
+				push: sinon.stub(),
+				currentRoute: {
+					params: {},
+					path: '/'
+				}
+			},
+			$toast: {
+				error: sinon.spy()
 			}
 		};
 	});
@@ -85,9 +90,39 @@ describe('ViewMarker.vue', () => {
 		assert.isTrue(wrapper.find('photo-stub').exists());
 	});
 
+	it('Renders pagination when there are multiple media and selected media', () => {
+		marker.media = [{
+			type: 'image',
+			path: 'test',
+			id: 1
+		}, {
+			type: 'image',
+			path: 'test',
+			id: 2
+		}];
+
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			currentMedia: 1,
+			marker
+		});
+
+		assert.isTrue(wrapper.find('.modal').exists());
+		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
+		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isTrue(wrapper.find('photo-stub[id="2"]').exists());
+		assert.isTrue(wrapper.find('.click-pagination').exists());
+	});
+
 
 	it('Renders with instagram content', () => {
-		marker.media.type = 'instagram';
+		marker.media[0].type = 'instagram';
 		const wrapper = mount(ViewMarker, {
 			stubs,
 			mocks
@@ -193,6 +228,36 @@ describe('ViewMarker.vue', () => {
 		assert.deepEqual(wrapper.vm.$data.marker, marker);
 	});
 
+	it('Shows marker with pagination hint when album', (done) => {
+		marker.media = [{
+			type: 'image',
+			path: 'test',
+			id: 1
+		}, {
+			type: 'image',
+			path: 'test1',
+			id: 2
+		}];
+		const wrapper = shallowMount(ViewMarker, {
+			mocks
+		});
+
+		wrapper.setData({
+			modal: false,
+		});
+
+		wrapper.vm.showMarker(marker);
+
+		assert.isTrue(wrapper.vm.$data.modal);
+		assert.deepEqual(wrapper.vm.$data.marker, marker);
+		assert.isTrue(wrapper.vm.$data.showAlbumHint);
+
+		setTimeout(() => {
+			assert.isFalse(wrapper.vm.$data.showAlbumHint);
+			done();
+		}, 1510);
+	});
+
 	it('Deletes marker', async () => {
 		const dispatchStub = sinon.stub().returns(true);
 		mocks.$store = {
@@ -234,7 +299,7 @@ describe('ViewMarker.vue', () => {
 		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
 	});
 
-	it('Navigates to user when requested and closes modal', async () => {
+	it('Closes modal and enables user navigation flag', async () => {
 		const wrapper = mount(ViewMarker, {
 			mocks,
 			stubs
@@ -247,12 +312,113 @@ describe('ViewMarker.vue', () => {
 
 		wrapper.find('viewmarkerheader-stub').vm.$emit('view-user-page');
 
-		await wrapper.vm.$nextTick;
+		assert.isFalse(wrapper.vm.$data.modal);
+		assert.isTrue(wrapper.vm.$data.userNavigation);
+	});
+
+	it('Changes media', async () => {
+		marker.media = [{
+			type: 'image',
+			path: 'test',
+			id: 1
+		}, {
+			type: 'image',
+			path: 'test',
+			id: 2
+		}];
+
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+
+		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
+		assert.equal(wrapper.vm.$data.currentMedia, 0);
+
+		wrapper.vm.changeMedia(1);
+
+		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isTrue(wrapper.find('photo-stub[id="2"]').exists());
+		assert.equal(wrapper.vm.$data.currentMedia, 1);
+
+		wrapper.vm.changeMedia(-1);
+
+		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
+		assert.equal(wrapper.vm.$data.currentMedia, 0);
+
+		wrapper.vm.changeMedia(-1);
+
+		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isTrue(wrapper.find('photo-stub[id="2"]').exists());
+		assert.equal(wrapper.vm.$data.currentMedia, 1);
+
+		wrapper.vm.changeMedia(1);
+
+		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
+		assert.equal(wrapper.vm.$data.currentMedia, 0);
+	});
+
+	it('Navigates to user when flag is true and modal is closed', async () => {
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker,
+			userNavigation: true
+		});
+
+		wrapper.vm.closedNavigation();
 
 		assert.isTrue(mocks.$router.push.calledOnce);
 		assert.isTrue(mocks.$router.push.calledWith('/test'));
-
-		assert.isFalse(wrapper.vm.$data.modal);
-
+		assert.isFalse(wrapper.vm.$data.userNavigation);
 	});
+
+	it('Navigates back to user when it was loaded before', async () => {
+		mocks.$router.currentRoute.params.username = 'test';
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker,
+		});
+
+		wrapper.vm.closedNavigation();
+
+		assert.isTrue(mocks.$router.pushRoute.calledTwice);
+		assert.isTrue(mocks.$router.pushRoute.secondCall.calledWith('test'));
+	});
+
+	it('Navigates back to previous url if there was no user before', async () => {
+		mocks.$router.currentRoute.path = 'edit';
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker,
+		});
+
+		wrapper.vm.closedNavigation();
+
+		assert.isTrue(mocks.$router.pushRoute.calledTwice);
+		assert.isTrue(mocks.$router.pushRoute.secondCall.calledWith('edit'));
+	});
+
 });

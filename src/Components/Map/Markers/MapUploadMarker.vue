@@ -1,11 +1,12 @@
 <script>
+	import leaflet from 'leaflet';
 	import MapMarker from "@/Components/Map/Markers/MapMarker";
 
 	export default {
 		name: "MapUploadMarker",
 		extends: MapMarker,
 
-		mounted(){
+		mounted() {
 			this.setStatus();
 		},
 
@@ -45,6 +46,17 @@
 		watch: {
 			'$store.state.Uploads.workingId'() {
 				this.setStatus();
+			},
+
+			async 'marker.media'() {
+				this.src = this.calculateUnverifiedImage(this.marker);
+				await this.$nextTick();
+				this.setIcon(
+					leaflet.divIcon({
+						html: this.$el.outerHTML,
+						iconSize: [this.iconSize, this.iconSize]
+					})
+				);
 			},
 
 			'marker.error'() {
