@@ -14,8 +14,8 @@
 					<span class="is-size-7">Register</span>
 				</button>
 			</div>
-			<LoginModal v-model="loginModal"/>
-			<RegisterModal v-model="registerModal"/>
+			<LoginModal :active.sync="loginModal"/>
+			<RegisterModal :active.sync="registerModal"/>
 		</template>
 	</TheTopBar>
 </template>

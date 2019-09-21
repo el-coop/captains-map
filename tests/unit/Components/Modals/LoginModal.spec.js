@@ -52,7 +52,7 @@ describe('LoginModal.vue', () => {
 
 		wrapper.find('.card-footer-item a').trigger('click');
 
-		assert.equal(wrapper.emitted().change[0][0], false);
+		assert.equal(wrapper.emitted()['update:active'][0][0], false);
 	});
 
 	it('closes modal when emitted form modal', () => {
@@ -61,9 +61,9 @@ describe('LoginModal.vue', () => {
 			propsData,
 		});
 
-		wrapper.vm.$children[0].$emit('change',false);
+		wrapper.vm.$children[0].$emit('update:active',false);
 
-		assert.equal(wrapper.emitted().change[0][0], false);
+		assert.equal(wrapper.emitted()['update:active'][0][0], false);
 	});
 
 	it('Attempts logging in and shows errors', async () => {

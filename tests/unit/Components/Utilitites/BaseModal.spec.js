@@ -118,7 +118,7 @@ describe('BaseModal.vue', () => {
 		wrapper.vm.close();
 
 		assert.isTrue(mocks.$router.back.calledOnce);
-		assert.isFalse(wrapper.emitted().change[0][0]);
+		assert.isFalse(wrapper.emitted()['update:active'][0][0]);
 	});
 
 	it('goes back when back is pressed and emits events', () => {
@@ -132,6 +132,6 @@ describe('BaseModal.vue', () => {
 		wrapper.vm.hideOnBack();
 
 		assert.isTrue(mocks.$router.back.calledOnce);
-		assert.isFalse(wrapper.emitted().change[0][0]);
+		assert.isFalse(wrapper.emitted()['update:active'][0][0]);
 	});
 });

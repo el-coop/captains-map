@@ -20,7 +20,7 @@
 		</div>
 
 		<div class="control dropdown is-hoverable search-bar__field" :class="{'is-active': openResults}">
-			<input type="search" class="input dropdown-trigger" v-model="query" @keyup="searched = false"
+			<input type="search" class="input dropdown-trigger" v-model.lazy="query" @keyup="searched = false"
 				   @keyup.enter="search(searchOptions[searchCategory].funcName)"/>
 			<div class="dropdown-menu search-bar__dropdown-menu">
 				<div class="dropdown-content" v-if="results.length || searched">

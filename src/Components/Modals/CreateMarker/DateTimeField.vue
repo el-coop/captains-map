@@ -3,10 +3,10 @@
 		<label class="label" v-text="label" v-if="label"/>
 		<div class="field is-grouped">
 			<div class="control is-expanded">
-				<input type="date" class="input" v-model="date"/>
+				<input type="date" class="input" v-model.lazy="date"/>
 			</div>
 			<div class="control is-expanded">
-				<input type="time" class="input" v-model="time"/>
+				<input type="time" class="input" v-model.lazy="time"/>
 			</div>
 		</div>
 		<p class="help is-danger" v-if="error" v-text="error"/>

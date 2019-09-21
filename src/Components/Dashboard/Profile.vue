@@ -21,7 +21,7 @@
 					<h4 class="title is-4" v-text="user.username"></h4>
 					<template v-if="isEdit">
 						<div class="field is-flex-1">
-							<textarea v-model="description" name="description" class="textarea profile__media-textarea h-100"></textarea>
+							<textarea v-model.lazy="description" name="description" class="textarea profile__media-textarea h-100"></textarea>
 						</div>
 						<button class="button is-primary is-fullwidth" :class="{'is-loading': loading}">Save</button>
 					</template>

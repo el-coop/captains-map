@@ -30,7 +30,7 @@ describe('SearchBar.vue', () => {
 			stubs
 		});
 		wrapper.find('.input.dropdown-trigger').element.value = 'a';
-		wrapper.find('.input.dropdown-trigger').trigger('input');
+		wrapper.find('.input.dropdown-trigger').trigger('change');
 
 		assert.equal(wrapper.vm.$data.query, 'a');
 	});

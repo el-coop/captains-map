@@ -61,6 +61,7 @@ describe('CreateMarker/TextField.vue', () => {
 		const wrapper = shallowMount(TextField);
 
 		wrapper.find('input[type=text]').setValue('instagram');
+		wrapper.find('input[type=text]').trigger('change');
 
 		assert.deepEqual(wrapper.emitted().input[0][0], 'instagram');
 	});

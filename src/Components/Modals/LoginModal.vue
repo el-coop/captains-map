@@ -1,5 +1,5 @@
 <template>
-	<BaseModal route-name="" :active="active" @change="$emit('change',$event)"	>
+	<BaseModal route-name="" :active="active" @update:active="$emit('update:active',$event)"	>
 		<template #header>
 			<p class="card-header-title">Login</p>
 		</template>
@@ -16,7 +16,7 @@
 		<template #footer>
 			<p class="card-footer-item">
 				<span>
-					<a @click="$emit('change',false)">Close</a>
+					<a @click="$emit('update:active',false)">Close</a>
 				</span>
 			</p>
 			<p class="card-footer-item">
@@ -36,11 +36,6 @@
 	export default {
 		components: {TextField, BaseModal},
 		name: "LoginModal",
-
-		model: {
-			prop: 'active',
-			event: 'change'
-		},
 
 		props: {
 			active: {

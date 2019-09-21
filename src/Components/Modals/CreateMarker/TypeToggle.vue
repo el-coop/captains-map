@@ -1,6 +1,6 @@
 <template>
 	<div class="tabs is-toggle is-toggle-rounded is-fullwidth">
-		<input type="hidden" name="media[type]" v-model="type"/>
+		<input type="hidden" name="media[type]" v-model.lazy="type"/>
 		<ul>
 			<li :class="{ 'is-active': type === 'image'}">
 				<a @click="type = 'image'">

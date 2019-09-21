@@ -32,10 +32,6 @@
 <script>
 	export default {
 		name: "BaseModal",
-		model: {
-			prop: 'active',
-			event: 'change'
-		},
 
 		props: {
 			active: {
@@ -69,11 +65,11 @@
 				if (this.routeName !== null && this.manageCloseNavigation) {
 					this.$router.back();
 				}
-				this.$emit('change', false);
+				this.$emit('update:active', false);
 			},
 			hideOnBack() {
 				if (this.active) {
-					this.$emit('change', false);
+					this.$emit('update:active', false);
 				}
 			},
 		},
