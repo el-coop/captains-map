@@ -8,27 +8,18 @@
 		<div class="dashboard__body">
 			<Profile v-if="hasUsername"/>
 			<div v-else></div>
-			<transition name="slide-up">
-				<div class="dashboard__control dashboard__body-sidebar" v-if="openSidebar">
-					<MarkerList/>
-					<div class="content copyright">
-						Map data available thanks to © OpenStreetMap contributors.<br>
-						© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> | © <a
-							href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> | <a
-							href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a>
-					</div>
+			<MarkerList class="dashboard__control dashboard__sidebar">
+				<div class="copyright">
+					Map data available thanks to © OpenStreetMap contributors.<br>
+					© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> | © <a
+						href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> | <a
+						href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a>
 				</div>
-			</transition>
+			</MarkerList>
 		</div>
 
 		<div class="dashboard__control dashboard__footer is-hidden-tablet">
-			<MarkerBordersFilter>
-				<button class="button is-light is-outlined is-marginless is-faded has-icon-top marker-border-filter__button"
-						@click="openSidebar = !openSidebar">
-					<FontAwesomeIcon icon="list" size="sm"/>
-					<span class="is-size-7">Show {{ openSidebar ? 'Map' : 'List'}}</span>
-				</button>
-			</MarkerBordersFilter>
+			<MarkerBordersFilter/>
 		</div>
 
 		<ViewMarker/>
@@ -61,25 +52,15 @@
 		data() {
 			return {
 				selectedMarker: null,
-				openSidebar: window.matchMedia("(min-width: 769px)").matches,
 				mountModal: false,
 			}
 		},
 
 		created() {
-			this.$bus.$on('moving-map', this.closeSidebar);
+			this.$bus.$on('moving-map');
 		},
 		beforeDestroy() {
-			this.$bus.$off('moving-map', this.closeSidebar);
-		},
-
-		methods: {
-			closeSidebar() {
-				if (!window.matchMedia("(min-width: 769px)").matches) {
-					this.openSidebar = false;
-				}
-			},
-
+			this.$bus.$off('moving-map');
 		},
 
 		computed: {

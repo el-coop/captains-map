@@ -8,6 +8,10 @@ describe('MarkerEntry.vue', () => {
 	let marker;
 
 	beforeEach(() => {
+		global.window.matchMedia = sinon.stub().returns({
+			matches: false
+		});
+
 		marker = {
 			media: [{
 				type: 'image',
@@ -17,7 +21,10 @@ describe('MarkerEntry.vue', () => {
 			lat: 1,
 			lng: 1,
 			user: {
-				username: 'test'
+				username: 'test',
+				bio: {
+					path: '/wrath',
+				}
 			},
 			time: '2018-10-06 15:43:57'
 
@@ -27,19 +34,21 @@ describe('MarkerEntry.vue', () => {
 
 	afterEach(() => {
 		sinon.restore();
+		delete global.window.matchMedia;
 	});
 
-	it('Renders', () => {
+	it('Renders', async () => {
 		const wrapper = shallowMount(MarkerEntry, {
 			propsData: {
 				marker
 			}
 		});
 
-		assert.isTrue(wrapper.find('.media').exists());
-		assert.isTrue(wrapper.find('.image').exists());
-		assert.isTrue(wrapper.find('.media-content').exists());
-		assert.equal(wrapper.find('.content > p').text(), 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0...');
+		await wrapper.vm.$nextTick();
+
+		assert.isTrue(wrapper.find('.marker-entry__card-image').exists());
+		assert.equal(wrapper.find('.marker-entry__card-content').text(), 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0...');
+		assert.equal(wrapper.find('.marker-entry__card-profile-img').attributes().src, '/api/wrath');
 
 	});
 
@@ -100,7 +109,7 @@ describe('MarkerEntry.vue', () => {
 			}
 		});
 
-		wrapper.find('.media').trigger('click');
+		wrapper.find('.marker-entry__card').trigger('click');
 
 		assert.isTrue($bus.$emit.calledOnce);
 		assert.isTrue($bus.$emit.calledWith('moving-map'));

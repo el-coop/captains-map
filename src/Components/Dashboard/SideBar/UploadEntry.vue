@@ -1,5 +1,6 @@
 <script>
 	import MarkerEntry from "@/Components/Dashboard/SideBar/MarkerEntry";
+	import globe from '../../../assets/images/globe-icon.png';
 
 	export default {
 		name: "UploadEntry",
@@ -7,7 +8,8 @@
 
 		data() {
 			return {
-				className: null
+				className: null,
+				user: this.$store.state.Profile.user
 			}
 		},
 
@@ -22,6 +24,12 @@
 					return;
 				}
 				this.className = this.marker.error ? 'error' : 'queued';
+			}
+		},
+
+		computed: {
+			profileImg() {
+				return this.user.path ? `/api${this.user.path}` : globe;
 			}
 		},
 

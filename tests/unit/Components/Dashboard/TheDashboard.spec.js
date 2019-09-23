@@ -13,7 +13,7 @@ describe('TheDashboard.vue', () => {
 
 	beforeEach(() => {
 		global.window.matchMedia = sinon.stub().returns({
-			matches: true
+			matches: false
 		});
 		mocks = {
 			$bus: {
@@ -72,64 +72,6 @@ describe('TheDashboard.vue', () => {
 		assert.isTrue(mocks.$bus.$off.calledWith('moving-map'));
 	});
 
-	it('closes the sidebar', () => {
-		global.window.matchMedia = sinon.stub().returns({
-			matches: false
-		});
-		const wrapper = shallowMount(TheDashboard, {
-			stubs,
-			mocks
-		});
-
-		wrapper.setData({
-			openSidebar: true
-		});
-
-		wrapper.vm.closeSidebar();
-
-		assert.isFalse(wrapper.vm.$data.openSidebar);
-		assert.isFalse(wrapper.find('marker-list-stub').exists());
-
-	});
-
-	it('It toggles list on when clicked and list is off', () => {
-		global.window.matchMedia = sinon.stub().returns({
-			matches: false
-		});
-		const wrapper = shallowMount(TheDashboard, {
-			propsData: {
-				editMode: false
-			},
-			stubs,
-			mocks
-		});
-
-		wrapper.setData({
-			openSidebar: false
-		});
-		wrapper.find('button').trigger('click');
-
-		assert.isTrue(wrapper.vm.$data.openSidebar);
-		assert.isTrue(wrapper.find('MarkerList-stub').exists());
-	});
-
-	it('It toggles list off when clicked and list is on', () => {
-		const wrapper = shallowMount(TheDashboard, {
-			propsData: {
-				editMode: false
-			},
-			stubs,
-			mocks
-		});
-
-		wrapper.setData({
-			openSidebar: true
-		});
-		wrapper.find('button').trigger('click');
-
-		assert.isFalse(wrapper.vm.$data.openSidebar);
-		assert.isFalse(wrapper.find('.TheDashboard__body-sidebar.open').exists());
-	});
 	it('Renders logged out bar when no user', () => {
 		const wrapper = shallowMount(TheDashboard, {
 			stubs,

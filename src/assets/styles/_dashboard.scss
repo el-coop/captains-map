@@ -43,29 +43,11 @@
 	&__body {
 		grid-row: body;
 		display: flex;
+		flex-direction: column;
+
 		justify-content: space-between;
-
-		&-sidebar {
-			box-shadow: -10px 0px 20px 10px rgba(0, 0, 0, 0.3);
-			height: 100%;
-			width: 100vw;
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-			overflow: auto;
-
-			@media #{$above-tablet} {
-				height: 100%;
-				transform: unset;
-				width: 500px;
-				max-width: 20vw;
-
-			}
-
-			> .copyright {
-				padding: 5px;
-				font-size: 0.75rem;
-			}
+		@media #{$above-tablet} {
+			flex-direction: row;
 		}
 	}
 	&__footer {

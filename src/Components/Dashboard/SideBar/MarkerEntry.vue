@@ -1,19 +1,22 @@
 <template>
-	<div class="media marker-entry" :class="className" @click="showMarker">
-		<figure class="media-left">
-			<p class="image marker-entry__image">
-				<img :src="src" :alt="imageAlt">
-				<FontAwesomeIcon icon="images" v-if="marker.media.length > 1" class="marker-entry__image-album"/>
-			</p>
-		</figure>
-		<div class="media-content">
-			<div class="content">
-				<small class="has-text-weight-semibold is-block is-size-7" v-text="dateDisplay(marker.time)"></small>
-				<small>Type:&nbsp;</small>
-				<strong class="has-text-white" v-text="marker.type"></strong>
+	<div class="marker-entry__card" :class="className" @click="showMarker">
+
+		<img :src="src" :alt="imageAlt" class="marker-entry__card-image">
+		<div class="marker-entry__card-tags">
+			<template v-if="marker.location">
 				<br>
-				<p>{{ marker.description | truncate(45) }}</p>
+				<strong>{{marker.location | textAfterLine |truncate(40)}}</strong>
+			</template>
+			<br>
+			<small class="has-text-weight-semibold" v-text="dateDisplay(marker.time)"/>
+		</div>
+		<FontAwesomeIcon icon="images" v-if="marker.media.length > 1" class="marker-entry__card-icon"/>
+		<div class="marker-entry__card-text">
+			<div class="marker-entry__card-profile">
+				<img :src="profileImg" class="marker-entry__card-profile-img">
+				<span v-text="user.username"/>
 			</div>
+			<p class="marker-entry__card-content" v-text="description"/>
 		</div>
 	</div>
 </template>
@@ -21,6 +24,7 @@
 <script>
 	import map from '@/Services/LeafletMapService';
 	import HandlesDataDisplayMixin from "@/Components/Utilities/HandlesDataDisplayMixin";
+	import globe from '../../../assets/images/globe-icon.png';
 
 	export default {
 		name: "MarkerEntry",
@@ -33,20 +37,35 @@
 			}
 		},
 
+		mounted() {
+			this.resizeDescription();
+			window.addEventListener('resize', this.resizeDescription);
+		},
+
+		beforeDestroy() {
+			window.removeEventListener('resize', this.resizeDescription);
+		},
+
 		data() {
 			return {
+				resizeListener: null,
 				src: this.calculateImage(),
-				className: `marker-entry--${this.marker.type}`,
+				className: `marker-entry__card--${this.marker.type}`,
+				description: '',
+				user: this.marker.user
 			}
 		},
 
 		computed: {
 			imageAlt() {
 				let text = '';
-				if (this.marker.user) {
-					text = `${this.marker.user.username} `;
+				if (this.user) {
+					text = `${this.user.username} `;
 				}
 				return text + this.marker.type;
+			},
+			profileImg() {
+				return this.user.bio.path ? `/api${this.user.bio.path}` : globe;
 			}
 		},
 
@@ -62,6 +81,15 @@
 				this.$bus.$emit('moving-map');
 				map.move([this.marker.lat, this.marker.lng], 16);
 			},
+			resizeDescription() {
+				let length = 45;
+				if (window.matchMedia("(min-width: 1950px)").matches) {
+					length = 75;
+				} else if (window.matchMedia("(min-width: 1520px)").matches) {
+					length = 60;
+				}
+				this.description = this.$options.filters.truncate(this.marker.description, length);
+			}
 
 		},
 	}

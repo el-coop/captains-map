@@ -65,6 +65,15 @@
 
 				return tcText + '...';
 			},
+
+			textAfterLine(text) {
+				const splitText = text.split('-');
+				if (splitText.length > 1) {
+					text = splitText[1];
+				}
+
+				return text.trim();
+			}
 		}
 	}
 </script>

@@ -65,10 +65,10 @@ describe('MarkerList.vue', () => {
 		});
 
 		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
-		assert.isFalse(wrapper.findAll('.buttons').exists());
+		assert.isFalse(wrapper.findAll('.button').exists());
 	});
 
-	it('Renders markers and pagination buttons when there is next', () => {
+	it('Renders next pagination buttons when there is next', () => {
 		mocks.$store.state.Markers.markers = new Array(2).fill({lat: 0, lng: 0});
 		mocks.$store.state.Markers.hasNext = true;
 
@@ -77,65 +77,10 @@ describe('MarkerList.vue', () => {
 		});
 
 		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
-		assert.isTrue(wrapper.find('.buttons').exists());
+		assert.equal(wrapper.find('.button').text(),'Load Next');
 	});
 
-	it('Renders markers and pagination buttons when not on last page', () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize * 5).fill({lat: 0, lng: 0});
-		mocks.$store.state.Markers.page = 2;
-
-		const wrapper = shallowMount(MarkerList, {
-			mocks
-		});
-
-		assert.equal(wrapper.findAll('markerentry-stub').length, 5);
-		assert.isTrue(wrapper.find('.buttons').exists());
-	});
-
-	it('Disables next button when needs to be', async () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$store.state.Markers.page = 2;
-
-		const wrapper = shallowMount(MarkerList, {
-			mocks
-		});
-
-		await wrapper.vm.$nextTick();
-
-		const nextButton = wrapper.find('.button:disabled');
-		assert.isTrue(nextButton.exists());
-		assert.include(nextButton.text(), 'Next');
-	});
-
-	it('Disables prev button when needs to be', async () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-
-		const wrapper = shallowMount(MarkerList, {
-			mocks
-		});
-
-		await wrapper.vm.$nextTick();
-
-		const prevButton = wrapper.find('.button:disabled');
-		assert.isTrue(prevButton.exists());
-		assert.include(prevButton.text(), 'Previous');
-	});
-
-	it('Enables both buttons', async () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$store.state.Markers.hasNext = true;
-		mocks.$store.state.Markers.page = 1;
-
-		const wrapper = shallowMount(MarkerList, {
-			mocks
-		});
-
-		await wrapper.vm.$nextTick();
-
-		assert.isFalse(wrapper.find('.button:disabled').exists());
-	});
-
-	it('Enables previous button when page is 0 and server page is bigger', async () => {
+	it('Shows previous button when page is 0 and server page is bigger', async () => {
 		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
 		mocks.$store.state.Markers.hasNext = true;
 		mocks.$store.state.Markers.serverPage = 2;
@@ -146,7 +91,7 @@ describe('MarkerList.vue', () => {
 
 		await wrapper.vm.$nextTick();
 
-		assert.isFalse(wrapper.find('.button:disabled').exists());
+		assert.equal(wrapper.find('.button').text(),'Load Previous');
 	});
 
 	it('Loads next page', async () => {

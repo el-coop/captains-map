@@ -1,17 +1,27 @@
 <template>
 	<div>
-		<UploadsList v-if="$store.getters['Uploads/allFiles'].length && $router.currentRoute.name === 'edit'"/>
+		<UploadsList v-if="! loading && $store.getters['Uploads/allFiles'].length && $router.currentRoute.name === 'edit'"/>
 		<MarkerBordersFilter class="is-hidden-touch"/>
-		<div class="loader marker-list__loader" v-if="loading"></div>
-		<ul v-if="! loading">
-			<li v-for="marker in markers" class="media marker-list__media" :key="marker.id">
+
+		<div v-if="loading" class="marker-list__loader">
+			<div class="loader"></div>
+		</div>
+		<ul v-if="!loading" class="marker-list">
+			<li v-if="hasPrev && !loading">
+				<button class="marker-list__button marker-list__button--prev button is-outlined is-faded is-light" @click="previousPage">
+					Load Previous
+				</button>
+			</li>
+			<li v-for="marker in markers" class="marker-list__entry" :key="marker.id">
 				<MarkerEntry :marker="marker"/>
 			</li>
+			<li v-if="hasNext && !loading">
+				<button class="marker-list__button marker-list__button--next button is-outlined is-faded is-light" @click="nextPage">
+					Load Next
+				</button>
+			</li>
 		</ul>
-		<div class="buttons marker-list__buttons has-addons" v-if="(hasNext || hasPrev) && ! loading">
-			<button class="button is-light is-flex-1" @click="previousPage" :disabled="! hasPrev">< Previous</button>
-			<button class="button is-light is-flex-1" @click="nextPage" :disabled="! hasNext">Next ></button>
-		</div>
+		<slot v-if="!loading"/>
 	</div>
 </template>
 
@@ -48,9 +58,11 @@
 		methods: {
 			async previousPage() {
 				await this.$store.dispatch('Markers/previousPage');
+				this.$el.scrollLeft = 0;
 			},
 			async nextPage() {
 				await this.$store.dispatch('Markers/nextPage');
+				this.$el.scrollLeft = 0;
 			},
 		}
 	}

@@ -1,12 +1,12 @@
 <template>
-	<div>
-		<button class="button is-light is-outlined is-fullwidth is-marginless is-faded has-icon-top h-auto"
+	<div class="uploads-list">
+		<button class="button is-light is-outlined is-marginless is-faded has-icon-top uploads-list__button"
 				@click="open = !open">
 			<FontAwesomeIcon icon="upload" size="sm"/>
-			<span class="is-size-7">Show Uploads</span>
+			<span class="is-size-7" v-text="open ? 'Hide Uploads' : 'Show Uploads'"/>
 		</button>
-		<ul v-if="open">
-			<li v-for="marker in markers" class="media marker-list__media" :key="marker.uploadTime">
+		<ul v-if="open" class="marker-list">
+			<li v-for="marker in markers" class="marker-list__entry" :key="marker.uploadTime">
 				<UploadEntry :marker="marker"></UploadEntry>
 			</li>
 		</ul>

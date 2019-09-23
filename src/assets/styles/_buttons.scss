@@ -3,12 +3,29 @@
 		flex: 1;
 		flex-direction: column;
 	}
+
 	&.is-faded.is-light.is-outlined {
 		border-color: rgba(219, 219, 219, 0.5);
 
 		&:focus:not(:hover), &:active:not(:hover) {
 			color: whitesmoke;
 			background-color: transparent;
+		}
+	}
+
+	&.is-borderless {
+		border: none;
+
+		&:focus, &:hover, &:active {
+			border: none;
+			box-shadow: none !important;
+		}
+	}
+
+	&.is-light-hover {
+		&:focus, &:hover, &:active {
+			background-color: lighten($background, 1) !important;
+			color: $text !important;
 		}
 	}
 }

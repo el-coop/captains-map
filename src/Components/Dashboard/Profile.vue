@@ -48,7 +48,6 @@
 		components: {AjaxForm, FileField},
 		data() {
 			return {
-				logo: globe,
 				description: '',
 				loading: false,
 				file: null,
@@ -95,7 +94,7 @@
 				return this.$store.state.Profile.open;
 			},
 			user() {
-				if (this.$store.state.Profile.user) {
+				if (1) {
 					this.description = this.$store.state.Profile.user.description;
 				}
 				return this.$store.state.Profile.user;

@@ -3,10 +3,6 @@
 	cursor: pointer;
 	padding: 0.5rem;
 
-	&:hover {
-		background-color: $grey-light;
-	}
-
 	&.error, &.queued {
 		.image {
 			overflow: hidden;
@@ -56,41 +52,11 @@
 		}
 	}
 
-
-	&--Plan {
-		&:hover {
-			background-color: $cyan;
-		}
-	}
-
-	&--Visited {
-		&:hover {
-			background-color: $turquoise;
-		}
-	}
-
-	&--Suggestion {
-		&:hover {
-			background-color: $red;
-		}
-	}
-
 	&__image {
 		max-width: 64px;
 		max-height: 100px;
 		overflow: hidden;
 		position: relative;
-
-		&-album {
-			position: absolute;
-			left: 3%;
-			bottom: 1%;
-			width: 1rem !important;
-			height: 1rem !important;
-			text-align: center;
-			font-size: 1em;
-			opacity: 0.75;
-		}
 	}
 
 }

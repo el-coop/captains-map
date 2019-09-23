@@ -1,0 +1,346 @@
+.dashboard__sidebar {
+	box-shadow: -10px 0px 20px 10px rgba(0, 0, 0, 0.3);
+	height: 18%;
+	width: 100vw;
+	display: flex;
+	justify-content: stretch;
+	align-self: flex-end;
+	overflow-x: auto;
+	overflow-y: hidden;
+	flex-shrink: 100;
+
+	@media #{$above-tablet} {
+		flex-direction: column;
+		height: 100%;
+		max-width: 400px;
+		width: 20vw;
+		overflow-y: auto;
+		overflow-x: hidden;
+		flex-shrink: unset;
+	}
+}
+
+.copyright {
+	filter: drop-shadow(-1px 0 2px rgba(0, 0, 0, 0.8));
+	background-color: darken($background, 10%);
+	padding: 1.5em;
+	margin-left: 0.5em;
+	font-size: $size-7;
+	max-height: 100%;
+	overflow-x: visible;
+	min-width: 300px;
+	position: relative;
+
+	&:before {
+		content: " ";
+		display: block;
+		position: absolute;
+		width: 7.5px;
+		height: 100%;
+		top: 0;
+		left: -7.5px;
+
+		background: linear-gradient(
+						45deg, transparent 33.333%,
+						darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+						transparent 66.667%
+		),
+		linear-gradient(
+						-45deg, transparent 33.333%,
+						darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+						transparent 66.667%
+		);
+		background-size: 40px 20px;
+	}
+
+	@media #{$above-tablet} {
+		filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+		margin-top: auto;
+		margin-left: 0;
+		min-width: 0;
+		overflow-y: visible;
+		&:before {
+			width: 100%;
+			height: 7.5px;
+
+			top: -7.5px;
+			left: 0;
+
+			background: linear-gradient(
+							45deg, transparent 33.333%,
+							darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+							transparent 66.667%
+			),
+			linear-gradient(
+							-45deg, transparent 33.333%,
+							darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+							transparent 66.667%
+			);
+			background-size: 20px 40px;
+		}
+	}
+}
+
+.marker-list {
+	display: flex;
+	align-items: stretch;
+	height: 100%;
+	position: relative;
+	overflow-x: visible;
+
+	&__entry {
+		width: 60vw;
+		padding: 3vw;
+		height: 100%;
+		max-width: 200px;
+	}
+
+	@media #{$above-tablet} {
+		flex-direction: column;
+		overflow-y: visible;
+		height: auto;
+		margin-right: 0;
+		margin-bottom: 0.5em;
+
+		&__entry {
+			max-width: 100%;
+			padding: 0.75vh 1vw;
+		}
+	}
+
+	&__loader {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: auto;
+		height: 100%;
+		@media #{$above-tablet} {
+			align-items: start;
+			margin: 10px;
+			width: auto;
+		}
+
+	}
+
+	&__button {
+		height: 100%;
+		@media #{$above-tablet} {
+			width: 100%;
+			height: 50px;
+		}
+		&--prev {
+			border-left: transparent;
+			@media #{$above-tablet} {
+				height: 45px;
+			}
+		}
+		&--next {
+			border-right: transparent;
+			@media #{$above-tablet} {
+				top: 10px;
+			}
+		}
+	}
+}
+
+.marker-entry__card {
+	cursor: pointer;
+	box-shadow: $card-shadow;
+	border-radius: $radius-large;
+	height: 100%;
+	position: relative;
+	border: 0 solid transparent;
+	overflow: hidden;
+	@media #{$above-wide-screen} {
+		display: flex;
+		height: 13vh;
+	}
+
+	&.error, &.queued {
+		&:after {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+	}
+
+	&.error {
+		&:after {
+			content: 'ERROR';
+			background-color: transparentize($red, 0.35);
+		}
+	}
+
+	&.queued {
+		&:after {
+			content: 'QUEUE';
+			background-color: transparentize($black, 0.35);
+		}
+	}
+
+	&.uploading {
+		filter: grayscale(100);
+
+		&:after {
+			animation: spinAround 500ms infinite linear;
+			border: 0.25em solid $grey-lighter;
+			border-radius: $radius-rounded;
+			border-right-color: transparent;
+			border-top-color: transparent;
+			content: "";
+			display: block;
+			top: calc(50% - 1em);
+			left: calc(50% - 1em);
+			width: 2em;
+			height: 2em;
+			position: absolute;
+		}
+	}
+
+	&-image {
+		max-width: 200px;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center center;
+		@media #{$above-wide-screen} {
+			max-width: 50%;
+		}
+	}
+
+	&-tags {
+		max-width: 200px;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 2;
+		padding: 0.7em;
+		background: linear-gradient(to bottom, rgba(0, 0, 0, 0), black);
+		font-size: $size-7;
+		line-height: 1;
+		@media #{$above-wide-screen} {
+			max-width: 50%;
+		}
+	}
+
+	&-icon {
+		position: absolute;
+		right: 4px;
+		bottom: 1%;
+		width: 1rem !important;
+		height: 1rem !important;
+		z-index: 3;
+		text-align: center;
+		font-size: 1em;
+		opacity: 0.75;
+		@media #{$above-wide-screen} {
+			right: calc(50% + 4px);
+		}
+	}
+
+	&-text {
+		font-size: $size-6;
+		display: none;
+		@media #{$above-wide-screen} {
+			display: block;
+			width: 50%;
+		}
+	}
+
+	&-profile {
+		padding-top: 0.25em;
+		display: flex;
+		align-items: center;
+		height: 24px;
+		background: linear-gradient(to top, rgba(0, 0, 0, 0), darken($background, 1.5%));
+
+		&-img {
+			border-radius: $radius-rounded;
+			max-height: 100%;
+			max-width: 100%;
+			margin: 5%;
+			width: auto !important;
+		}
+	}
+
+	&-content {
+		padding: 0.25em;
+	}
+
+	&:hover {
+		border: 1px solid $grey-light;
+	}
+
+	&--Plan:hover {
+		border: 1px solid $cyan;
+	}
+
+	&--Visited:hover {
+		border: 1px solid $turquoise;
+	}
+
+	&--Suggestion:hover {
+		border: 1px solid $red;
+	}
+
+}
+
+
+.uploads-list {
+	height: 100%;
+	display: flex;
+	filter: drop-shadow(1px 0 2px rgba(0, 0, 0, 0.8));
+	background-color: darken($background, 10%);
+	padding-right: 0.5em;
+	margin-right: 0.5em;
+
+	&:after {
+		content: " ";
+		display: block;
+		position: absolute;
+		width: 7.5px;
+		height: 100%;
+		top: 0;
+		right: -7.5px;
+
+		background-position: right !important;
+		background: linear-gradient(
+						225deg, transparent 33.333%,
+						darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+						transparent 66.667%
+		),
+		linear-gradient(
+						135deg, transparent 33.333%,
+						darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+						transparent 66.667%
+		);
+		background-size: 40px 20px;
+	}
+
+	@media #{$above-tablet} {
+		background-color: transparent;
+		height: auto;
+		flex-direction: column;
+		margin-right: 0;
+		padding-right: 0;
+		&:after {
+			content: "";
+		}
+	}
+
+	.uploads-list__button {
+		width: 100px;
+		height: 100%;
+
+		@media #{$above-tablet} {
+			height: auto;
+			width: 100%;
+		}
+	}
+}

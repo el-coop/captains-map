@@ -13,11 +13,19 @@ describe('UploadEntry.vue', () => {
 	const file = new UploadFile('name', 'image');
 
 	beforeEach(() => {
+		global.window.matchMedia = sinon.stub().returns({
+			matches: false
+		});
 		mocks = {
 			$store: {
 				state: {
 					Uploads: {
 						workingId: 1
+					},
+					Profile: {
+						user: {
+							path: '/wrath'
+						}
 					}
 				}
 			}
@@ -44,9 +52,10 @@ describe('UploadEntry.vue', () => {
 
 	afterEach(() => {
 		sinon.restore();
+		delete global.window.matchMedia;
 	});
 
-	it('Renders', () => {
+	it('Renders', async () => {
 		const wrapper = shallowMount(UploadEntry, {
 			mocks,
 			propsData: {
@@ -54,10 +63,11 @@ describe('UploadEntry.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.find('.media').exists());
-		assert.isTrue(wrapper.find('.image').exists());
-		assert.isTrue(wrapper.find('.media-content').exists());
-		assert.equal(wrapper.find('.content > p').text(), 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0...');
+		await wrapper.vm.$nextTick();
+
+		assert.isTrue(wrapper.find('.marker-entry__card-image').exists());
+		assert.equal(wrapper.find('.marker-entry__card-content').text(), 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0...');
+		assert.equal(wrapper.find('.marker-entry__card-profile-img').attributes().src, '/api/wrath');
 	});
 
 	it('Calculates image src for image type', () => {
@@ -96,7 +106,7 @@ describe('UploadEntry.vue', () => {
 			mocks
 		});
 
-		wrapper.find('.media').trigger('click');
+		wrapper.find('.marker-entry__card').trigger('click');
 
 		assert.isTrue(mocks.$bus.$emit.calledOnce);
 		assert.isTrue(mocks.$bus.$emit.calledWith('moving-map'));
@@ -158,7 +168,7 @@ describe('UploadEntry.vue', () => {
 			lat: 1,
 			lng: 1,
 			user: {
-				username: 'test'
+				username: 'test',
 			},
 			time: '2018-10-06 15:43:57',
 			uploadTime: 2
