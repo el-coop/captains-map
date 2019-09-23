@@ -56,13 +56,6 @@
 			}
 		},
 
-		created() {
-			this.$bus.$on('moving-map');
-		},
-		beforeDestroy() {
-			this.$bus.$off('moving-map');
-		},
-
 		computed: {
 			loggedIn() {
 				return auth.isLoggedIn();

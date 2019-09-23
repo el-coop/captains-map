@@ -12,7 +12,7 @@ function buildFormData(data, formData, parentKey) {
 
 	if (data && typeof data === 'object' && !(data instanceof Date) && !(data instanceof File) && !(data instanceof UploadFile)) {
 		Object.keys(data).forEach(key => {
-			if(key !== 'preview' && key !== 'error' && key !== 'uploadTime'){
+			if (key !== 'preview' && key !== 'error' && key !== 'uploadTime') {
 				buildFormData(data[key], formData, parentKey ? `${parentKey}[${key}]` : key);
 			}
 		});
@@ -44,7 +44,9 @@ class UploadService {
 	async upload(marker) {
 		const formData = buildFormData(marker);
 
-		const response = await http.post('marker/create', formData);
+		const response = await http.post('marker/create', formData, {}, {
+			onUploadProgress: this.onUploadProgress
+		});
 		if (!response || response.status < 200 || response.status > 299) {
 			marker.error = {
 				status: response ? response.status : 'offline',
@@ -58,6 +60,10 @@ class UploadService {
 		uploadedMarker.uploadTime = marker.uploadTime;
 
 		await Store.dispatch("Uploads/uploaded", uploadedMarker);
+	}
+
+	onUploadProgress(progressEvent) {
+		Store.commit('Uploads/setProgress', progressEvent.loaded * 100 / progressEvent.total);
 	}
 }
 

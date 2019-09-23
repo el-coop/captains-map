@@ -1,5 +1,5 @@
 <template>
-	<div class="marker-entry__card" :class="className" @click="showMarker">
+	<div class="marker-entry__card" :class="className" @click="showMarker" :style="uploadingStyle || ''">
 
 		<img :src="src" :alt="imageAlt" class="marker-entry__card-image">
 		<div class="marker-entry__card-tags">
@@ -18,6 +18,11 @@
 			</div>
 			<p class="marker-entry__card-content" v-text="description"/>
 		</div>
+		<progress v-if="className === 'uploading' && progress" class="progress marker-entry__card-progress is-dark"
+				  :value="progress" max="100"
+				  v-text="`${progress}%`"/>
+		<progress v-if="className === 'uploading' && !progress" class="progress marker-entry__card-progress is-dark"
+				  max="100"/>
 	</div>
 </template>
 
@@ -66,6 +71,9 @@
 			},
 			profileImg() {
 				return this.user.bio.path ? `/api${this.user.bio.path}` : globe;
+			},
+			uploadingStyle() {
+				return '';
 			}
 		},
 
@@ -78,7 +86,6 @@
 				return this.calculateVerifiedImage(this.marker.media[0]);
 			},
 			showMarker() {
-				this.$bus.$emit('moving-map');
 				map.move([this.marker.lat, this.marker.lng], 16);
 			},
 			resizeDescription() {

@@ -20,7 +20,8 @@ describe('UploadEntry.vue', () => {
 			$store: {
 				state: {
 					Uploads: {
-						workingId: 1
+						workingId: 1,
+						progress: null
 					},
 					Profile: {
 						user: {
@@ -68,6 +69,7 @@ describe('UploadEntry.vue', () => {
 		assert.isTrue(wrapper.find('.marker-entry__card-image').exists());
 		assert.equal(wrapper.find('.marker-entry__card-content').text(), 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0...');
 		assert.equal(wrapper.find('.marker-entry__card-profile-img').attributes().src, '/api/wrath');
+		assert.isFalse(wrapper.find('.progress').exists());
 	});
 
 	it('Calculates image src for image type', () => {
@@ -108,8 +110,6 @@ describe('UploadEntry.vue', () => {
 
 		wrapper.find('.marker-entry__card').trigger('click');
 
-		assert.isTrue(mocks.$bus.$emit.calledOnce);
-		assert.isTrue(mocks.$bus.$emit.calledWith('moving-map'));
 		assert.isTrue(mapMoveStub.calledOnce);
 		assert.isTrue(mapMoveStub.calledWith([1, 1], 16));
 	});
@@ -137,6 +137,37 @@ describe('UploadEntry.vue', () => {
 
 		assert.equal(wrapper.vm.$data.className, 'uploading');
 		assert.isTrue(wrapper.find('.uploading').exists());
+	});
+
+	it('Shows progress bar with progress value when uploading and progress value exists',async () => {
+		const wrapper = shallowMount(UploadEntry, {
+			mocks,
+			propsData: {
+				marker
+			}
+		});
+
+		mocks.$store.state.Uploads.workingId = 2;
+		mocks.$store.state.Uploads.progress = 40;
+		await wrapper.vm.$nextTick();
+		const progressBar = wrapper.find('.progress');
+		assert.isTrue(progressBar.exists());
+		assert.equal(progressBar.attributes().value,40);
+	});
+
+	it('Shows progress bar withiout progress value when uploading and progress value doenst exist',async () => {
+		const wrapper = shallowMount(UploadEntry, {
+			mocks,
+			propsData: {
+				marker
+			}
+		});
+
+		mocks.$store.state.Uploads.workingId = 2;
+		await wrapper.vm.$nextTick();
+		const progressBar = wrapper.find('.progress');
+		assert.isTrue(progressBar.exists());
+		assert.isUndefined(progressBar.attributes().value);
 	});
 
 	it('Sets classname to error when has errors', () => {

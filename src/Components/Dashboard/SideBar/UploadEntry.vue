@@ -9,7 +9,7 @@
 		data() {
 			return {
 				className: null,
-				user: this.$store.state.Profile.user
+				user: this.$store.state.Profile.user,
 			}
 		},
 
@@ -28,8 +28,25 @@
 		},
 
 		computed: {
+			progress() {
+				if (this.className !== 'uploading') {
+					return null;
+				}
+
+				return this.$store.state.Uploads.progress;
+			},
 			profileImg() {
 				return this.user.path ? `/api${this.user.path}` : globe;
+			},
+			uploadingStyle() {
+				if (this.className !== 'uploading') {
+					return '';
+				}
+				if (!this.progress) {
+					return `filter: grayscale(100%)`;
+				}
+				return `filter: grayscale(${100 - this.progress}%)`;
+
 			}
 		},
 

@@ -46,32 +46,6 @@ describe('TheDashboard.vue', () => {
 		assert.isTrue(wrapper.find('MarkerList-stub').exists());
 	});
 
-	it('Registers listeners', () => {
-		shallowMount(TheDashboard, {
-			propsData: {
-				editMode: true
-			},
-			stubs,
-			mocks
-		});
-
-		assert.isTrue(mocks.$bus.$on.calledWith('moving-map'));
-	});
-
-	it('Unregisters listeners', () => {
-		const wrapper = shallowMount(TheDashboard, {
-			propsData: {
-				editMode: true
-			},
-			stubs,
-			mocks
-		});
-
-		wrapper.destroy();
-
-		assert.isTrue(mocks.$bus.$off.calledWith('moving-map'));
-	});
-
 	it('Renders logged out bar when no user', () => {
 		const wrapper = shallowMount(TheDashboard, {
 			stubs,

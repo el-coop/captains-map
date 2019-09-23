@@ -13,7 +13,8 @@ export default {
 		queue: [],
 		errored: [],
 		workingId: null,
-		loaded: false
+		loaded: false,
+		progress: null
 	},
 
 	getters: {
@@ -49,6 +50,10 @@ export default {
 
 		markAsWorking(state, id) {
 			state.workingId = id;
+		},
+
+		setProgress(state, progress) {
+			state.progress = progress;
 		}
 
 	},

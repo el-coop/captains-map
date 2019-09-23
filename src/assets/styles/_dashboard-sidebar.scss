@@ -128,12 +128,14 @@
 			width: 100%;
 			height: 50px;
 		}
+
 		&--prev {
 			border-left: transparent;
 			@media #{$above-tablet} {
 				height: 45px;
 			}
 		}
+
 		&--next {
 			border-right: transparent;
 			@media #{$above-tablet} {
@@ -156,7 +158,7 @@
 		height: 13vh;
 	}
 
-	&.error, &.queued {
+	&.error, &.queued, &.uploading {
 		&:after {
 			display: flex;
 			justify-content: center;
@@ -183,23 +185,14 @@
 		}
 	}
 
-	&.uploading {
-		filter: grayscale(100);
-
-		&:after {
-			animation: spinAround 500ms infinite linear;
-			border: 0.25em solid $grey-lighter;
-			border-radius: $radius-rounded;
-			border-right-color: transparent;
-			border-top-color: transparent;
-			content: "";
-			display: block;
-			top: calc(50% - 1em);
-			left: calc(50% - 1em);
-			width: 2em;
-			height: 2em;
-			position: absolute;
-		}
+	&-progress {
+		filter: blur(-4px);
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 80%;
+		z-index: 10;
+		transform: translate(-50%, -50%);
 	}
 
 	&-image {

@@ -46,7 +46,7 @@ class HttpService {
 			error = responseError;
 		}
 
-		if(error.response.status !== 404){
+		if (error.response.status !== 404) {
 			const cachedData = await Cache.get('request', url);
 
 			if (cachedData) {
@@ -62,14 +62,15 @@ class HttpService {
 
 	}
 
-	async post(url, data = {}, headers = {}, repeat = true) {
+	async post(url, data = {}, headers = {}, config = {}, repeat = true) {
 		try {
 			return await axios.post(`${host}/${url}`, data, {
-				headers
+				headers,
+				...config
 			});
 		} catch (error) {
 			if (error.response && error.response.data.message === 'invalid csrf token' && repeat) {
-				return await this.repeatWithCsrf('post', url, headers, data);
+				return await this.repeatWithCsrf('post', url, headers, data, config);
 			}
 			return error.response;
 		}
@@ -86,12 +87,12 @@ class HttpService {
 		}
 	}
 
-	async repeatWithCsrf(method, url, headers, data = {}) {
+	async repeatWithCsrf(method, url, headers, data = {}, config = {}) {
 		await this.get('getCsrf');
 		if (method === "delete") {
 			return await this.delete(url, headers, false);
 		}
-		return await this.post(url, data, headers, false);
+		return await this.post(url, data, headers, config, false);
 	}
 
 	static install(Vue) {

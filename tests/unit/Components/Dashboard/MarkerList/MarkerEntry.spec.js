@@ -111,8 +111,6 @@ describe('MarkerEntry.vue', () => {
 
 		wrapper.find('.marker-entry__card').trigger('click');
 
-		assert.isTrue($bus.$emit.calledOnce);
-		assert.isTrue($bus.$emit.calledWith('moving-map'));
 		assert.isTrue(mapMoveStub.calledOnce);
 		assert.isTrue(mapMoveStub.calledWith([1, 1], 16));
 
