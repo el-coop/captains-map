@@ -50,6 +50,22 @@ describe('Http service', () => {
 		assert.isTrue(storeStub.calledWith('User/logout'));
 	});
 
+	it('Extends user login when userextend header found', async () => {
+		const storeStub = sinon.stub(Store, 'dispatch');
+		moxios.wait(() => {
+			let request = moxios.requests.mostRecent();
+			request.respondWith({
+				status: 200,
+				headers: {
+					userextend: 10
+				}
+			});
+		});
+		await http.get('test');
+		assert.isTrue(storeStub.calledOnce);
+		assert.isTrue(storeStub.calledWith('User/extend',10));
+	});
+
 	it('returns the get response and caches', async () => {
 		const cacheStub = sinon.stub(cache, 'store');
 		moxios.wait(() => {

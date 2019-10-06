@@ -13,10 +13,15 @@ describe('User Store', () => {
 
 	it('Calls log out and redirects on logout', async () => {
 		const logoutStub = sinon.stub(auth, 'logout');
-		const routerStub = sinon.stub(router, 'go');
+		const routerStub = sinon.stub(router, 'push');
+		const httpStub = sinon.stub(http, 'get').callsFake(() => {
+			return {status: 200,}
+		});
 
 		await userStore.actions.logout();
 
+		assert.isTrue(httpStub.calledOnce);
+		assert.isTrue(httpStub.calledWith('auth/logout'));
 		assert.isTrue(logoutStub.calledOnce);
 		assert.isTrue(routerStub.calledWith('/'));
 		assert.isTrue(routerStub.calledOnce);
@@ -59,5 +64,14 @@ describe('User Store', () => {
 
 		assert.isFalse(response);
 		assert.isFalse(authStub.called);
+	});
+
+	it('Extend extends user login duration', async () => {
+		const authStub = sinon.stub(auth, 'extend');
+
+		userStore.actions.extend({},100);
+
+		assert.isTrue(authStub.calledWith(100));
+		assert.isTrue(authStub.calledOnce);
 	});
 });

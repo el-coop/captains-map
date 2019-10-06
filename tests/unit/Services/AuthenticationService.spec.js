@@ -132,4 +132,25 @@ describe('Authentication Service', () => {
 		assert.isNull(auth.user);
 	});
 
+	it('Extends user data in localstorage and on user object', () => {
+		global.localStorage = {
+			setItem() {
+			}
+		};
+		const time = Date.now();
+		auth.user = {
+			id: 1,
+			username: 'test',
+			exp: time
+		};
+
+		const setItemStub = sinon.stub(global.localStorage, 'setItem');
+
+		auth.extend(time + 100);
+
+		assert.deepEqual(auth.getUserDetails().exp, time + 100);
+		assert.isTrue(setItemStub.calledOnce);
+		assert.isTrue(setItemStub.calledWith('captains-map.exp', time + 100));
+	});
+
 });

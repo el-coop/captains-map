@@ -9,6 +9,13 @@ class AuthenticationService {
 		this.user = user;
 	}
 
+	extend(duration) {
+		localStorage.setItem('captains-map.exp', duration);
+		if (this.user && this.user.id && this.user.username) {
+			this.user.exp = duration;
+		}
+	}
+
 	getUserDetails() {
 		try {
 			if (!this.user) {

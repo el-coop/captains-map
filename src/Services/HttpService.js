@@ -7,7 +7,24 @@ let host = "/api";
 
 class HttpService {
 	constructor() {
-		axios.interceptors.response.use(this.setCsrfToken.bind(this), this.issueLogout.bind(this));
+		axios.interceptors.response.use((response) => {
+			this.setCsrfToken(response);
+			this.extendUserLogin(response);
+			return response;
+		}, this.issueLogout.bind(this));
+	}
+
+	setCsrfToken(response) {
+		if (response.headers.csrftoken || false) {
+			this.setHeader('X-CSRF-TOKEN', response.headers.csrftoken);
+			Store.dispatch('CSRFReady');
+		}
+	}
+
+	extendUserLogin(response) {
+		if (response.headers.userextend || false) {
+			Store.dispatch('User/extend', response.headers.userextend);
+		}
 	}
 
 	issueLogout(error) {
@@ -17,13 +34,6 @@ class HttpService {
 		return Promise.reject(error);
 	}
 
-	setCsrfToken(response) {
-		if (response.headers.csrftoken || false) {
-			this.setHeader('X-CSRF-TOKEN', response.headers.csrftoken);
-			Store.dispatch('CSRFReady');
-		}
-		return response;
-	}
 
 	setHeader(key, value) {
 		axios.defaults.headers.common[key] = value;
