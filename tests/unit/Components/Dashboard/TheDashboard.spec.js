@@ -41,9 +41,22 @@ describe('TheDashboard.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('MarkerBordersFilter-stub').exists());
+		assert.isFalse(wrapper.find('MarkerBordersFilter-stub').exists());
 		assert.isTrue(wrapper.find('ViewMarker-stub').exists());
 		assert.isTrue(wrapper.find('MarkerList-stub').exists());
+	});
+
+	it('Renders markers filter when showFilters true', async () => {
+		const wrapper = shallowMount(TheDashboard, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			showFilters: true
+		});
+
+		assert.isTrue(wrapper.find('MarkerBordersFilter-stub').exists());
 	});
 
 	it('Renders logged out bar when no user', () => {
@@ -77,6 +90,27 @@ describe('TheDashboard.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('.dashboard--with-profile').exists());
+	});
+
+	it('Toggles show filter on and of on button click', async () => {
+		const wrapper = shallowMount(TheDashboard, {
+			stubs,
+			mocks
+		});
+
+		assert.isFalse(wrapper.find('MarkerBordersFilter-stub').exists());
+
+		const button = wrapper.find('.dashboard__control-filters');
+
+		button.trigger('click');
+
+		assert.isTrue(wrapper.vm.$data.showFilters);
+		assert.isTrue(wrapper.find('MarkerBordersFilter-stub').exists());
+
+		button.trigger('click');
+
+		assert.isFalse(wrapper.vm.$data.showFilters);
+		assert.isFalse(wrapper.find('MarkerBordersFilter-stub').exists());
 	});
 
 });

@@ -7,8 +7,7 @@
 
 		<div class="dashboard__body">
 			<Profile v-if="hasUsername"/>
-			<div v-else></div>
-			<MarkerList class="dashboard__control dashboard__sidebar">
+			<MarkerList class="dashboard__control dashboard__sidebar" :class="{'dashboard__sidebar--filters': showFilters}">
 				<div class="copyright">
 					Map data available thanks to © OpenStreetMap contributors.<br>
 					© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> | © <a
@@ -16,12 +15,12 @@
 						href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a>
 				</div>
 			</MarkerList>
+			<button type="button" class="is-hidden-tablet dashboard__control dashboard__control--dark dashboard__control-filters"
+					@click="showFilters = !showFilters">
+				<FontAwesomeIcon icon="sliders-h"/>
+			</button>
+			<MarkerBordersFilter class="is-hidden-tablet dashboard__control" v-if="showFilters"/>
 		</div>
-
-		<div class="dashboard__control dashboard__footer is-hidden-tablet">
-			<MarkerBordersFilter/>
-		</div>
-
 		<ViewMarker/>
 	</div>
 </template>
@@ -53,6 +52,7 @@
 			return {
 				selectedMarker: null,
 				mountModal: false,
+				showFilters: false
 			}
 		},
 
