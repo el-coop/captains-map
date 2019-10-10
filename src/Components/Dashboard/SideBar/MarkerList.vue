@@ -1,8 +1,6 @@
 <template>
-	<div>
+	<div class="marker-list__wrapper">
 		<UploadsList v-if="! loading && $store.getters['Uploads/allFiles'].length && $router.currentRoute.name === 'edit'"/>
-		<MarkerBordersFilter class="is-hidden-touch"/>
-
 		<div v-if="loading" class="marker-list__loader">
 			<div class="loader"></div>
 		</div>

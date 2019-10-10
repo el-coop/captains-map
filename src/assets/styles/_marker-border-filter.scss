@@ -1,8 +1,26 @@
 .marker-border-filter {
+	display: flex;
+	flex-direction: column;
+	height: 0.35 * $gap;
+	overflow: hidden;
 
-	height: 100%;
+	@media #{$above-tablet} {
+		height: auto;
+	}
+
+
+	&--open {
+		flex-shrink: 1;
+		height: auto;
+	}
 
 	&__button {
 		height: 100%;
+	}
+
+	&__open {
+		height: 0.35 * $gap;
+		padding-top: 0;
+		padding-bottom: 0;
 	}
 }

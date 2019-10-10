@@ -68,13 +68,18 @@
 
 	&__body {
 		grid-row: body;
-		display: flex;
-		flex-direction: column;
+		display: grid;
 
+		grid-template-rows: [profile] auto [sidebar] max-content;
+		grid-template-columns: auto;
+		overflow-x: auto;
+		overflow-y: hidden;
 
 		@media #{$above-tablet} {
-			flex-direction: row;
-
+			overflow-y: auto;
+			overflow-x: hidden;
+			grid-template-rows: max-content;
+			grid-template-columns: [profile] auto [sidebar] max-content;
 		}
 	}
 }

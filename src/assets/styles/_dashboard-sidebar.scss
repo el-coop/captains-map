@@ -1,30 +1,27 @@
 .dashboard__sidebar {
+	grid-row: sidebar;
 	box-shadow: -10px 0px 20px 10px rgba(0, 0, 0, 0.3);
-	max-height: 2.5 * $gap;
-	height: 100%;
+	height: 2.5 * $gap;
 	width: 100vw;
 	display: flex;
+	flex-direction: column-reverse;
 	justify-content: stretch;
-	align-self: flex-end;
-	overflow-x: auto;
+	overflow-x: hidden;
 	overflow-y: hidden;
-	flex-shrink: 100;
 	margin-top: auto;
-
-	&--filters {
-		max-height: 1.8 * $gap;
-	}
+	transition: height $animation-speed;
 
 	@media #{$above-tablet} {
-		max-height: unset;
+		grid-column: sidebar;
+		height: calc(100vh - #{$gap / 1.5}) !important;
 		flex-direction: column;
-		max-width: 400px;
 		width: 20vw;
-		overflow-y: auto;
-		overflow-x: hidden;
-		flex-shrink: unset;
-		margin-left: auto;
+		max-width: 400px;
 	}
+}
+
+.profile--open + .dashboard__sidebar {
+	height: $gap;
 }
 
 .copyright {
@@ -85,6 +82,20 @@
 			);
 			background-size: 20px 40px;
 		}
+	}
+}
+
+.marker-list__wrapper {
+	display: flex;
+	justify-content: stretch;
+	flex: 1;
+	overflow-y: hidden;
+	overflow-x: visible;
+
+	@media #{$above-tablet} {
+		flex-direction: column;
+		overflow-y: visible;
+		overflow-x: hidden;
 	}
 }
 
@@ -160,7 +171,7 @@
 	position: relative;
 	border: 0 solid transparent;
 	overflow: hidden;
-	@media #{$above-wide-screen} {
+	@media #{$above-tablet} {
 		display: flex;
 		height: 13vh;
 	}
@@ -208,7 +219,7 @@
 		height: 100%;
 		object-fit: cover;
 		object-position: center center;
-		@media #{$above-wide-screen} {
+		@media #{$above-tablet} {
 			max-width: 50%;
 		}
 	}
@@ -224,7 +235,7 @@
 		background: linear-gradient(to bottom, rgba(0, 0, 0, 0), black);
 		font-size: $size-7;
 		line-height: 1;
-		@media #{$above-wide-screen} {
+		@media #{$above-tablet} {
 			max-width: 50%;
 		}
 	}
@@ -239,7 +250,7 @@
 		text-align: center;
 		font-size: 1em;
 		opacity: 0.75;
-		@media #{$above-wide-screen} {
+		@media #{$above-tablet} {
 			right: calc(50% + 4px);
 		}
 	}
@@ -247,7 +258,7 @@
 	&-text {
 		font-size: $size-6;
 		display: none;
-		@media #{$above-wide-screen} {
+		@media #{$above-tablet} {
 			display: block;
 			width: 50%;
 		}
