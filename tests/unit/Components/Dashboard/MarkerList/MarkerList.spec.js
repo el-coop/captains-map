@@ -41,7 +41,6 @@ describe('MarkerList.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('markerbordersfilter-stub').exists());
 		assert.isTrue(wrapper.find('ul').exists());
 		assert.isFalse(wrapper.find('.loader').exists());
 	});

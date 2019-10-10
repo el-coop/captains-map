@@ -37,8 +37,23 @@ describe('MarkerBoardersFilter.vue', () => {
 			stubs
 		});
 
-		assert.equal(wrapper.findAll('button').length, 2);
+		assert.equal(wrapper.findAll('button').length, 3);
 		assert.isTrue(wrapper.find('button[disabled]').exists());
+	});
+
+	it('Toggles filters on and off', () => {
+		const wrapper = shallowMount(MarkerBoardersFilter, {
+			stubs
+		});
+
+		assert.isFalse(wrapper.vm.$data.open);
+		assert.isFalse(wrapper.find('.marker-border-filter--open').exists());
+		wrapper.find('.marker-border-filter__open').trigger('click');
+		assert.isTrue(wrapper.vm.$data.open);
+		assert.isTrue(wrapper.find('.marker-border-filter--open').exists());
+		wrapper.find('.marker-border-filter__open').trigger('click');
+		assert.isFalse(wrapper.vm.$data.open);
+		assert.isFalse(wrapper.find('.marker-border-filter--open').exists());
 	});
 
 	it('Listens for map move end', () => {
@@ -70,7 +85,7 @@ describe('MarkerBoardersFilter.vue', () => {
 			}
 		});
 
-		wrapper.find('button').trigger('click');
+		wrapper.findAll('button').at(1).trigger('click');
 
 		assert.isTrue($store.commit.calledOnce);
 		assert.isTrue($store.commit.calledWith('Markers/setBorders', [{
@@ -100,7 +115,7 @@ describe('MarkerBoardersFilter.vue', () => {
 			location: 'current'
 		});
 
-		wrapper.findAll('button').at(1).trigger('click');
+		wrapper.findAll('button').at(2).trigger('click');
 		await wrapper.vm.$nextTick();
 
 		assert.isTrue($store.commit.calledOnce);
