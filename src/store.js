@@ -4,6 +4,7 @@ import User from '@/store/user';
 import Markers from '@/store/markers';
 import Profile from '@/store/profile';
 import Uploads from '@/store/uploads';
+import Webpush from '@/store/Webpush';
 import cache from "@/Services/Cache";
 import router from './router'
 
@@ -33,7 +34,8 @@ const store = new Vuex.Store({
 		User,
 		Markers,
 		Profile,
-		Uploads
+		Uploads,
+		Webpush
 	},
 	state: {
 		hasCsrf: false

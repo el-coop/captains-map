@@ -1,0 +1,153 @@
+import sinon from 'sinon';
+import { assert } from 'chai';
+import store from '@/store';
+import http from '@/Services/HttpService';
+
+describe('Webpush Store', () => {
+
+	beforeEach(() => {
+		global.navigator.serviceWorker = sinon.stub();
+		global.window.PushManager = {
+			getSubscription: sinon.stub()
+		};
+	});
+
+	afterEach('Reset sinon and settings', () => {
+		sinon.restore();
+	});
+
+	it('Initializes when no registration yet', async () => {
+		const registrationStub = {
+			pushManager: {
+				getSubscription: sinon.stub().returns(null)
+			}
+		};
+		await store.dispatch('Webpush/initialize', registrationStub)
+
+		assert.isTrue(store.state.Webpush.hasPush);
+		assert.deepEqual(store.state.Webpush.registration, registrationStub);
+		assert.isNull(store.state.Webpush.subscription);
+		assert.deepEqual(store.state.Webpush.following, []);
+	});
+
+	it('Initializes when registration exists', async () => {
+		const subscription = {
+			endpoint: 'entpoint'
+		};
+		const following = ['nur'];
+		sinon.stub(http, 'get').returns({
+			status: 200,
+			data: following
+		});
+		const registrationStub = {
+			pushManager: {
+				getSubscription: sinon.stub().returns(subscription)
+			}
+		};
+		await store.dispatch('Webpush/initialize', registrationStub);
+
+		assert.isTrue(store.state.Webpush.hasPush);
+		assert.deepEqual(store.state.Webpush.registration, registrationStub);
+		assert.deepEqual(store.state.Webpush.subscription, subscription);
+		assert.deepEqual(store.state.Webpush.following, following);
+	});
+
+	it('Registers when there is no subscription', async () => {
+		const subscription = {
+			endpoint: 'entpoint'
+		};
+		store.state.Webpush.subscription = null;
+		store.state.Webpush.following = [];
+		store.state.Webpush.registration = {
+			pushManager: {
+				subscribe: sinon.stub().returns(subscription)
+			}
+		};
+
+		sinon.stub(http, 'get').returns({
+			status: 200,
+			data: 'asd',
+		});
+
+		sinon.stub(http, 'post').returns({
+			status: 201,
+		});
+
+		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
+
+		assert.isTrue(response);
+		assert.deepEqual(store.state.Webpush.following, ['nur']);
+	});
+
+	it('Returns false when subscription fails', async () => {
+		const subscription = {
+			endpoint: 'entpoint'
+		};
+		store.state.Webpush.subscription = null;
+		store.state.Webpush.following = [];
+		store.state.Webpush.registration = {
+			pushManager: {
+				subscribe: sinon.stub().returns(subscription)
+			}
+		};
+
+		sinon.stub(http, 'get').returns({
+			status: 500,
+			data: 'asd',
+		});
+
+
+		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
+
+		assert.isFalse(response);
+		assert.deepEqual(store.state.Webpush.following, []);
+	});
+
+	it('Toggles follow', async () => {
+		store.state.Webpush.subscription = {
+			endpoint: 'entpoint'
+		};
+		store.state.Webpush.following = [];
+
+		sinon.stub(http, 'post').returns({
+			status: 201,
+		});
+
+		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
+
+		assert.isTrue(response);
+		assert.deepEqual(store.state.Webpush.following, ['nur']);
+	});
+
+	it('Toggles follow off', async () => {
+		store.state.Webpush.subscription = {
+			endpoint: 'entpoint'
+		};
+		store.state.Webpush.following = ['nur'];
+
+		sinon.stub(http, 'post').returns({
+			status: 200
+		});
+
+		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
+
+		assert.isTrue(response);
+		assert.deepEqual(store.state.Webpush.following, []);
+	});
+
+	it('Returns false when errors', async () => {
+		store.state.Webpush.subscription = {
+			endpoint: 'entpoint'
+		};
+		store.state.Webpush.following = ['nur'];
+
+		sinon.stub(http, 'post').returns({
+			status: 500
+		});
+
+		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
+
+		assert.isFalse(response);
+		assert.deepEqual(store.state.Webpush.following, ['nur']);
+	});
+});

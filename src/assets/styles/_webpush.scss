@@ -1,0 +1,18 @@
+.webpush {
+	font-size: $size-7;
+	height: 100%;
+	background-color: darken($background, 10%);
+	color: $text !important;
+
+	&:focus, &:hover, &:active {
+		background-color: lighten($background, 1) !important;
+		color: $text !important;
+	}
+
+
+	@media #{$above-tablet} {
+		background-color: transparent;
+
+	}
+
+}

@@ -19,6 +19,9 @@ describe('ProfileOpen.vue', () => {
 							username: 'test',
 							path: '/testpath'
 						}
+					},
+					Webpush: {
+						hasPush: true
 					}
 				},
 				commit: sinon.stub()
@@ -26,7 +29,8 @@ describe('ProfileOpen.vue', () => {
 		};
 
 		stubs = {
-			FontAwesomeIcon: true
+			FontAwesomeIcon: true,
+			FollowButton: true
 		};
 	});
 
@@ -35,7 +39,7 @@ describe('ProfileOpen.vue', () => {
 	});
 
 
-	it('Renders username and logo when they exist', () => {
+	it('Renders username and logo when they exist and webpush', () => {
 		const wrapper = shallowMount(ProfileOpen, {
 			mocks,
 			stubs
@@ -43,7 +47,9 @@ describe('ProfileOpen.vue', () => {
 
 		assert.equal(wrapper.find('img').element.src, 'http://localhost/api/testpath');
 		assert.equal(wrapper.find('.profile-open__button-text').text(), 'test');
+		assert.isTrue(wrapper.find('followbutton-stub').exists());
 	});
+
 
 
 	it('Renders globe when no image exists', () => {
@@ -57,6 +63,16 @@ describe('ProfileOpen.vue', () => {
 		assert.equal(wrapper.find('.profile-open__button-text').text(), 'test');
 	});
 
+	it('Doesnt have follow button when no push', () => {
+		mocks.$store.state.Webpush.hasPush = false;
+		const wrapper = shallowMount(ProfileOpen, {
+			mocks,
+			stubs
+		});
+
+		assert.isFalse(wrapper.find('followbutton-stub').exists());
+	});
+
 	it('Triggers toggle on store when clicked', () => {
 		mocks.$store.state.Profile.user.path = null;
 		const wrapper = shallowMount(ProfileOpen, {
@@ -64,7 +80,7 @@ describe('ProfileOpen.vue', () => {
 			stubs
 		});
 
-		wrapper.find('.profile-open').trigger('click');
+		wrapper.find('.profile-open__button').trigger('click');
 
 		assert.isTrue(mocks.$store.commit.calledOnce);
 		assert.isTrue(mocks.$store.commit.calledWith('Profile/toggle'));

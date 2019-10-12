@@ -1,25 +1,33 @@
 <template>
-	<div class="profile-open" @click="$store.commit('Profile/toggle')">
-		<button class="profile-open__button button is-light is-outlined is-borderless is-light-hover"
+	<div class="profile-open">
+		<button class="profile-open__button button is-light is-outlined is-borderless is-light-hover is-not-rounded"
+				@click="$store.commit('Profile/toggle')"
 				:class="{'is-loading': ! user.username}">
 			<figure class="image profile-open__button-img is-32x32 icon">
 				<img class="is-rounded image profile-open__button-img-src" :src="imageSrc">
 			</figure>
-			&nbsp;
 			<span class="is-size-7-tablet profile-open__button-text"
-				  v-text="user.username"></span>
+				  v-text="user.username"/>
 			<span class="is-hidden-tablet icon is-small">
 				<FontAwesomeIcon :icon="isOpen ? 'times-circle' : 'chevron-down'" size="sm"/>
 			</span>
 		</button>
+		<FollowButton v-if="hasPush && user.username" :user="user.username"/>
 	</div>
 </template>
 
 <script>
 	import globe from '@/assets/images/globe-icon.png';
+	import FollowButton from "@/Components/Dashboard/TopBar/FollowButton";
 
 	export default {
 		name: "ProfileOpen",
+		components: {FollowButton},
+		data() {
+			return {
+				hasPush: this.$store.state.Webpush.hasPush
+			}
+		},
 		computed: {
 			isOpen() {
 				return this.$store.state.Profile.open
