@@ -6,7 +6,7 @@ import store from "@/store";
 
 
 if (process.env.NODE_ENV === 'production') {
-	console.log('register', process.env.VUE_APP_BASE_URL);
+	console.log('register', `${process.env.VUE_APP_BASE_URL}service-worker.js`);
 	register(`${process.env.VUE_APP_BASE_URL}service-worker.js`, {
 		ready(registration) {
 			console.log(
