@@ -4,10 +4,10 @@ import { register } from 'register-service-worker'
 import toast from 'izitoast';
 import store from "@/store";
 
-console.log(process.env.NODE_ENV);
+
 if (process.env.NODE_ENV === 'production') {
-	console.log('register', process.env.BASE_URL);
-	register(`${process.env.BASE_URL}service-worker.js`, {
+	console.log('register', process.env.VUE_APP_BASE_URL);
+	register(`${process.env.VUE_APP_BASE_URL}service-worker.js`, {
 		ready(registration) {
 			console.log(
 				'App is being served from cache by a service worker.\n' +
