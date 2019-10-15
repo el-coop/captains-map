@@ -57,7 +57,6 @@
 				formData.append('description', this.description);
 				if (Object.values(this.file)[0]) {
 					const file = Object.values(this.file)[0];
-					console.log(file);
 					formData.append('image', file.asBlob(), file.name);
 				}
 				const response = await this.$http.post(`bio`, formData);

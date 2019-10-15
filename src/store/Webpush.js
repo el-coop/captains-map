@@ -43,6 +43,7 @@ export default {
 		async initialize({state}, value) {
 			state.hasPush = 'serviceWorker' in navigator && 'PushManager' in window;
 			if (!state.hasPush) {
+				console.log(state,'return');
 				return;
 			}
 			state.registration = value;

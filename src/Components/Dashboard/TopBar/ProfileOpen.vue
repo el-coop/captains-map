@@ -12,7 +12,7 @@
 				<FontAwesomeIcon :icon="isOpen ? 'times-circle' : 'chevron-down'" size="sm"/>
 			</span>
 		</button>
-		<FollowButton v-if="hasPush && user.username" :user="user.username"/>
+		<FollowButton v-if="$store.state.Webpush.hasPush && user.username" :user="user.username"/>
 	</div>
 </template>
 
@@ -23,11 +23,6 @@
 	export default {
 		name: "ProfileOpen",
 		components: {FollowButton},
-		data() {
-			return {
-				hasPush: this.$store.state.Webpush.hasPush
-			}
-		},
 		computed: {
 			isOpen() {
 				return this.$store.state.Profile.open
