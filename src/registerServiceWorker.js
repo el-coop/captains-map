@@ -6,8 +6,7 @@ import store from "@/store";
 
 
 if (process.env.NODE_ENV === 'production') {
-	console.log('register', `${process.env.VUE_APP_BASE_URL}service-worker.js`);
-	register(`${process.env.VUE_APP_BASE_URL}service-worker.js`, {
+	register(`${process.env.BASE_URL}service-worker.js`, {
 		ready(registration) {
 			console.log(
 				'App is being served from cache by a service worker.\n' +
@@ -39,6 +38,9 @@ if (process.env.NODE_ENV === 'production') {
 		error(error) {
 			console.error('Error during service worker registration:', error);
 		}
+	});
+	navigator.serviceWorker.ready.then(registration => {
+		emit('ready', registration)
 	});
 
 	let refreshing;
