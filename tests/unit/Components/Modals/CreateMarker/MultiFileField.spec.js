@@ -38,6 +38,21 @@ describe('CreateMarker/MultiFileField.vue', () => {
 
 	});
 
+	it('Renders preview', () => {
+		const wrapper = shallowMount(MultiFileField, {
+			stubs,
+			propsData: {
+				preview: '/perv'
+			},
+		});
+
+
+		assert.isTrue(wrapper.find('.dropzone__preview-image').exists());
+		assert.equal(wrapper.find('.dropzone__preview-image').attributes().src, '/perv');
+		assert.equal(wrapper.find('.dropzone__preview-label-text').text(), 'Click to upload');
+
+	});
+
 	it('show image previews', async () => {
 		const value = {
 			1: new UploadFile('name1', 'image1'),

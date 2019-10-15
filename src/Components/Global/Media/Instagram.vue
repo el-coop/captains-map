@@ -27,7 +27,7 @@
 		},
 
 		async created() {
-			let response = await this.$http.get(`marker/instagram/${this.id}`);
+			const response = await this.$http.get(`marker/instagram/${this.id}`);
 			this.loading = false;
 			if (response.data) {
 				this.embedCode = response.data.html;

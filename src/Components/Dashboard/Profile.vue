@@ -1,16 +1,10 @@
 <template>
 	<div class="dashboard__control profile" :class="{'profile--open': isOpen}">
-		<component :is="isEdit ? 'ajax-form' : 'div'" class="media profile__media h-100"
-				   method="post" :action="`bio/${user.username}`"
-				   @submitting="submitting"
-				   :headers="formHeaders"
-				   @submitted="displayResponse">
+		<div class="media profile__media h-100">
 			<div class="media-left profile__media-left">
 				<template v-if="isEdit">
-					<FileField name="image" v-model="file" :init-preview="imageSrc">
-					</FileField>
-					<button class="button is-fullwidth is-danger" type="button" @click="file = null" v-if="file">Reset
-					</button>
+					<MultiFileField :limit="1" name="image" v-model="file" :preview="imageSrc">
+					</MultiFileField>
 				</template>
 				<figure class="image profile__media-image is-128x128" v-else>
 					<img :src="imageSrc">
@@ -21,9 +15,12 @@
 					<h4 class="title is-4" v-text="user.username"></h4>
 					<template v-if="isEdit">
 						<div class="field is-flex-1">
-							<textarea v-model.lazy="description" name="description" class="textarea profile__media-textarea h-100"></textarea>
+							<textarea v-model.lazy="description" name="description"
+									  class="textarea profile__media-textarea h-100"></textarea>
 						</div>
-						<button class="button is-primary is-fullwidth" :class="{'is-loading': loading}">Save</button>
+						<button class="button is-primary is-fullwidth" :class="{'is-loading': loading}" @click="submit">
+							Save
+						</button>
 					</template>
 					<p class="is-flex-1 profile__media-content-text" v-else v-text="user.description"></p>
 				</div>
@@ -33,33 +30,37 @@
 					<FontAwesomeIcon icon="times-circle"/>
 				</span>
 			</div>
-		</component>
+		</div>
 	</div>
 </template>
 
 <script>
 	import globe from '../../assets/images/globe-icon.png';
-	import AjaxForm from "@/Components/Utilities/AjaxForm";
 	import Auth from '@/Services/AuthenticationService';
-	import FileField from '@/Components/Modals/CreateMarker/FileField';
+	import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField";
 
 	export default {
 		name: "Profile",
-		components: {AjaxForm, FileField},
+		components: {MultiFileField},
 		data() {
 			return {
 				description: '',
 				loading: false,
-				file: null,
-				formHeaders: {
-					'Content-Type': 'multipart/form-data'
-				},
+				file: {},
 			}
 		},
 
 		methods: {
-			displayResponse(response) {
-				this.loading = false;
+			async submit() {
+				this.loading = true;
+				const formData = new FormData();
+				formData.append('description', this.description);
+				if (Object.values(this.file)[0]) {
+					const file = Object.values(this.file)[0];
+					console.log(file);
+					formData.append('image', file.asBlob(), file.name);
+				}
+				const response = await this.$http.post(`bio`, formData);
 				if (response.status > 199 && response.status < 300) {
 					this.$toast.success(' ', 'Profile updated.');
 					if (this.user.path !== response.data.path) {
@@ -73,14 +74,12 @@
 						description: response.data.description,
 						path: response.data.path
 					});
-					this.file = null;
+					this.file = {};
 				} else {
 					this.$toast.error('Please try again at a later time', 'Update failed.');
 				}
+				this.loading = false;
 			},
-			submitting() {
-				this.loading = true;
-			}
 		},
 
 		computed: {
@@ -94,9 +93,7 @@
 				return this.$store.state.Profile.open;
 			},
 			user() {
-				if (1) {
-					this.description = this.$store.state.Profile.user.description;
-				}
+				this.description = this.$store.state.Profile.user.description;
 				return this.$store.state.Profile.user;
 			},
 

@@ -1,7 +1,8 @@
 <template>
 	<div class="field">
 		<label class="dropzone" :class="{'is-flex-column': ! Object.keys(value).length}">
-			<input class="dropzone__input" type="file" :name="name" @change="imageAdded" multiple accept="image/*">
+			<input class="dropzone__input" type="file" :name="name" @change="imageAdded" :multiple="limit > 1"
+				   accept="image/*">
 			<template v-if="Object.keys(value).length">
 				<div v-for="(file,key) in value" :key="key" class="dropzone__preview" @click.prevent="removeImage(key)">
 					<img class="dropzone__preview-image" :src="file.preview">
@@ -10,7 +11,7 @@
 						<span v-text="file.name"/>
 					</div>
 				</div>
-				<div class="dropzone__preview has-text-centered" v-if="Object.keys(value).length < 5">
+				<div class="dropzone__preview has-text-centered" v-if="Object.keys(value).length < this.limit">
 					<span class="dropzone__icon">
 						<FontAwesomeIcon icon="upload"/>
 					</span>
@@ -18,6 +19,14 @@
 						Add images<br>
 						<span v-text="`${this.limit - Object.keys(value).length} Left`"/>
 					</span>
+				</div>
+			</template>
+			<template v-else-if="preview">
+				<div class="dropzone__preview">
+					<img class="dropzone__preview-image" :src="preview">
+					<div class="dropzone__preview-label">
+						<span class="dropzone__preview-label-text">Click to upload</span>
+					</div>
 				</div>
 			</template>
 			<template v-else>
@@ -48,6 +57,10 @@
 				}
 			},
 			error: {
+				type: String,
+				default: ''
+			},
+			preview: {
 				type: String,
 				default: ''
 			},

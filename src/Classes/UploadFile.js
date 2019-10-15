@@ -11,6 +11,10 @@ class UploadFile {
 		this.image = image;
 	}
 
+	asBlob(){
+		return ImageService.stringToBlob(this.image);
+	}
+
 	get preview() {
 		return 'data:image/jpeg;base64,' + btoa(this.image);
 	}

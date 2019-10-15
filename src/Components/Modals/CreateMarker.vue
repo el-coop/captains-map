@@ -47,7 +47,6 @@
 	import FormDataMixin from "@/Components/Utilities/FormDataMixin";
 	import BaseModal from "@/Components/Utilities/BaseModal";
 	import TypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
-	import FileField from "@/Components/Modals/CreateMarker/FileField";
 	import TextField from "@/Components/Modals/CreateMarker/TextField";
 	import SelectField from "@/Components/Modals/CreateMarker/SelectField";
 	import DateTimeField from "@/Components/Modals/CreateMarker/DateTimeField";
@@ -68,7 +67,6 @@
 			DateTimeField,
 			SelectField,
 			TextField,
-			FileField,
 			TypeToggle,
 			BaseModal,
 		},

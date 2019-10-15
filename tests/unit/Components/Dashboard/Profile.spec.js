@@ -24,6 +24,9 @@ describe('Profile.vue', () => {
 				},
 				commit: sinon.stub()
 			},
+			$http: {
+
+			},
 			$toast: {
 				success: sinon.stub(),
 				error: sinon.stub()
@@ -83,27 +86,9 @@ describe('Profile.vue', () => {
 
 
 		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
-		assert.isTrue(wrapper.find('ajax-form-stub').exists());
-		assert.equal(wrapper.find('filefield-stub').props().initPreview, '/api/path');
+		assert.equal(wrapper.find('multifilefield-stub').props().preview, '/api/path');
 		assert.equal(wrapper.find('h4').text(), 'test');
 		assert.equal(wrapper.find('textarea').element.value, 'description');
-	});
-
-	it('Reacts to submitting', async () => {
-
-		sinon.stub(auth, 'getUserDetails').returns({
-			username: 'test'
-		});
-		mocks.$store.state.Profile.user.path = '/path';
-
-		const wrapper = shallowMount(Profile, {
-			stubs,
-			mocks
-		});
-
-		wrapper.find('ajax-form-stub').vm.$emit('submitting');
-
-		assert.isTrue(wrapper.find('.button.is-loading').exists());
 	});
 
 	it('Reacts to failure submission', async () => {
@@ -111,6 +96,9 @@ describe('Profile.vue', () => {
 		sinon.stub(auth, 'getUserDetails').returns({
 			username: 'test'
 		});
+		mocks.$http.post = sinon.stub().returns({
+			status: 500,
+		});
 		mocks.$store.state.Profile.user.path = '/path';
 
 		const wrapper = shallowMount(Profile, {
@@ -118,33 +106,41 @@ describe('Profile.vue', () => {
 			mocks
 		});
 
-		wrapper.find('ajax-form-stub').vm.$emit('submitted', {
-			status: 403
-		});
+		wrapper.find('button.is-primary').trigger('click');
+
+		await wrapper.vm.$nextTick;
 
 		assert.isTrue(mocks.$toast.error.calledOnce);
 		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Update failed.'));
 	});
 
-	it('Reacts to success submission with image update', async () => {
+	it('Submits data successfully', async () => {
 
 		sinon.stub(auth, 'getUserDetails').returns({
 			username: 'test'
 		});
-		mocks.$store.state.Profile.user.path = '/path';
-
-		const wrapper = shallowMount(Profile, {
-			stubs,
-			mocks
-		});
-
-		wrapper.find('ajax-form-stub').vm.$emit('submitted', {
+		mocks.$http.post = sinon.stub().returns({
 			status: 200,
 			data: {
 				description: 'desc',
 				path: 'patha'
 			}
 		});
+		mocks.$store.state.Profile.user.path = '/path';
+
+		const wrapper = shallowMount(Profile, {
+			stubs,
+			mocks
+		});
+
+
+		wrapper.find('button.is-primary').trigger('click');
+
+		assert.isTrue(wrapper.find('button.is-primary.is-loading').exists());
+
+		await wrapper.vm.$nextTick;
+
+		assert.isFalse(wrapper.find('button.is-primary.is-loading').exists());
 
 		assert.isTrue(mocks.$toast.success.calledOnce);
 		assert.isTrue(mocks.$toast.success.calledWith(' ', 'Profile updated.'));
