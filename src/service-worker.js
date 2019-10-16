@@ -36,7 +36,7 @@ self.addEventListener('push', (event) => {
 	}
 
 	event.waitUntil(
-		self.registration.showNotification('nur posted a new marker', {
+		self.registration.showNotification(`${payload.username} posted a new marker`, {
 			actions: [{
 				action: 'see',
 				title: 'See',
