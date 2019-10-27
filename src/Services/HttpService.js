@@ -56,7 +56,7 @@ class HttpService {
 			error = responseError;
 		}
 
-		if (error.response.status !== 404) {
+		if (!error.response || error.response.status !== 404) {
 			const cachedData = await Cache.get('request', url);
 
 			if (cachedData) {
