@@ -1,6 +1,6 @@
 <template>
 	<div class="dashboard" :class="{'dashboard--with-profile': hasUsername}">
-		<div class="dashboard__header dashboard__control dashboard__control--dark">
+		<div class="dashboard__header dashboard__control dashboard__control--accent">
 			<LoggedInBar v-if="loggedIn"/>
 			<LoggedOutBar v-else/>
 		</div>

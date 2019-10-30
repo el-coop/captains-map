@@ -1,4 +1,4 @@
-@import "~bulma/sass/utilities/initial-variables";
+@import "~bulma/sass/utilities/_all";
 
 $above-phone: "only screen and (min-width : 576px)";
 $above-tablet: "only screen and (min-width : #{$tablet})";
@@ -13,6 +13,7 @@ $label-color: $white-ter;
 
 $card-background-color: $background;
 $card-header-color: $white-bis;
+$card-shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($scheme-invert, 0.02);
 
 $tabs-link-hover-color: $white-bis;
 $dropdown-item-hover-background-color: whitesmoke;
@@ -22,3 +23,7 @@ $link-hover: $blue;
 
 $modal-content-spacing-mobile: 0px;
 $modal-background-background-color: rgba(0, 0, 0, 0.2);
+
+$status-colors: ('light': $white-ter, 'primary': $primary);
+$button-backgrounds: ('primary': $primary);
+$screen-sizes: mobile tablet;

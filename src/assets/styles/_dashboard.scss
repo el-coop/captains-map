@@ -7,31 +7,27 @@
 	overflow: hidden;
 	display: grid;
 	z-index: 10;
-	grid-template-rows: [header] $gap/1.5 [body] calc(100% - #{$gap / 1.5});
+	grid-template-rows: [header] calc(var(--gap) / 1.5) [body] 1fr;
 	grid-template-columns: 100%;
-	transition: grid-template-rows 0.3s;
+	transition: grid-template-rows var(--animation-speed);
 
 	&--with-profile {
-		grid-template-rows: [header] 2*$gap/1.5 [body] calc(100% - #{$gap * 2 / 1.5});
+		grid-template-rows: [header] calc(2 * var(--gap) / 1.5) [body] 1fr;
 	}
 
-	@media #{$above-tablet} {
+	@include from($tablet) {
 		&--with-profile {
-			grid-template-rows: [header] $gap/1.5 [body] calc(100% - #{$gap / 1.5});
+			grid-template-rows: [header] calc(var(--gap) / 1.5) [body] 1fr;
 		}
 	}
 
-	.title, .subtitle, strong {
-		color: $text;
-	}
-
 	&__control {
-		background-color: $background;
+		background-color: var(--background);
 		pointer-events: visible;
 		position: relative;
 
-		&--dark {
-			background-color: darken($background, 10%);
+		&--accent {
+			background-color: var(--background-accent);
 		}
 
 		&-filters {
@@ -63,23 +59,24 @@
 
 	&__header {
 		grid-row: header;
-		box-shadow: 0 5px 20px 10px rgba(0, 0, 0, 0.3);
+		z-index: 10;
+		box-shadow: var(--box-shadow-down) 20px 10px var(--box-shadow-color);
 	}
 
 	&__body {
 		grid-row: body;
 		display: grid;
 
-		grid-template-rows: [profile] auto [sidebar] max-content;
-		grid-template-columns: auto;
+		grid-template-rows: [profile] 1fr [sidebar] max-content;
+		grid-template-columns: 1fr;
 		overflow-x: auto;
 		overflow-y: hidden;
 
 		@media #{$above-tablet} {
 			overflow-y: auto;
 			overflow-x: hidden;
-			grid-template-rows: max-content;
-			grid-template-columns: [profile] auto [sidebar] max-content;
+			grid-template-rows: 1fr;
+			grid-template-columns: [profile] 1fr [sidebar] max-content;
 		}
 	}
 }

@@ -1,25 +1,25 @@
 <template>
 	<transition name="fade">
 		<div class="modal is-active" v-show="active">
-			<div class="modal-background" @click="close"/>
+			<div class="modal__background" @click="close"/>
 			<transition name="slide-up-opacity">
-				<div class="modal-content" v-if="active">
+				<div class="modal__content" v-if="active">
 					<div class="card">
-						<div class="card-header dashboard__control--dark">
+						<div class="card__header">
 							<slot name="header"/>
-							<a class="card-header-icon modal__close" @click="close">
+							<a class="card__header-icon modal__close" @click="close">
 								<span class="icon">
 									<FontAwesomeIcon icon="times-circle"/>
 								</span>
 							</a>
 						</div>
-						<div class="card-image" v-if="!! $slots.image">
+						<div class="card__image" v-if="!! $slots.image">
 							<slot name="image"/>
 						</div>
-						<div class="card-content">
+						<div class="card__content">
 							<slot name="content"/>
 						</div>
-						<footer class="card-footer">
+						<footer class="card__footer">
 							<slot name="footer"/>
 						</footer>
 					</div>

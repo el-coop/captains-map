@@ -1,6 +1,6 @@
 .profile-open {
 	width: 100%;
-	background-color: transparentize(whitesmoke, 0.05);
+	background-color: var(--background-invert);
 	display: flex;
 	align-items: center;
 	height: 100%;
@@ -11,34 +11,22 @@
 		align-items: center;
 		height: 100%;
 		width: 100%;
-		color: invert($text, 100) !important;
-		padding: calc(0.375em - 1px) 5vw;
+		color: var(--text-invert) !important;
+		padding: calc(0.375em - 1px) 0.75em;
 
 		&-text {
 			flex: 1;
 			text-align: left;
 			padding-bottom: 0.1em;
 		}
-
-		&-img {
-			display: flex;
-
-			&-src {
-				max-height: 100%;
-				max-width: 100%;
-				width: auto !important;
-			}
-		}
 	}
 
-	@media (min-width: $tablet) {
+	@include from($tablet) {
 		width: auto;
 		background-color: transparent;
 
 		&__button {
-			border-radius: 4px;
-			color: $text !important;
-			padding: calc(0.375em - 1px) 0.75em;
+			color: var(--text) !important;
 
 			&-text {
 				padding-bottom: 0;

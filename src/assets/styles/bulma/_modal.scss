@@ -1,0 +1,39 @@
+.modal {
+	@extend %overlay;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	position: fixed;
+	z-index: 100;
+	pointer-events: all;
+	justify-content: center;
+
+	&__background {
+		@extend %overlay;
+		background-color: var(--modal-background-background-color);
+	}
+
+	&__content {
+		margin: 0;
+		max-height: 100vh;
+		overflow: auto;
+		position: relative;
+		width: 100%;
+		// Responsiveness
+		@include from($tablet) {
+			margin: 0 auto;
+			max-height: calc(100vh - 40px);
+			width: 640px;
+		}
+	}
+
+	&__close {
+		color: var(--text-muted);
+		&:hover {
+			color: var(--text-strong);
+		}
+	}
+
+}
+

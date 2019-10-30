@@ -1,9 +1,13 @@
-@import "leaflet";
 @import "variables";
+
+@import "themes/_theme";
+
+@import "leaflet";
 @import "bulma";
 @import '~izitoast/dist/css/iziToast.css';
-@import "fixes";
+@import "generic";
 @import "helpers";
+
 @import "buttons";
 @import "drawer-mobile";
 @import "map";

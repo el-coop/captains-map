@@ -1,0 +1,26 @@
+$dimensions: 32;
+
+.image {
+	display: block;
+	position: relative;
+
+	img {
+		display: block;
+		width: 100%;
+
+		&.is-rounded {
+			border-radius: var(--radius-rounded);
+		}
+
+		&.is-fullwidth {
+			width: 100%;
+		}
+	}
+
+	@each $dimension in $dimensions {
+		&.is-#{$dimension}x#{$dimension} {
+			height: $dimension * 1px !important;
+			width: $dimension * 1px !important;
+		}
+	}
+}

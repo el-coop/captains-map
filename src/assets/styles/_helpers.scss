@@ -15,3 +15,63 @@
 	height: 100%;
 }
 
+.is-loading {
+
+	&:before {
+		position: absolute;
+		content: "";
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		background-color: var(--background);
+		opacity: 0.6;
+		z-index: 20;
+	}
+	color: transparent !important;
+	pointer-events: none;
+	position: relative;
+
+	&:after {
+		animation: spinAround 500ms infinite linear;
+		border: 2px solid var(--loader-color);
+		border-radius: var(--radius-rounded);
+		border-right-color: transparent;
+		border-top-color: transparent;
+
+		content: "";
+		display: block;
+		position: absolute;
+
+		height: 1em;
+		width: 1em;
+		top: calc(50% - 0.5em);
+		left: calc(50% - 0.5em);
+		z-index: 40;
+	}
+}
+
+
+.is-hidden-mobile {
+	@include mobile() {
+		display: none !important;
+	}
+}
+
+.is-hidden-tablet {
+	@include tablet() {
+		display: none !important;
+	}
+}
+
+@for $i from 1 through 7 {
+	.is-size-#{$i} {
+		font-size: var(--size-#{$i});
+	}
+}
+
+.is-size-7-tablet {
+	@include from($tablet) {
+		font-size: var(--size-7);
+	}
+}

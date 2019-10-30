@@ -1,15 +1,15 @@
 <template>
 	<TheTopBar>
 		<template #right>
-			<div class="buttons is-marginless">
-				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
+			<div class="buttons">
+				<button class="button"
 						@click="loginModal = true">
-					<span class="icon is-small">
-						<font-awesome-icon icon="sign-in-alt"/>&nbsp;
+					<span class="icon">
+						<font-awesome-icon icon="sign-in-alt" fixed-width/>&nbsp;
 					</span>
 					<span class="is-size-7">Log In</span>
 				</button>
-				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
+				<button class="button"
 						@click="registerModal = true">
 					<span class="is-size-7">Register</span>
 				</button>

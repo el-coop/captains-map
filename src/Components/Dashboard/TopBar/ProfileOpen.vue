@@ -1,14 +1,14 @@
 <template>
 	<div class="profile-open">
-		<button class="profile-open__button button is-light is-outlined is-borderless is-light-hover is-not-rounded"
+		<button class="profile-open__button button is-light"
 				@click="$store.commit('Profile/toggle')"
-				:class="{'is-loading': ! user.username}">
+				:class="{'is-loading': !user.username}">
 			<figure class="image profile-open__button-img is-32x32 icon">
-				<img class="is-rounded image profile-open__button-img-src" :src="imageSrc">
+				<img class="is-rounded" :src="imageSrc">
 			</figure>
 			<span class="is-size-7-tablet profile-open__button-text"
 				  v-text="user.username"/>
-			<span class="is-hidden-tablet icon is-small">
+			<span class="is-hidden-tablet icon">
 				<FontAwesomeIcon :icon="isOpen ? 'times-circle' : 'chevron-down'" size="sm"/>
 			</span>
 		</button>

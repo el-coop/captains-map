@@ -12,8 +12,13 @@ describe('MapUserMarker.vue', () => {
 	let mapObject;
 	let parent;
 	let divIcon;
+	let addWatchLocationStub;
 
 	beforeEach(() => {
+		sinon.stub(mapService, 'goToCurrentLocation');
+		addWatchLocationStub = sinon.stub(mapService, 'watchLocation');
+		sinon.stub(mapService, 'stopLocate');
+
 		mocks = {
 			$bus: {
 				$emit: sinon.spy(),
@@ -42,7 +47,8 @@ describe('MapUserMarker.vue', () => {
 		mapObject = {
 			on: sinon.stub().returnsThis(),
 			setLatLng: sinon.stub(),
-			getElement: sinon.stub().returns(divIcon)
+			getElement: sinon.stub().returns(divIcon),
+			locate: sinon.stub()
 		};
 	});
 
@@ -51,7 +57,6 @@ describe('MapUserMarker.vue', () => {
 	});
 
 	it('watches for location when created', () => {
-		const addWatchLocationStub = sinon.stub(mapService, 'watchLocation');
 		const wrapper = shallowMount(MapUserMarker, {
 			mocks
 		});
