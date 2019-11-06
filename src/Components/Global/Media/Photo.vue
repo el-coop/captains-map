@@ -1,8 +1,8 @@
 <template>
 	<figure class="image view-marker__image">
 		<img :src="`/api${path}`" :alt="alt" class="view-marker__image-img">
-		<button class="button is-light view-marker__image-button" @click="openImage">
-			<FontAwesomeIcon icon="external-link-square-alt"></FontAwesomeIcon>
+		<button class="button is-light-background view-marker__image-button" @click="openImage">
+			<FontAwesomeIcon icon="external-link-square-alt" fixed-width></FontAwesomeIcon>
 		</button>
 	</figure>
 </template>

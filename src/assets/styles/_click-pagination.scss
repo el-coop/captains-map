@@ -11,9 +11,9 @@
 	}
 
 	&__button {
-		border: 3px whitesmoke dashed;
+		border: 3px var(--text) dashed;
 		width: 50%;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: var(--album-hint-overlay);
 		font-size: 2em;
 		display: flex;
 		justify-content: center;

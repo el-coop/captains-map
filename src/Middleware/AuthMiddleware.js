@@ -1,8 +1,8 @@
-import Auth from '../Services/AuthenticationService';
+import Store from '@/store';
 
 class AuthMiddleware {
-	handle(to, from, next) {
-		if (Auth.isLoggedIn()) {
+	async handle(to, from, next) {
+		if (await Store.dispatch('User/isLoggedIn')) {
 			return next();
 		}
 		return next('/');

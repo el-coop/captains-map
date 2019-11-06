@@ -1,6 +1,6 @@
 <template>
 	<div class="profile-open">
-		<button class="profile-open__button button is-light"
+		<button class="profile-open__button button"
 				@click="$store.commit('Profile/toggle')"
 				:class="{'is-loading': !user.username}">
 			<figure class="image profile-open__button-img is-32x32 icon">

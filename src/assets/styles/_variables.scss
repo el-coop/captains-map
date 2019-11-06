@@ -24,6 +24,8 @@ $link-hover: $blue;
 $modal-content-spacing-mobile: 0px;
 $modal-background-background-color: rgba(0, 0, 0, 0.2);
 
-$status-colors: ('light': $white-ter, 'primary': $primary);
-$button-backgrounds: ('primary': $primary);
+$marker-type-colors: ('Other': $grey-light, 'Plan': $cyan, 'Visited': $turquoise, 'Suggestion': $red);
+$status-colors: ('light': $white-ter, 'primary': $primary, 'danger': $danger);
+$button-backgrounds: ('primary': $primary, 'light': $light, 'white': $white);
+$button-backgrounds-light: ('light': $light);
 $screen-sizes: mobile tablet;

@@ -2,24 +2,24 @@
 	<div class="marker-list__wrapper">
 		<UploadsList v-if="! loading && $store.getters['Uploads/allFiles'].length && $router.currentRoute.name === 'edit'"/>
 		<div v-if="loading" class="marker-list__loader">
-			<div class="loader"></div>
+			<div class="is-loading"></div>
 		</div>
 		<ul v-if="!loading" class="marker-list">
-			<li v-if="hasPrev && !loading">
-				<button class="marker-list__button marker-list__button--prev button is-outlined is-faded is-light" @click="previousPage">
+			<li v-if="hasPrev">
+				<button class="marker-list__button marker-list__button--prev button is-faded" @click="previousPage">
 					Load Previous
 				</button>
 			</li>
 			<li v-for="marker in markers" class="marker-list__entry" :key="marker.id">
 				<MarkerEntry :marker="marker"/>
 			</li>
-			<li v-if="hasNext && !loading">
-				<button class="marker-list__button marker-list__button--next button is-outlined is-faded is-light" @click="nextPage">
+			<li v-if="hasNext">
+				<button class="marker-list__button marker-list__button--next button is-faded" @click="nextPage">
 					Load Next
 				</button>
 			</li>
 		</ul>
-		<slot v-if="!loading"/>
+		<slot v-if="! loading"/>
 	</div>
 </template>
 

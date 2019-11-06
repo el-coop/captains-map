@@ -1,23 +1,6 @@
-.is-flex-column {
-	display: flex;
-	flex-direction: column;
-}
-
-.has-items-aligned-center {
-	align-items: center;
-}
-
-.is-flex-1 {
-	flex: 1;
-}
-
-.h-100 {
-	height: 100%;
-}
-
 .is-loading {
 
-	&:before {
+	&:not(.no-loading-overlay):before {
 		position: absolute;
 		content: "";
 		top: 0;
@@ -28,6 +11,7 @@
 		opacity: 0.6;
 		z-index: 20;
 	}
+
 	color: transparent !important;
 	pointer-events: none;
 	position: relative;
@@ -64,6 +48,25 @@
 	}
 }
 
+.is-hidden-touch {
+	@include touch() {
+		display: none !important;
+	}
+}
+
+
+@each $weight in ('light', 'normal', 'semibold') {
+	.has-text-weight-#{$weight} {
+		font-weight: var(--weight-#{$weight});
+	}
+}
+
+@each $name, $color in $status-colors {
+	.is-#{$name} {
+		color: var(--#{$name}-color) !important;
+	}
+}
+
 @for $i from 1 through 7 {
 	.is-size-#{$i} {
 		font-size: var(--size-#{$i});
@@ -74,4 +77,8 @@
 	@include from($tablet) {
 		font-size: var(--size-7);
 	}
+}
+
+.has-text-muted {
+	color: var(--text-muted);
 }

@@ -9,13 +9,21 @@ html {
 	--background-accent: #{darken($background, 10%)};
 	--background-invert: #{transparentize(whitesmoke, 0.05)};
 
+	--background-light: #{transparentize(whitesmoke, 0.05)};
+	--background-light-er: #{$white};
+
 	--text: #{$white-ter};
 	--text-strong: #{$white-bis};
 	--text-muted: #{$grey-light};
 	--text-invert: #{invert($text, 100)};
-	--loader-color: #{$grey-lighter};
-	--label-color: var(--text);
+	--text-dark: #{$grey-darker};
+	--text-darker: #{$black-ter};
 
+	--input-color: var(--text-dark);
+	--input-placeholder-color: rgba($grey-darker, 0.3);
+
+
+	--loader-color: #{$grey-lighter};
 	--border-color: #{$grey-lighter};
 
 	//
@@ -25,19 +33,29 @@ html {
 	--link: #{$cyan};
 	--link-hover: #{$blue};
 
-	--modal-background-background-color: rgba(0, 0, 0, 0.2);
+	--album-hint-overlay: rgba(0, 0, 0, 0.5);
+	--modal-background-background-color: rgba(100, 100, 100, 0.3);
 
 	@each $name, $color in $status-colors {
 		--#{$name}-color: #{$color};
 		--#{$name}-color-darker: #{darken($color, 2.5%)};
 	}
 
+	@each $name, $color in $marker-type-colors {
+		--#{$name}-color: #{$color};
+	}
+
+	--faded-color: hsla(0, 0%, 85.9%, .5);
+
 	// shadows
 	--box-shadow-color: rgba(0, 0, 0, 0.3);
+	--box-shadow-color-light: rgba(10, 10, 10, .1);
 	--box-shadow-down: 0 5px;
+	--box-shadow-left: -5px 0;
 
 	// borders
 	--radius: 4px;
+	--radius-large: 6px;
 	--radius-rounded: 290486px;
 
 	// misc

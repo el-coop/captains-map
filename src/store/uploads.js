@@ -1,7 +1,6 @@
 import cache from '@/Services/Cache';
-import auth from '@/Services/AuthenticationService';
+import Store from '@/store';
 import UploadService from '@/Services/UploadService';
-import ImageService from '@/Services/ImageService';
 import UploadFile from "@/Classes/UploadFile";
 
 const uploads = cache.caches().uploads;
@@ -130,8 +129,9 @@ export default {
 			state.workingId = null;
 		},
 
-		uploadOfflineError({dispatch, state}) {
-			if (auth.isLoggedIn()) {
+		async uploadOfflineError({dispatch, state}) {
+			const isLoggedIn = await auth.isLoggedIn();
+			if (isLoggedIn) {
 				const offlines = state.errored.filter((marker) => {
 					return marker.error.status === 'offline';
 				});

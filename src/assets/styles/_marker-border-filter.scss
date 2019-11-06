@@ -1,10 +1,10 @@
 .marker-border-filter {
 	display: flex;
 	flex-direction: column;
-	height: 0.35 * $gap;
+	height: calc(0.35 * var(--gap));
 	overflow: hidden;
 
-	@media #{$above-tablet} {
+	@include from($tablet) {
 		height: auto;
 	}
 
@@ -19,8 +19,6 @@
 	}
 
 	&__open {
-		height: 0.35 * $gap;
-		padding-top: 0;
-		padding-bottom: 0;
+		height: calc(0.35 * var(--gap));
 	}
 }

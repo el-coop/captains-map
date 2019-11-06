@@ -1,23 +1,17 @@
 <template>
-	<div class="media">
-		<div class="media-content">
-			<div class="content view-marker__content">
-				<p v-if="marker.location" v-text="marker.location"
-				   class="is-size-6 has-text-grey-light has-text-weight-light "/>
-				<p v-text="marker.description"/>
-			</div>
+	<div class="view-marker__content">
+		<div class="view-marker__content-text">
+			<p v-if="marker.location" v-text="marker.location"
+			   class="view-marker__content-text-location"/>
+			<p v-text="marker.description"/>
 		</div>
-		<div class="media-right">
-			<button class="button is-dark is-medium view-marker__content-button" @click="copyLink" v-if="! hasShare">
-				<span class="icon">
-					<FontAwesomeIcon icon="copy"/>
-				</span>
+		<div class="view-marker__content-buttons">
+			<button class="button is-dark view-marker__content-button" @click="copyLink" v-if="! hasShare">
+				<FontAwesomeIcon icon="copy" size="lg"/>
 			</button>
 			<br class="is-hidden-desktop">
-			<button class="button is-dark is-medium view-marker__content-button" @click="facebookShare">
-				<span class="icon">
-					<FontAwesomeIcon :icon="hasShare ? 'share-alt' : ['fab','facebook']"/>
-				</span>
+			<button class="button is-dark view-marker__content-button" @click="facebookShare">
+				<FontAwesomeIcon :icon="hasShare ? 'share-alt' : ['fab','facebook']" size="lg"/>
 			</button>
 		</div>
 	</div>

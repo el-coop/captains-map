@@ -1,0 +1,28 @@
+.input, .textarea {
+	box-shadow: inset 0 1px 2px rgba(10, 10, 10, .1);
+	width: 100%;
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius);
+	color: var(--input-color);
+	font-size: 1rem;
+	line-height: 1.5;
+
+	&::placeholder {
+		color: var(--input-placeholder-color);
+	}
+
+	&:focus, &:active {
+		border-color: $link;
+		box-shadow: 0 0 0 0.125em rgba($link, 0.25);
+	}
+}
+
+.input {
+	height: 2.25em;
+	padding: calc(.375em - 1px) calc(.625em - 1px);
+}
+
+.textarea {
+	resize: vertical;
+	padding: .625em;
+}

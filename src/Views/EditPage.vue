@@ -7,7 +7,6 @@
 
 <script>
 	import TheDashboard from '@/Components/Dashboard/TheDashboard';
-	import auth from '@/Services/AuthenticationService';
 	import map from '@/Services/LeafletMapService';
 	import LoadsMarkersMixin from "@/Views/LoadsMarkersMixin";
 	import CreateMarker from "@/Components/Modals/CreateMarker";
@@ -27,8 +26,9 @@
 		methods: {
 
 			envSetup() {
-				this.$store.commit('Markers/setUser', auth.getUserDetails().username);
-				this.$store.dispatch('Profile/load', auth.getUserDetails().username);
+				const username = this.$store.state.User.user.username;
+				this.$store.commit('Markers/setUser', username);
+				this.$store.dispatch('Profile/load', username);
 			},
 
 			async markersLoaded() {

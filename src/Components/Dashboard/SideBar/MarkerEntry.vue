@@ -1,6 +1,5 @@
 <template>
 	<div class="marker-entry__card" :class="className" @click="showMarker" :style="uploadingStyle || ''">
-
 		<img :src="src" :alt="imageAlt" class="marker-entry__card-image">
 		<div class="marker-entry__card-tags">
 			<template v-if="marker.location">

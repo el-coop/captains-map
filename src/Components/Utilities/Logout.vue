@@ -1,5 +1,5 @@
 <template>
-	<button class="logout__button button is-danger is-outlined is-marginless is-borderless" @click="logout">
+	<button class="button button--logout is-danger" @click="logout">
 		<span class="icon">
 			<FontAwesomeIcon icon="sign-out-alt"/>
 		</span>

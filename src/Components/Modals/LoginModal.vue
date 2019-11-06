@@ -1,5 +1,5 @@
 <template>
-	<BaseModal route-name="" :active="active" @update:active="$emit('update:active',$event)"	>
+	<BaseModal route-name="" :active="active" @update:active="$emit('update:active',$event)">
 		<template #header>
 			<p class="card__header-title">Login</p>
 		</template>

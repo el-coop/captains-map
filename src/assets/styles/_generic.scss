@@ -28,14 +28,19 @@ textarea {
 	font-family: var(--font-primary);
 }
 
+
 a {
-	color: var(--link);
 	cursor: pointer;
 	text-decoration: none;
 
-	&:hover {
-		color: var(--link-hover);
+	&[href] {
+		color: var(--link);
+
+		&:hover {
+			color: var(--link-hover);
+		}
 	}
+
 }
 
 hr {

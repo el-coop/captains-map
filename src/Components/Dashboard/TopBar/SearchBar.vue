@@ -1,34 +1,30 @@
 <template>
-	<div class="field has-addons is-full-touch search-bar">
-		<div class="control">
-			<div class="dropdown is-hoverable is-rounded">
-				<div class="dropdown-trigger">
-					<button class="button">
-						<FontAwesomeIcon :icon="searchOptions[searchCategory].icon" fixed-width/>
-					</button>
-				</div>
-				<div class="dropdown-menu search-bar__dropdown-menu">
-					<div class="dropdown-content">
-						<a class="dropdown-item search-bar__dropdown-item" v-for="category in availableSearchCategories"
-						   @click="changeSearch(category)">
-							<FontAwesomeIcon :icon="searchOptions[category].icon"/>
-							&nbsp&nbsp;{{ category }}
-						</a>
-					</div>
+	<div class="search-bar addon-row">
+		<div class="dropdown">
+			<button class="button is-light-background addon-row__control--left">
+				<FontAwesomeIcon :icon="searchOptions[searchCategory].icon" fixed-width/>
+			</button>
+			<div class="dropdown__menu">
+				<div class="dropdown__content">
+					<a class="dropdown__content-item" v-for="category in availableSearchCategories"
+					   @click="changeSearch(category)">
+						<FontAwesomeIcon :icon="searchOptions[category].icon"/>
+						&nbsp&nbsp;{{ category }}
+					</a>
 				</div>
 			</div>
 		</div>
 
-		<div class="control dropdown is-hoverable search-bar__field" :class="{'is-active': openResults}">
-			<input type="search" class="input dropdown-trigger" v-model="query" @keyup="searched = false"
+		<div class="dropdown search-bar__field" :class="{'is-active': openResults}">
+			<input type="search" class="input addon-row__control" v-model="query" @keyup="searched = false"
 				   @keyup.enter="search(searchOptions[searchCategory].funcName)"/>
-			<div class="dropdown-menu search-bar__dropdown-menu">
-				<div class="dropdown-content" v-if="results.length || searched">
+			<div class="dropdown__menu search-bar__results">
+				<div class="dropdown__content" v-if="results.length || searched">
 					<a v-for="(result, index) in results" :key="index" v-text="formatResult(result)"
-					   class="dropdown-item search-bar__dropdown-item"
+					   class="dropdown__content-item"
 					   @click="resultClicked(result)">
 					</a>
-					<p class="help is-danger dropdown-item search-bar__dropdown-item"
+					<p class="help is-danger dropdown__content-item"
 					   v-if="! results.length && searched">
 						No results found for <span v-text="query"/>
 					</p>
@@ -36,13 +32,12 @@
 			</div>
 		</div>
 
-		<div class="control">
-			<button class="button" :class="{'is-loading': searching}"
-					@click="search(searchOptions[searchCategory].funcName)" @mouseenter="openResults = true"
-					@mouseleave="openResults = false">
-				<FontAwesomeIcon icon="search"/>
-			</button>
-		</div>
+		<button class="button is-light-background addon-row__control--right no-loading-overlay"
+				:class="{'is-loading': searching}"
+				@click="search(searchOptions[searchCategory].funcName)" @mouseenter="openResults = true"
+				@mouseleave="openResults = false">
+			<FontAwesomeIcon icon="search"/>
+		</button>
 	</div>
 </template>
 

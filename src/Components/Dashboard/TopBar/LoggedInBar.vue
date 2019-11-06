@@ -8,26 +8,26 @@
 		</template>
 
 		<template #right>
-			<div class="buttons is-marginless">
-				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover is-hidden-tablet"
+			<div class="buttons">
+				<button class="button is-hidden-tablet"
 						@click="$refs.searchBar.open()">
-					<span class="icon is-small">
+					<span class="icon">
 						<FontAwesomeIcon icon="search"/>&nbsp;
 					</span>
 					<span class="is-size-7">Search</span>
 				</button>
-				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
+				<button class="button"
 						:disabled="isEdit"
 						@click="$router.push('/edit')">
-					<span class="icon is-small">
+					<span class="icon">
 						<FontAwesomeIcon icon="user-alt"/>
 					</span>
 					<span class="is-size-7" v-text="username"></span>
 				</button>
-				<button class="button is-light is-outlined is-borderless is-marginless is-light-hover"
+				<button class="button"
 						:disabled="! hasUser"
 						@click="$router.push('/')">
-					<span class="icon is-small">
+					<span class="icon">
 						<FontAwesomeIcon icon="globe"/>
 					</span>
 					<span class="is-size-7">Home</span>
@@ -42,7 +42,6 @@
 <script>
 	import Logout from "@/Components/Utilities/Logout";
 	import SearchBar from "@/Components/Dashboard/TopBar/SearchBar";
-	import auth from '@/Services/AuthenticationService';
 	import TopBar from "@/Components/Dashboard/TopBar/TheTopBar";
 	import DrawerMobile from "@/Components/Utilities/DrawerMobile";
 
@@ -57,7 +56,7 @@
 
 		computed: {
 			username() {
-				return auth.getUserDetails().username;
+				return this.$store.state.User.user.username;
 			},
 
 			hasUser() {

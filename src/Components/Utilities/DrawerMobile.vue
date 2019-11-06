@@ -1,10 +1,8 @@
 <template>
 	<div class="drawer-mobile" :class="{'drawer-mobile--open' : drawerOpen}">
-		<button class="button is-danger is-outlined is-marginless is-borderless is-hidden-tablet"
+		<button class="button button--drawer is-danger is-hidden-tablet"
 				@click="drawerOpen=false">
-				<span class="icon">
-					<FontAwesomeIcon icon="times-circle"/>
-				</span>
+			<FontAwesomeIcon icon="times-circle"/>
 		</button>
 		<slot></slot>
 	</div>

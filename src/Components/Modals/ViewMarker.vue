@@ -4,7 +4,8 @@
 			<ViewMarkerHeader :marker="marker" @view-user-page="navigateToUser"/>
 		</template>
 		<template #image v-if="marker && marker.media.length">
-			<div v-if="marker.media.length > 1" class="click-pagination" :class="{'click-pagination--visible': showAlbumHint}">
+			<div v-if="marker.media.length > 1" class="click-pagination"
+				 :class="{'click-pagination--visible': showAlbumHint}">
 				<div class="click-pagination__button" @click="changeMedia(-1)">Back</div>
 				<div class="click-pagination__button" @click="changeMedia(1)">Next</div>
 			</div>
@@ -21,10 +22,10 @@
 		</template>
 
 		<template #footer v-if="marker">
-			<p class="card-footer-item">
+			<p class="card__footer-item">
 				<a @click="modal = false">Close</a>
 			</p>
-			<p class="card-footer-item" v-if="canDelete">
+			<p class="card__footer-item" v-if="canDelete">
 				<button class="button is-danger is-fullwidth" @click="deleteMarker"
 						:class="{'is-loading': deleting}">
 					Delete
@@ -36,7 +37,6 @@
 
 <script>
 	import BaseModal from "@/Components/Utilities/BaseModal";
-	import auth from '@/Services/AuthenticationService';
 	import Photo from '@/Components/Global/Media/Photo';
 	import Instagram from '@/Components/Global/Media/Instagram';
 	import ViewMarkerHeader from "@/Components/Modals/ViewMarker/Header";
@@ -107,7 +107,7 @@
 				this.marker = marker;
 				this.modal = true;
 
-				if(marker.media.length > 1){
+				if (marker.media.length > 1) {
 					this.showAlbumHint = true;
 					setTimeout(() => {
 						this.showAlbumHint = false;
@@ -118,7 +118,7 @@
 
 		computed: {
 			canDelete() {
-				const user = auth.getUserDetails();
+				const user = this.$store.state.User.user;
 				return user && user.id === this.marker.user_id
 			},
 

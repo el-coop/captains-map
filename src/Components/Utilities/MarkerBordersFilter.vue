@@ -1,18 +1,17 @@
 <template>
 	<div class="marker-border-filter" :class="{'marker-border-filter--open' :open}">
-		<div class="is-hidden-tablet">
-			<button class="button is-light is-outlined is-faded is-fullwidth marker-border-filter__open" @click="open = !open">
-				<FontAwesomeIcon icon="sliders-h" size="sm"/>
-			</button>
-		</div>
-		<div class="buttons has-addons is-marginless">
-			<button class="button is-light is-outlined is-marginless is-faded has-icon-top marker-border-filter__button"
+		<button class="button is-fullwidth is-faded marker-border-filter__open is-hidden-tablet"
+				@click="open = !open">
+			<FontAwesomeIcon icon="sliders-h" size="sm"/>
+		</button>
+		<div class="buttons">
+			<button class="button is-faded has-icon-top marker-border-filter__button"
 					@click="setBorders"
 					:disabled="location === 'current'">
 				<FontAwesomeIcon icon="map-marked" size="sm"/>
 				<span class="is-size-7">Only Here</span>
 			</button>
-			<button class="button is-light is-outlined is-marginless is-faded has-icon-top marker-border-filter__button"
+			<button class="button is-faded has-icon-top marker-border-filter__button"
 					@click="clearBorders"
 					:disabled="location === 'everywhere'">
 				<FontAwesomeIcon icon="globe-asia" size="sm"/>

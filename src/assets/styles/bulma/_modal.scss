@@ -30,6 +30,7 @@
 
 	&__close {
 		color: var(--text-muted);
+		cursor: pointer;
 		&:hover {
 			color: var(--text-strong);
 		}
