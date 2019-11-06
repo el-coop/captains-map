@@ -1,5 +1,5 @@
 import cache from '@/Services/Cache';
-import Store from '@/store';
+import toast from 'izitoast';
 import UploadService from '@/Services/UploadService';
 import UploadFile from "@/Classes/UploadFile";
 
@@ -106,7 +106,7 @@ export default {
 		},
 
 		async uploadError({commit}, marker) {
-			this._vm.$toast.error('Please try again later', 'Upload failed');
+			toast.error({message: 'Please try again later', title: 'Upload failed'});
 			commit('removeFromQueue', marker.uploadTime);
 			commit('pushToErrored', marker);
 			await cache.store('uploads', marker.uploadTime, marker);

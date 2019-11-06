@@ -12,6 +12,9 @@ html {
 	--background-light: #{transparentize(whitesmoke, 0.05)};
 	--background-light-er: #{$white};
 
+	--error-color: #{transparentize($red, 0.35)};
+	--queue-color: #{transparentize($black, 0.35)};
+
 	--text: #{$white-ter};
 	--text-strong: #{$white-bis};
 	--text-muted: #{$grey-light};
@@ -22,9 +25,11 @@ html {
 	--input-color: var(--text-dark);
 	--input-placeholder-color: rgba($grey-darker, 0.3);
 
-
 	--loader-color: #{$grey-lighter};
 	--border-color: #{$grey-lighter};
+
+	--progress-background: #{$grey-lightest};
+	--progress-color: #{$dark};
 
 	//
 	//--tabs-link-hover-color: #{$white-bis};

@@ -2,12 +2,8 @@
 	<div class="field">
 		<label class="label" v-text="label" v-if="label"/>
 		<div class="field is-grouped">
-			<div class="control is-expanded">
-				<input type="date" class="input" v-model.lazy="date"/>
-			</div>
-			<div class="control is-expanded">
-				<input type="time" class="input" v-model.lazy="time"/>
-			</div>
+			<input type="date" class="input" v-model.lazy="date"/>
+			<input type="time" class="input" v-model.lazy="time"/>
 		</div>
 		<p class="help is-danger" v-if="error" v-text="error"/>
 	</div>

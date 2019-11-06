@@ -2,7 +2,7 @@
 	<form @submitting="loading = true" @submit.prevent="queueUpload">
 		<BaseModal route-name="edit" :active.sync="modal">
 			<template #header>
-				<p class="card-header-title">Create new marker</p>
+				<p class="card__header-title">Create new marker</p>
 			</template>
 
 			<template #content>
@@ -26,8 +26,8 @@
 			</template>
 
 			<template #footer>
-				<p class="card-footer-item">
-					<button v-if="marker" class="button is-danger is-fullwidth" @click="cancelUpload"
+				<p class="card__footer-item">
+					<button v-if="marker" class="button is-danger-background is-fullwidth" @click="cancelUpload"
 							type="button">
 						Cancel upload
 					</button>
@@ -35,8 +35,8 @@
                         <a @click="modal=false">Close</a>
                     </span>
 				</p>
-				<p class="card-footer-item">
-					<button class="button is-primary is-fullwidth" :class="{'is-loading' : loading}">Submit</button>
+				<p class="card__footer-item">
+					<button class="button is-primary-background is-fullwidth" :class="{'is-loading' : loading}">Submit</button>
 				</p>
 			</template>
 		</BaseModal>

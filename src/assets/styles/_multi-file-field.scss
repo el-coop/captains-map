@@ -8,7 +8,11 @@
 	justify-content: center;
 	min-height: 120px;
 	position: relative;
-	color: $text;
+	color: var(--text);
+
+	&--empty {
+		flex-direction: column;
+	}
 
 	&__input {
 		height: 100%;
@@ -32,12 +36,13 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		text-align: center;
 
 		width: 120px;
 		height: 120px;
 		margin: 8px;
 
-		border-color: #dbdbdb;
+		border-color: var(--border-color);
 		border-style: solid;
 		border-width: 1px;
 		border-radius: 4px;
@@ -52,7 +57,7 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			font-size: $size-7;
+			font-size: var(--size-7);
 			width: 100%;
 			padding: 0 2.5%;
 

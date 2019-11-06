@@ -4,7 +4,7 @@
 	position: relative;
 	vertical-align: top;
 
-	&:hover {
+	&:hover, &:active, &:focus, &:focus-within {
 		#{$self}__menu {
 			display: block;
 		}

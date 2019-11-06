@@ -1,0 +1,39 @@
+.select {
+	display: inline-block;
+	max-width: 100%;
+	position: relative;
+	vertical-align: top;
+	height: 2.5em;
+
+
+	&::after {
+		@extend %arrow;
+		border-color: var(--selected-color);
+		right: 1.125em;
+		z-index: 4;
+	}
+
+	&:hover {
+		&::after {
+			border-color: var(--text-dark);
+		}
+	}
+
+	select {
+		appearance: none;
+		height: 2.25em;
+		cursor: pointer;
+		display: block;
+		font-size: 1em;
+		max-width: 100%;
+		outline: none;
+		padding: calc(.375em - 1px) 1em calc(.375em - 1px) calc(.625em - 1px);
+		position: relative;
+
+
+		option {
+			padding: 0.5em 1em
+
+		}
+	}
+}

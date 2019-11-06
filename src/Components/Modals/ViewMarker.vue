@@ -26,7 +26,7 @@
 				<a @click="modal = false">Close</a>
 			</p>
 			<p class="card__footer-item" v-if="canDelete">
-				<button class="button is-danger is-fullwidth" @click="deleteMarker"
+				<button class="button is-danger-background is-fullwidth" @click="deleteMarker"
 						:class="{'is-loading': deleting}">
 					Delete
 				</button>
