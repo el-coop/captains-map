@@ -15,9 +15,16 @@
 			</div>
 		</div>
 
-		<div class="dropdown search-bar__field" :class="{'is-active': openResults}">
+		<div class="dropdown  search-bar__field" :class="{'is-active': openResults}">
 			<input type="search" class="input addon-row__control" v-model="query" @keyup="searched = false"
 				   @keyup.enter="search(searchOptions[searchCategory].funcName)"/>
+			<button class="button is-light-background addon-row__control--right no-loading-overlay"
+					:class="{'is-loading': searching}"
+					@click="search(searchOptions[searchCategory].funcName)" @mouseenter="openResults = true"
+					@mouseleave="openResults = false">
+				<FontAwesomeIcon icon="search"/>
+			</button>
+
 			<div class="dropdown__menu search-bar__results">
 				<div class="dropdown__content" v-if="results.length || searched">
 					<a v-for="(result, index) in results" :key="index" v-text="formatResult(result)"
@@ -31,13 +38,6 @@
 				</div>
 			</div>
 		</div>
-
-		<button class="button is-light-background addon-row__control--right no-loading-overlay"
-				:class="{'is-loading': searching}"
-				@click="search(searchOptions[searchCategory].funcName)" @mouseenter="openResults = true"
-				@mouseleave="openResults = false">
-			<FontAwesomeIcon icon="search"/>
-		</button>
 	</div>
 </template>
 

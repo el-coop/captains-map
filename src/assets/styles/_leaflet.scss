@@ -310,7 +310,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 /* general typography */
 .leaflet-container {
-	font: 12px/1.5 $family-sans-serif;
+	font: 12px/1.5 var(--font-primary);
 }
 
 
@@ -331,7 +331,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	display: block;
 	text-align: center;
 	text-decoration: none;
-	color: black;
+	color: black !important;
 }
 
 .leaflet-bar a,
@@ -382,7 +382,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
-	font: bold 18px $family-monospace;
+	font: bold 18px var(--font-secondary);
 	text-indent: 1px;
 }
 
@@ -590,7 +590,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	text-align: center;
 	width: 18px;
 	height: 14px;
-	font: 16px/14px $family-sans-serif;
+	font: 16px/14px var(--font-primary);
 	color: #c3c3c3;
 	text-decoration: none;
 	font-weight: bold;

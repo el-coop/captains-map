@@ -1,5 +1,10 @@
 .search-bar {
 	padding: 0.2em 0.25em;
+	flex: 1;
+
+	&__field {
+		flex: 1;
+	}
 
 	&__results {
 		min-width: 100%;

@@ -57,7 +57,7 @@
 		background-size: 40px 20px;
 	}
 
-	@media #{$above-tablet} {
+	@include from($tablet) {
 		filter: drop-shadow(0 1px 2px var(--box-shadow-color));
 		margin-top: auto;
 		margin-left: 0;
@@ -92,7 +92,7 @@
 	overflow-y: hidden;
 	overflow-x: visible;
 
-	@media #{$above-tablet} {
+	@include from($tablet) {
 		flex-direction: column;
 		overflow-y: visible;
 		overflow-x: hidden;

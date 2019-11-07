@@ -29,32 +29,6 @@
 		&--accent {
 			background-color: var(--background-accent);
 		}
-
-		&-filters {
-			position: absolute;
-			cursor: pointer;
-			right: 0;
-			bottom: 0;
-			z-index: 100;
-			height: $gap;
-			width: $gap;
-			color: $text;
-			padding-right: 0;
-			padding-left: 0.4 * $gap;
-			padding-top: 0.4 * $gap;
-			clip-path: polygon(100% 0, 0 100%, 100% 100%);
-
-			&:before {
-				content: '';
-				width: $gap;
-				height: $gap;
-				clip-path: polygon(96% 0, 0 96%, 0 0);
-				background: rgba(219, 219, 219, 0.5);
-				position: absolute;
-				top: 1px;
-				left: 1px;
-			}
-		}
 	}
 
 	&__header {
@@ -72,7 +46,7 @@
 		overflow-x: auto;
 		overflow-y: hidden;
 
-		@media #{$above-tablet} {
+		@include from($tablet) {
 			overflow-y: auto;
 			overflow-x: hidden;
 			grid-template-rows: 1fr;

@@ -25,7 +25,7 @@ $modal-content-spacing-mobile: 0px;
 $modal-background-background-color: rgba(0, 0, 0, 0.2);
 
 $marker-type-colors: ('Other': $grey-light, 'Plan': $cyan, 'Visited': $turquoise, 'Suggestion': $red);
-$status-colors: ('light': $white-ter, 'primary': $primary, 'danger': $danger, 'selected': $link);
+$status-colors: ('light': $white-ter, 'primary': $primary, 'danger': $danger, 'selected': $link, 'user-marker': #06f, 'user-marker-inacurate': $grey);
 $button-backgrounds: ('primary': $primary, 'light': $light, 'white': $white, 'danger': $danger, 'selected': $link);
 $button-backgrounds-light: ('light': $light);
 $screen-sizes: mobile tablet;

@@ -9,7 +9,7 @@
 		position: absolute;
 		left: 0;
 		top: 0;
-		font-size: $size-7;
+		font-size: var(--size-7);
 	}
 }
 
@@ -19,10 +19,10 @@
 	filter: grayscale(100);
 
 	&:after {
-		background-color: transparentize($black, 0.4);
+		background-color: var(--queue-color);
 		animation: spinAround 500ms infinite linear;
-		border: 0.25em solid $grey-lighter;
-		border-radius: $radius-rounded;
+		border: 0.25em solid var(--border-color);
+		border-radius: var(--radius-rounded);
 		border-right-color: transparent;
 		border-top-color: transparent;
 		content: "";
@@ -37,11 +37,11 @@
 
 .map__marker--queued:after {
 	content: 'QUEUE';
-	background-color: transparentize($black, 0.4);
+	background-color: var(--queue-color);
 }
 
 .map__marker--error:after {
 	content: 'ERROR';
-	background-color: transparentize($red, 0.4);
+	background-color: var(--error-color);
 }
 

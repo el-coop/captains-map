@@ -94,9 +94,9 @@
 		width: 100%;
 
 
-		@media #{$above-tablet} {
+		@include from($tablet) {
 			padding: 1em 3.5em 2em 1em;
-			border-left: $grey-darker dotted 2px;
+			border-left: var(--background-muted) dotted 2px;
 		}
 
 

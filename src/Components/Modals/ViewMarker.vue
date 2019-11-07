@@ -4,11 +4,20 @@
 			<ViewMarkerHeader :marker="marker" @view-user-page="navigateToUser"/>
 		</template>
 		<template #image v-if="marker && marker.media.length">
-			<div v-if="marker.media.length > 1" class="click-pagination"
-				 :class="{'click-pagination--visible': showAlbumHint}">
-				<div class="click-pagination__button" @click="changeMedia(-1)">Back</div>
-				<div class="click-pagination__button" @click="changeMedia(1)">Next</div>
-			</div>
+			<template v-if="marker.media.length > 1">
+				<div class="click-pagination"
+					 :class="{'click-pagination--visible': showAlbumHint}">
+					<div class="click-pagination__button" @click="changeMedia(-1)">Back</div>
+					<div class="click-pagination__button" @click="changeMedia(1)">Next</div>
+				</div>
+
+				<div class="pagination-indicators">
+					<template v-for="(media, mediaIndex) in marker.media">
+						<div class="pagination-indicators__indicator" @click="currentMedia = mediaIndex"
+							 :class="{'pagination-indicators__indicator--active': currentMedia === mediaIndex}"></div>
+					</template>
+				</div>
+			</template>
 			<template v-for="(media, mediaIndex) in marker.media">
 				<component v-if="currentMedia === mediaIndex"
 						   :is="media.type === 'instagram' ? 'Instagram': 'Photo'"

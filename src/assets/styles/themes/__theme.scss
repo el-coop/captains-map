@@ -1,6 +1,7 @@
 html {
 	// fonts
 	--font-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+	--font-secondary: #{$family-monospace};
 
 	// colors
 	--background: #{$background};
@@ -35,6 +36,7 @@ html {
 	//--tabs-link-hover-color: #{$white-bis};
 	//--dropdown-item-hover-background-color: whitesmoke;
 
+	--white: #{$white};
 	--link: #{$cyan};
 	--link-hover: #{$blue};
 
