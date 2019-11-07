@@ -7,7 +7,11 @@
 	position: fixed;
 	z-index: 100;
 	pointer-events: all;
-	justify-content: center;
+	justify-content: flex-start;
+
+	@include from($tablet) {
+		justify-content: center;
+	}
 
 	&__background {
 		@extend %overlay;
@@ -31,6 +35,7 @@
 	&__close {
 		color: var(--text-muted);
 		cursor: pointer;
+
 		&:hover {
 			color: var(--text-strong);
 		}

@@ -3,11 +3,12 @@
 		margin-right: 1rem;
 
 		&-image {
-			max-height: 64px;
-			max-width: 64px;
-			height: auto !important;
-			width: auto !important;
+			height: 64px;
+			width: 64px;
 			margin: auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 	}
 
