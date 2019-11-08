@@ -129,6 +129,10 @@
 	&__loader {
 		position: relative;
 		height: 100%;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		@include from($tablet) {
 			align-items: start;
 			margin: 20px;
