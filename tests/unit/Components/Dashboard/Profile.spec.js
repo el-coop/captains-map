@@ -3,7 +3,6 @@ import { shallowMount } from '@vue/test-utils';
 import Profile from '@/Components/Dashboard/Profile';
 import sinon from 'sinon';
 import globe from '@/assets/images/globe-icon.png';
-import auth from '@/Services/AuthenticationService';
 
 describe('Profile.vue', () => {
 
@@ -20,6 +19,9 @@ describe('Profile.vue', () => {
 							description: 'description',
 							path: false
 						}
+					},
+					User: {
+						user: null
 					}
 				},
 				commit: sinon.stub()
@@ -41,119 +43,40 @@ describe('Profile.vue', () => {
 		sinon.restore();
 	});
 
-	it('Renders profile with globe picture', async () => {
+	it('Renders', async () => {
 		const wrapper = shallowMount(Profile, {
 			stubs,
 			mocks
 		});
 
 		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
-		assert.isFalse(wrapper.find('ajax-form-stub').exists());
-		assert.equal(wrapper.find('img').element.src, `http://localhost${globe}`);
-		assert.equal(wrapper.find('h4').text(), 'test');
-		assert.equal(wrapper.find('p.is-flex-1').text(), 'description');
+		assert.equal(wrapper.find('.title.is-4').text(), 'test');
 	});
 
-	it('Renders profile with actual profile picture', async () => {
-
-		mocks.$store.state.Profile.user.path = '/path';
+	it('Toggles open', async () => {
+		mocks.$store.state.Profile.open = true;
 
 		const wrapper = shallowMount(Profile, {
 			stubs,
 			mocks
 		});
 
-		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
-		assert.isFalse(wrapper.find('ajax-form-stub').exists());
-		assert.equal(wrapper.find('img').element.src, 'http://localhost/api/path');
-		assert.equal(wrapper.find('h4').text(), 'test');
-		assert.equal(wrapper.find('p.is-flex-1').text(), 'description');
+		assert.isTrue(wrapper.find('.dashboard__control.profile.profile--open').exists());
 	});
 
-
-	it('Renders edit mode when profile is same as logged in', async () => {
-
-
-		sinon.stub(auth, 'getUserDetails').returns({
-			username: 'test'
-		});
-		mocks.$store.state.Profile.user.path = '/path';
+	it('Closes when clicked', async () => {
+		mocks.$store.state.Profile.open = true;
 
 		const wrapper = shallowMount(Profile, {
 			stubs,
 			mocks
 		});
 
+		wrapper.find('.icon.profile__close').trigger('click');
 
-		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
-		assert.equal(wrapper.find('multifilefield-stub').props().preview, '/api/path');
-		assert.equal(wrapper.find('h4').text(), 'test');
-		assert.equal(wrapper.find('textarea').element.value, 'description');
+		await wrapper.vm.$nextTick();
+
+		assert.isTrue(mocks.$store.commit.calledOnce);
+		assert.isTrue(mocks.$store.commit.calledWith('Profile/toggle'));
 	});
-
-	it('Reacts to failure submission', async () => {
-
-		sinon.stub(auth, 'getUserDetails').returns({
-			username: 'test'
-		});
-		mocks.$http.post = sinon.stub().returns({
-			status: 500,
-		});
-		mocks.$store.state.Profile.user.path = '/path';
-
-		const wrapper = shallowMount(Profile, {
-			stubs,
-			mocks
-		});
-
-		wrapper.find('button.is-primary').trigger('click');
-
-		await wrapper.vm.$nextTick;
-
-		assert.isTrue(mocks.$toast.error.calledOnce);
-		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Update failed.'));
-	});
-
-	it('Submits data successfully', async () => {
-
-		sinon.stub(auth, 'getUserDetails').returns({
-			username: 'test'
-		});
-		mocks.$http.post = sinon.stub().returns({
-			status: 200,
-			data: {
-				description: 'desc',
-				path: 'patha'
-			}
-		});
-		mocks.$store.state.Profile.user.path = '/path';
-
-		const wrapper = shallowMount(Profile, {
-			stubs,
-			mocks
-		});
-
-
-		wrapper.find('button.is-primary').trigger('click');
-
-		assert.isTrue(wrapper.find('button.is-primary.is-loading').exists());
-
-		await wrapper.vm.$nextTick;
-
-		assert.isFalse(wrapper.find('button.is-primary.is-loading').exists());
-
-		assert.isTrue(mocks.$toast.success.calledOnce);
-		assert.isTrue(mocks.$toast.success.calledWith(' ', 'Profile updated.'));
-		assert.isTrue(mocks.$store.commit.calledTwice);
-		assert.isTrue(mocks.$store.commit.firstCall.calledWith('Markers/updateProfilePic', {
-			username: 'test',
-			path: 'patha'
-		}));
-		assert.isTrue(mocks.$store.commit.secondCall.calledWith('Profile/updateBio', {
-			username: 'test',
-			description: 'desc',
-			path: 'patha'
-		}));
-	});
-
 });

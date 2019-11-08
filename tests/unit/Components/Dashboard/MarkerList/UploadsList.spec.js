@@ -30,7 +30,7 @@ describe('UploadsList.vue', () => {
 			stubs
 		});
 
-		assert.isTrue(wrapper.find('button.is-light').exists());
+		assert.isTrue(wrapper.find('button.is-faded').exists());
 		assert.isFalse(wrapper.find('ul').exists());
 	});
 
@@ -44,7 +44,7 @@ describe('UploadsList.vue', () => {
 			open: false
 		});
 
-		wrapper.find('button.is-light').trigger('click');
+		wrapper.find('button.is-faded').trigger('click');
 		assert.isTrue(wrapper.find('ul').exists());
 	});
 
@@ -59,7 +59,7 @@ describe('UploadsList.vue', () => {
 			open: true
 		});
 
-		wrapper.find('button.is-light').trigger('click');
+		wrapper.find('button.is-faded').trigger('click');
 		assert.isFalse(wrapper.find('ul').exists());
 	});
 

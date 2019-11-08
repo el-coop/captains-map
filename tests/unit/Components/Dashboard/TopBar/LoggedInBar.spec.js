@@ -2,7 +2,6 @@ import { assert } from 'chai';
 import { mount } from '@vue/test-utils';
 import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
 import sinon from 'sinon';
-import auth from '@/Services/AuthenticationService';
 
 describe('LoggedInBar.vue', () => {
 
@@ -12,7 +11,10 @@ describe('LoggedInBar.vue', () => {
 	beforeEach(() => {
 		stubs = {
 			FontAwesomeIcon: true,
-			ProfileOpen: true
+			SearchBar: true,
+			ProfileOpen: true,
+			DrawerMobile: true,
+			logout: true,
 		};
 		mocks = {
 			$router: {
@@ -25,13 +27,17 @@ describe('LoggedInBar.vue', () => {
 				state: {
 					Markers: {
 						username: false
+					},
+					User: {
+						user: {
+							username: 'user',
+						},
+						isLoggedIn: sinon.stub().returns(true)
 					}
 				}
 			}
 		};
-		sinon.stub(auth, 'getUserDetails').returns({
-			username: 'test'
-		});
+
 	});
 
 	afterEach(() => {
@@ -45,10 +51,10 @@ describe('LoggedInBar.vue', () => {
 			mocks
 		});
 
-		assert.equal(wrapper.find('.button.is-light.is-outlined:disabled > span:last-child').text(), 'Home');
+		assert.equal(wrapper.find('.button:disabled > span:last-child').text(), 'Home');
 		assert.isTrue(wrapper.find('.top-bar').exists());
-		assert.isTrue(wrapper.find('.button.is-danger.is-outlined').exists());
-		assert.isTrue(wrapper.find('.search-bar').exists());
+		assert.isTrue(wrapper.find('.button--logout').exists());
+		assert.isTrue(wrapper.find('searchbar-stub').exists());
 	});
 
 	it('Changes route when edit button clicked', () => {
@@ -58,7 +64,7 @@ describe('LoggedInBar.vue', () => {
 			mocks
 		});
 
-		wrapper.findAll('.button.is-light.is-outlined').at(1).trigger('click');
+		wrapper.findAll('.button').at(1).trigger('click');
 
 		assert.isTrue(mocks.$router.push.calledOnce);
 		assert.isTrue(mocks.$router.push.calledWith('/edit'));
@@ -67,14 +73,14 @@ describe('LoggedInBar.vue', () => {
 
 	it('Renders with disabled edit button in edit page', () => {
 		mocks.$router.currentRoute.path = "/edit";
+
 		const wrapper = mount(LoggedInBar, {
 			stubs,
 			mocks
 		});
-		assert.equal(wrapper.find('.button.is-light.is-outlined:disabled > span:last-child').text(), 'test');
-
-		assert.isTrue(wrapper.find('.button.is-danger.is-outlined').exists());
-		assert.isTrue(wrapper.find('.search-bar').exists());
+		assert.equal(wrapper.find('.button:disabled > span:last-child').text(), 'user');
+		assert.isTrue(wrapper.find('.button').exists());
+		assert.isTrue(wrapper.find('searchbar-stub').exists());
 	});
 
 	it('Changes route when home button clicked clicked', () => {
@@ -85,7 +91,7 @@ describe('LoggedInBar.vue', () => {
 			mocks
 		});
 
-		wrapper.findAll('.button.is-light.is-outlined').at(2).trigger('click');
+		wrapper.findAll('.button').at(2).trigger('click');
 
 		assert.isTrue(mocks.$router.push.calledOnce);
 		assert.isTrue(mocks.$router.push.calledWith('/'));

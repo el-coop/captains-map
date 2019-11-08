@@ -167,7 +167,7 @@ describe('UploadEntry.vue', () => {
 		await wrapper.vm.$nextTick();
 		const progressBar = wrapper.find('.progress');
 		assert.isTrue(progressBar.exists());
-		assert.isUndefined(progressBar.attributes().value);
+		assert.equal(progressBar.attributes().value, 0);
 	});
 
 	it('Sets classname to error when has errors', () => {

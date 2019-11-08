@@ -4,8 +4,8 @@ import Store from '@/store';
 import uploadsStore from '@/store/uploads';
 import cache from '@/Services/Cache';
 import uploadService from '@/Services/UploadService';
-import auth from '@/Services/AuthenticationService';
 import UploadFile from "@/Classes/UploadFile";
+import toast from "izitoast";
 
 
 describe('Upload store', () => {
@@ -275,11 +275,8 @@ describe('Upload store', () => {
 	it('moves marker from queue to error', async () => {
 		const commit = sinon.stub();
 		const cacheStub = sinon.stub(cache.caches().uploads, 'setItem');
-		uploadsStore.actions._vm = {
-			$toast: {
-				error: sinon.stub()
-			}
-		};
+		const toastStub = sinon.stub(toast, 'error');
+
 
 		const marker = {
 			id: 1,
@@ -295,8 +292,8 @@ describe('Upload store', () => {
 		assert.isTrue(commit.calledWith('removeFromQueue', 1));
 		assert.isTrue(cacheStub.calledOnce);
 		assert.isTrue(cacheStub.calledWith('1', {value: marker, expiry: null}));
-		assert.isTrue(uploadsStore.actions._vm.$toast.error.calledOnce);
-		assert.isTrue(uploadsStore.actions._vm.$toast.error.calledWith('Please try again later', 'Upload failed'));
+		assert.isTrue(toastStub.calledOnce);
+		assert.isTrue(toastStub.calledWith({message: 'Please try again later', title: 'Upload failed'}));
 	});
 
 	it('removes marker from storage when uploaded', async () => {
@@ -336,42 +333,43 @@ describe('Upload store', () => {
 		});
 	});
 
-	it('Doesnt retry uploads with offline errors when logged out', () => {
-		sinon.stub(auth, 'isLoggedIn').returns(false);
+	it('Doesnt retry uploads with offline errors when logged out',async () => {
 
 		const state = {
 			errored: [{id: 2, status: 'offline'}],
 		};
 		const dispatch = sinon.stub();
+		dispatch.onCall(0).returns(false);
 
-		uploadsStore.actions.uploadOfflineError({state, dispatch});
-		assert.isFalse(dispatch.called);
+		await uploadsStore.actions.uploadOfflineError({state, dispatch});
+		assert.isTrue(dispatch.calledOnce);
 	});
 
-	it('Retries uploads with offline errors when logged in', () => {
-		sinon.stub(auth, 'isLoggedIn').returns(true);
+	it('Retries uploads with offline errors when logged in', async () => {
 
 		const state = {
 			errored: [{id: 2, error: {status: 'offline'}}, {id: 3, error: {status: 'offline'}}],
 		};
 		const dispatch = sinon.stub();
+		dispatch.onCall(0).returns(true);
 
-		uploadsStore.actions.uploadOfflineError({state, dispatch});
-		assert.isTrue(dispatch.calledTwice);
-		assert.isTrue(dispatch.firstCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}}));
-		assert.isTrue(dispatch.secondCall.calledWith('returnToQueue', {id: 3, error: {status: 'offline'}}));
+		await uploadsStore.actions.uploadOfflineError({state, dispatch});
+		assert.isTrue(dispatch.calledThrice);
+		assert.isTrue(dispatch.secondCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}}));
+		assert.isTrue(dispatch.thirdCall.calledWith('returnToQueue', {id: 3, error: {status: 'offline'}}));
 	});
 
-	it('Retries only uploads with offline error', () => {
-		sinon.stub(auth, 'isLoggedIn').returns(true);
+	it('Retries only uploads with offline error', async () => {
 
 		const state = {
 			errored: [{id: 2, error: {status: 'offline'}}, {id: 3, error: {status: '500'}}],
 		};
 		const dispatch = sinon.stub();
 
-		uploadsStore.actions.uploadOfflineError({state, dispatch});
-		assert.isTrue(dispatch.calledOnce);
-		assert.isTrue(dispatch.firstCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}}));
+		dispatch.onCall(0).returns(true);
+
+		await uploadsStore.actions.uploadOfflineError({state, dispatch});
+		assert.isTrue(dispatch.calledTwice);
+		assert.isTrue(dispatch.secondCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}}));
 	});
 });

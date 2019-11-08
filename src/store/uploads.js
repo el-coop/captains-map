@@ -130,7 +130,10 @@ export default {
 		},
 
 		async uploadOfflineError({dispatch, state}) {
-			const isLoggedIn = await auth.isLoggedIn();
+			const isLoggedIn = await dispatch('User/isLoggedIn', {}, {
+				root: true
+			});
+
 			if (isLoggedIn) {
 				const offlines = state.errored.filter((marker) => {
 					return marker.error.status === 'offline';

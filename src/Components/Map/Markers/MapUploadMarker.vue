@@ -28,17 +28,23 @@
 
 			setStatus() {
 				if (this.$store.state.Uploads.workingId === this.marker.uploadTime) {
-					this.addClass('map__marker--uploading');
 					this.removeClass('map__marker--error');
 					this.removeClass('map__marker--queued');
+					setTimeout(() => {
+						this.addClass('map__marker--uploading');
+					},0);
 				} else if (this.marker.error) {
-					this.addClass('map__marker--error');
 					this.removeClass('map__marker--uploading');
 					this.removeClass('map__marker--queued');
+					setTimeout(() => {
+						this.addClass('map__marker--error');
+					},0);
 				} else {
-					this.addClass('map__marker--queued');
 					this.removeClass('map__marker--error');
 					this.removeClass('map__marker--uploading');
+					setTimeout(() => {
+						this.addClass('map__marker--queued');
+					},0);
 				}
 			}
 		},

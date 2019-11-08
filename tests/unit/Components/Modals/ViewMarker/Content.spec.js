@@ -58,8 +58,8 @@ describe('ViewMarker/Content.vue', () => {
 			stubs
 		});
 
-		assert.isTrue(wrapper.find('.media-right').exists());
-		assert.isTrue(wrapper.find('.media-content').exists());
+		assert.isTrue(wrapper.find('.view-marker__content-text').exists());
+		assert.isTrue(wrapper.find('.view-marker__content-buttons').exists());
 	});
 
 

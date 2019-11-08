@@ -43,7 +43,7 @@ describe('RegisterModal.vue', () => {
 			propsData
 		});
 
-		wrapper.find('.card-footer-item a').trigger('click');
+		wrapper.find('.card__footer-item a').trigger('click');
 
 		assert.equal(wrapper.emitted()['update:active'][0][0], false);
 	});

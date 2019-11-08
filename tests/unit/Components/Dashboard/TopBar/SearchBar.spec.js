@@ -21,16 +21,16 @@ describe('SearchBar.vue', () => {
 			stubs
 		});
 
-		assert.isTrue(wrapper.find('.input.dropdown-trigger').exists());
-		assert.isTrue(wrapper.find('.button').exists());
+		assert.isTrue(wrapper.find('.input.addon-row__control').exists());
+		assert.isTrue(wrapper.find('.button.is-light-background').exists());
 	});
 
 	it('Tracks input', () => {
 		const wrapper = shallowMount(SearchBar, {
 			stubs
 		});
-		wrapper.find('.input.dropdown-trigger').element.value = 'a';
-		wrapper.find('.input.dropdown-trigger').trigger('input');
+		wrapper.find('.input').element.value = 'a';
+		wrapper.find('.input').trigger('input');
 
 		assert.equal(wrapper.vm.$data.query, 'a');
 	});
@@ -44,7 +44,7 @@ describe('SearchBar.vue', () => {
 			searchCategory: 'Users'
 		});
 
-		wrapper.find('.dropdown-item').trigger('click');
+		wrapper.find('.dropdown__content-item').trigger('click');
 
 		assert.equal(wrapper.vm.$data.searchCategory, 'Address');
 	});
@@ -58,7 +58,7 @@ describe('SearchBar.vue', () => {
 			searchCategory: 'Address'
 		});
 
-		wrapper.find('.dropdown-item').trigger('click');
+		wrapper.find('.dropdown__content-item').trigger('click');
 
 		assert.equal(wrapper.vm.$data.searchCategory, 'Users');
 	});
@@ -177,7 +177,7 @@ describe('SearchBar.vue', () => {
 			}]
 		});
 
-		wrapper.findAll('.search-bar__dropdown-item').at(1).trigger('click');
+		wrapper.findAll('.dropdown__content-item').at(1).trigger('click');
 		assert.isTrue(moveStub.calledWith([0, 0]));
 		assert.isTrue(moveStub.calledOnce);
 	});
@@ -199,7 +199,7 @@ describe('SearchBar.vue', () => {
 			results: ['test']
 		});
 
-		wrapper.findAll('.search-bar__dropdown-item').at(1).trigger('click');
+		wrapper.findAll('.dropdown__content-item').at(1).trigger('click');
 		assert.isTrue(routeSpy.calledWith('test'));
 		assert.isFalse(moveStub.called);
 	});

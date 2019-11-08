@@ -3,8 +3,6 @@ import EditPage from '@/Views/EditPage.vue';
 import { assert } from 'chai';
 import sinon from "sinon";
 import map from "@/Services/LeafletMapService";
-import auth from '@/Services/AuthenticationService';
-import Vue from 'vue';
 
 describe('EditPage.vue', () => {
 	let mocks;
@@ -23,6 +21,11 @@ describe('EditPage.vue', () => {
 							lat: 1,
 							lng: -1
 						}]
+					},
+					User: {
+						user: {
+							username: 'test'
+						}
 					}
 				}
 			},
@@ -30,10 +33,6 @@ describe('EditPage.vue', () => {
 				$emit: sinon.spy(),
 			}
 		};
-
-		sinon.stub(auth, 'getUserDetails').returns({
-			username: 'test'
-		});
 		goToCurrentLocationStub = sinon.stub(map, 'goToCurrentLocation');
 	});
 

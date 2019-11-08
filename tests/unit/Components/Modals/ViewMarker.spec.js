@@ -2,7 +2,6 @@ import { assert } from 'chai';
 import { shallowMount, mount } from '@vue/test-utils';
 import ViewMarker from '@/Components/Modals/ViewMarker';
 import sinon from 'sinon';
-import auth from '@/Services/AuthenticationService';
 
 describe('ViewMarker.vue', () => {
 	let marker;
@@ -41,6 +40,13 @@ describe('ViewMarker.vue', () => {
 				currentRoute: {
 					params: {},
 					path: '/'
+				}
+			},
+			$store: {
+				state: {
+					User: {
+						user: null
+					}
 				}
 			},
 			$toast: {
@@ -152,9 +158,9 @@ describe('ViewMarker.vue', () => {
 	});
 
 	it('Shows delete button for markers user', () => {
-		sinon.stub(auth, 'getUserDetails').returns({
+		mocks.$store.state.User.user = {
 			id: 1
-		});
+		};
 		const wrapper = mount(ViewMarker, {
 			mocks,
 			stubs
@@ -165,13 +171,11 @@ describe('ViewMarker.vue', () => {
 			marker
 		});
 
-		assert.isTrue(wrapper.find('button.is-danger').exists());
+		assert.isTrue(wrapper.find('button.is-danger-background').exists());
 	});
 
 	it('Doesnt show delete button for different user', () => {
-		sinon.stub(auth, 'getUserDetails').returns({
-			id: 2
-		});
+
 		const wrapper = shallowMount(ViewMarker, {
 			mocks
 		});
@@ -195,7 +199,7 @@ describe('ViewMarker.vue', () => {
 			marker
 		});
 
-		wrapper.find('.card-footer-item a').trigger('click');
+		wrapper.find('.card__footer-item a').trigger('click');
 
 		assert.isFalse(wrapper.vm.$data.modal);
 	});
@@ -336,7 +340,6 @@ describe('ViewMarker.vue', () => {
 			modal: true,
 			marker
 		});
-
 		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
 		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
 		assert.equal(wrapper.vm.$data.currentMedia, 0);
@@ -421,4 +424,58 @@ describe('ViewMarker.vue', () => {
 		assert.isTrue(mocks.$router.pushRoute.secondCall.calledWith('edit'));
 	});
 
+	it('Displays pagination indicators', async () => {
+		marker.media = [{
+			type: 'image',
+			path: 'test',
+			id: 1
+		}, {
+			type: 'image',
+			path: 'test1',
+			id: 2
+		}, {
+			type: 'image',
+			path: 'test2',
+			id: 3
+		}];
+
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+
+		const indicators = wrapper.findAll('.pagination-indicators__indicator');
+
+		assert.isTrue(wrapper.find('.pagination-indicators').exists());
+		assert.equal(3, indicators.length);
+
+		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="3"]').exists());
+		assert.equal(wrapper.vm.$data.currentMedia, 0);
+
+		indicators.at(1).trigger('click');
+		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isTrue(wrapper.find('photo-stub[id="2"]').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="3"]').exists());
+		assert.equal(wrapper.vm.$data.currentMedia, 1);
+
+		indicators.at(2).trigger('click');
+		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
+		assert.isTrue(wrapper.find('photo-stub[id="3"]').exists());
+		assert.equal(wrapper.vm.$data.currentMedia, 2);
+
+		indicators.at(0).trigger('click');
+		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
+		assert.isFalse(wrapper.find('photo-stub[id="3"]').exists());
+		assert.equal(wrapper.vm.$data.currentMedia, 0);
+
+	});
 });

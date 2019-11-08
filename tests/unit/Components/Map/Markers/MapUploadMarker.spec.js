@@ -68,7 +68,7 @@ describe('MapUploadMarker.vue', () => {
 		sinon.restore();
 	});
 
-	it('Adds marker to map on creation', () => {
+	it('Adds marker to map on creation', (done) => {
 		const createIconStub = sinon.stub(leaflet, 'divIcon');
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(mapObject);
 		const wrapper = shallowMount(MapUploadMarker, {
@@ -90,8 +90,11 @@ describe('MapUploadMarker.vue', () => {
 		assert.isTrue(parent.methods.addObject.calledWith(mapObject));
 		assert.isTrue(mapObject.on.calledOnce);
 		assert.isTrue(mapObject.on.calledWith('click'));
-		assert.isTrue(divIcon.firstChild.classList.add.calledOnce);
-		assert.isTrue(divIcon.firstChild.classList.add.calledWith('map__marker--queued'));
+		setTimeout(()=> {
+			assert.isTrue(divIcon.firstChild.classList.add.calledOnce);
+			assert.isTrue(divIcon.firstChild.classList.add.calledWith('map__marker--queued'));
+			done();
+		},10);
 	});
 
 	it('Renders instagram marker path', () => {
@@ -128,7 +131,7 @@ describe('MapUploadMarker.vue', () => {
 		assert.isTrue(wrapper.find(`img[src="${file.preview}"]`).exists());
 	});
 
-	it('Renders the object with error status', () => {
+	it('Renders the object with error status', (done) => {
 		sinon.stub(leaflet, 'divIcon');
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 
@@ -143,11 +146,14 @@ describe('MapUploadMarker.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(divIcon.firstChild.classList.add.calledOnce);
-		assert.isTrue(divIcon.firstChild.classList.add.calledWith('map__marker--error'));
+		setTimeout(()=> {
+			assert.isTrue(divIcon.firstChild.classList.add.calledOnce);
+			assert.isTrue(divIcon.firstChild.classList.add.calledWith('map__marker--error'));
+			done();
+		},10);
 	});
 
-	it('Sets marker to upload when it is being worked', async () => {
+	it('Sets marker to upload when it is being worked', (done) => {
 		sinon.stub(leaflet, 'divIcon');
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 
@@ -161,11 +167,12 @@ describe('MapUploadMarker.vue', () => {
 
 		mocks.$store.state.Uploads.workingId = 2;
 
-		await wrapper.vm.$nextTick();
-
-		assert.isTrue(divIcon.firstChild.classList.add.calledTwice);
-		assert.isTrue(divIcon.firstChild.classList.add.firstCall.calledWith('map__marker--queued'));
-		assert.isTrue(divIcon.firstChild.classList.add.secondCall.calledWith('map__marker--uploading'));
+		setTimeout(()=>{
+			assert.isTrue(divIcon.firstChild.classList.add.calledTwice);
+			assert.isTrue(divIcon.firstChild.classList.add.firstCall.calledWith('map__marker--queued'));
+			assert.isTrue(divIcon.firstChild.classList.add.secondCall.calledWith('map__marker--uploading'));
+			done();
+		}, 10)
 	});
 
 	it('Changes marker image when updated', async () => {
