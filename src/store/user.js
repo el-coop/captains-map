@@ -45,7 +45,7 @@ export default {
 					id: user.id,
 					username: user.username,
 					exp: user.exp,
-				}, user.exp);
+				}, user.exp - Date.now());
 				return true;
 			}
 			return false;
