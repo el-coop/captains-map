@@ -15,7 +15,7 @@ export default {
 
 		isLoggedIn({state, dispatch}) {
 			if (state.user) {
-				if (state.user.exp > Date.now()) {
+				if (parseInt(state.user.exp) > Date.now()) {
 					return true;
 				}
 				dispatch('logout');

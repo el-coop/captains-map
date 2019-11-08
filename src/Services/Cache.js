@@ -40,7 +40,7 @@ class Cache {
 				return defaultValue;
 			}
 
-			if (data.expiry && data.expiry < Date.now()) {
+			if (data.expiry && parseInt(data.expiry) < Date.now()) {
 				this.forget(storageName, '' + key);
 				return defaultValue;
 			}
@@ -73,7 +73,7 @@ class Cache {
 	async store(storageName, key, value, expiry = null) {
 		const storage = caches[storageName];
 		if (expiry) {
-			expiry = Date.now() + expiry;
+			expiry = Date.now() + parseInt(expiry);
 		}
 
 		try {
