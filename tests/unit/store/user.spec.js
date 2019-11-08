@@ -22,39 +22,58 @@ describe('User Store', () => {
 		await userStore.actions.init({state});
 
 		assert.deepEqual(state.user, user);
+		assert.isTrue(state.initialized);
 	});
 
-	it('Returns false when no user in state', () => {
-		const state = {user: null};
-		const dispatch = sinon.stub();
-
-		assert.isFalse(userStore.actions.isLoggedIn({state, dispatch}));
-		assert.isFalse(dispatch.calledOnce);
-	});
-
-	it('Returns false when expired user in state', () => {
+	it('Returns false when no user in state', async () => {
 		const state = {
-			user: {
-				exp: 0
-			}
+			user: null,
+			initialized: true
 		};
 		const dispatch = sinon.stub();
 
-		assert.isFalse(userStore.actions.isLoggedIn({state, dispatch}));
+		assert.isFalse(await userStore.actions.isLoggedIn({state, dispatch}));
+		assert.isFalse(dispatch.calledOnce);
+	});
+
+	it('Returns false when expired user in state', async () => {
+		const state = {
+			user: {
+				exp: 0
+			},
+			initialized: true
+		};
+		const dispatch = sinon.stub();
+
+		assert.isFalse(await userStore.actions.isLoggedIn({state, dispatch}));
 		assert.isTrue(dispatch.calledOnce);
 		assert.isTrue(dispatch.calledWith('logout'));
 	});
 
-	it('Returns true when expired user in state', () => {
+	it('Returns true when expired user in state', async () => {
 		const state = {
 			user: {
 				exp: Date.now() + 10000000
-			}
+			},
+			initialized: true
 		};
 		const dispatch = sinon.stub();
 
-		assert.isTrue(userStore.actions.isLoggedIn({state, dispatch}));
+		assert.isTrue(await userStore.actions.isLoggedIn({state, dispatch}));
 		assert.isFalse(dispatch.calledOnce);
+	});
+
+
+	it('Initializes if not initialized', async () => {
+		const state = {
+			user: false,
+			initialized: false
+		};
+		const dispatch = sinon.stub();
+
+		assert.isFalse(await userStore.actions.isLoggedIn({state, dispatch}));
+		assert.isTrue(dispatch.calledOnce);
+		assert.isTrue(dispatch.firstCall.calledWith('init'));
 	});
 
 	it('Calls log out and redirects on logout', async () => {

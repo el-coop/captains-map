@@ -5,15 +5,20 @@ import cache from "@/Services/Cache";
 export default {
 	namespaced: true,
 	state: {
-		user: null
+		user: null,
+		initialized: false
 	},
 	mutations: {},
 	actions: {
 		async init({state}) {
 			state.user = await cache.get('settings', 'user');
+			state.initialized = true;
 		},
 
-		isLoggedIn({state, dispatch}) {
+		async isLoggedIn({state, dispatch}) {
+			if(! state.initialized){
+				await dispatch('init');
+			}
 			if (state.user) {
 				if (parseInt(state.user.exp) > Date.now()) {
 					return true;
