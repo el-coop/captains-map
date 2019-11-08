@@ -1,6 +1,6 @@
 <template>
-	<button class="webpush button is-borderless is-not-rounded" :class="{'is-loading': loading}" @click="toggleFollow">
-		<FontAwesomeIcon icon="rss" class="icon is-small"/>
+	<button class="webpush button" :class="{'is-loading': loading}" @click="toggleFollow">
+		<FontAwesomeIcon icon="rss" class="icon"/>
 		<span v-text="buttonText"/>
 	</button>
 </template>

@@ -22,7 +22,7 @@ describe('CreateMarker/SearchLocationField.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('#location[type=text]').exists());
-		assert.isTrue(wrapper.find('button.is-info').exists());
+		assert.isTrue(wrapper.find('button.is-selected-background').exists());
 		assert.isFalse(wrapper.find('.help.is-danger').exists());
 	});
 
@@ -124,7 +124,7 @@ describe('CreateMarker/SearchLocationField.vue', () => {
 			]
 		});
 
-		wrapper.find('.dropdown-item').trigger('click');
+		wrapper.find('.dropdown__content-item').trigger('click');
 
 		assert.equal(wrapper.emitted().input[0][0], 'street, 1 - city, country');
 	});

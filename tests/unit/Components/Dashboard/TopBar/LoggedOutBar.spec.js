@@ -41,8 +41,8 @@ describe('LoggedOutBar.vue', () => {
 		assert.isTrue(wrapper.find('.top-bar').exists());
 		assert.isTrue(wrapper.find('loginmodal-stub').exists());
 		assert.isTrue(wrapper.find('registermodal-stub').exists());
-		assert.equal(wrapper.findAll('button.is-light.is-outlined').at(0).text(), 'Log In');
-		assert.equal(wrapper.findAll('button.is-light.is-outlined').at(1).text(), 'Register');
+		assert.equal(wrapper.findAll('button').at(0).text(), 'Log In');
+		assert.equal(wrapper.findAll('button').at(1).text(), 'Register');
 	});
 
 	it('Starts login modal when log in clicked', () => {
@@ -55,7 +55,7 @@ describe('LoggedOutBar.vue', () => {
 			loginModal: false
 		});
 
-		wrapper.findAll('.button.is-light.is-outlined').at(0).trigger('click');
+		wrapper.findAll('.button').at(0).trigger('click');
 
 		assert.isTrue(wrapper.vm.$data.loginModal);
 
@@ -71,7 +71,7 @@ describe('LoggedOutBar.vue', () => {
 			registerModal: false
 		});
 
-		wrapper.findAll('.button.is-light.is-outlined').at(1).trigger('click');
+		wrapper.findAll('.button').at(1).trigger('click');
 
 		assert.isTrue(wrapper.vm.$data.registerModal);
 

@@ -1,7 +1,7 @@
 <template>
 	<div :class="{ 'view-marker__instagram' : ! embedCode}">
 		<h4 class="title is-4" v-if="loading">Loading...</h4>
-		<span class="loader" v-if="loading"></span>
+		<div class="is-loading" v-if="loading"></div>
 		<div v-if="embedCode" v-html="embedCode"></div>
 		<h4 class="title is-5" v-if="! loading && ! embedCode">There was an error getting data from Instagram.</h4>
 		<h6 v-if="! loading && ! embedCode" class="subtitle is-6">Please try again later.</h6>

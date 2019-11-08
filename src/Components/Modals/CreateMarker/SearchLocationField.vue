@@ -1,31 +1,28 @@
 <template>
 	<div class="field">
 		<label class="label" for="location">Location</label>
-		<div class="field has-addons dropdown is-hoverable">
-			<div class="control is-expanded">
-				<input type="text" id="location" class="input" v-model="content"
-					   name="location">
-			</div>
-			<div class="dropdown-menu">
-				<div class="dropdown-content" v-if="searched">
+		<div class="field addon-row dropdown">
+			<input type="text" id="location" class="input addon-row__control--left" v-model="content"
+				   name="location">
+			<div class="dropdown__menu">
+				<div class="dropdown__content" v-if="searched">
 					<a v-for="(result, index) in results" :key="index"
-					   class="dropdown-item"
+					   class=" dropdown__content-item"
 					   v-text="result"
 					   @click="content = result">
 					</a>
-					<p class="help is-danger dropdown-item" v-if="! results.length">
+					<p class="help is-danger dropdown__content-item" v-if="! results.length">
 						Could not find location
 					</p>
 				</div>
 			</div>
-			<div class="control">
-				<button class="button is-info" type="button" @click="search" :disabled="searched"
-						:class="{'is-loading': searching}">
-					<span class="icon">
-						<FontAwesomeIcon icon="search-location"/>
-					</span>
-				</button>
-			</div>
+			<button class="button is-selected-background addon-row__control--right" type="button" @click="search"
+					:disabled="searched"
+					:class="{'is-loading': searching}">
+				<span>
+					<FontAwesomeIcon icon="search-location"/>
+				</span>
+			</button>
 
 		</div>
 		<p class="help is-danger" v-if="error">The location is invalid.</p>
@@ -62,12 +59,12 @@
 			}
 		},
 
-		computed:{
-			content:{
-				get(){
+		computed: {
+			content: {
+				get() {
 					return this.value;
 				},
-				set(value){
+				set(value) {
 					this.$emit('input', value);
 				}
 			}

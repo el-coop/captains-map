@@ -1,6 +1,6 @@
 .profile-open {
 	width: 100%;
-	background-color: transparentize(whitesmoke, 0.05);
+	background-color: var(--background-invert);
 	display: flex;
 	align-items: center;
 	height: 100%;
@@ -11,34 +11,28 @@
 		align-items: center;
 		height: 100%;
 		width: 100%;
-		color: invert($text, 100) !important;
-		padding: calc(0.375em - 1px) 5vw;
+		color: var(--text-invert) !important;
+		padding: calc(0.375em - 1px) 0.75em;
+
+		&-img {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 
 		&-text {
 			flex: 1;
 			text-align: left;
 			padding-bottom: 0.1em;
 		}
-
-		&-img {
-			display: flex;
-
-			&-src {
-				max-height: 100%;
-				max-width: 100%;
-				width: auto !important;
-			}
-		}
 	}
 
-	@media (min-width: $tablet) {
+	@include from($tablet) {
 		width: auto;
 		background-color: transparent;
 
 		&__button {
-			border-radius: 4px;
-			color: $text !important;
-			padding: calc(0.375em - 1px) 0.75em;
+			color: var(--text) !important;
 
 			&-text {
 				padding-bottom: 0;
@@ -52,67 +46,83 @@
 .profile {
 	grid-row: profile;
 	overflow: hidden;
-	box-shadow: 5px 5px 20px 10px rgba(0, 0, 0, 0.3);
+	z-index: 20;
+	box-shadow: 5px 5px 20px 10px var(--box-shadow-color);
 	width: 100%;
 	height: 0;
-	transition: height $animation-speed;
+	transition: height var(--animation-speed);
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
 
 	&--open {
 		height: 100%;
 		overflow: auto;
 	}
 
-	&__close {
-		cursor: pointer;
+	@include from($tablet) {
+		flex-direction: row;
 	}
 
-	&__media {
-		padding: 1em;
-		flex-direction: column;
-		align-items: stretch;
+	&__image {
+		display: flex;
+		justify-content: stretch;
+		margin: 0 0 1em 0;
+		padding: 1em 1em 0;
 
-		@media #{$above-tablet} {
-			flex-direction: row;
+		&-field {
+			width: 100%;
 		}
 
-		&-left {
-			margin: 0 0 1em 0;
 
-			@media #{$above-tablet} {
-				margin: 0 1em 0 0;
-			}
-		}
-
-		&-image {
+		&-display {
 			margin: auto;
-
-			&.is-128x128 > img {
-				max-height: 100%;
-				width: auto;
-				margin: auto;
-			}
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 
 
-		&-content {
-			overflow: visible;
-			padding-bottom: 1em;
-
-
-			@media #{$above-tablet} {
-				padding-left: 1em;
-				border-left: $grey-darker dotted 2px;
-			}
-
-
-			&-text {
-				white-space: pre-wrap;
-				word-wrap: break-word;
+		@include from($tablet) {
+			padding: 1em 0 0 1em;
+			margin: 0 1em 0 0;
+			&-display {
+				margin: 0;
 			}
 		}
+	}
 
-		&-textarea.textarea {
-			max-height: unset;
+
+	&__content {
+		overflow: visible;
+		padding: 0 1em 1em;
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		width: 100%;
+
+
+		@include from($tablet) {
+			padding: 1em 3.5em 2em 1em;
+			border-left: var(--background-muted) dotted 2px;
 		}
+
+
+		&-text {
+			white-space: pre-wrap;
+			word-wrap: break-word;
+		}
+	}
+
+	&__close {
+		@extend .modal__close;
+
+		position: absolute;
+		right: 1em;
+		top: 1.25em;
+	}
+
+	&__textarea {
+		flex: 1
 	}
 }

@@ -10,8 +10,10 @@ describe('TheMap.vue', () => {
 
 	let mocks;
 	let mapInitStub;
+	let mapOnStub;
 
 	beforeEach(() => {
+		mapOnStub = sinon.stub(mapService, 'on');
 		mocks = {
 			$store: {
 				state: {
@@ -55,7 +57,6 @@ describe('TheMap.vue', () => {
 	});
 
 	it('Initiates maps and listeners', () => {
-		const mapOnStub = sinon.stub(mapService, 'on');
 		const wrapper = shallowMount(TheMap, {
 			mocks
 		});

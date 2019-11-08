@@ -1,7 +1,6 @@
 import cache from '@/Services/Cache';
-import auth from '@/Services/AuthenticationService';
+import toast from 'izitoast';
 import UploadService from '@/Services/UploadService';
-import ImageService from '@/Services/ImageService';
 import UploadFile from "@/Classes/UploadFile";
 
 const uploads = cache.caches().uploads;
@@ -107,7 +106,7 @@ export default {
 		},
 
 		async uploadError({commit}, marker) {
-			this._vm.$toast.error('Please try again later', 'Upload failed');
+			toast.error({message: 'Please try again later', title: 'Upload failed'});
 			commit('removeFromQueue', marker.uploadTime);
 			commit('pushToErrored', marker);
 			await cache.store('uploads', marker.uploadTime, marker);
@@ -130,8 +129,12 @@ export default {
 			state.workingId = null;
 		},
 
-		uploadOfflineError({dispatch, state}) {
-			if (auth.isLoggedIn()) {
+		async uploadOfflineError({dispatch, state}) {
+			const isLoggedIn = await dispatch('User/isLoggedIn', {}, {
+				root: true
+			});
+
+			if (isLoggedIn) {
 				const offlines = state.errored.filter((marker) => {
 					return marker.error.status === 'offline';
 				});

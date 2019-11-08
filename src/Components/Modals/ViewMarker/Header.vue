@@ -1,18 +1,15 @@
 <template>
-	<div class="card-header-title">
-		<div class="media">
-			<div class="media-left view-marker-header__profile">
-				<figure class="image is-64x64">
-					<img class="view-marker-header__profile-image is-rounded" :src="imageSrc"/>
-				</figure>
-			</div>
-			<div class="media-content">
-				<a @click.stop.prevent="linkClicked"
-				   class="has-text-white is-size-5" v-text="marker.user.username"/>
-				<p class="has-text-weight-normal" v-text="marker.type"/>
-				<p class="has-text-weight-light has-text-grey-lighter is-size-6"
-				   v-text="dateDisplay"/>
-			</div>
+	<div class="card__header-title">
+		<div class="view-marker__profile">
+			<figure class="image view-marker__profile-image">
+				<img class="is-rounded" :src="imageSrc"/>
+			</figure>
+		</div>
+		<div>
+			<a @click.stop.prevent="linkClicked" class="is-size-5" v-text="marker.user.username"/>
+			<p class="has-text-weight-normal" v-text="marker.type"/>
+			<p class="has-text-weight-light has-text-muted is-size-6"
+			   v-text="dateDisplay"/>
 		</div>
 	</div>
 </template>

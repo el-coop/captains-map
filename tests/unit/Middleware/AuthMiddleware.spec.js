@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import auth from '@/Services/AuthenticationService';
 import authMiddleware from '@/Middleware/AuthMiddleware';
+import store from '@/store';
 
 describe('Authentication Middleware', () => {
 
@@ -9,26 +9,24 @@ describe('Authentication Middleware', () => {
 		sinon.restore();
 	});
 
-	it('Allows passage for logged in user',() => {
-		sinon.stub(auth,'isLoggedIn').callsFake(() => {
-			return true;
-		});
+	it('Allows passage for logged in user',async () => {
+		sinon.stub(store,'dispatch').returns(true);
+
 		const nextSpy = sinon.spy();
 
-		authMiddleware.handle({},{}, nextSpy);
+		await authMiddleware.handle({},{}, nextSpy);
 
 		assert.isTrue(nextSpy.calledOnce);
 		assert.isTrue(nextSpy.calledWith());
 	});
 
 
-	it('Sends not logged in user to home',() => {
-		sinon.stub(auth,'isLoggedIn').callsFake(() => {
-			return false;
-		});
+	it('Sends not logged in user to home',async () => {
+		sinon.stub(store,'dispatch').returns(false);
+
 		const nextSpy = sinon.spy();
 
-		authMiddleware.handle({},{}, nextSpy);
+		await authMiddleware.handle({},{}, nextSpy);
 
 		assert.isTrue(nextSpy.calledOnce);
 		assert.isTrue(nextSpy.calledWith('/'));

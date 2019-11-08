@@ -53,7 +53,7 @@ describe('MarkerList.vue', () => {
 		});
 
 		assert.isFalse(wrapper.find('ul').exists());
-		assert.isTrue(wrapper.find('.loader').exists());
+		assert.isTrue(wrapper.find('.is-loading').exists());
 	});
 
 	it('Renders list of markers and hides pagination when no hasNext', () => {

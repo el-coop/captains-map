@@ -1,6 +1,6 @@
 <template>
 	<div class="uploads-list">
-		<button class="button is-light is-outlined is-marginless is-faded has-icon-top uploads-list__button"
+		<button class="button is-faded has-icon-top uploads-list__button"
 				@click="open = !open">
 			<FontAwesomeIcon icon="upload" size="sm"/>
 			<span class="is-size-7" v-text="open ? 'Hide Uploads' : 'Show Uploads'"/>

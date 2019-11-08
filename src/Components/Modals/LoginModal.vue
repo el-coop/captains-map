@@ -1,7 +1,7 @@
 <template>
-	<BaseModal route-name="" :active="active" @update:active="$emit('update:active',$event)"	>
+	<BaseModal route-name="" :active="active" @update:active="$emit('update:active',$event)">
 		<template #header>
-			<p class="card-header-title">Login</p>
+			<p class="card__header-title">Login</p>
 		</template>
 		<template #content>
 			<TextField label="Username"
@@ -14,13 +14,13 @@
 					   v-model="form.password"/>
 		</template>
 		<template #footer>
-			<p class="card-footer-item">
+			<p class="card__footer-item">
 				<span>
 					<a @click="$emit('update:active',false)">Close</a>
 				</span>
 			</p>
-			<p class="card-footer-item">
-				<button class="button is-primary is-fullwidth" @click="login"
+			<p class="card__footer-item">
+				<button class="button is-primary-background is-fullwidth" @click="login"
 						:class="{'is-loading': loading}">
 					Submit
 				</button>

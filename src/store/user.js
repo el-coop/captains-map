@@ -1,27 +1,63 @@
 import $http from '../Services/HttpService';
-import Auth from '../Services/AuthenticationService';
 import router from '@/router';
+import cache from "@/Services/Cache";
 
 export default {
 	namespaced: true,
+	state: {
+		user: null
+	},
 	mutations: {},
 	actions: {
-		async logout() {
-			await $http.get('auth/logout');
-			await Auth.logout();
-			router.push('/');
+		async init({state}) {
+			state.user = await cache.get('settings', 'user');
 		},
-		async login({commit}, form) {
+
+		isLoggedIn({state, dispatch}) {
+			if (state.user) {
+				if (state.user.exp > Date.now()) {
+					return true;
+				}
+				dispatch('logout');
+				return false;
+			} else {
+				return false;
+			}
+		},
+
+
+		async logout({dispatch, state}) {
+			await $http.get('auth/logout');
+			await dispatch('Uploads/purge', {}, {root: true});
+			await cache.forget('settings', 'user');
+			state.user = null;
+			if (router.currentRoute.path !== '/') {
+				await router.push('/');
+			}
+		},
+
+		async login({state}, form) {
 			const response = await $http.post('auth/login', form);
 			if (response.status === 200) {
-				Auth.saveUser(response.data.user);
+				const user = response.data.user;
+				state.user = user;
+				await cache.store('settings', 'user', {
+					id: user.id,
+					username: user.username,
+					exp: user.exp,
+				}, user.exp);
 				return true;
 			}
 			return false;
 		},
 
-		extend({commit}, duration) {
-			Auth.extend(duration);
+		async extend({state}, duration) {
+			state.user.exp = duration;
+			await cache.store('settings', 'user', {
+				id: state.user.id,
+				username: state.user.username,
+				exp: duration,
+			}, duration);
 		}
 	}
 }

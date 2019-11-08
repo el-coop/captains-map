@@ -29,11 +29,7 @@
 
 		computed: {
 			progress() {
-				if (this.className !== 'uploading') {
-					return null;
-				}
-
-				return this.$store.state.Uploads.progress;
+				return this.$store.state.Uploads.progress || 0;
 			},
 			profileImg() {
 				return this.user.path ? `/api${this.user.path}` : globe;

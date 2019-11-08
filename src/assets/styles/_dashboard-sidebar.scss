@@ -1,7 +1,7 @@
 .dashboard__sidebar {
 	grid-row: sidebar;
-	box-shadow: -10px 0px 20px 10px rgba(0, 0, 0, 0.3);
-	height: 2.5 * $gap;
+	box-shadow: var(--box-shadow-left) 20px 10px var(--box-shadow-color);
+	height: calc(2.5 * var(--gap));
 	width: 100vw;
 	display: flex;
 	flex-direction: column-reverse;
@@ -9,11 +9,11 @@
 	overflow-x: hidden;
 	overflow-y: hidden;
 	margin-top: auto;
-	transition: height $animation-speed;
+	transition: height var(--animation-speed);
 
-	@media #{$above-tablet} {
+	@include from($tablet) {
 		grid-column: sidebar;
-		height: calc(100vh - #{$gap / 1.5}) !important;
+		height: calc(100vh - var(--gap) / 1.5) !important;
 		flex-direction: column;
 		width: 20vw;
 		max-width: 400px;
@@ -21,15 +21,15 @@
 }
 
 .profile--open + .dashboard__sidebar {
-	height: $gap;
+	height: var(--gap);
 }
 
 .copyright {
 	filter: drop-shadow(-1px 0 2px rgba(0, 0, 0, 0.8));
-	background-color: darken($background, 10%);
+	background-color: var(--background-accent);
 	padding: 1.5em;
 	margin-left: 0.5em;
-	font-size: $size-7;
+	font-size: var(--size-7);
 	max-height: 100%;
 	overflow-x: visible;
 	min-width: 300px;
@@ -46,19 +46,19 @@
 
 		background: linear-gradient(
 						45deg, transparent 33.333%,
-						darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+						var(--background-accent) 33.333%, var(--background-accent) 66.667%,
 						transparent 66.667%
 		),
 		linear-gradient(
 						-45deg, transparent 33.333%,
-						darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+						var(--background-accent) 33.333%, var(--background-accent) 66.667%,
 						transparent 66.667%
 		);
 		background-size: 40px 20px;
 	}
 
-	@media #{$above-tablet} {
-		filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+	@include from($tablet) {
+		filter: drop-shadow(0 1px 2px var(--box-shadow-color));
 		margin-top: auto;
 		margin-left: 0;
 		min-width: 0;
@@ -72,12 +72,12 @@
 
 			background: linear-gradient(
 							45deg, transparent 33.333%,
-							darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+							var(--background-accent) 33.333%, var(--background-accent) 66.667%,
 							transparent 66.667%
 			),
 			linear-gradient(
 							-45deg, transparent 33.333%,
-							darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+							var(--background-accent) 33.333%, var(--background-accent) 66.667%,
 							transparent 66.667%
 			);
 			background-size: 20px 40px;
@@ -92,7 +92,7 @@
 	overflow-y: hidden;
 	overflow-x: visible;
 
-	@media #{$above-tablet} {
+	@include from($tablet) {
 		flex-direction: column;
 		overflow-y: visible;
 		overflow-x: hidden;
@@ -113,7 +113,7 @@
 		max-width: 200px;
 	}
 
-	@media #{$above-tablet} {
+	@include from($tablet) {
 		flex-direction: column;
 		overflow-y: visible;
 		height: auto;
@@ -127,36 +127,34 @@
 	}
 
 	&__loader {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		margin: auto;
+		position: relative;
 		height: 100%;
-		@media #{$above-tablet} {
+		@include from($tablet) {
 			align-items: start;
-			margin: 10px;
+			margin: 20px;
 			width: auto;
 		}
 
 	}
 
 	&__button {
+		position: relative;
 		height: 100%;
-		@media #{$above-tablet} {
+		@include from($tablet) {
 			width: 100%;
 			height: 50px;
 		}
 
 		&--prev {
 			border-left: transparent;
-			@media #{$above-tablet} {
+			@include from($tablet) {
 				height: 45px;
 			}
 		}
 
 		&--next {
 			border-right: transparent;
-			@media #{$above-tablet} {
+			@include from($tablet) {
 				top: 10px;
 			}
 		}
@@ -165,13 +163,12 @@
 
 .marker-entry__card {
 	cursor: pointer;
-	box-shadow: $card-shadow;
-	border-radius: $radius-large;
+	box-shadow: 0 2px 3px var(--box-shadow-color-light), 0 0 0 1px var(--box-shadow-color-light);
+	border-radius: var(--radius-large);
 	height: 100%;
 	position: relative;
-	border: 0 solid transparent;
 	overflow: hidden;
-	@media #{$above-tablet} {
+	@include from($tablet) {
 		display: flex;
 		height: 13vh;
 	}
@@ -192,14 +189,14 @@
 	&.error {
 		&:after {
 			content: 'ERROR';
-			background-color: transparentize($red, 0.35);
+			background-color: var(--error-color);
 		}
 	}
 
 	&.queued {
 		&:after {
 			content: 'QUEUE';
-			background-color: transparentize($black, 0.35);
+			background-color: var(--queue-color);
 		}
 	}
 
@@ -219,7 +216,7 @@
 		height: 100%;
 		object-fit: cover;
 		object-position: center center;
-		@media #{$above-tablet} {
+		@include from($tablet) {
 			max-width: 50%;
 		}
 	}
@@ -232,10 +229,10 @@
 		right: 0;
 		z-index: 2;
 		padding: 0.7em;
-		background: linear-gradient(to bottom, rgba(0, 0, 0, 0), black);
-		font-size: $size-7;
+		background: linear-gradient(to bottom, transparent, black);
+		font-size: var(--size-7);
 		line-height: 1;
-		@media #{$above-tablet} {
+		@include from($tablet) {
 			max-width: 50%;
 		}
 	}
@@ -250,15 +247,15 @@
 		text-align: center;
 		font-size: 1em;
 		opacity: 0.75;
-		@media #{$above-tablet} {
+		@include from($tablet) {
 			right: calc(50% + 4px);
 		}
 	}
 
 	&-text {
-		font-size: $size-6;
+		font-size: var(--size-6);
 		display: none;
-		@media #{$above-tablet} {
+		@include from($tablet) {
 			display: block;
 			width: 50%;
 		}
@@ -269,10 +266,10 @@
 		display: flex;
 		align-items: center;
 		height: 24px;
-		background: linear-gradient(to top, rgba(0, 0, 0, 0), darken($background, 1.5%));
+		background: linear-gradient(to top, transparent, var(--background-accent));
 
 		&-img {
-			border-radius: $radius-rounded;
+			border-radius: var(--radius-rounded);
 			max-height: 100%;
 			max-width: 100%;
 			margin: 5%;
@@ -285,29 +282,22 @@
 	}
 
 	&:hover {
-		border: 1px solid $grey-light;
+		border: 1px solid;
 	}
 
-	&--Plan:hover {
-		border: 1px solid $cyan;
+	@each $status, $color in $marker-type-colors {
+		&--#{$status}:hover {
+			border-color: var(--#{$status}-color);
+		}
 	}
-
-	&--Visited:hover {
-		border: 1px solid $turquoise;
-	}
-
-	&--Suggestion:hover {
-		border: 1px solid $red;
-	}
-
 }
 
 
 .uploads-list {
 	height: 100%;
 	display: flex;
-	filter: drop-shadow(1px 0 2px rgba(0, 0, 0, 0.8));
-	background-color: darken($background, 10%);
+	filter: drop-shadow(1px 0 2px var(--box-shadow-color));
+	background-color: var(--background-accent);
 	padding-right: 0.5em;
 	margin-right: 0.5em;
 
@@ -323,18 +313,18 @@
 		background-position: right !important;
 		background: linear-gradient(
 						225deg, transparent 33.333%,
-						darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+						var(--background-accent) 33.333%, var(--background-accent) 66.667%,
 						transparent 66.667%
 		),
 		linear-gradient(
 						135deg, transparent 33.333%,
-						darken($background, 10%) 33.333%, darken($background, 10%) 66.667%,
+						var(--background-accent) 33.333%, var(--background-accent) 66.667%,
 						transparent 66.667%
 		);
 		background-size: 40px 20px;
 	}
 
-	@media #{$above-tablet} {
+	@include from($tablet) {
 		background-color: transparent;
 		height: auto;
 		flex-direction: column;
@@ -349,7 +339,7 @@
 		width: 100px;
 		height: 100%;
 
-		@media #{$above-tablet} {
+		@include from($tablet) {
 			height: auto;
 			width: 100%;
 		}

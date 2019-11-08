@@ -8,12 +8,14 @@ import sinon from 'sinon';
 describe('MarkerBoardersFilter.vue', () => {
 
 	let $store;
+	let mapOnStub;
 
 	const stubs = {
 		FontAwesomeIcon: true
 	};
 
 	beforeEach(() => {
+		mapOnStub = sinon.stub(map,'on');
 		$store = {
 			commit: sinon.spy(),
 			dispatch: sinon.spy(),
@@ -57,7 +59,6 @@ describe('MarkerBoardersFilter.vue', () => {
 	});
 
 	it('Listens for map move end', () => {
-		const mapOnStub = sinon.stub(map, 'on');
 		shallowMount(MarkerBoardersFilter, {
 			stubs
 		});

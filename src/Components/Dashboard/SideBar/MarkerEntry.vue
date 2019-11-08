@@ -1,6 +1,5 @@
 <template>
 	<div class="marker-entry__card" :class="className" @click="showMarker" :style="uploadingStyle || ''">
-
 		<img :src="src" :alt="imageAlt" class="marker-entry__card-image">
 		<div class="marker-entry__card-tags">
 			<template v-if="marker.location">
@@ -18,11 +17,9 @@
 			</div>
 			<p class="marker-entry__card-content" v-text="description"/>
 		</div>
-		<progress v-if="className === 'uploading' && progress" class="progress marker-entry__card-progress is-dark"
+		<progress v-if="className === 'uploading'" class="progress marker-entry__card-progress is-dark"
 				  :value="progress" max="100"
 				  v-text="`${progress}%`"/>
-		<progress v-if="className === 'uploading' && !progress" class="progress marker-entry__card-progress is-dark"
-				  max="100"/>
 	</div>
 </template>
 

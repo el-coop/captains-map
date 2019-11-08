@@ -1,17 +1,84 @@
-.is-flex-column {
-	display: flex;
-	flex-direction: column;
+.is-loading {
+
+	&:not(.no-loading-overlay):before {
+		position: absolute;
+		content: "";
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		background-color: var(--background);
+		opacity: 0.6;
+		z-index: 20;
+	}
+
+	color: transparent !important;
+	pointer-events: none;
+	position: relative;
+
+	&:after {
+		animation: spinAround 500ms infinite linear;
+		border: 2px solid var(--loader-color);
+		border-radius: var(--radius-rounded);
+		border-right-color: transparent;
+		border-top-color: transparent;
+
+		content: "";
+		display: block;
+		position: absolute;
+
+		height: 1em;
+		width: 1em;
+		top: calc(50% - 0.5em);
+		left: calc(50% - 0.5em);
+		z-index: 40;
+	}
 }
 
-.has-items-aligned-center {
-	align-items: center;
+
+.is-hidden-mobile {
+	@include mobile() {
+		display: none !important;
+	}
 }
 
-.is-flex-1 {
-	flex: 1;
+.is-hidden-tablet {
+	@include tablet() {
+		display: none !important;
+	}
 }
 
-.h-100 {
-	height: 100%;
+.is-hidden-touch {
+	@include touch() {
+		display: none !important;
+	}
 }
 
+
+@each $weight in ('light', 'normal', 'semibold') {
+	.has-text-weight-#{$weight} {
+		font-weight: var(--weight-#{$weight});
+	}
+}
+
+@each $name, $color in $status-colors {
+	.is-#{$name} {
+		color: var(--#{$name}-color) !important;
+	}
+}
+
+@for $i from 1 through 7 {
+	.is-size-#{$i} {
+		font-size: var(--size-#{$i});
+	}
+}
+
+.is-size-7-tablet {
+	@include from($tablet) {
+		font-size: var(--size-7);
+	}
+}
+
+.has-text-muted {
+	color: var(--text-muted);
+}

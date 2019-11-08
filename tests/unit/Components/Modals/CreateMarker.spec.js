@@ -192,7 +192,7 @@ describe('CreateMarker.vue', () => {
 			modal: true,
 		});
 
-		wrapper.find('.card-footer-item a').trigger('click');
+		wrapper.find('.card__footer-item a').trigger('click');
 
 		assert.isFalse(wrapper.vm.$data.modal);
 	});
@@ -264,7 +264,7 @@ describe('CreateMarker.vue', () => {
 			marker
 		});
 
-		assert.isTrue(wrapper.find('button.is-danger').exists());
+		assert.isTrue(wrapper.find('button.is-danger-background').exists());
 	});
 
 	it('Cancels marker upload', async () => {
@@ -279,7 +279,7 @@ describe('CreateMarker.vue', () => {
 		});
 
 
-		wrapper.find('button.is-danger').trigger('click');
+		wrapper.find('button.is-danger-background').trigger('click');
 
 		await wrapper.vm.$nextTick();
 

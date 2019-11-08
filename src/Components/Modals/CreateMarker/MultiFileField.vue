@@ -1,6 +1,6 @@
 <template>
 	<div class="field">
-		<label class="dropzone" :class="{'is-flex-column': ! Object.keys(value).length}">
+		<label class="dropzone" :class="{'dropzone--empty': ! Object.keys(value).length}">
 			<input class="dropzone__input" type="file" :name="name" @change="imageAdded" :multiple="limit > 1"
 				   accept="image/*">
 			<template v-if="Object.keys(value).length">
@@ -11,7 +11,7 @@
 						<span v-text="file.name"/>
 					</div>
 				</div>
-				<div class="dropzone__preview has-text-centered" v-if="Object.keys(value).length < this.limit">
+				<div class="dropzone__preview" v-if="Object.keys(value).length < this.limit">
 					<span class="dropzone__icon">
 						<FontAwesomeIcon icon="upload"/>
 					</span>
@@ -33,7 +33,7 @@
 				<span class="dropzone__icon">
 					<FontAwesomeIcon icon="upload"/>
 				</span>
-				<span class="has-text-centered">
+				<span>
 					Add images<br>
 					<span v-text="`Maximum ${this.limit}`"/>
 				</span>

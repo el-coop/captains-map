@@ -71,7 +71,7 @@ describe('BaseModal.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('.modal').exists());
-		assert.isTrue(wrapper.find('.modal-content').exists());
+		assert.isTrue(wrapper.find('.modal__content').exists());
 	});
 
 	it('Emits close when closes', () => {

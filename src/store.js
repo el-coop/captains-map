@@ -19,6 +19,8 @@ export const actions = {
 	},
 
 	async initSettings({dispatch}) {
+		dispatch('User/init');
+
 		if (await cache.get('settings', 'userMarker', false)) {
 			dispatch('Markers/toggleUserMarker');
 		}

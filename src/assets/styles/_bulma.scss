@@ -1,21 +1,15 @@
-@import "~bulma/sass/utilities/_all";
-@import "~bulma/sass/base/_all";
-//@import "~bulma/sass/elements/_all";
-@import "~bulma/sass/elements/button";
-@import "~bulma/sass/elements/content";
-@import "~bulma/sass/elements/icon";
-@import "~bulma/sass/elements/image";
-@import "~bulma/sass/elements/title";
-@import "~bulma/sass/elements/other";
-@import "~bulma/sass/elements/progress";
-@import "~bulma/sass/form/all";
-//@import "~bulma/sass/components/_all";
-@import "~bulma/sass/components/modal";
-@import "~bulma/sass/components/card";
-@import "~bulma/sass/components/dropdown";
-@import "~bulma/sass/components/media";
-@import "~bulma/sass/components/tabs";
+@import "~bulma/sass/base/minireset.sass";
+@import "bulma/button";
+@import "bulma/icon";
+@import "bulma/image";
+@import "bulma/title";
+@import "bulma/progress";
+@import "bulma/field";
+@import "bulma/text";
+@import "bulma/select";
+@import "bulma/modal";
+@import "bulma/card";
+@import "bulma/dropwdown";
+@import "bulma/tabs";
 
-//@import "~bulma/sass/grid/_all";
-//@import "~bulma/sass/layout/_all";
 

@@ -1,25 +1,18 @@
 <template>
-	<div class="tabs is-toggle is-toggle-rounded is-fullwidth">
+	<div class="tabs">
 		<input type="hidden" name="media[type]" v-model.lazy="type"/>
-		<ul>
-			<li :class="{ 'is-active': type === 'image'}">
-				<a @click="type = 'image'">
-					<span class="icon is-small">
-						<FontAwesomeIcon icon="file-image"/>
-					</span>
-					<span>Upload files</span>
-				</a>
-
-			</li>
-			<li :class="{ 'is-active': type === 'instagram'}">
-				<a @click="type = 'instagram'">
-					<span class="icon">
-						<FontAwesomeIcon icon="camera-retro"/>
-					</span>
-					<span>Instagram</span>
-				</a>
-			</li>
-		</ul>
+		<a class="tabs__button" :class="{ 'is-active': type === 'image'}" @click="type = 'image'">
+				<span class="tabs__button-icon">
+					<FontAwesomeIcon icon="file-image"/>
+				</span>
+			<span>Upload files</span>
+		</a>
+		<a class="tabs__button" :class="{ 'is-active': type === 'instagram'}" @click="type = 'instagram'">
+				<span class="tabs__button-icon">
+					<FontAwesomeIcon icon="camera-retro"/>
+				</span>
+			<span>Instagram</span>
+		</a>
 	</div>
 </template>
 

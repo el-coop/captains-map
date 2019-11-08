@@ -1,6 +1,13 @@
 .four04-wrapper {
 	position: relative;
 
+	&__title {
+		text-align: center;
+		margin-bottom: 1.5em;
+		font-weight: var(--weight-semibold);
+		font-size: var(--size-5);
+	}
+
 	&__cover {
 		position: absolute;
 		height: 100%;

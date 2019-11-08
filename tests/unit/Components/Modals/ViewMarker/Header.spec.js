@@ -31,8 +31,8 @@ describe('ViewMarker/Header.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.find('.media-left').exists());
-		assert.isTrue(wrapper.find('.media-content').exists());
+		assert.isTrue(wrapper.find('.view-marker__profile').exists());
+		assert.equal('test',wrapper.find('a.is-size-5').text());
 	});
 
 

@@ -1,14 +1,16 @@
 <template>
 	<div class="dashboard" :class="{'dashboard--with-profile': hasUsername}">
-		<div class="dashboard__header dashboard__control dashboard__control--dark">
-			<LoggedInBar v-if="loggedIn"/>
+		<div class="dashboard__header dashboard__control dashboard__control--accent">
+			<LoggedInBar v-if="$store.state.User.user"/>
 			<LoggedOutBar v-else/>
 		</div>
 
 		<div class="dashboard__body">
-			<Profile v-if="hasUsername"/>
-			<div class="dashboard__control dashboard__sidebar"
-				 :class="{'dashboard__sidebar--filters': showFilters}">
+			<template v-if="hasUsername">
+				<ProfileEdit v-if="profileEdit"/>
+				<ProfileDisplay v-else/>
+			</template>
+			<div class="dashboard__control dashboard__sidebar">
 				<MarkerBordersFilter/>
 				<MarkerList>
 					<div class="copyright">
@@ -31,14 +33,17 @@
 	import Profile from "@/Components/Dashboard/Profile";
 	import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
 	import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar';
-	import auth from '@/Services/AuthenticationService';
 	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter";
+	import ProfileEdit from "@/Components/Dashboard/Profile/ProfileEdit";
+	import ProfileDisplay from "@/Components/Dashboard/Profile/ProfileDisplay";
 
 	export default {
 		name: "TheDashboard",
 
 
 		components: {
+			ProfileDisplay,
+			ProfileEdit,
 			MarkerBordersFilter,
 			Profile,
 			ViewMarker,
@@ -52,13 +57,18 @@
 			return {
 				selectedMarker: null,
 				mountModal: false,
-				showFilters: false
 			}
 		},
 
 		computed: {
-			loggedIn() {
-				return auth.isLoggedIn();
+			profileEdit() {
+				const user = this.$store.state.User.user;
+				const profileUser = this.$store.state.Profile.user;
+
+				if (!user || !profileUser) {
+					return false;
+				}
+				return user.username === profileUser.username;
 			},
 
 			hasUsername() {

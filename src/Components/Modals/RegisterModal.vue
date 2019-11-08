@@ -1,7 +1,7 @@
 <template>
 	<BaseModal route-name="" :active="active" @update:active="$emit('update:active',$event)">
 		<template #header>
-			<p class="card-header-title">Register</p>
+			<p class="card__header-title">Register</p>
 		</template>
 		<template #content>
 			<p class="title">
@@ -18,12 +18,12 @@
 			</p>
 		</template>
 		<template #footer>
-			<p class="card-footer-item">
+			<p class="card__footer-item">
                     <span>
                         <a @click="$emit('update:active',false)">Close</a>
                     </span>
 			</p>
-			<p class="card-footer-item">
+			<p class="card__footer-item">
                     <span>
                         <a href="https://elcoop.io/contact" target="_blank">Contact Us</a>
                     </span>

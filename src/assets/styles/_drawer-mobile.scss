@@ -3,11 +3,11 @@
 	top: 0;
 	left: 0;
 	height: 100%;
-	max-height: $gap/1.5;
+	max-height: calc(var(--gap) / 1.5);
 	width: 100%;
 	z-index: 39;
 	transform: translateX(100%);
-	background-color: transparentize(whitesmoke, 0.05);
+	background-color: var(--background-invert);
 	transition: transform 0.3s;
 	display: flex;
 
@@ -19,7 +19,7 @@
 		}
 	}
 
-	@media (min-width: $tablet) {
+	@include from($tablet){
 		transform: none;
 		position: static;
 		width: auto;

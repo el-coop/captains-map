@@ -1,10 +1,11 @@
 <template>
 	<div class="top-bar">
 		<div class="top-bar__left">
-			<ProfileOpen v-if="hasUsername" class="top-bar__profile"/>
-			<figure class="image is-32x32 is-hidden-mobile" v-else>
+			<ProfileOpen v-if="hasUsername"/>
+			<figure v-else class="image is-32x32 is-hidden-mobile">
 				<picture>
-					<source :srcset="'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='" media="(max-width: 768px)">
+					<source :srcset="'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='"
+							media="(max-width: 768px)">
 					<img class="is-rounded" :src="logo">
 				</picture>
 			</figure>
