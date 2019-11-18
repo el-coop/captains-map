@@ -13,7 +13,7 @@
 			<p class="content">
 				This is currently still under construction, but we would love to discuss early access or other
 				involvement with the project. You can use the contact form <a
-					href="https://elcoop.io/contact" target="_blank">here</a> and we will answer as soon as
+					href="https://elcoop.io/contact" target="_blank" rel="noreferrer">here</a> and we will answer as soon as
 				possible.
 			</p>
 		</template>
@@ -25,7 +25,7 @@
 			</p>
 			<p class="card__footer-item">
                     <span>
-                        <a href="https://elcoop.io/contact" target="_blank">Contact Us</a>
+                        <a href="https://elcoop.io/contact" target="_blank" rel="noreferrer">Contact Us</a>
                     </span>
 			</p>
 		</template>

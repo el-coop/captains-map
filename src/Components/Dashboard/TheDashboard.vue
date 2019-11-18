@@ -15,9 +15,9 @@
 				<MarkerList>
 					<div class="copyright">
 						Map data available thanks to © OpenStreetMap contributors.<br>
-						© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> | © <a
-							href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> | <a
-							href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a>
+						© <a href='https://www.mapbox.com/about/maps/'  target="_blank" rel="noreferrer">Mapbox</a> | © <a
+							href='http://www.openstreetmap.org/copyright'  target="_blank" rel="noreferrer">OpenStreetMap</a> | <a
+							href='https://www.mapbox.com/map-feedback/' target="_blank" rel="noreferrer">Improve this map</a>
 					</div>
 				</MarkerList>
 			</div>
