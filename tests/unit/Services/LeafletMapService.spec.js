@@ -293,11 +293,23 @@ describe('Map Service', () => {
 			'test',
 			'test1'
 		];
-		sinon.stub(Http, 'get').returns({
+		const locateStub = sinon.stub(Http, 'get').returns({
 			data
 		});
 
-		const response = await LeafletMapService.locate('test');
+		const response = await LeafletMapService.locate('test', {
+			_southWest: {lat: -1, lng: -1},
+			_northEast: {lat: 1, lng: 1}
+		});
+
+		assert.isTrue(locateStub.calledWith('geocode/test', {
+			params: {
+				south: -1,
+				west: -1,
+				north: 1,
+				east: 1,
+			}
+		}));
 		assert.deepEqual(response, data);
 	});
 

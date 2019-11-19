@@ -146,10 +146,21 @@ export class LeafletMapService {
 		}
 	}
 
-	static async locate(address) {
+	getCurrentLocation() {
+		return this.map.getBounds();
+	}
+
+	static async locate(address, currentLocation) {
 		let response;
 		try {
-			response = await http.get(`geocode/${address}`);
+			response = await http.get(`geocode/${address}`, {
+				params: {
+					south: currentLocation._southWest.lat,
+					west: currentLocation._southWest.lng,
+					north: currentLocation._northEast.lat,
+					east: currentLocation._northEast.lng,
+				}
+			});
 		} catch (error) {
 
 		}

@@ -64,6 +64,10 @@ describe('SearchBar.vue', () => {
 	});
 
 	it('Searches for query value location', async () => {
+		sinon.stub(Map, 'getCurrentLocation').returns({
+			_southWest: {lat: -1, lng: -1},
+			_northEast: {lat: 1, lng: 1}
+		});
 		const geocoderStub = sinon.stub(LeafletMapService, 'locate').callsFake(() => {
 			return ['a', 'b'];
 		});
@@ -87,7 +91,10 @@ describe('SearchBar.vue', () => {
 		assert.isFalse(wrapper.vm.$data.searching);
 		assert.isTrue(wrapper.vm.$data.searched);
 		assert.isTrue(geocoderStub.calledOnce);
-		assert.isTrue(geocoderStub.calledWith('test'));
+		assert.isTrue(geocoderStub.calledWith('test', {
+			_southWest: {lat: -1, lng: -1},
+			_northEast: {lat: 1, lng: 1}
+		}));
 		assert.isFalse(searchUserStub.called);
 		assert.deepEqual(wrapper.vm.results, ['a', 'b']);
 	});

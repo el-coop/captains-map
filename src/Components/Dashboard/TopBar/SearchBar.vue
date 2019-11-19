@@ -25,7 +25,7 @@
 				<FontAwesomeIcon icon="search"/>
 			</button>
 
-			<div class="dropdown__menu search-bar__results">
+			<div class="dropdown__menu search-bar__results" v-if="!searching">
 				<div class="dropdown__content" v-if="results.length || searched">
 					<a v-for="(result, index) in results" :key="index" v-text="formatResult(result)"
 					   class="dropdown__content-item"
@@ -92,7 +92,8 @@
 			},
 
 			async searchLocation() {
-				return await LeafletMapService.locate(this.query);
+				const currentLocation = Map.getCurrentLocation();
+				return await LeafletMapService.locate(this.query, currentLocation);
 			},
 
 			async searchUsers() {
