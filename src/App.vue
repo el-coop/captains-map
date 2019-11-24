@@ -20,6 +20,16 @@
 		created() {
 			window.addEventListener('online', this.onlineEvent);
 		},
+		mounted() {
+			this.$toast.error('test', 'best', {
+				timeout: 100000,
+				buttons: [
+					['<button>Update</button>', () => {
+
+					}],
+				]
+			});
+		},
 		beforeDestroy() {
 			window.removeEventListener('online', this.onlineEvent);
 

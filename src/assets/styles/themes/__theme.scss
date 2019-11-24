@@ -32,6 +32,13 @@ html {
 	--progress-background: #{$grey-lightest};
 	--progress-color: #{$dark};
 
+	// toasts
+	--toast-danger: rgba(255, 175, 180, 0.9);
+	--toast-warning: rgba(255, 207, 165, 0.9);
+	--toast-question: rgba(255, 249, 178, 0.9);
+	--toast-info: rgba(157, 222, 255, 0.9);
+	--toast-success: rgba(166, 239, 184, 0.9);
+
 	//
 	//--tabs-link-hover-color: #{$white-bis};
 	//--dropdown-item-hover-background-color: whitesmoke;

@@ -71,7 +71,7 @@
 
 	&__icon-wrapper {
 		height: 35px;
-		@media #{$above-phone} {
+		@include from($mobile) {
 			height: 40px;
 		}
 		background-color: var(--background);
@@ -159,7 +159,7 @@
 .map--zoom-medium {
 	.map__icon-wrapper {
 		height: 25px;
-		@media #{$above-phone} {
+		@include from($mobile) {
 			height: 30px;
 		}
 	}
@@ -174,7 +174,7 @@
 .map--zoom-close {
 	.map__icon-wrapper {
 		height: 45px;
-		@media #{$above-phone} {
+		@include from($mobile) {
 			height: 50px;
 		}
 	}
