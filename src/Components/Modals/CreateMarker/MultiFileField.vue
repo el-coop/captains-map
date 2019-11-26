@@ -1,6 +1,6 @@
 <template>
 	<div class="field">
-		<label class="dropzone" :class="{'dropzone--empty': ! Object.keys(value).length}">
+		<label class="dropzone" :class="{'dropzone--empty': ! Object.keys(value).length, 'is-loading': loading}">
 			<input class="dropzone__input" type="file" :name="name" @change="imageAdded" :multiple="limit > 1"
 				   accept="image/*">
 			<template v-if="Object.keys(value).length">
@@ -75,10 +75,17 @@
 
 		},
 
+		data() {
+			return {
+				loading: false
+			}
+		},
+
 		methods: {
 			async imageAdded(event) {
 				const filesObject = this.value;
 				const files = event.target.files;
+				this.loading = true;
 				for (let i = 0; i < files.length && Object.values(filesObject).length < this.limit; i++) {
 					const file = files[i];
 					if (file.type.split('/')[0] === 'image') {
@@ -86,6 +93,7 @@
 					}
 				}
 				this.$emit('input', {...filesObject});
+				this.loading = false;
 			},
 
 			removeImage(key) {
