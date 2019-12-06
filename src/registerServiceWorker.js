@@ -27,7 +27,12 @@ if (process.env.NODE_ENV === 'production') {
 				position: 'bottomCenter',
 				buttons: [
 					['<button>Update</button>', () => {
-						registration.waiting.postMessage({action: 'skipWaiting'});
+						try {
+
+							registration.waiting.postMessage({action: 'skipWaiting'});
+						} catch (error) {
+							
+						}
 					}],
 				]
 			});
