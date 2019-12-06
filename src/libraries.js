@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { installer as HttpService } from '@/Services/HttpService';
+import http, { installer as HttpService } from '@/Services/HttpService';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
 	faUpload,
@@ -29,6 +29,7 @@ import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import Meta from 'vue-meta';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueIziToast from 'vue-izitoast';
+import errorLogger from '@/Services/ErrorLogger';
 
 library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faSignOutAlt, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia, faUserAlt, faChevronDown, faSignInAlt, faExternalLinkSquareAlt, faSearchLocation, faShareAlt, faImages, faSlidersH, faRss);
 
@@ -41,3 +42,14 @@ Vue.use(VueIziToast, {
 });
 Vue.config.productionTip = false;
 Vue.prototype.$bus = new Vue();
+
+
+window.onerror = (message, source, lineno, colno, error) => {
+	console.log('window error', error);
+	errorLogger.handle(error);
+};
+
+Vue.config.errorHandler = (error, vm) => {
+	console.log('vue error', error, vm);
+	errorLogger.handle(error, vm);
+};
