@@ -22,11 +22,9 @@ describe('ErrorLogger.js', () => {
 			$options: {
 				propsData: {
 					hata: 'lata'
-				}
+				},
+				_componentTag: 'tag'
 			},
-			_data: {
-				rata: 'gata'
-			}
 		});
 
 		assert.isTrue(httpStub.calledOnce);
@@ -42,9 +40,7 @@ describe('ErrorLogger.js', () => {
 				props: {
 					hata: 'lata'
 				},
-				data: {
-					rata: 'gata'
-				}
+				tag: 'tag'
 			}
 
 		}));

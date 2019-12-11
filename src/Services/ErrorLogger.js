@@ -7,12 +7,12 @@ class ErrorsLogger {
 			userAgent: navigator.userAgent || '',
 			error: {
 				name: error.name,
+				message: error.message,
 				stack: error.stack,
-				message: error.message
 			},
 			vm: {
+				tag: vm.$options ? vm.$options._componentTag : '',
 				props: vm.$options ? vm.$options.propsData : {},
-				data: vm._data || {}
 			}
 		});
 

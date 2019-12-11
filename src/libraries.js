@@ -45,11 +45,9 @@ Vue.prototype.$bus = new Vue();
 
 
 window.onerror = (message, source, lineno, colno, error) => {
-	console.log('window error', error);
 	errorLogger.handle(error);
 };
 
 Vue.config.errorHandler = (error, vm) => {
-	console.log('vue error', error, vm);
 	errorLogger.handle(error, vm);
 };

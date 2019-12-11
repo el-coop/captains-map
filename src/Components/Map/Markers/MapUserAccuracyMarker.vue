@@ -1,5 +1,5 @@
 <template>
-	<div class="map__user-marker-accuracy"></div>
+	<div class="map__user-marker-accuracy"/>
 </template>
 
 <script>
@@ -26,7 +26,7 @@
 
 		data() {
 			return {
-				iconSize: this.accuracy / 2
+				iconSize: Math.min(750, this.accuracy / 2)
 			}
 		},
 
@@ -38,8 +38,10 @@
 				this.setLatLng(this.lat, this.lng);
 			},
 			accuracy() {
+				console.log('change');
 				let icon = this.mapObject.options.icon;
-				icon.options.iconSize = [this.accuracy / 2, this.accuracy / 2];
+				const size = Math.min(750, this.accuracy / 2);
+				icon.options.iconSize = [size, size];
 				this.setIcon(icon);
 			},
 		},
