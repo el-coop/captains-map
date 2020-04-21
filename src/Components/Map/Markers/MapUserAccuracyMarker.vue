@@ -38,7 +38,6 @@
 				this.setLatLng(this.lat, this.lng);
 			},
 			accuracy() {
-				console.log('change');
 				let icon = this.mapObject.options.icon;
 				const size = Math.min(750, this.accuracy / 2);
 				icon.options.iconSize = [size, size];

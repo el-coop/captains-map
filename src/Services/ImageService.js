@@ -126,7 +126,6 @@ function imageToCanvas(src, orientation) {
 			// draw image
 			ctx.drawImage(image, 0, 0);
 			canvas.toBlob((blob) => {
-				console.log('function', blob);
 				resolve(blob);
 			}, 'image/jpeg');
 		});
