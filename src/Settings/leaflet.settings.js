@@ -1,8 +1,12 @@
 const mapbox_key = process.env.VUE_APP_MAPBOX_TOKEN;
 
 export const mapboxLayer = {
-	url: `https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=${mapbox_key}`,
-	options: {}
+	url: `https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${mapbox_key}`,
+	options: {
+		tileSize: 512,
+		zoomOffset: -1,
+		id: 'mapbox/streets-v11',
+	}
 };
 
 export const openstreetmapLayer = {
