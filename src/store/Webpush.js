@@ -6,7 +6,7 @@ async function subscribe(registration) {
 		if (response.status !== 200) {
 			return false;
 		}
-		const vapidKey = urlBase64ToUint8Array(response.data);
+		const vapidKey = urlBase64ToUint8Array(response.data.key);
 		return await registration.pushManager.subscribe({
 			userVisibleOnly: true,
 			applicationServerKey: vapidKey
