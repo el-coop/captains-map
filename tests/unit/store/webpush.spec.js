@@ -66,7 +66,7 @@ describe('Webpush Store', () => {
 
 		sinon.stub(http, 'get').returns({
 			status: 200,
-			data: 'asd',
+			data: {key: 'asd'},
 		});
 
 		sinon.stub(http, 'post').returns({
