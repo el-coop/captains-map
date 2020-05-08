@@ -60,12 +60,13 @@
 			async login() {
 				this.loading = true;
 				this.error = false;
-				let loggedIn = await this.$store.dispatch('User/login', this.form);
+				const loggedIn = await this.$store.dispatch('User/login', this.form);
 				this.loading = false;
 				if (!loggedIn) {
 					this.error = true;
 					return;
 				}
+
 				this.$router.push('/edit');
 			}
 		}

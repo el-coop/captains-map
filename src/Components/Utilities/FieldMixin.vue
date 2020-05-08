@@ -3,7 +3,6 @@
 		name: "FieldMixin",
 		props: {
 			value: {
-				type: String,
 				default: ''
 			},
 			error: {

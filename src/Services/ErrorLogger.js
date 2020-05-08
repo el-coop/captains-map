@@ -2,6 +2,8 @@ import http from "@/Services/HttpService";
 
 class ErrorsLogger {
 	handle(error, vm = {}) {
+		console.log(error);
+		return;
 		http.post('/errors', {
 			url: window.location.href,
 			userAgent: navigator.userAgent || '',

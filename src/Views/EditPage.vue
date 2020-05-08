@@ -27,6 +27,7 @@
 
 			envSetup() {
 				const username = this.$store.state.User.user.username;
+				this.$store.commit('Stories/exit');
 				this.$store.commit('Markers/setUser', username);
 				this.$store.dispatch('Profile/load', username);
 			},

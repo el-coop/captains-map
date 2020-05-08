@@ -1,6 +1,7 @@
 import Router from 'vue-router';
 import ViewPage from '@/Views/ViewPage';
 import EditPage from '@/Views/EditPage';
+import StoryPage from '@/Views/StoryPage';
 import Auth from '@/Middleware/AuthMiddleware';
 import cache from "@/Services/Cache";
 
@@ -17,6 +18,11 @@ const router = new Router({
 			path: '/:username?/:marker?',
 			name: 'view',
 			component: ViewPage
+		},
+		{
+			path: '/:username/story/:story',
+			name: 'view',
+			component: StoryPage
 		},
 	]
 });

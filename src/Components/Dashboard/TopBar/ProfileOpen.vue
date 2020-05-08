@@ -25,7 +25,7 @@
 		components: {FollowButton},
 		computed: {
 			isOpen() {
-				return this.$store.state.Profile.open
+				return this.$store.state.Profile.open;
 			},
 
 			imageSrc() {
