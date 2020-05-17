@@ -42,6 +42,9 @@ describe('ViewMarker.vue', () => {
 					path: '/'
 				}
 			},
+			$route: {
+				params: {}
+			},
 			$store: {
 				state: {
 					User: {
@@ -298,7 +301,7 @@ describe('ViewMarker.vue', () => {
 		await wrapper.vm.deleteMarker();
 
 		assert.isTrue(dispatchStub.calledOnce);
-		assert.isTrue(dispatchStub.calledWith('Markers/delete', 1));
+		assert.isTrue(dispatchStub.calledWith('Markers/delete', {id: 1, story: null}));
 		assert.isTrue(mocks.$toast.error.calledOnce);
 		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
 	});

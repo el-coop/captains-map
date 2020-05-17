@@ -139,7 +139,7 @@
 				}
 				const markerTime = new Date(this.marker.time);
 
-				this.form.story = this.marker.story;
+				this.form.story = this.marker.story || null;
 				this.form.description = this.marker.description;
 				this.form.location = this.marker.location;
 				this.form.type = this.marker.type;

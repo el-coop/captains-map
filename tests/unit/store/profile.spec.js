@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
+import store from '@/store';
 import profileStore from '@/store/profile';
 import http from '@/Services/HttpService';
 
@@ -42,7 +43,8 @@ describe('User Store', () => {
 		const getStub = sinon.stub(http, 'get').returns({
 			data: {
 				description: 'desc',
-				path: 'path'
+				path: 'path',
+				stories: []
 			}
 		});
 
@@ -54,19 +56,30 @@ describe('User Store', () => {
 		assert.isTrue(getStub.calledOnce);
 		assert.isTrue(getStub.calledWith('bio/test'));
 
-		assert.isTrue(commit.calledTwice);
+		assert.equal(commit.callCount,4);
+
 		assert.deepEqual(commit.firstCall.args, [
 			'updateBio',
 			{}
 		]);
 
 		assert.deepEqual(commit.secondCall.args, [
+			'setStories',
+			[]
+		]);
+
+		assert.deepEqual(commit.thirdCall.args, [
 			'updateBio',
 			{
 				username: 'test',
 				description: 'desc',
 				path: 'path'
 			}
+		]);
+
+		assert.deepEqual(commit.getCall(3).args, [
+			'setStories',
+			[]
 		]);
 	});
 

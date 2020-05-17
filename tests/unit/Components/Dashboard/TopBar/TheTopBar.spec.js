@@ -13,6 +13,9 @@ describe('TheTopBar.vue', () => {
 				state: {
 					Markers: {
 						username: false
+					},
+					Stories: {
+						story: null
 					}
 				}
 			}

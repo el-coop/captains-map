@@ -76,7 +76,10 @@
 		methods: {
 			async deleteMarker() {
 				this.deleting = true;
-				const response = await this.$store.dispatch('Markers/delete', this.marker.id);
+				const response = await this.$store.dispatch('Markers/delete', {
+					id: this.marker.id,
+					story: this.$route.params.story || null
+				});
 				this.deleting = false;
 				if (response) {
 					this.modal = false;

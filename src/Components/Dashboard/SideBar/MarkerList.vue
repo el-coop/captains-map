@@ -58,10 +58,7 @@
 				return this.$store.state.Markers.page > 0 || this.$store.state.Markers.serverPage > 0;
 			},
 			loading() {
-				if (this.$store.state.Stories.story) {
-					return this.$store.state.Stories.loading;
-				}
-				return this.$store.state.Markers.loading;
+				return this.$store.state.Markers.loading || this.$store.state.Stories.loading;
 			},
 
 			showUploads() {

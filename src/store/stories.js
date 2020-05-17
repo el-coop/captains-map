@@ -18,13 +18,18 @@ export default {
 		add(state, marker) {
 			state.markers.push(marker);
 		},
+
+		remove(state, id) {
+			state.markers = state.markers.filter((marker) => {
+				return marker.id !== id;
+			});
+		},
 	},
 
 	actions: {
 		async load({state}, storyId) {
 			state.loading = true;
 			const response = await $http.get(`story/${storyId}`);
-			state.loading = false;
 			const story = response.data;
 			state.story = {
 				id: storyId,
@@ -34,6 +39,7 @@ export default {
 			};
 
 			state.markers = story.markers;
+			state.loading = false;
 		},
 
 		async save({state, commit}, {name, published}) {

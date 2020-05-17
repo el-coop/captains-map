@@ -23,6 +23,9 @@ describe('ProfileDisplay.vue', () => {
 					},
 					User: {
 						user: null
+					},
+					Stories: {
+						story: null
 					}
 				},
 				commit: sinon.stub()

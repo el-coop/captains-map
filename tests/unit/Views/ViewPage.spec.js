@@ -62,9 +62,10 @@ describe('ViewPage.vue', () => {
 
 			assert.isTrue(mocks.$bus.$emit.calledWith('env-setup'));
 
-			assert.isTrue(mocks.$store.commit.calledTwice);
+			assert.isTrue(mocks.$store.commit.calledThrice);
 			assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
 			assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', ''));
+			assert.isTrue(mocks.$store.commit.calledWith('Stories/exit'));
 
 			assert.isTrue(mocks.$store.dispatch.calledOnce);
 			assert.isTrue(mocks.$store.dispatch.calledWith('Markers/load', {
@@ -173,9 +174,10 @@ describe('ViewPage.vue', () => {
 			mocks
 		});
 
-		assert.isTrue(mocks.$store.commit.calledTwice);
+		assert.isTrue(mocks.$store.commit.calledThrice);
 		assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
 		assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', 'test'));
+		assert.isTrue(mocks.$store.commit.calledWith('Stories/exit'));
 
 		assert.isTrue(mocks.$store.dispatch.calledTwice);
 		assert.isTrue(mocks.$store.dispatch.calledWith('Markers/load', {

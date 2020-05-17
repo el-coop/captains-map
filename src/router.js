@@ -21,7 +21,7 @@ const router = new Router({
 		},
 		{
 			path: '/:username/story/:story',
-			name: 'view',
+			name: 'story',
 			component: StoryPage
 		},
 	]

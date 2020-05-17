@@ -19,6 +19,12 @@ describe('MarkerList.vue', () => {
 						page: 0,
 						serverPage: 0
 					},
+					Stories: {
+						story: null
+					},
+					User: {
+						user: null
+					}
 				},
 				getters: {
 					'Uploads/allFiles': []
@@ -76,7 +82,7 @@ describe('MarkerList.vue', () => {
 		});
 
 		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
-		assert.equal(wrapper.find('.button').text(),'Load Next');
+		assert.equal(wrapper.find('.button').text(), 'Load Next');
 	});
 
 	it('Shows previous button when page is 0 and server page is bigger', async () => {
@@ -90,7 +96,7 @@ describe('MarkerList.vue', () => {
 
 		await wrapper.vm.$nextTick();
 
-		assert.equal(wrapper.find('.button').text(),'Load Previous');
+		assert.equal(wrapper.find('.button').text(), 'Load Previous');
 	});
 
 	it('Loads next page', async () => {

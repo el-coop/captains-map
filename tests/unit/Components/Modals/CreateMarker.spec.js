@@ -52,7 +52,12 @@ describe('CreateMarker.vue', () => {
 				$off: sinon.stub(),
 			},
 			$store: {
-				dispatch: sinon.stub()
+				dispatch: sinon.stub(),
+				state: {
+					Stories: {
+						story: null
+					}
+				}
 			},
 			$router: {
 				pushRoute: sinon.stub(),
@@ -156,6 +161,7 @@ describe('CreateMarker.vue', () => {
 					new UploadFile('name1', 'image1'),
 				]
 			},
+			story: null,
 			lat: 0,
 			lng: 0,
 			description: 'test',
@@ -310,8 +316,9 @@ describe('CreateMarker.vue', () => {
 					new UploadFile('name1', 'image1'),
 				],
 				type: 'instagram',
-				path: 'path'
+				path: 'path',
 			},
+			story: null,
 			lat: 0,
 			lng: 0,
 			description: 'test',

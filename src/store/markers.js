@@ -160,10 +160,16 @@ export default {
 			return response;
 		},
 
-		async delete({commit}, id) {
+		async delete({commit}, {id, story}) {
 			let response = await $http.delete(`marker/${id}`);
 			if (response) {
-				commit('remove', id);
+				if (story) {
+					commit('Stories/remove', id, {
+						root: true
+					});
+				} else {
+					commit('remove', id);
+				}
 				return true;
 			}
 			return false

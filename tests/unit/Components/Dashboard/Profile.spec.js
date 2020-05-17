@@ -22,6 +22,9 @@ describe('Profile.vue', () => {
 					},
 					User: {
 						user: null
+					},
+					Stories: {
+						story: null
 					}
 				},
 				commit: sinon.stub()

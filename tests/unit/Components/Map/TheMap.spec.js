@@ -20,6 +20,9 @@ describe('TheMap.vue', () => {
 					Markers: {
 						markers: [],
 						page: 0
+					},
+					Stories: {
+						story: null
 					}
 				},
 				getters: {

@@ -70,6 +70,7 @@ describe('Store', () => {
 		await actions.initSettings({
 			dispatch: sinon.stub()
 		});
+
 		assert.isTrue(routerStub.calledOnce);
 		assert.isTrue(routerStub.calledWith('/edit'));
 	});

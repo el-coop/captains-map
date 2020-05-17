@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
+import store from '@/store';
 import markersStore from '@/store/markers';
 import http from '@/Services/HttpService';
 import cache from "@/Services/Cache";
@@ -91,7 +92,9 @@ describe('Marker Store', () => {
 
 		await markersStore.actions.delete({
 			commit: commitSpy
-		}, 1);
+		}, {
+			id: 1
+		});
 
 		assert.isTrue(deleteStub.calledOnce);
 		assert.isTrue(deleteStub.calledWith('marker/1'));
