@@ -1,37 +1,12 @@
 import { assert } from 'chai';
 import { shallowMount, mount } from '@vue/test-utils';
 import CreateMarker from '@/Components/Modals/CreateMarker';
-import sinon from 'sinon';
+import sinon, { mock } from 'sinon';
 import UploadFile from "@/Classes/UploadFile";
 
 describe('CreateMarker.vue', () => {
 
-	const marker = {
-		uploadTime: 1,
-		lat: 0,
-		lng: 0,
-		description: 'test',
-		type: 'Planned',
-		location: 'location',
-		time: new Date(2),
-		media: {
-			type: 'instagram',
-			path: 'path',
-			files: [
-				new UploadFile('name', 'image'),
-				new UploadFile('name1', 'image1'),
-			]
-		},
-		error: {
-			status: 422,
-			data: {
-				errors: [{
-					param: 'media.path',
-					msg: 'invalid'
-				}]
-			}
-		}
-	};
+	let marker;
 	const latLng = {
 		lat: 1,
 		lng: 1,
@@ -46,6 +21,32 @@ describe('CreateMarker.vue', () => {
 	};
 
 	beforeEach(() => {
+		marker = {
+			uploadTime: 1,
+			lat: 0,
+			lng: 0,
+			description: 'test',
+			type: 'Planned',
+			location: 'location',
+			time: new Date(2),
+			media: {
+				type: 'instagram',
+				path: 'path',
+				files: [
+					new UploadFile('name', 'image'),
+					new UploadFile('name1', 'image1'),
+				]
+			},
+			error: {
+				status: 422,
+				data: {
+					errors: [{
+						param: 'media.path',
+						msg: 'invalid'
+					}]
+				}
+			}
+		};
 		mocks = {
 			$bus: {
 				$on: sinon.stub(),
@@ -128,6 +129,47 @@ describe('CreateMarker.vue', () => {
 		});
 	});
 
+	it('Shows empty form with story id when there is no data marker but there is a story', () => {
+		mocks.$store.state.Stories.story = {
+			id: 1
+		};
+
+		const latlng = {
+			lat: 0,
+			lng: 0
+		};
+		const wrapper = shallowMount(CreateMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: false
+		});
+
+		wrapper.vm.createMarker({
+			event: {
+				latlng
+			}
+		});
+
+		assert.isTrue(wrapper.vm.$data.modal);
+		assert.isNull(wrapper.vm.$data.marker);
+		assert.deepInclude(wrapper.vm.$data.form, {
+			story: 1,
+			media: {
+				type: 'image',
+				files: {},
+				path: ''
+			},
+			lat: 0,
+			lng: 0,
+			location: '',
+			description: '',
+			type: 'Visited'
+		});
+	});
+
 	it('Shows filled form when there is data marker', () => {
 		const latlng = {
 			lat: 0,
@@ -162,6 +204,51 @@ describe('CreateMarker.vue', () => {
 				]
 			},
 			story: null,
+			lat: 0,
+			lng: 0,
+			description: 'test',
+			location: 'location',
+			type: 'Planned',
+			time: date.setMinutes(date.getMinutes() + date.getTimezoneOffset()),
+		});
+	});
+
+	it('Shows filled form when there is data marker with original story', () => {
+		const latlng = {
+			lat: 0,
+			lng: 0
+		};
+		marker.story = 1;
+
+		const wrapper = shallowMount(CreateMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: false,
+		});
+
+		wrapper.vm.createMarker({
+			event: {
+				latlng
+			},
+			marker
+		});
+		const date = new Date(2);
+
+		assert.isTrue(wrapper.vm.$data.modal);
+		assert.deepEqual(wrapper.vm.$data.marker, marker);
+		assert.deepEqual(wrapper.vm.$data.form, {
+			media: {
+				type: 'instagram',
+				path: 'path',
+				files: [
+					new UploadFile('name', 'image'),
+					new UploadFile('name1', 'image1'),
+				]
+			},
+			story: 1,
 			lat: 0,
 			lng: 0,
 			description: 'test',
@@ -284,7 +371,6 @@ describe('CreateMarker.vue', () => {
 			marker
 		});
 
-
 		wrapper.find('button.is-danger-background').trigger('click');
 
 		await wrapper.vm.$nextTick();
@@ -319,6 +405,40 @@ describe('CreateMarker.vue', () => {
 				path: 'path',
 			},
 			story: null,
+			lat: 0,
+			lng: 0,
+			description: 'test',
+			location: 'location',
+			type: 'Planned',
+			time: date.setMinutes(date.getMinutes() + date.getTimezoneOffset()),
+		});
+	});
+
+	it('Prefills data with marker story', () => {
+		marker.story = 1;
+
+		const wrapper = shallowMount(CreateMarker, {
+			mocks
+		});
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+
+		wrapper.vm.prefill();
+
+		const date = new Date(2);
+
+		assert.deepEqual(wrapper.vm.$data.form, {
+			media: {
+				files: [
+					new UploadFile('name', 'image'),
+					new UploadFile('name1', 'image1'),
+				],
+				type: 'instagram',
+				path: 'path',
+			},
+			story: 1,
 			lat: 0,
 			lng: 0,
 			description: 'test',

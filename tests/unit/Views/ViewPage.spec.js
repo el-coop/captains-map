@@ -54,28 +54,26 @@ describe('ViewPage.vue', () => {
 	});
 
 	it('Loads Markers', async () => {
-		{
-			const mapSetViewStub = sinon.stub(map, 'setView');
-			await shallowMount(ViewPage, {
-				mocks
-			});
+		const mapSetViewStub = sinon.stub(map, 'setView');
+		await shallowMount(ViewPage, {
+			mocks
+		});
 
-			assert.isTrue(mocks.$bus.$emit.calledWith('env-setup'));
+		assert.isTrue(mocks.$bus.$emit.calledWith('env-setup'));
 
-			assert.isTrue(mocks.$store.commit.calledThrice);
-			assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
-			assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', ''));
-			assert.isTrue(mocks.$store.commit.calledWith('Stories/exit'));
+		assert.isTrue(mocks.$store.commit.calledThrice);
+		assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
+		assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', ''));
+		assert.isTrue(mocks.$store.commit.calledWith('Stories/exit'));
 
-			assert.isTrue(mocks.$store.dispatch.calledOnce);
-			assert.isTrue(mocks.$store.dispatch.calledWith('Markers/load', {
-				startingId: false,
-				pageIncluding: true
-			}));
+		assert.isTrue(mocks.$store.dispatch.calledOnce);
+		assert.isTrue(mocks.$store.dispatch.calledWith('Markers/load', {
+			startingId: false,
+			pageIncluding: true
+		}));
 
-			assert.isTrue(mapSetViewStub.calledOnce);
-			assert.isTrue(mapSetViewStub.calledWith([1, -1]));
-		}
+		assert.isTrue(mapSetViewStub.calledOnce);
+		assert.isTrue(mapSetViewStub.calledWith([1, -1]));
 	});
 
 	it('Loads 404 when response returns 404', async () => {

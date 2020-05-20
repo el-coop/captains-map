@@ -8,9 +8,10 @@
 <script>
 	import TheDashboard from "@/Components/Dashboard/TheDashboard";
 	import CreateMarker from "@/Components/Modals/CreateMarker";
+	import map from "@/Services/LeafletMapService";
 
 	export default {
-		name: "ViewPage",
+		name: "StoryPage",
 		metaInfo() {
 			return {
 				title: this.$route.params.username
@@ -35,8 +36,15 @@
 		},
 
 		methods: {
-			loadStory() {
-				this.$store.dispatch('Stories/load', this.$route.params.story);
+			async loadStory() {
+				const responseStatus = await this.$store.dispatch('Stories/load', this.$route.params.story);
+
+				if (responseStatus === 404) {
+					return this.$bus.$emit(404);
+				}
+
+				const marker = this.$store.state.Stories.markers[0];
+				return map.setView([marker.lat, marker.lng]);
 			}
 		},
 	}

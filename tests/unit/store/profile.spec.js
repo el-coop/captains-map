@@ -37,6 +37,39 @@ describe('User Store', () => {
 		});
 	});
 
+	it('adds a story to list', () => {
+
+		profileStore.mutations.addStory(profileStore.state, {
+			id: 1
+		});
+
+		assert.deepEqual(profileStore.state.stories, [{
+			id: 1
+		}]);
+	});
+
+	it('removes a story from list', () => {
+		profileStore.state.stories = [{
+			id: 1
+		}];
+
+		profileStore.mutations.removeStory(profileStore.state, {
+			id: 1
+		});
+
+		assert.deepEqual(profileStore.state.stories, []);
+	});
+
+	it('sets stories', () => {
+		profileStore.state.stories = [{
+			id: 1
+		}];
+
+		profileStore.mutations.setStories(profileStore.state, [{id: 2}, {id: 3}]);
+
+		assert.deepEqual(profileStore.state.stories, [{id: 2}, {id: 3}]);
+	});
+
 	it('Loads user bio', async () => {
 
 		const commit = sinon.stub();
@@ -44,7 +77,11 @@ describe('User Store', () => {
 			data: {
 				description: 'desc',
 				path: 'path',
-				stories: []
+				stories: [{
+					id: 1
+				}, {
+					id: 2
+				}]
 			}
 		});
 
@@ -56,7 +93,7 @@ describe('User Store', () => {
 		assert.isTrue(getStub.calledOnce);
 		assert.isTrue(getStub.calledWith('bio/test'));
 
-		assert.equal(commit.callCount,4);
+		assert.equal(commit.callCount, 4);
 
 		assert.deepEqual(commit.firstCall.args, [
 			'updateBio',
@@ -79,7 +116,11 @@ describe('User Store', () => {
 
 		assert.deepEqual(commit.getCall(3).args, [
 			'setStories',
-			[]
+			[{
+				id: 1
+			}, {
+				id: 2
+			}]
 		]);
 	});
 

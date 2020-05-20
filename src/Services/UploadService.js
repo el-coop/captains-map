@@ -68,7 +68,6 @@ class UploadService {
 	}
 
 	onUploadProgress(progressEvent) {
-		console.log('progress event');
 		Store.commit('Uploads/setProgress', progressEvent.loaded * 100 / progressEvent.total);
 	}
 }

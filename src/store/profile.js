@@ -30,7 +30,6 @@ export default {
 				return;
 			}
 			const key = state.stories.findIndex((story) => {
-				console.log(story.id, storyId);
 				return story.id == storyId;
 			});
 			state.stories.splice(key, 1);

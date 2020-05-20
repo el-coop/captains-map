@@ -35,7 +35,6 @@
 		methods: {
 			storySaved(){
 				this.edit = false;
-				this.$toast.success(' ', 'Story updated.');
 			},
 			exitStory() {
 				this.$router.push(`/${this.$route.params.username}`);

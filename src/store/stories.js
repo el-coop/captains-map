@@ -30,6 +30,10 @@ export default {
 		async load({state}, storyId) {
 			state.loading = true;
 			const response = await $http.get(`story/${storyId}`);
+			state.loading = false;
+			if(response.status === 404){
+				return 404;
+			}
 			const story = response.data;
 			state.story = {
 				id: storyId,
@@ -39,7 +43,7 @@ export default {
 			};
 
 			state.markers = story.markers;
-			state.loading = false;
+			return 200;
 		},
 
 		async save({state, commit}, {name, published}) {
@@ -68,7 +72,7 @@ export default {
 
 			return {
 				status: response.status,
-				id: response.data.id
+				id: response.data.id || 0
 			};
 		},
 

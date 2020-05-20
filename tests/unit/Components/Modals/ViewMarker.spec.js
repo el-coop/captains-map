@@ -306,6 +306,28 @@ describe('ViewMarker.vue', () => {
 		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
 	});
 
+	it('Calls with delete with story when in story page', async () => {
+		mocks.$route.params.story = 1;
+		const dispatchStub = sinon.stub().returns(true);
+		mocks.$store = {
+			dispatch: dispatchStub
+		};
+		const wrapper = shallowMount(ViewMarker, {
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+
+		await wrapper.vm.deleteMarker();
+
+		assert.isTrue(dispatchStub.calledOnce);
+		assert.isTrue(dispatchStub.calledWith('Markers/delete', {id: 1, story: 1}));
+		assert.isFalse(wrapper.vm.$data.modal);
+	});
+
 	it('Closes modal and enables user navigation flag', async () => {
 		const wrapper = mount(ViewMarker, {
 			mocks,

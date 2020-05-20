@@ -172,6 +172,25 @@ describe('Http service', () => {
 		});
 	});
 
+
+	it('returns the response from patch', async () => {
+		moxios.wait(() => {
+			let request = moxios.requests.mostRecent();
+			request.respondWith({
+				status: 200,
+				headers: {},
+				response: {
+					message: 'test'
+				}
+			});
+		});
+		const response = await http.patch('test');
+		assert.equal(response.status, 200);
+		assert.deepEqual(response.data, {
+			'message': 'test'
+		});
+	});
+
 	it('returns the error response from post', async () => {
 		moxios.wait(() => {
 			let request = moxios.requests.mostRecent();
@@ -184,6 +203,24 @@ describe('Http service', () => {
 			});
 		});
 		const response = await http.post('test');
+		assert.equal(response.status, 400);
+		assert.deepEqual(response.data, {
+			'message': 'test'
+		});
+	});
+
+	it('returns the error response from patch', async () => {
+		moxios.wait(() => {
+			let request = moxios.requests.mostRecent();
+			request.respondWith({
+				status: 400,
+				headers: {},
+				response: {
+					message: 'test'
+				}
+			});
+		});
+		const response = await http.patch('test');
 		assert.equal(response.status, 400);
 		assert.deepEqual(response.data, {
 			'message': 'test'
@@ -257,6 +294,44 @@ describe('Http service', () => {
 		});
 
 		const response = await http.post('test');
+		assert.equal(axios.defaults.headers.common['X-CSRF-TOKEN'], 'test');
+		assert.equal(response.status, 200);
+		assert.deepEqual(response.data, {
+			'message': 'test'
+		});
+	});
+
+	it('repeats request from patch with csrf error', async () => {
+		moxios.wait(() => {
+			let request = moxios.requests.mostRecent();
+			request.respondWith({
+				status: 403,
+				response: {
+					message: 'invalid csrf token'
+				}
+			});
+			moxios.wait(() => {
+				request = moxios.requests.mostRecent();
+				request.respondWith({
+					status: 200,
+					headers: {
+						csrftoken: 'test'
+					}
+				});
+				moxios.wait(() => {
+					request = moxios.requests.mostRecent();
+					request.respondWith({
+						status: 200,
+						headers: {},
+						response: {
+							message: 'test'
+						}
+					});
+				});
+			});
+		});
+
+		const response = await http.patch('test');
 		assert.equal(axios.defaults.headers.common['X-CSRF-TOKEN'], 'test');
 		assert.equal(response.status, 200);
 		assert.deepEqual(response.data, {

@@ -317,6 +317,28 @@ describe('Upload store', () => {
 		assert.isTrue(cacheStub.calledWith('1'));
 	});
 
+	it('removes marker from storage when uploaded and adds to story if story id', async () => {
+		const commit = sinon.stub();
+		const cacheStub = sinon.stub(cache.caches().uploads, 'removeItem');
+		const marker = {
+			id: 1,
+			uploadTime: 1,
+			story_id: 1,
+			'media[type]': 'image',
+			'media[image]': 'gla'
+		};
+
+		await uploadsStore.actions.uploaded({commit}, marker);
+
+		assert.isTrue(commit.calledTwice);
+		assert.isTrue(commit.calledWith('Stories/add', marker, {
+			root: true
+		}));
+		assert.isTrue(commit.calledWith('removeFromQueue', 1));
+		assert.isTrue(cacheStub.calledOnce);
+		assert.isTrue(cacheStub.calledWith('1'));
+	});
+
 	it('Purges queue', async () => {
 		const state = {
 			queue: [{id: 1}],

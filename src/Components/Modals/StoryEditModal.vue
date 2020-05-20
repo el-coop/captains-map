@@ -1,12 +1,12 @@
 <template>
 	<BaseModal @update:active="$emit('update:active',$event)" :active="active">
 		<template #header>
-			<p class="card__header-title">Choose story name</p>
+			<p class="card__header-title" v-text="story.name ? 'Edit story' : 'Choose story name'"/>
 		</template>
 		<template #content>
 			<TextField label="Story name" v-model="name"
-					   :error="errors.name || ''"/>
-			<template v-if="canEdit">
+					   :error="error"/>
+			<template v-if="isEdit">
 				<SelectField label="Published" v-model="published" :options="{
 						0: 'No',
 						1: 'Yes'
@@ -15,7 +15,7 @@
 		</template>
 		<template #footer>
 			<p class="card__footer-item">
-				<button v-if="canEdit" class="button is-danger-background is-fullwidth"
+				<button v-if="isEdit" class="button is-danger-background is-fullwidth"
 						:class="{'is-loading': deleting}" @click="deleteStory">
 					Delete
 				</button>
@@ -60,15 +60,15 @@
 				name: this.story.name || '',
 				published: this.story.published || 0,
 				saving: false,
-				errors: {},
+				error: '',
 				deleting: false,
 			}
 		},
 
 		computed: {
-			canEdit() {
+			isEdit() {
 				const user = this.$store.state.User.user;
-				return this.$store.state.Stories.story && user && this.$store.state.Stories.story.user_id === user.id;
+				return this.story && user && this.story.user_id === user.id;
 			}
 		},
 
@@ -107,6 +107,7 @@
 					this.$toast.error('Please try again at a later time', 'Saving failed.');
 					return;
 				}
+				this.$toast.success(' ', 'Story saved.');
 
 				this.$emit('saved', id);
 			}
