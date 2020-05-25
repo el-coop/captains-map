@@ -220,6 +220,20 @@ describe('ViewMarker.vue', () => {
 		assert.equal(wrapper.vm.routeName, 'test/1');
 	});
 
+	it('Calculates route name with story', () => {
+		mocks.$route.params.story = 1;
+		const wrapper = shallowMount(ViewMarker, {
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+
+		assert.equal(wrapper.vm.routeName, 'test/story/1/1');
+	});
+
 	it('Shows marker', async () => {
 		const wrapper = shallowMount(ViewMarker, {
 			mocks
@@ -411,6 +425,25 @@ describe('ViewMarker.vue', () => {
 		assert.isTrue(mocks.$router.push.calledOnce);
 		assert.isTrue(mocks.$router.push.calledWith('/test'));
 		assert.isFalse(wrapper.vm.$data.userNavigation);
+	});
+
+	it('Navigates back to story when it was loaded before', async () => {
+		mocks.$router.currentRoute.params.username = 'test';
+		mocks.$route.params.story = 1;
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker,
+		});
+
+		wrapper.vm.closedNavigation();
+
+		assert.isTrue(mocks.$router.pushRoute.calledTwice);
+		assert.isTrue(mocks.$router.pushRoute.secondCall.calledWith('test/story/1'));
 	});
 
 	it('Navigates back to user when it was loaded before', async () => {

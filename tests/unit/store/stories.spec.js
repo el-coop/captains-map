@@ -48,7 +48,7 @@ describe('Stories Store', () => {
 		}]);
 	});
 
-	it('Removes marker from story', () => {
+	it('Removes marker from story and changes cover photo when one left', () => {
 		storiesStore.state = {
 			story: {
 				id: 1
@@ -56,14 +56,46 @@ describe('Stories Store', () => {
 			markers: [{
 				id: 1
 			}, {
-				id: 2
+				id: 2,
+				media: [{
+					type: 'type',
+					path: 'path'
+				}]
 			}]
 		}
 		storiesStore.mutations.remove(storiesStore.state, 1);
 
 		assert.deepEqual(storiesStore.state.markers, [{
-			id: 2
+			id: 2,
+			media: [{
+				type: 'type',
+				path: 'path'
+			}]
 		}]);
+
+		assert.deepEqual(storiesStore.state.story.cover, {
+			type: 'type',
+			path: 'path'
+		});
+	});
+
+	it('Removes marker from story and removes cover photo when none left', () => {
+		storiesStore.state = {
+			story: {
+				id: 1
+			},
+			markers: [{
+				id: 1
+			}]
+		}
+		storiesStore.mutations.remove(storiesStore.state, 1);
+
+		assert.deepEqual(storiesStore.state.markers, []);
+
+		assert.deepEqual(storiesStore.state.story.cover, {
+			type: null,
+			path: null
+		});
 	});
 
 	it('Loads story', async () => {
@@ -77,6 +109,10 @@ describe('Stories Store', () => {
 			name: 'name',
 			user_id: 1,
 			published: 1,
+			cover: {
+				type: 'type',
+				path: 'path',
+			},
 			markers: [{
 				id: 1
 			}, {
@@ -100,6 +136,10 @@ describe('Stories Store', () => {
 			name: 'name',
 			user_id: 1,
 			published: 1,
+			cover: {
+				type: 'type',
+				path: 'path',
+			}
 		});
 		assert.deepEqual(storiesStore.state.markers, data.markers);
 	});

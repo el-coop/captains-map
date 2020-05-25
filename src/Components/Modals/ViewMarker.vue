@@ -108,6 +108,9 @@
 					this.userNavigation = false;
 					return this.$router.push(`/${this.marker.user.username}`);
 				}
+				if (this.$route.params.story) {
+					return this.$router.pushRoute(`${this.$router.currentRoute.params.username}/story/${this.$route.params.story}`);
+				}
 				if (this.$router.currentRoute.params.username) {
 					return this.$router.pushRoute(this.$router.currentRoute.params.username);
 				}
@@ -137,6 +140,9 @@
 			routeName() {
 				if (!this.marker) {
 					return '';
+				}
+				if (this.$route.params.story) {
+					return `${this.marker.user.username}/story/${this.$route.params.story}/${this.marker.id}`
 				}
 				return `${this.marker.user.username}/${this.marker.id}`;
 			}

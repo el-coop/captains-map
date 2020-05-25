@@ -64,6 +64,10 @@ describe('StoriesOpen.vue', () => {
 
 		wrapper.find('button.webpush').trigger('click');
 
+
+		assert.isTrue(mocks.$store.commit.calledOnce);
+		assert.isTrue(mocks.$store.commit.calledWith('Profile/trackStory', mocks.$store.state.Stories.story));
+
 		assert.isTrue(mocks.$router.push.calledOnce);
 		assert.isTrue(mocks.$router.push.calledWith('/username'));
 	});

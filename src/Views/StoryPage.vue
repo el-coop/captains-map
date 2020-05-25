@@ -42,8 +42,28 @@
 				if (responseStatus === 404) {
 					return this.$bus.$emit(404);
 				}
+				if (responseStatus === 'cached') {
+					this.$toast.info('Markers loaded from cache', '');
+				}
 
-				const marker = this.$store.state.Stories.markers[0];
+				const markers = this.$store.state.Stories.markers;
+
+				if (!markers.length) {
+					return;
+				}
+
+				let marker;
+				if (this.$route.params.marker) {
+					marker = markers.find(({id}) => {
+						return id == this.$route.params.marker;
+					});
+				} else {
+					marker = markers[0];
+				}
+
+				if (!marker) {
+					return this.$bus.$emit('404');
+				}
 				return map.setView([marker.lat, marker.lng]);
 			}
 		},

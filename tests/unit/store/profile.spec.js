@@ -70,6 +70,30 @@ describe('User Store', () => {
 		assert.deepEqual(profileStore.state.stories, [{id: 2}, {id: 3}]);
 	});
 
+	it('Tracks stories cover photos', async () => {
+		profileStore.state.stories = [{
+			id: 1,
+			cover: {
+				'type': 'type1',
+				'path': 'path1'
+			}
+		}];
+
+		profileStore.mutations.trackStory(profileStore.state, {
+			id: 1,
+			cover: {
+				'type': 'type2',
+				'path': 'path2'
+			}
+		})
+
+		assert.deepEqual(profileStore.state.stories[0].cover, {
+			'type': 'type2',
+			'path': 'path2'
+		});
+	});
+
+
 	it('Loads user bio', async () => {
 
 		const commit = sinon.stub();

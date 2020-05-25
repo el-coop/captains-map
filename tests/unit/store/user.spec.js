@@ -79,6 +79,7 @@ describe('User Store', () => {
 	it('Calls log out and redirects on logout', async () => {
 
 		const cacheStub = sinon.stub(cache, 'forget');
+		const cacheClearStub = sinon.stub(cache, 'clear');
 		const routerStub = sinon.stub(router, 'push');
 		sinon.stub(router, 'currentRoute').value({
 			path: '/edit'
@@ -103,6 +104,8 @@ describe('User Store', () => {
 		assert.isTrue(dispatch.calledWith('Uploads/purge'));
 		assert.isTrue(cacheStub.calledOnce);
 		assert.isTrue(cacheStub.calledWith('settings', 'user'));
+		assert.isTrue(cacheClearStub.calledOnce);
+		assert.isTrue(cacheClearStub.calledWith('requests'));
 
 		assert.isTrue(httpStub.calledOnce);
 		assert.isTrue(httpStub.calledWith('auth/logout'));

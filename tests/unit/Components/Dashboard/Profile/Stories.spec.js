@@ -72,7 +72,7 @@ describe('Stories.vue', () => {
 			mocks
 		});
 
-		wrapper.find('.story').trigger('click');
+		wrapper.find('.story__link').trigger('click');
 
 		assert.isTrue(wrapper.vm.$data.createModal);
 	});
@@ -83,7 +83,7 @@ describe('Stories.vue', () => {
 			mocks
 		});
 
-		wrapper.findAll('.story').at(1).trigger('click');
+		wrapper.findAll('.story__link').at(1).trigger('click');
 
 		assert.isTrue(mocks.$store.commit.called);
 		assert.isTrue(mocks.$store.commit.calledWith('Profile/toggle'));

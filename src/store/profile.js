@@ -36,6 +36,16 @@ export default {
 		},
 		close(state) {
 			state.open = false;
+		},
+
+		trackStory(state, updatedStory) {
+			const key = state.stories.findIndex((story) => {
+				return story.id == updatedStory.id;
+			});
+
+			if (key > -1) {
+				state.stories[key].cover = updatedStory.cover;
+			}
 		}
 	},
 

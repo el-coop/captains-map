@@ -11,23 +11,42 @@
 }
 
 .story {
-	border-radius: 50%;
-	background-color: var(--background-muted);
 	margin-right: 10px;
 	margin-bottom: 10px;
-	min-width: 65px;
-	max-width: 65px;
-	height: 65px;
-	color: var(--text);
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	text-align: center;
-	word-break: break-all;
-	overflow: hidden;
 
-	&:hover {
-		background-color: var(--background-invert);
-		color: var(--text-invert)
+	&__link {
+		margin-bottom: 5px;
+		border-radius: 50%;
+		background-color: var(--background-muted);
+		min-width: 65px;
+		max-width: 65px;
+		height: 65px;
+		color: var(--text);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		word-break: break-all;
+		overflow: hidden;
+
+		&:hover {
+			filter: brightness(0.7);
+		}
+	}
+
+	&__figure {
+		height: 100%;
+		width: 100%;
+
+		&.image {
+			margin-right: 5px;
+		}
+
+		&-image {
+			object-fit: cover;
+			height: 100% !important;
+			width: 100% !important;
+		}
 	}
 }

@@ -1,10 +1,9 @@
 <template>
 	<div class="profile-open">
 		<button class="profile-open__button button" @click="edit = true">
-			<span>
-				<FontAwesomeIcon icon="edit" class="icon"/>
-				{{ story.name }}
-			</span>
+			<FontAwesomeIcon icon="edit" class="icon"/>
+			<StoryCoverImage :cover="story.cover" :is-small="true"/>
+			{{ story.name }}
 		</button>
 		<button @click="exitStory" class="webpush button is-wide">
 			<FontAwesomeIcon icon="times-circle" class="icon"/>
@@ -16,15 +15,11 @@
 
 <script>
 	import StoryEditModal from "@/Components/Modals/StoryEditModal";
+	import StoryCoverImage from "@/Components/Dashboard/Profile/StoryCoverImage";
 
 	export default {
 		name: "StoriesOpen",
-		components: {StoryEditModal},
-		computed: {
-			story() {
-				return this.$store.state.Stories.story;
-			},
-		},
+		components: {StoryCoverImage, StoryEditModal},
 
 		data() {
 			return {
@@ -32,11 +27,18 @@
 			}
 		},
 
+		computed: {
+			story() {
+				return this.$store.state.Stories.story;
+			},
+		},
+
 		methods: {
-			storySaved(){
+			storySaved() {
 				this.edit = false;
 			},
 			exitStory() {
+				this.$store.commit('Profile/trackStory', this.$store.state.Stories.story);
 				this.$router.push(`/${this.$route.params.username}`);
 			},
 		}

@@ -17,12 +17,29 @@ export default {
 
 		add(state, marker) {
 			state.markers.push(marker);
+			if (state.markers.length === 1) {
+				state.story.cover = {
+					type: marker.media[0].type,
+					path: marker.media[0].path,
+				};
+			}
 		},
 
 		remove(state, id) {
 			state.markers = state.markers.filter((marker) => {
 				return marker.id !== id;
 			});
+			if (state.markers.length > 0) {
+				state.story.cover = {
+					type: state.markers[0].media[0].type,
+					path: state.markers[0].media[0].path,
+				};
+			} else {
+				state.story.cover = {
+					type: null,
+					path: null
+				};
+			}
 		},
 	},
 
@@ -31,7 +48,7 @@ export default {
 			state.loading = true;
 			const response = await $http.get(`story/${storyId}`);
 			state.loading = false;
-			if(response.status === 404){
+			if (response.status === 404) {
 				return 404;
 			}
 			const story = response.data;
@@ -39,11 +56,12 @@ export default {
 				id: storyId,
 				name: story.name,
 				user_id: story.user_id,
-				published: story.published
+				published: story.published,
+				cover: story.cover
 			};
 
 			state.markers = story.markers;
-			return 200;
+			return response.status;
 		},
 
 		async save({state, commit}, {name, published}) {

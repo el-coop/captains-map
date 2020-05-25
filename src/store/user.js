@@ -35,6 +35,7 @@ export default {
 			await $http.get('auth/logout');
 			await dispatch('Uploads/purge', {}, {root: true});
 			await cache.forget('settings', 'user');
+			await cache.clear('requests');
 			state.user = null;
 			if (router.currentRoute.path !== '/') {
 				await router.push('/');

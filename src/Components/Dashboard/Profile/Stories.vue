@@ -1,11 +1,19 @@
 <template>
 	<div class="stories">
-		<a class="story" @click="createModal = true">
-			New
-		</a>
+		<div class="story">
+			<a class="story__link" @click="createModal = true">
+				New
+			</a>
+		</div>
 
-		<a class="story" v-for="story in stories" :key="`story_${story.id}`" v-text="story.name"
-		   @click="chooseStory(story.id)"/>
+		<div class="story" v-for="story in stories" :key="`story_${story.id}`">
+			<a class="story__link"
+			   @click="chooseStory(story.id)">
+				<StoryCoverImage :cover="story.cover"/>
+			</a>
+
+			<span class="story__name" v-text="story.name"/>
+		</div>
 
 		<StoryEditModal :active.sync="createModal" @saved="chooseStory"/>
 	</div>
@@ -13,14 +21,15 @@
 
 <script>
 	import StoryEditModal from "@/Components/Modals/StoryEditModal";
+	import StoryCoverImage from "@/Components/Dashboard/Profile/StoryCoverImage";
 
 	export default {
 		name: "Stories",
-		components: {StoryEditModal},
+		components: {StoryCoverImage, StoryEditModal},
 
 		data() {
 			return {
-				createModal: false
+				createModal: false,
 			}
 		},
 

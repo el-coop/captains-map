@@ -127,43 +127,40 @@ describe('StoryPage.vue', () => {
 		assert.deepEqual(mocks.$bus.$emit.secondCall.args, [404]);
 	});
 
-	// it('Shows cache toast when loaded from cache', async () => {
-	// 	sinon.stub(map, 'setView');
-	// 	mocks.$store.dispatch.returns({
-	// 		status: 'cached'
-	// 	});
-	// 	mocks.$toast = {
-	// 		info: sinon.spy()
-	// 	};
-	// 	await shallowMount(ViewPage, {
-	// 		mocks
-	// 	});
-	//
-	// 	assert.isTrue(mocks.$toast.info.calledOnce);
-	// 	assert.isTrue(mocks.$toast.info.calledWith('Markers loaded from cache', ''));
-	// });
+	it('Shows cache toast when loaded from cache', async () => {
+		sinon.stub(map, 'setView');
+		mocks.$store.dispatch.returns('cached');
+		mocks.$toast = {
+			info: sinon.spy()
+		};
+		await shallowMount(StoryPage, {
+			mocks
+		});
+
+		assert.isTrue(mocks.$toast.info.calledOnce);
+		assert.isTrue(mocks.$toast.info.calledWith('Markers loaded from cache', ''));
+	});
 
 
-	//
-	// it('Loads 404 when specified marker isnt found', async () => {
-	// 	const mapSetViewStub = sinon.stub(map, 'setView');
-	// 	mocks.$store.state.Markers.markers = [{
-	// 		id: 1,
-	// 		lat: 1,
-	// 		lng: 1
-	// 	}, {
-	// 		id: 2,
-	// 		lat: 10,
-	// 		lng: 10
-	// 	}];
-	//
-	// 	mocks.$route.params.marker = 3;
-	// 	await shallowMount(ViewPage, {
-	// 		mocks
-	// 	});
-	//
-	// 	assert.isTrue(mocks.$bus.$emit.calledWith('404'));
-	// 	assert.isFalse(mapSetViewStub.called);
-	// });
+	it('Loads 404 when specified marker isnt found', async () => {
+		const mapSetViewStub = sinon.stub(map, 'setView');
+		mocks.$store.state.Markers.markers = [{
+			id: 1,
+			lat: 1,
+			lng: 1
+		}, {
+			id: 2,
+			lat: 10,
+			lng: 10
+		}];
+
+		mocks.$route.params.marker = 3;
+		await shallowMount(StoryPage, {
+			mocks
+		});
+
+		assert.isTrue(mocks.$bus.$emit.calledWith('404'));
+		assert.isFalse(mapSetViewStub.called);
+	});
 
 });

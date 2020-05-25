@@ -20,7 +20,7 @@ const router = new Router({
 			component: ViewPage
 		},
 		{
-			path: '/:username/story/:story',
+			path: '/:username/story/:story/:marker?',
 			name: 'story',
 			component: StoryPage
 		},
@@ -32,7 +32,7 @@ router.pushRoute = function (location) {
 };
 
 router.afterEach(async (to, from) => {
-	if (from.name && (to.fullPath === '/edit' || to.fullPath === '/')) {
+	if (from.name) {
 		await cache.store('settings', 'route', to.fullPath);
 	}
 });

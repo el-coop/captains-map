@@ -75,6 +75,20 @@ describe('Store', () => {
 		assert.isTrue(routerStub.calledWith('/edit'));
 	});
 
+	it('Routes to story when its been cached on edit', async () => {
+		const cacheStub = sinon.stub(cache, 'get');
+		const routerStub = sinon.stub(router, 'push');
+		cacheStub.onFirstCall().returns(false);
+		cacheStub.onSecondCall().returns('/user/story/1');
+
+		await actions.initSettings({
+			dispatch: sinon.stub()
+		});
+
+		assert.isTrue(routerStub.calledOnce);
+		assert.isTrue(routerStub.calledWith('/user/story/1'));
+	});
+
 	it('Doesnt change when no route is cached', async () => {
 		const cacheStub = sinon.stub(cache, 'get');
 		const routerStub = sinon.stub(router, 'push');
