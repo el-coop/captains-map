@@ -2,7 +2,6 @@ import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import Profile from '@/Components/Dashboard/Profile';
 import sinon from 'sinon';
-import globe from '@/assets/images/globe-icon.png';
 
 describe('Profile.vue', () => {
 
@@ -22,6 +21,9 @@ describe('Profile.vue', () => {
 					},
 					User: {
 						user: null
+					},
+					Stories: {
+						story: null
 					}
 				},
 				commit: sinon.stub()
@@ -35,7 +37,8 @@ describe('Profile.vue', () => {
 			}
 		};
 		stubs = {
-			FontAwesomeIcon: true
+			FontAwesomeIcon: true,
+			Stories: true
 		};
 	});
 
@@ -50,6 +53,7 @@ describe('Profile.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
+		assert.isTrue(wrapper.find('stories-stub').exists());
 		assert.equal(wrapper.find('.title.is-4').text(), 'test');
 	});
 
@@ -79,4 +83,17 @@ describe('Profile.vue', () => {
 		assert.isTrue(mocks.$store.commit.calledOnce);
 		assert.isTrue(mocks.$store.commit.calledWith('Profile/toggle'));
 	});
+
+	it('Doesnt open when a story is chosen', async () => {
+		mocks.$store.state.Profile.open = true;
+		mocks.$store.state.Stories.story = 1;
+
+		const wrapper = shallowMount(Profile, {
+			stubs,
+			mocks
+		});
+
+		assert.isFalse(wrapper.find('.dashboard__control.profile.profile--open').exists());
+	});
+
 });

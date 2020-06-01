@@ -1,6 +1,5 @@
 <template>
 	<TopBar>
-
 		<template #left>
 			<DrawerMobile ref="searchBar">
 				<SearchBar/>
@@ -35,7 +34,6 @@
 				<Logout/>
 			</div>
 		</template>
-
 	</TopBar>
 </template>
 

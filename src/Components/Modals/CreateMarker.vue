@@ -36,7 +36,8 @@
                     </span>
 				</p>
 				<p class="card__footer-item">
-					<button class="button is-primary-background is-fullwidth" :class="{'is-loading' : loading}">Submit</button>
+					<button class="button is-primary-background is-fullwidth" :class="{'is-loading' : loading}">Submit
+					</button>
 				</p>
 			</template>
 		</BaseModal>
@@ -81,8 +82,10 @@
 		},
 
 		data() {
+
 			return {
 				form: {
+					story: this.$store.state.Stories.story ? this.$store.state.Stories.story.id : null,
 					media: {
 						type: 'image',
 						files: {},
@@ -136,6 +139,7 @@
 				}
 				const markerTime = new Date(this.marker.time);
 
+				this.form.story = this.marker.story || null;
 				this.form.description = this.marker.description;
 				this.form.location = this.marker.location;
 				this.form.type = this.marker.type;
@@ -154,6 +158,7 @@
 			resetForm() {
 				this.errors = null;
 				this.form = {
+					story: this.$store.state.Stories.story ? this.$store.state.Stories.story.id : null,
 					media: {
 						type: 'image',
 						files: {},

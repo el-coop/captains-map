@@ -57,24 +57,23 @@ describe('EditPage.vue', () => {
 	});
 
 	it('Loads Markers', async () => {
-		{
-			await shallowMount(EditPage, {
-				mocks
-			});
+		await shallowMount(EditPage, {
+			mocks
+		});
 
-			assert.isTrue(mocks.$bus.$emit.calledWith('env-setup'));
+		assert.isTrue(mocks.$bus.$emit.calledWith('env-setup'));
 
-			assert.isTrue(mocks.$store.commit.calledTwice);
-			assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
-			assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', 'test'));
+		assert.isTrue(mocks.$store.commit.calledThrice);
+		assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
+		assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', 'test'));
+		assert.isTrue(mocks.$store.commit.calledWith('Stories/exit'));
 
-			assert.isTrue(mocks.$store.dispatch.calledTwice);
-			assert.isTrue(mocks.$store.dispatch.calledWith('Markers/load'));
-			assert.isTrue(mocks.$store.dispatch.calledWith('Profile/load'));
+		assert.isTrue(mocks.$store.dispatch.calledTwice);
+		assert.isTrue(mocks.$store.dispatch.calledWith('Markers/load'));
+		assert.isTrue(mocks.$store.dispatch.calledWith('Profile/load'));
 
-			assert.isTrue(goToCurrentLocationStub.calledOnce);
-			assert.isTrue(goToCurrentLocationStub.calledWith());
-		}
+		assert.isTrue(goToCurrentLocationStub.calledOnce);
+		assert.isTrue(goToCurrentLocationStub.calledWith());
 	});
 
 	it('Shows cache toast when loaded from cache', async () => {

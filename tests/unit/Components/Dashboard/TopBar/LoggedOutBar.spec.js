@@ -20,6 +20,9 @@ describe('LoggedOutBar.vue', () => {
 					Markers: {
 						username: false
 					},
+					Stories: {
+						story: null
+					}
 				},
 				getters: {
 					'Uploads/allFiles': []

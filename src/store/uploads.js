@@ -116,9 +116,15 @@ export default {
 			await cache.forget('uploads', data.uploadTime);
 
 			commit('removeFromQueue', data.uploadTime);
-			commit('Markers/addAtStart', data, {
-				root: true
-			});
+			if (!data.story_id) {
+				commit('Markers/addAtStart', data, {
+					root: true
+				});
+			} else {
+				commit('Stories/add', data, {
+					root: true
+				})
+			}
 		},
 
 		async purge({state}) {

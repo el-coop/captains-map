@@ -42,6 +42,9 @@ describe('ViewMarker.vue', () => {
 					path: '/'
 				}
 			},
+			$route: {
+				params: {}
+			},
 			$store: {
 				state: {
 					User: {
@@ -217,6 +220,20 @@ describe('ViewMarker.vue', () => {
 		assert.equal(wrapper.vm.routeName, 'test/1');
 	});
 
+	it('Calculates route name with story', () => {
+		mocks.$route.params.story = 1;
+		const wrapper = shallowMount(ViewMarker, {
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+
+		assert.equal(wrapper.vm.routeName, 'test/story/1/1');
+	});
+
 	it('Shows marker', async () => {
 		const wrapper = shallowMount(ViewMarker, {
 			mocks
@@ -298,9 +315,31 @@ describe('ViewMarker.vue', () => {
 		await wrapper.vm.deleteMarker();
 
 		assert.isTrue(dispatchStub.calledOnce);
-		assert.isTrue(dispatchStub.calledWith('Markers/delete', 1));
+		assert.isTrue(dispatchStub.calledWith('Markers/delete', {id: 1, story: null}));
 		assert.isTrue(mocks.$toast.error.calledOnce);
 		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
+	});
+
+	it('Calls with delete with story when in story page', async () => {
+		mocks.$route.params.story = 1;
+		const dispatchStub = sinon.stub().returns(true);
+		mocks.$store = {
+			dispatch: dispatchStub
+		};
+		const wrapper = shallowMount(ViewMarker, {
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker
+		});
+
+		await wrapper.vm.deleteMarker();
+
+		assert.isTrue(dispatchStub.calledOnce);
+		assert.isTrue(dispatchStub.calledWith('Markers/delete', {id: 1, story: 1}));
+		assert.isFalse(wrapper.vm.$data.modal);
 	});
 
 	it('Closes modal and enables user navigation flag', async () => {
@@ -386,6 +425,25 @@ describe('ViewMarker.vue', () => {
 		assert.isTrue(mocks.$router.push.calledOnce);
 		assert.isTrue(mocks.$router.push.calledWith('/test'));
 		assert.isFalse(wrapper.vm.$data.userNavigation);
+	});
+
+	it('Navigates back to story when it was loaded before', async () => {
+		mocks.$router.currentRoute.params.username = 'test';
+		mocks.$route.params.story = 1;
+		const wrapper = mount(ViewMarker, {
+			stubs,
+			mocks
+		});
+
+		wrapper.setData({
+			modal: true,
+			marker,
+		});
+
+		wrapper.vm.closedNavigation();
+
+		assert.isTrue(mocks.$router.pushRoute.calledTwice);
+		assert.isTrue(mocks.$router.pushRoute.secondCall.calledWith('test/story/1'));
 	});
 
 	it('Navigates back to user when it was loaded before', async () => {

@@ -1,6 +1,7 @@
 import Router from 'vue-router';
 import ViewPage from '@/Views/ViewPage';
 import EditPage from '@/Views/EditPage';
+import StoryPage from '@/Views/StoryPage';
 import Auth from '@/Middleware/AuthMiddleware';
 import cache from "@/Services/Cache";
 
@@ -18,6 +19,11 @@ const router = new Router({
 			name: 'view',
 			component: ViewPage
 		},
+		{
+			path: '/:username/story/:story/:marker?',
+			name: 'story',
+			component: StoryPage
+		},
 	]
 });
 
@@ -26,7 +32,7 @@ router.pushRoute = function (location) {
 };
 
 router.afterEach(async (to, from) => {
-	if (from.name && (to.fullPath === '/edit' || to.fullPath === '/')) {
+	if (from.name) {
 		await cache.store('settings', 'route', to.fullPath);
 	}
 });

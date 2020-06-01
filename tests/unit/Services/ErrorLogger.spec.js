@@ -7,7 +7,6 @@ describe('ErrorLogger.js', () => {
 
 	afterEach('Reset sinon and settings', () => {
 		sinon.restore();
-
 	});
 
 	it('logs errors', async () => {
@@ -29,7 +28,7 @@ describe('ErrorLogger.js', () => {
 
 		assert.isTrue(httpStub.calledOnce);
 		assert.isTrue(httpStub.calledWith('/errors', {
-			url: 'http://localhost/',
+			url: window.location.href,
 			userAgent: 'Mozilla/5.0 (win32) AppleWebKit/537.36 (KHTML, like Gecko) jsdom/15.2.1',
 			error: {
 				name: 'name',
@@ -42,7 +41,6 @@ describe('ErrorLogger.js', () => {
 				},
 				tag: 'tag'
 			}
-
 		}));
 	});
 

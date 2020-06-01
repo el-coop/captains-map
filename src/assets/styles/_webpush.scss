@@ -1,10 +1,14 @@
 .webpush {
 	font-size: var(--size-7);
-	height: 100%;
 	background-color: var(--background-accent);
 
 	@include from($tablet) {
 		background-color: transparent;
+	}
+
+	&.is-wide {
+		padding-left: 1.5em;
+		padding-right: 1.5em;
 	}
 
 }

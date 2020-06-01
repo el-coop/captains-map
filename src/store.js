@@ -4,6 +4,7 @@ import User from '@/store/user';
 import Markers from '@/store/markers';
 import Profile from '@/store/profile';
 import Uploads from '@/store/uploads';
+import Stories from '@/store/stories';
 import Webpush from '@/store/Webpush';
 import cache from "@/Services/Cache";
 import router from './router'
@@ -34,6 +35,7 @@ export const actions = {
 const store = new Vuex.Store({
 	modules: {
 		User,
+		Stories,
 		Markers,
 		Profile,
 		Uploads,

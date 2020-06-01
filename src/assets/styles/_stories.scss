@@ -1,0 +1,52 @@
+.stories {
+	display: flex;
+	flex-direction: row;
+	overflow-x: auto;
+
+	@include from($desktop) {
+		overflow: hidden;
+		flex-wrap: wrap;
+		width: 230px;
+	}
+}
+
+.story {
+	margin-right: 10px;
+	margin-bottom: 10px;
+	text-align: center;
+
+	&__link {
+		margin-bottom: 5px;
+		border-radius: 50%;
+		background-color: var(--background-muted);
+		min-width: 65px;
+		max-width: 65px;
+		height: 65px;
+		color: var(--text);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		word-break: break-all;
+		overflow: hidden;
+
+		&:hover {
+			filter: brightness(0.7);
+		}
+	}
+
+	&__figure {
+		height: 100%;
+		width: 100%;
+
+		&.image {
+			margin-right: 5px;
+		}
+
+		&-image {
+			object-fit: cover;
+			height: 100% !important;
+			width: 100% !important;
+		}
+	}
+}

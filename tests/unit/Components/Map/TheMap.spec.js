@@ -20,6 +20,9 @@ describe('TheMap.vue', () => {
 					Markers: {
 						markers: [],
 						page: 0
+					},
+					Stories: {
+						story: null
 					}
 				},
 				getters: {
@@ -76,6 +79,21 @@ describe('TheMap.vue', () => {
 			mocks
 		});
 		assert.equal(wrapper.findAll('mapmarker-stub').length, 3);
+	});
+
+	it('renders story markers', () => {
+		mocks.$store.state.Markers.markers = [
+			{id: 1}, {id: 2}, {id: 3}
+		];
+
+		mocks.$store.state.Markers.markers = [
+			{id: 4}, {id: 5}, {id: 6}, {id: 7}
+		];
+
+		const wrapper = shallowMount(TheMap, {
+			mocks
+		});
+		assert.equal(wrapper.findAll('mapmarker-stub').length, 4);
 	});
 
 	it('renders second page of markers markers', () => {

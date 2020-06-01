@@ -1,6 +1,7 @@
 <template>
 	<div class="marker-list__wrapper">
-		<UploadsList v-if="! loading && $store.getters['Uploads/allFiles'].length && $router.currentRoute.name === 'edit'"/>
+		<UploadsList
+				v-if="! loading && showUploads"/>
 		<div v-if="loading" class="marker-list__loader">
 			<div class="is-loading"></div>
 		</div>
@@ -36,20 +37,39 @@
 
 		computed: {
 			markers() {
+				if (this.$store.state.Stories.story) {
+					return this.$store.state.Stories.markers;
+				}
 				const start = this.$store.state.Markers.page * pageSize;
 				const end = this.$store.state.Markers.page * pageSize + pageSize;
 				return this.$store.state.Markers.markers.slice(start, end);
 			},
 			hasNext() {
+				if (this.$store.state.Stories.story) {
+					return false;
+				}
 				const pageEnd = this.$store.state.Markers.page * pageSize + pageSize;
 				return this.$store.state.Markers.hasNext || pageEnd < this.$store.state.Markers.markers.length;
 			},
 			hasPrev() {
+				if (this.$store.state.Stories.story) {
+					return false;
+				}
 				return this.$store.state.Markers.page > 0 || this.$store.state.Markers.serverPage > 0;
 			},
 			loading() {
-				return this.$store.state.Markers.loading;
+				return this.$store.state.Markers.loading || this.$store.state.Stories.loading;
 			},
+
+			showUploads() {
+				if (!this.$store.getters['Uploads/allFiles'].length) {
+					return false
+				}
+
+				const user = this.$store.state.User.user;
+
+				return this.$router.currentRoute.name === 'edit' || (this.$store.state.Stories.story && user && this.$store.state.Stories.story.user_id === user.id);
+			}
 		},
 
 

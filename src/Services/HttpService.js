@@ -86,6 +86,20 @@ class HttpService {
 		}
 	}
 
+	async patch(url, data = {}, headers = {}, config = {}, repeat = true) {
+		try {
+			return await axios.patch(`${host}/${url}`, data, {
+				headers,
+				...config
+			});
+		} catch (error) {
+			if (error.response && error.response.data.message === 'invalid csrf token' && repeat) {
+				return await this.repeatWithCsrf('post', url, headers, data, config);
+			}
+			return error.response;
+		}
+	}
+
 	async delete(url, headers = {}, repeat = true) {
 		try {
 			return await axios.delete(`${host}/${url}`, headers);

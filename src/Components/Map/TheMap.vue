@@ -89,6 +89,9 @@
 
 		computed: {
 			markers() {
+				if (this.$store.state.Stories.story) {
+					return this.$store.state.Stories.markers;
+				}
 				const start = this.$store.state.Markers.page * process.env.VUE_APP_PAGE_SIZE;
 				const end = this.$store.state.Markers.page * process.env.VUE_APP_PAGE_SIZE + process.env.VUE_APP_PAGE_SIZE;
 				return this.$store.state.Markers.markers.slice(start, end);

@@ -19,6 +19,14 @@ describe('MarkerList.vue', () => {
 						page: 0,
 						serverPage: 0
 					},
+					Stories: {
+						story: null
+					},
+					User: {
+						user: {
+							id: 1
+						}
+					}
 				},
 				getters: {
 					'Uploads/allFiles': []
@@ -45,8 +53,21 @@ describe('MarkerList.vue', () => {
 		assert.isFalse(wrapper.find('.loader').exists());
 	});
 
-	it('Shows loader when loading', () => {
+	it('Shows loader when loading normal markers', () => {
 		mocks.$store.state.Markers.loading = true;
+
+		const wrapper = shallowMount(MarkerList, {
+			mocks
+		});
+
+		assert.isFalse(wrapper.find('ul').exists());
+		assert.isTrue(wrapper.find('.is-loading').exists());
+	});
+
+
+	it('Shows loader when loading story markers', () => {
+		mocks.$store.state.Markers.loading = false;
+		mocks.$store.state.Stories.loading = true;
 
 		const wrapper = shallowMount(MarkerList, {
 			mocks
@@ -67,6 +88,21 @@ describe('MarkerList.vue', () => {
 		assert.isFalse(wrapper.findAll('.button').exists());
 	});
 
+	it('Renders list of markers and hides pagination when story is chosen', () => {
+		mocks.$store.state.Markers.hasNext = true;
+		mocks.$store.state.Markers.page = 1;
+		mocks.$store.state.Markers.markers = new Array(2).fill({lat: 0, lng: 0});
+		mocks.$store.state.Stories.story = 1;
+		mocks.$store.state.Stories.markers = new Array(3).fill({lat: 0, lng: 0});
+
+		const wrapper = shallowMount(MarkerList, {
+			mocks
+		});
+
+		assert.equal(wrapper.findAll('markerentry-stub').length, 3);
+		assert.isFalse(wrapper.findAll('.button').exists());
+	});
+
 	it('Renders next pagination buttons when there is next', () => {
 		mocks.$store.state.Markers.markers = new Array(2).fill({lat: 0, lng: 0});
 		mocks.$store.state.Markers.hasNext = true;
@@ -76,7 +112,7 @@ describe('MarkerList.vue', () => {
 		});
 
 		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
-		assert.equal(wrapper.find('.button').text(),'Load Next');
+		assert.equal(wrapper.find('.button').text(), 'Load Next');
 	});
 
 	it('Shows previous button when page is 0 and server page is bigger', async () => {
@@ -90,7 +126,7 @@ describe('MarkerList.vue', () => {
 
 		await wrapper.vm.$nextTick();
 
-		assert.equal(wrapper.find('.button').text(),'Load Previous');
+		assert.equal(wrapper.find('.button').text(), 'Load Previous');
 	});
 
 	it('Loads next page', async () => {
@@ -172,13 +208,40 @@ describe('MarkerList.vue', () => {
 		assert.isTrue(wrapper.find('uploadslist-stub').exists());
 	});
 
-	it('Doesnt Show upload list when there are pending uploads and current route is not edit', () => {
+	it('Shows upload list when there are pending uploads and a users story is chosen', () => {
+		mocks.$store.getters["Uploads/allFiles"] = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$router.currentRoute.name = 'story';
+		mocks.$store.state.Stories.story = {
+			user_id: 1
+		};
+
+		const wrapper = shallowMount(MarkerList, {
+			mocks
+		});
+		assert.isTrue(wrapper.find('uploadslist-stub').exists());
+	});
+
+	it('Doesnt show upload list when there are pending uploads and current route is not edit', () => {
 		mocks.$store.getters["Uploads/allFiles"] = new Array(pageSize * 3).fill({lat: 0, lng: 0});
 		mocks.$router.currentRoute.name = 'view';
 
 		const wrapper = shallowMount(MarkerList, {
 			mocks
 		});
-		assert.isFalse(wrapper.find('uploads-list-stub').exists());
+		assert.isFalse(wrapper.find('uploadslist-stub').exists());
+	});
+
+	it('Doesnt Show upload list when there are pending uploads and route is story of other user', () => {
+		mocks.$store.getters["Uploads/allFiles"] = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		mocks.$router.currentRoute.name = 'story';
+		mocks.$store.state.Stories.story = {
+			user_id: 2
+		};
+
+		const wrapper = shallowMount(MarkerList, {
+			mocks
+		});
+
+		assert.isFalse(wrapper.find('uploadslist-stub').exists());
 	});
 });

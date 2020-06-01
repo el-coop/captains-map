@@ -38,4 +38,12 @@ describe('router', () => {
 		assert.isNotNull(viewRoute);
 		assert.equal(viewRoute.component.name,'ViewPage');
 	});
+
+	it('defines story route', () => {
+		const storyRoute = router.options.routes.find((item) => {
+			return item.path === '/:username/story/:story/:marker?';
+		});
+		assert.isNotNull(storyRoute);
+		assert.equal(storyRoute.component.name,'StoryPage');
+	});
 });

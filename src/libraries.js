@@ -23,7 +23,8 @@ import {
 	faShareAlt,
 	faImages,
 	faSlidersH,
-	faRss
+	faRss,
+	faEdit
 } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import Meta from 'vue-meta';
@@ -31,7 +32,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueIziToast from 'vue-izitoast';
 import errorLogger from '@/Services/ErrorLogger';
 
-library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faSignOutAlt, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia, faUserAlt, faChevronDown, faSignInAlt, faExternalLinkSquareAlt, faSearchLocation, faShareAlt, faImages, faSlidersH, faRss);
+library.add(faUpload, faTimesCircle, faFileImage, faCameraRetro, faCopy, faSignOutAlt, faGlobe, faFacebook, faSearch, faUsers, faAddressCard, faList, faMapMarked, faGlobeAsia, faUserAlt, faChevronDown, faSignInAlt, faExternalLinkSquareAlt, faSearchLocation, faShareAlt, faImages, faSlidersH, faRss, faEdit);
 
 Vue.use(Meta);
 Vue.component('FontAwesomeIcon', FontAwesomeIcon);

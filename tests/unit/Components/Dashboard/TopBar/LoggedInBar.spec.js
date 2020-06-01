@@ -33,6 +33,9 @@ describe('LoggedInBar.vue', () => {
 							username: 'user',
 						},
 						isLoggedIn: sinon.stub().returns(true)
+					},
+					Stories: {
+						story: null
 					}
 				}
 			}

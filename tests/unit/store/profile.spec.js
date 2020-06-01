@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
+import store from '@/store';
 import profileStore from '@/store/profile';
 import http from '@/Services/HttpService';
 
@@ -36,13 +37,75 @@ describe('User Store', () => {
 		});
 	});
 
+	it('adds a story to list', () => {
+
+		profileStore.mutations.addStory(profileStore.state, {
+			id: 1
+		});
+
+		assert.deepEqual(profileStore.state.stories, [{
+			id: 1
+		}]);
+	});
+
+	it('removes a story from list', () => {
+		profileStore.state.stories = [{
+			id: 1
+		}];
+
+		profileStore.mutations.removeStory(profileStore.state, {
+			id: 1
+		});
+
+		assert.deepEqual(profileStore.state.stories, []);
+	});
+
+	it('sets stories', () => {
+		profileStore.state.stories = [{
+			id: 1
+		}];
+
+		profileStore.mutations.setStories(profileStore.state, [{id: 2}, {id: 3}]);
+
+		assert.deepEqual(profileStore.state.stories, [{id: 2}, {id: 3}]);
+	});
+
+	it('Tracks stories cover photos', async () => {
+		profileStore.state.stories = [{
+			id: 1,
+			cover: {
+				'type': 'type1',
+				'path': 'path1'
+			}
+		}];
+
+		profileStore.mutations.trackStory(profileStore.state, {
+			id: 1,
+			cover: {
+				'type': 'type2',
+				'path': 'path2'
+			}
+		})
+
+		assert.deepEqual(profileStore.state.stories[0].cover, {
+			'type': 'type2',
+			'path': 'path2'
+		});
+	});
+
+
 	it('Loads user bio', async () => {
 
 		const commit = sinon.stub();
 		const getStub = sinon.stub(http, 'get').returns({
 			data: {
 				description: 'desc',
-				path: 'path'
+				path: 'path',
+				stories: [{
+					id: 1
+				}, {
+					id: 2
+				}]
 			}
 		});
 
@@ -54,19 +117,34 @@ describe('User Store', () => {
 		assert.isTrue(getStub.calledOnce);
 		assert.isTrue(getStub.calledWith('bio/test'));
 
-		assert.isTrue(commit.calledTwice);
+		assert.equal(commit.callCount, 4);
+
 		assert.deepEqual(commit.firstCall.args, [
 			'updateBio',
 			{}
 		]);
 
 		assert.deepEqual(commit.secondCall.args, [
+			'setStories',
+			[]
+		]);
+
+		assert.deepEqual(commit.thirdCall.args, [
 			'updateBio',
 			{
 				username: 'test',
 				description: 'desc',
 				path: 'path'
 			}
+		]);
+
+		assert.deepEqual(commit.getCall(3).args, [
+			'setStories',
+			[{
+				id: 1
+			}, {
+				id: 2
+			}]
 		]);
 	});
 

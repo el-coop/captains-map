@@ -25,6 +25,7 @@
 
 		methods: {
 			envSetup() {
+				this.$store.commit('Stories/exit');
 				this.$store.commit('Markers/setUser', this.$route.params.username || '');
 				if (this.$route.params.username) {
 					this.$store.dispatch('Profile/load', this.$route.params.username);
@@ -48,9 +49,10 @@
 
 				if (marker) {
 					return map.setView([marker.lat, marker.lng], 16);
-				} else {
-					return this.$bus.$emit('404');
 				}
+
+				return this.$bus.$emit('404');
+
 			}
 		},
 

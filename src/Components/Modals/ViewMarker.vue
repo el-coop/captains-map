@@ -76,7 +76,10 @@
 		methods: {
 			async deleteMarker() {
 				this.deleting = true;
-				const response = await this.$store.dispatch('Markers/delete', this.marker.id);
+				const response = await this.$store.dispatch('Markers/delete', {
+					id: this.marker.id,
+					story: this.$route.params.story || null
+				});
 				this.deleting = false;
 				if (response) {
 					this.modal = false;
@@ -104,6 +107,9 @@
 				if (this.userNavigation) {
 					this.userNavigation = false;
 					return this.$router.push(`/${this.marker.user.username}`);
+				}
+				if (this.$route.params.story) {
+					return this.$router.pushRoute(`${this.$router.currentRoute.params.username}/story/${this.$route.params.story}`);
 				}
 				if (this.$router.currentRoute.params.username) {
 					return this.$router.pushRoute(this.$router.currentRoute.params.username);
@@ -134,6 +140,9 @@
 			routeName() {
 				if (!this.marker) {
 					return '';
+				}
+				if (this.$route.params.story) {
+					return `${this.marker.user.username}/story/${this.$route.params.story}/${this.marker.id}`
 				}
 				return `${this.marker.user.username}/${this.marker.id}`;
 			}

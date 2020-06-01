@@ -43,8 +43,13 @@ class UploadService {
 
 	async upload(marker) {
 		const formData = buildFormData(marker);
+		let url = 'marker/create';
 
-		const response = await http.post('marker/create', formData, {}, {
+		if(marker.story){
+			url += `/${marker.story}`;
+		}
+
+		const response = await http.post(url, formData, {}, {
 			onUploadProgress: this.onUploadProgress
 		});
 		if (!response || response.status < 200 || response.status > 299) {
