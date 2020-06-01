@@ -13,6 +13,11 @@ describe('Stories.vue', () => {
 		mocks = {
 			$store: {
 				state: {
+					User: {
+						user: {
+							username: 'test'
+						}
+					},
 					Profile: {
 						user: {
 							username: 'test',
@@ -40,8 +45,65 @@ describe('Stories.vue', () => {
 	afterEach(() => {
 		sinon.restore();
 	});
+	it('Renders with stories when logged out', async () => {
+		mocks.$store.state.User.user = null;
 
-	it('Renders with stories', async () => {
+		const wrapper = mount(Stories, {
+			stubs,
+			mocks
+		});
+
+		assert.isTrue(wrapper.find('.stories').exists());
+		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
+		assert.equal(wrapper.findAll('.story').length, 2)
+	});
+
+	it('Renders without stories when logged out', async () => {
+		mocks.$store.state.User.user = null;
+		mocks.$store.state.Profile.stories = [];
+
+		const wrapper = mount(Stories, {
+			stubs,
+			mocks
+		});
+
+		assert.isTrue(wrapper.find('.stories').exists());
+		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
+		assert.equal(wrapper.findAll('.story').length, 0)
+	});
+
+	it('Renders with stories when not same user', async () => {
+		mocks.$store.state.User.user = {
+			username: 'kla'
+		};
+
+		const wrapper = mount(Stories, {
+			stubs,
+			mocks
+		});
+
+		assert.isTrue(wrapper.find('.stories').exists());
+		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
+		assert.equal(wrapper.findAll('.story').length, 2)
+	});
+
+	it('Renders without stories when not same user', async () => {
+		mocks.$store.state.User.user = {
+			username: 'kla'
+		};
+		mocks.$store.state.Profile.stories = [];
+
+		const wrapper = mount(Stories, {
+			stubs,
+			mocks
+		});
+
+		assert.isTrue(wrapper.find('.stories').exists());
+		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
+		assert.equal(wrapper.findAll('.story').length, 0)
+	});
+
+	it('Renders with stories when can edit', async () => {
 		const wrapper = mount(Stories, {
 			stubs,
 			mocks
@@ -52,8 +114,7 @@ describe('Stories.vue', () => {
 		assert.equal(wrapper.findAll('.story').length, 3)
 	});
 
-
-	it('Renders without stories', async () => {
+	it('Renders without stories when can edit', async () => {
 		mocks.$store.state.Profile.stories = [];
 
 		const wrapper = mount(Stories, {

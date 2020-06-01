@@ -1,6 +1,6 @@
 <template>
 	<div class="stories">
-		<div class="story">
+		<div class="story" v-if="edit">
 			<a class="story__link" @click="createModal = true">
 				New
 			</a>
@@ -15,7 +15,7 @@
 			<span class="story__name" v-text="story.name"/>
 		</div>
 
-		<StoryEditModal :active.sync="createModal" @saved="chooseStory"/>
+		<StoryEditModal v-if="edit" :active.sync="createModal" @saved="chooseStory"/>
 	</div>
 </template>
 
@@ -36,6 +36,10 @@
 		computed: {
 			stories() {
 				return this.$store.state.Profile.stories;
+			},
+			edit() {
+				return !!(this.$store.state.User.user && this.$store.state.Profile.user.username === this.$store.state.User.user.username);
+
 			}
 		},
 
