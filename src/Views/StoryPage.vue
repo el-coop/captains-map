@@ -37,10 +37,13 @@
 
 		methods: {
 			async loadStory() {
-				const responseStatus = await this.$store.dispatch('Stories/load', this.$route.params.story);
+				const responseStatus = await this.$store.dispatch('Stories/load', {
+					user: this.$route.params.username,
+					storyId: this.$route.params.story
+				});
 
 				if (responseStatus === 404) {
-					return this.$bus.$emit(404);
+					return this.$bus.$emit('404');
 				}
 				if (responseStatus === 'cached') {
 					this.$toast.info('Markers loaded from cache', '');

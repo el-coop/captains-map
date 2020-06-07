@@ -1,6 +1,6 @@
 <template>
 	<div class="top-bar">
-		<div class="top-bar__left">
+		<div class="top-bar__left" :class="{'top-bar__left--logged-out': ! hasUsername}">
 			<ProfileOpen v-if="hasUsername && hasStory === false"/>
 			<StoriesOpen v-else-if="hasStory !== false"/>
 			<figure v-else class="image is-32x32 is-hidden-mobile">
@@ -37,7 +37,7 @@
 			},
 
 			hasStory() {
-				return !! this.$store.state.Stories.story;
+				return !!this.$store.state.Stories.story;
 			}
 		}
 	}

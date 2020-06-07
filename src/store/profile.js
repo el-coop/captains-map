@@ -22,6 +22,16 @@ export default {
 		setStories(state, stories) {
 			state.stories = stories;
 		},
+		updateStory(state, {id, name, published}) {
+			if (!state.stories.length) {
+				return;
+			}
+			const story = state.stories.find((story) => {
+				return story.id == id;
+			});
+
+			story.name = name;
+		},
 		addStory(state, story) {
 			state.stories.unshift(story);
 		},
@@ -50,6 +60,11 @@ export default {
 	},
 
 	actions: {
+		purge({commit}){
+			commit('updateBio', {});
+			commit('setStories', []);
+		},
+
 		async load({commit, state}, username) {
 			if (username !== state.user.username) {
 				commit('updateBio', {});

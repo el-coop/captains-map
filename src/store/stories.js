@@ -44,9 +44,9 @@ export default {
 	},
 
 	actions: {
-		async load({state}, storyId) {
+		async load({state}, {user, storyId}) {
 			state.loading = true;
-			const response = await $http.get(`story/${storyId}`);
+			const response = await $http.get(`story/${user}/${storyId}`);
 			state.loading = false;
 			if (response.status === 404) {
 				return 404;
@@ -86,6 +86,13 @@ export default {
 			} else if (response.status === 200) {
 				state.story.name = name;
 				state.story.published = published;
+				commit('Profile/updateStory', {
+					id: state.story.id,
+					name,
+					published
+				}, {
+					root: true
+				});
 			}
 
 			return {

@@ -34,6 +34,7 @@ export default {
 		async logout({dispatch, state}) {
 			await $http.get('auth/logout');
 			await dispatch('Uploads/purge', {}, {root: true});
+			await dispatch('Profile/purge', {}, {root: true});
 			await cache.forget('settings', 'user');
 			await cache.clear('requests');
 			state.user = null;
@@ -42,9 +43,10 @@ export default {
 			}
 		},
 
-		async login({state}, form) {
+		async login({state, dispatch}, form) {
 			const response = await $http.post('auth/login', form);
 			if (response.status === 200) {
+				await dispatch('Profile/purge', {}, {root: true});
 				const user = response.data.user;
 				state.user = user;
 				await cache.store('settings', 'user', {

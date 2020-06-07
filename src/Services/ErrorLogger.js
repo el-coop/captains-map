@@ -2,7 +2,7 @@ import http from "@/Services/HttpService";
 
 class ErrorsLogger {
 	handle(error, vm = {}) {
-		http.post('/errors', {
+		http.post('errors', {
 			url: window.location.href,
 			userAgent: navigator.userAgent || '',
 			error: {
@@ -15,7 +15,6 @@ class ErrorsLogger {
 				props: vm.$options ? vm.$options.propsData : {},
 			}
 		});
-
 	}
 }
 
