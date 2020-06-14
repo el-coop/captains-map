@@ -17,6 +17,11 @@ describe('StoriesOpen.vue', () => {
 						story: {
 							name: 'story1'
 						}
+					},
+					User: {
+						user: {
+							username: 'username'
+						}
 					}
 				},
 				commit: sinon.stub()
@@ -45,7 +50,35 @@ describe('StoriesOpen.vue', () => {
 	});
 
 
-	it('Renders', () => {
+	it('Renders in non edit mode when no logged in user', () => {
+		mocks.$store.state.User.user = null;
+
+		const wrapper = shallowMount(StoriesOpen, {
+			mocks,
+			stubs
+		});
+
+		assert.include(wrapper.text(), 'story1');
+		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
+		assert.isTrue(wrapper.find('.profile-open').exists());
+	});
+
+	it('Renders in non edit mode when logged in user not story owner', () => {
+		mocks.$store.state.User.user = {
+			username: 'test'
+		};
+
+		const wrapper = shallowMount(StoriesOpen, {
+			mocks,
+			stubs
+		});
+
+		assert.include(wrapper.text(), 'story1');
+		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
+		assert.isTrue(wrapper.find('.profile-open').exists());
+	});
+
+	it('Renders in edit mode when username matches user logged in user', () => {
 		const wrapper = shallowMount(StoriesOpen, {
 			mocks,
 			stubs

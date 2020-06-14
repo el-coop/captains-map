@@ -93,6 +93,26 @@ describe('User Store', () => {
 		});
 	});
 
+	it('Updates story', async () => {
+		profileStore.state.stories = [{
+			id: 1,
+			name: 'bla',
+			published: 0
+		}];
+
+		profileStore.mutations.updateStory(profileStore.state, {
+			id: 1,
+			name: 'story',
+			published: 1
+		})
+
+		assert.deepEqual(profileStore.state.stories[0], {
+			id: 1,
+			name: 'story',
+			published: 1
+		});
+	});
+
 
 	it('Loads user bio', async () => {
 
@@ -162,6 +182,20 @@ describe('User Store', () => {
 
 		assert.isFalse(getStub.called);
 		assert.isFalse(commit.called);
+
+	});
+
+	it('Purges bio and storues', async () => {
+
+		const commit = sinon.stub();
+
+		await profileStore.actions.purge({
+			commit,
+		});
+
+		assert.isTrue(commit.calledTwice);
+		assert.isTrue(commit.firstCall.calledWith('updateBio', {}));
+		assert.isTrue(commit.secondCall.calledWith('setStories', []));
 
 	});
 });

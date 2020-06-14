@@ -31,6 +31,7 @@ export default {
 			});
 
 			story.name = name;
+			story.published = published;
 		},
 		addStory(state, story) {
 			state.stories.unshift(story);
