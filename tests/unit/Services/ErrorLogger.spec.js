@@ -27,7 +27,7 @@ describe('ErrorLogger.js', () => {
 		});
 
 		assert.isTrue(httpStub.calledOnce);
-		assert.isTrue(httpStub.calledWith('/errors', {
+		assert.isTrue(httpStub.calledWith('errors', {
 			url: window.location.href,
 			userAgent: 'Mozilla/5.0 (win32) AppleWebKit/537.36 (KHTML, like Gecko) jsdom/15.2.1',
 			error: {

@@ -100,8 +100,9 @@ describe('User Store', () => {
 
 		assert.isNull(state.user);
 
-		assert.isTrue(dispatch.calledOnce);
-		assert.isTrue(dispatch.calledWith('Uploads/purge'));
+		assert.isTrue(dispatch.calledTwice);
+		assert.isTrue(dispatch.firstCall.calledWith('Uploads/purge'));
+		assert.isTrue(dispatch.secondCall.calledWith('Profile/purge'));
 		assert.isTrue(cacheStub.calledOnce);
 		assert.isTrue(cacheStub.calledWith('settings', 'user'));
 		assert.isTrue(cacheClearStub.calledOnce);
@@ -130,12 +131,16 @@ describe('User Store', () => {
 			}
 		});
 		const state = {};
+		const dispatch = sinon.stub();
 
 		const response = await userStore.actions.login({
 			commit: {},
-			state
+			state,
+			dispatch
 		}, {});
 
+		assert.isTrue(dispatch.called);
+		assert.isTrue(dispatch.calledWith('Profile/purge', {}, {root: true}));
 		assert.isTrue(response);
 		assert.deepEqual(state, {
 			user

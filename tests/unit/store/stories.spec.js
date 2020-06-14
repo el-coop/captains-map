@@ -120,15 +120,20 @@ describe('Stories Store', () => {
 			}],
 		};
 
-		sinon.stub(http, 'get').callsFake(() => {
+		const getStub = sinon.stub(http, 'get').callsFake(() => {
 			return {
 				status: 200,
 				data
 			};
 		});
 
-		const response = await storiesStore.actions.load(storiesStore, 1);
+		const response = await storiesStore.actions.load(storiesStore, {
+			user: 'test',
+			storyId: 1
+		});
 
+		assert.isTrue(getStub.called);
+		assert.isTrue(getStub.calledWith('story/test/1'));
 		assert.equal(response, 200);
 		assert.isFalse(storiesStore.state.loading);
 		assert.deepEqual(storiesStore.state.story, {
@@ -151,14 +156,19 @@ describe('Stories Store', () => {
 			loading: false,
 		};
 
-		sinon.stub(http, 'get').callsFake(() => {
+		const getStub = sinon.stub(http, 'get').callsFake(() => {
 			return {
 				status: 404,
 			};
 		});
 
-		const response = await storiesStore.actions.load(storiesStore, 1);
+		const response = await storiesStore.actions.load(storiesStore, {
+			user: 'test',
+			storyId: 1
+		});
 
+		assert.isTrue(getStub.called);
+		assert.isTrue(getStub.calledWith('story/test/1'));
 		assert.equal(response, 404);
 		assert.isFalse(storiesStore.state.loading);
 		assert.equal(storiesStore.state.story, null);
@@ -230,7 +240,12 @@ describe('Stories Store', () => {
 			published: 1
 		}));
 
-		assert.isTrue(commit.notCalled);
+		assert.isTrue(commit.called);
+		assert.isTrue(commit.calledWith('Profile/updateStory', {
+			id: 1,
+			name: 'name',
+			published: 1
+		}));
 
 		assert.deepEqual(response, {
 			status: 200,

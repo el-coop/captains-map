@@ -1,15 +1,16 @@
 <template>
 	<div class="profile-open">
 		<button class="profile-open__button button" @click="edit = true">
-			<FontAwesomeIcon icon="edit" class="icon"/>
+			<FontAwesomeIcon icon="edit" class="icon" v-if="canEdit"/>
 			<StoryCoverImage :cover="story.cover" :is-small="true"/>
-			{{ story.name }}
+			<span class="is-size-7-tablet profile-open__button-text"
+				  v-text="story.name"/>
 		</button>
 		<button @click="exitStory" class="webpush button is-wide">
 			<FontAwesomeIcon icon="times-circle" class="icon"/>
 		</button>
 
-		<StoryEditModal :active.sync="edit" :story="story" @saved="storySaved"/>
+		<StoryEditModal v-if="canEdit" :active.sync="edit" :story="story" @saved="storySaved"/>
 	</div>
 </template>
 
@@ -31,6 +32,10 @@
 			story() {
 				return this.$store.state.Stories.story;
 			},
+			canEdit() {
+
+				return !!(this.$store.state.User.user && this.$route.params.username === this.$store.state.User.user.username);
+			}
 		},
 
 		methods: {

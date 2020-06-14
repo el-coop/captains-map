@@ -39,6 +39,7 @@ describe('TheTopBar.vue', () => {
 
 		assert.isFalse(wrapper.find('ProfileOpen-stub').exists());
 		assert.isFalse(wrapper.find('StoriesOpen-stub').exists());
+		assert.isTrue(wrapper.find('.top-bar__left.top-bar__left--logged-out').exists());
 		assert.include(wrapper.find('img').element.src,'globe-icon');
 	});
 
@@ -50,6 +51,7 @@ describe('TheTopBar.vue', () => {
 		});
 
 		assert.isTrue(wrapper.find('ProfileOpen-stub').exists());
+		assert.isFalse(wrapper.find('.top-bar__left.top-bar__left--logged-out').exists());
 		assert.isFalse(wrapper.find('StoriesOpen-stub').exists());
 		assert.isFalse(wrapper.find('img').exists());
 	});
@@ -66,6 +68,7 @@ describe('TheTopBar.vue', () => {
 
 		assert.isFalse(wrapper.find('ProfileOpen-stub').exists());
 		assert.isTrue(wrapper.find('StoriesOpen-stub').exists());
+		assert.isFalse(wrapper.find('.top-bar__left.top-bar__left--logged-out').exists());
 		assert.isFalse(wrapper.find('img').exists());
 	});
 });
