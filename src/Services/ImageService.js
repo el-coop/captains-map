@@ -79,8 +79,8 @@ function imageToCanvas(src, orientation) {
 	const image = new Image();
 	return new Promise((resolve, reject) => {
 		image.addEventListener('load', () => {
-			let width = image.width;
-			let height = image.height;
+			const width = image.width;
+			const height = image.height;
 			const canvas = document.createElement('canvas');
 			const ctx = canvas.getContext("2d");
 
@@ -132,7 +132,59 @@ function imageToCanvas(src, orientation) {
 
 		image.src = src;
 	});
+}
 
+function rotatedCanvas(src, rotation) {
+	const objectUrl = URL.createObjectURL(src);
+	const image = new Image();
+
+	return new Promise((resolve) => {
+		image.addEventListener('load', () => {
+			const canvas = document.createElement('canvas');
+			const ctx = canvas.getContext("2d");
+			const width = image.width;
+			const height = image.height;
+
+
+			if (rotation === 90 || rotation === 270) {
+				canvas.width = height;
+				canvas.height = width;
+			} else {
+				canvas.width = width;
+				canvas.height = height;
+			}
+
+			switch (rotation) {
+				case 90: {
+					ctx.transform(0, -1, 1, 0, 0, width);
+					break;
+				}
+				case 180: {
+					ctx.transform(-1, 0, 0, -1, width, height);
+					break;
+				}
+				case 270: {
+					ctx.transform(0, 1, -1, 0, height, 0);
+					break;
+				}
+			}
+
+			ctx.drawImage(image, 0, 0);
+
+			canvas.toBlob((blob) => {
+				URL.revokeObjectURL(objectUrl)
+				resolve(blob);
+			}, 'image/jpeg');
+		});
+
+
+		image.addEventListener('error', (error) => {
+			URL.revokeObjectURL(objectUrl)
+			resolve(src);
+		});
+
+		image.src = objectUrl;
+	});
 }
 
 class ImageService {
@@ -164,15 +216,18 @@ class ImageService {
 		}
 		const orientation = await findEXIFinJPEG(image);
 
-		if(orientation < 2){
-			return await imageToBlob(image);
-		}
-
 		const src = await imageToDataUrl(image);
 		const blob = await imageToCanvas(src, orientation);
 
 		return await imageToBlob(blob);
 	};
+
+	static async rotate(image, rotation) {
+		const blob = this.stringToBlob(image);
+		const rotatedBlob = await rotatedCanvas(blob, rotation);
+		return await imageToBlob(rotatedBlob);
+	}
+
 }
 
 export default ImageService;
