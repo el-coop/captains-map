@@ -6,6 +6,11 @@
             <template v-if="Object.keys(value).length">
                 <div v-for="(file,key) in value" :key="key" class="dropzone__preview">
                     <img class="dropzone__preview-image" :src="file.preview" @click.prevent="editImage(key)">
+                    <button class="dropzone__preview-edit button is-selected-background is-fullwidth is-opaque"
+                            type="button" @click.prevent="editImage(key)">
+                        <FontAwesomeIcon icon="edit" class="dropzone__preview-label-icon"/>
+                        <span>Edit</span>
+                    </button>
                     <div class="dropzone__preview-label" @click.prevent="removeImage(key)">
                         <FontAwesomeIcon icon="times-circle" class="dropzone__preview-label-icon"/>
                         <span v-text="file.name"/>
@@ -40,7 +45,8 @@
             </template>
         </label>
         <p class="help is-danger" v-if="error" v-text="error"/>
-        <EditImage :image="value[editedImage]" @save="editedImage = null" @close="editedImage = null" @delete="removeImage(editedImage)"/>
+        <EditImage :image="value[editedImage]" @close="editedImage = null" @delete="removeImage(editedImage)"
+                   @save="saveImageChanges"/>
     </div>
 </template>
 
@@ -108,6 +114,13 @@ export default {
         
         editImage(key) {
             this.editedImage = key;
+        },
+        
+        async saveImageChanges(changes) {
+            console.log(changes);
+            const image = this.value[this.editedImage];
+            await image.rotate(changes.rotation);
+            this.editedImage = null
         }
     },
 }

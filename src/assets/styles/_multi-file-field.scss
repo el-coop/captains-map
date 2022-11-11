@@ -32,6 +32,7 @@
 	}
 
 	&__preview {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -68,6 +69,14 @@
 			&-icon {
 				margin-right: 0.5em;
 			}
+		}
+
+		&-edit {
+			position: absolute;
+			left: 0;
+			top: 0;
+			border-top-left-radius: 1px !important;
+			border-top-right-radius: 1px !important;
 		}
 
 		&-image {

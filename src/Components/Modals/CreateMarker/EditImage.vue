@@ -51,23 +51,31 @@ export default {
             if (this.rotation === 360) {
                 this.rotation = 0;
             }
-            this.preview = await this.image.rotatedImage(this.rotation);
+            this.preview = await this.image.rotatedPreview(this.rotation);
         },
         saveChanges() {
-            this.$emit('save');
+            const changes = {
+                rotation: this.rotation
+            }
+            this.$emit('save', changes);
         },
         deleteMarker() {
             this.$emit('delete');
+        },
+        closeModal(){
+            this.modal = false;
+            this.rotation = 0;
+            this.preview = null;
         }
     },
     watch: {
         async image(value) {
             if (value) {
                 this.modal = true;
-                this.preview = await value.rotatedImage();
+                this.preview = await value.rotatedPreview();
                 return;
             }
-            this.modal = false;
+            this.closeModal();
         }
     }
 }

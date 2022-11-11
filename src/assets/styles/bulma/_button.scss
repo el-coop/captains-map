@@ -96,6 +96,13 @@
 		}
 	}
 
+	&.is-opaque {
+		opacity: 0.7;
+		&:hover {
+			opacity: 0.9;
+		}
+	}
+
 	& > .icon:not(:last-child) {
 		margin-right: .275em;
 		font-size: 1rem;

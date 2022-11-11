@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import http, { installer as HttpService } from '@/Services/HttpService';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import http, {installer as HttpService} from '@/Services/HttpService';
+import {library} from '@fortawesome/fontawesome-svg-core';
 import {
 	faUpload,
 	faTimesCircle,
@@ -27,9 +27,9 @@ import {
 	faEdit,
 	faUndo
 } from '@fortawesome/free-solid-svg-icons';
-import { faFacebook } from '@fortawesome/free-brands-svg-icons';
+import {faFacebook} from '@fortawesome/free-brands-svg-icons';
 import Meta from 'vue-meta';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import VueIziToast from 'vue-izitoast';
 import errorLogger from '@/Services/ErrorLogger';
 
@@ -45,11 +45,12 @@ Vue.use(VueIziToast, {
 Vue.config.productionTip = false;
 Vue.prototype.$bus = new Vue();
 
+if (process.env.NODE_ENV === 'production') {
+	window.onerror = (message, source, lineno, colno, error) => {
+		errorLogger.handle(error);
+	};
 
-window.onerror = (message, source, lineno, colno, error) => {
-	errorLogger.handle(error);
-};
-
-Vue.config.errorHandler = (error, vm) => {
-	errorLogger.handle(error, vm);
-};
+	Vue.config.errorHandler = (error, vm) => {
+		errorLogger.handle(error, vm);
+	};
+}
