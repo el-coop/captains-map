@@ -19,6 +19,17 @@ class UploadFile {
 		return 'data:image/jpeg;base64,' + btoa(this.image);
 	}
 
+	async rotatedPreview(degrees = 0) {
+		if(! degrees){
+			return this.preview;
+		}
+		const blob = await ImageService.rotate(this.image, degrees);
+		return  'data:image/jpeg;base64,' + btoa(blob);
+	}
+
+	async rotate(degrees){
+		this.image = await ImageService.rotate(this.image,degrees);
+	}
 }
 
 export default UploadFile;

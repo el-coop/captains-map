@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "test:unit:watch": "vue-cli-service test:unit --watch",
+    "test:unit": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit",
+    "test:unit:watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit --watch",
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "axios": "^0.19.2",
     "bulma": "^0.8.2",
+    "cross-env": "^7.0.3",
     "leaflet": "^1.6.0",
     "leaflet.markercluster": "^1.4.1",
     "localforage": "^1.7.3",
@@ -35,7 +36,7 @@
     "@vue/test-utils": "1.0.0-beta.29",
     "chai": "^4.2.0",
     "moxios": "^0.4.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "sass-loader": "^8.0.2",
     "sinon": "^7.5.0",
     "vue-template-compiler": "^2.6.11"

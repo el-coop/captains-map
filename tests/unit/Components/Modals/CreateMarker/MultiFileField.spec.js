@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField";
+import EditImage from "@/Components/Modals/CreateMarker/EditImage";
 import sinon from 'sinon';
 import ImageService from "@/Services/ImageService";
 import UploadFile from "@/Classes/UploadFile";
@@ -274,5 +275,108 @@ describe('CreateMarker/MultiFileField.vue', () => {
 		assert.deepEqual(Object.values(emittedEvent), [
 			new UploadFile('name1', 'image1')
 		]);
+	});
+
+	it('Shows edit image button and calls component when clicked', async () => {
+		const value = {
+			1: new UploadFile('name1', 'image1'),
+			2: new UploadFile('name2', 'image2')
+		};
+		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				value
+			},
+			stubs
+		});
+
+		assert.isTrue(wrapper.find(`img[src="${value[1].preview}"]`).exists());
+		assert.include(wrapper.html(), '<span>Edit</span>');
+
+		wrapper.find('.dropzone__preview-edit').trigger('click');
+		assert.equal(wrapper.vm.$data.editedImage, 1);
+
+
+		sinon.restore();
+	});
+
+
+	it('Unsets edited image when EditImage is closed', async () => {
+
+		const value = {
+			1: new UploadFile('name1', 'image1'),
+		};
+		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				value,
+			},
+			stubs
+		});
+
+		wrapper.setData({
+			editedImage: 1
+		});
+
+		wrapper.find(EditImage).vm.$emit('close');
+
+		assert.equal(wrapper.vm.$data.editedImage, null);
+
+		sinon.restore();
+	});
+
+	it('Removes image when EditImage emits delete', async () => {
+
+		const value = {
+			1: new UploadFile('name1', 'image1'),
+			2: new UploadFile('name2', 'image2')
+		};
+		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				value,
+			},
+			stubs
+		});
+
+		wrapper.setData({
+			editedImage: 2
+		});
+
+		wrapper.find(EditImage).vm.$emit('delete');
+
+		assert.equal(wrapper.vm.$data.editedImage, null);
+		const emittedEvent = wrapper.emitted().input[0][0];
+		assert.deepEqual(Object.values(emittedEvent), [
+			new UploadFile('name1', 'image1')
+		]);
+
+		sinon.restore();
+	});
+
+	it('Calls image rotate function when EditImage emitts save event', async () => {
+
+		const rotateStub = sinon.stub(ImageService, 'rotate');
+		const value = {
+			1: new UploadFile('name1', 'image1'),
+		};
+		const wrapper = shallowMount(MultiFileField, {
+			propsData: {
+				value,
+			},
+			stubs
+		});
+
+		wrapper.setData({
+			editedImage: 1
+		});
+
+		wrapper.find(EditImage).vm.$emit('save',{rotation: 90});
+
+		await wrapper.vm.$nextTick();
+
+		assert.equal(wrapper.vm.$data.editedImage, null);
+		assert.isTrue(rotateStub.calledOnce);
+		assert.isTrue(rotateStub.calledWith('image1',90));
+
+
+		sinon.restore();
 	});
 });
