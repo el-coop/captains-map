@@ -5,8 +5,8 @@
   "scripts": {
     "serve": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "test:unit:watch": "vue-cli-service test:unit --watch",
+    "test:unit": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit",
+    "test:unit:watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit --watch",
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {

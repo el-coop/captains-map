@@ -81,7 +81,7 @@ describe('StoryPage.vue', () => {
 	});
 
 	it('Renders with create marker when user created story', () => {
-
+		sinon.stub(map, 'setView');
 		mocks.$store.state.User.user = {
 			id: 1
 		};

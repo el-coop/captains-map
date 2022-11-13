@@ -117,7 +117,6 @@ export default {
         },
         
         async saveImageChanges(changes) {
-            console.log(changes);
             const image = this.value[this.editedImage];
             await image.rotate(changes.rotation);
             this.editedImage = null
