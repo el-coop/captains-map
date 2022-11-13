@@ -4,8 +4,8 @@
             <p class="card__header-title">Edit Image</p>
         </template>
         <template #image>
-            <figure class="image view-marker__image">
-                <img :src="preview" class="view-marker__image-img">
+            <figure class="image view-marker__image" :class="{'is-loading': loading}">
+                <img :src="preview" class="view-marker__image-img" >
                 <button class="button is-selected-background view-marker__image-button" @click="rotateImage"
                         type="button">
                     <FontAwesomeIcon icon="undo" fixed-width/>
@@ -42,16 +42,19 @@ export default {
         return {
             modal: false,
             rotation: 0,
-            preview: null
+            preview: null,
+            loading: false
         }
     },
     methods: {
         async rotateImage() {
+            this.loading = true;
             this.rotation += 90;
             if (this.rotation === 360) {
                 this.rotation = 0;
             }
             this.preview = await this.image.rotatedPreview(this.rotation);
+            this.loading = false;
         },
         saveChanges() {
             const changes = {
