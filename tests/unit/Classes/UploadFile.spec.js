@@ -61,6 +61,9 @@ describe('UploadFile', () => {
 
 		const result = await file.rotatedPreview(90);
 
+		assert.isTrue(rotateStub.calledOnce);
+		assert.isTrue(rotateStub.calledWith('image',90));
+
 		assert.equal(result,'data:image/jpeg;base64,' + btoa('rotatedImage'));
 	});
 });
