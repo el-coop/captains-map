@@ -8,8 +8,8 @@
 					   :error="error"/>
 			<template v-if="isEdit">
 				<SelectField label="Published" v-model="published" :options="{
-						0: 'No',
-						1: 'Yes'
+						false: 'No',
+						true: 'Yes'
 					}"/>
 			</template>
 		</template>
@@ -58,7 +58,7 @@
 		data() {
 			return {
 				name: this.story.name || '',
-				published: this.story.published || 0,
+				published: this.story.published || false,
 				saving: false,
 				error: '',
 				deleting: false,
