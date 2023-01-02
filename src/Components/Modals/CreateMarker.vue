@@ -1,6 +1,6 @@
 <template>
 	<form @submitting="loading = true" @submit.prevent="queueUpload">
-		<BaseModal route-name="edit" :active.sync="modal">
+		<BaseModal route-name="edit" v-model:active="modal">
 			<template #header>
 				<p class="card__header-title">Create new marker</p>
 			</template>

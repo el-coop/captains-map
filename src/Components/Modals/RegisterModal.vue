@@ -38,6 +38,7 @@
 	export default {
 		name: "RegisterModal",
 		components: {BaseModal},
+        emits:['update:active'],
 
 		props: {
 			active: {

@@ -1,5 +1,5 @@
 <template>
-	<BaseModal :route-name="routeName" :manage-close-navigation="false" :active.sync="modal" @close="closedNavigation">
+	<BaseModal :route-name="routeName" :manage-close-navigation="false" v-model:active="modal" @close="closedNavigation">
 		<template #header v-if="marker">
 			<ViewMarkerHeader :marker="marker" @view-user-page="navigateToUser"/>
 		</template>

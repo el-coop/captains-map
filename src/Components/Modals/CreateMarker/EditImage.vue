@@ -1,5 +1,5 @@
 <template>
-    <BaseModal :active.sync="modal" @close="$emit('close')">
+    <BaseModal v-model:active="modal" @close="$emit('close')">
         <template #header>
             <p class="card__header-title">Edit Image</p>
         </template>

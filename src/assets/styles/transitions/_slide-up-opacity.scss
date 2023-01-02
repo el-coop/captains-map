@@ -2,7 +2,7 @@
 	transition: opacity .8s ease, transform .8s ease;
 }
 
-.slide-up-opacity-enter, .slide-up-opacity-leave-to {
+.slide-up-opacity-enter-from, .slide-up-opacity-leave-to {
 	transform: translateY(100%);
 	opacity: 0;
 }

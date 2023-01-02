@@ -10,7 +10,7 @@
 			<FontAwesomeIcon icon="times-circle" class="icon"/>
 		</button>
 
-		<StoryEditModal v-if="canEdit" :active.sync="edit" :story="story" @saved="storySaved"/>
+		<StoryEditModal v-if="canEdit" v-model:active="edit" :story="story" @saved="storySaved"/>
 	</div>
 </template>
 

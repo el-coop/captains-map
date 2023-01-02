@@ -36,6 +36,7 @@
 	export default {
 		components: {TextField, BaseModal},
 		name: "LoginModal",
+        emits:['update:active'],
 
 		props: {
 			active: {

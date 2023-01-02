@@ -17,7 +17,11 @@
 			TheMap,
 			NotFound
 		},
-		created() {
+        beforeCreate() {
+            this.$store.dispatch('Uploads/init');
+            this.$store.dispatch('initSettings');
+        },
+        created() {
 			window.addEventListener('online', this.onlineEvent);
 		},
 

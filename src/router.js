@@ -1,12 +1,12 @@
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 import ViewPage from '@/Views/ViewPage';
 import EditPage from '@/Views/EditPage';
 import StoryPage from '@/Views/StoryPage';
 import Auth from '@/Middleware/AuthMiddleware';
 import cache from "@/Services/Cache";
 
-const router = new Router({
-	mode: 'history',
+const router = createRouter({
+	history: createWebHistory(),
 	routes: [
 		{
 			path: '/edit',

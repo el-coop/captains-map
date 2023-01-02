@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex'
 import User from '@/store/user';
 import Markers from '@/store/markers';
 import Profile from '@/store/profile';
@@ -8,8 +7,6 @@ import Stories from '@/store/stories';
 import Webpush from '@/store/Webpush';
 import cache from "@/Services/Cache";
 import router from './router'
-
-Vue.use(Vuex);
 
 export const actions = {
 	CSRFReady({dispatch, state}) {
@@ -32,7 +29,7 @@ export const actions = {
 	},
 };
 
-const store = new Vuex.Store({
+const store = createStore({
 	modules: {
 		User,
 		Stories,

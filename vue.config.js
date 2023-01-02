@@ -9,7 +9,7 @@ module.exports = {
 		}
 	},
 	devServer: {
-		public: 'localhost:8080',
+		port: 8080,
 		proxy: {
 			"/api/*": {
 				target: "http://localhost:3000",
@@ -33,5 +33,22 @@ module.exports = {
 			maskIcon: 'img/icons/pinned.svg',
 			msTileImage: 'img/icons/icon-144x144.png'
 		}
+	},
+	chainWebpack(config) {
+		config.resolve.alias.set('vue', '@vue/compat')
+
+		config.module
+			.rule('vue')
+			.use('vue-loader')
+			.tap((options) => {
+				return {
+					...options,
+					compilerOptions: {
+						compatConfig: {
+							MODE: 3
+						}
+					}
+				}
+			})
 	}
 };

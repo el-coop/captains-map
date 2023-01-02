@@ -1,5 +1,5 @@
 <template>
-	<BaseModal @close="$router.push('/')" route-name="404" :active.sync="modal">
+	<BaseModal @close="$router.push('/')" route-name="404" v-model:active="modal">
 		<template #header>
 			<p class="card__header-title">404</p>
 		</template>

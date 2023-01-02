@@ -32,7 +32,7 @@
 <script>
 	export default {
 		name: "BaseModal",
-
+        emits:['update:active','close'],
 		props: {
 			active: {
 				type: Boolean,
