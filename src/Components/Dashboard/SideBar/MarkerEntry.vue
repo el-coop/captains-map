@@ -44,7 +44,7 @@ export default {
         window.addEventListener('resize', this.resizeDescription);
     },
     
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener('resize', this.resizeDescription);
     },
     
@@ -92,7 +92,7 @@ export default {
             } else if (window.matchMedia("(min-width: 1520px)").matches) {
                 length = 60;
             }
-            this.description = this.$options.filters.truncate(this.marker.description, length);
+            this.description = this.truncate(this.marker.description, length);
         }
         
     },

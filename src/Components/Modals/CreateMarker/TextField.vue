@@ -11,7 +11,9 @@
 	import FieldMixin from "@/Components/Utilities/FieldMixin";
 
 	export default {
-		name: "TextField",
+        compatConfig: { COMPONENT_V_MODEL: false },
+        
+        name: "TextField",
 		mixins: [FieldMixin],
 
 		props: {

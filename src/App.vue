@@ -1,8 +1,8 @@
 <template>
 	<div id="app">
-		<TheMap/>
-		<RouterView/>
-		<NotFound/>
+		<TheMap @marker-click="selectedMarker = $event"/>
+		<RouterView @404="notFound = true" @env-setup="notFound = false" v-model:selectedMarker="selectedMarker"/>
+		<NotFound v-model:active="notFound"/>
 	</div>
 </template>
 
@@ -12,6 +12,13 @@
 
 	export default {
 		name: 'App',
+        
+        data(){
+		    return {
+                notFound: false,
+                selectedMarker: null,
+            }
+        },
 
 		components: {
 			TheMap,
@@ -25,7 +32,7 @@
 			window.addEventListener('online', this.onlineEvent);
 		},
 
-		beforeDestroy() {
+		beforeUnmount() {
 			window.removeEventListener('online', this.onlineEvent);
 
 		},

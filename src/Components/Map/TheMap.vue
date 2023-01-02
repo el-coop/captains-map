@@ -10,7 +10,7 @@
 			</template>
 			<MapMarkerCluster key="cluster">
 				<MapMarker v-for="marker in markers" :marker="marker"
-						   :key="`marker_${marker.id}`"/>
+						   :key="`marker_${marker.id}`" @marker-click="$emit('marker-click', $event)"/>
 			</MapMarkerCluster>
 		</div>
 	</div>
@@ -59,7 +59,7 @@
 
 		methods: {
 			rightClick(event) {
-				this.$bus.$emit('map-create-marker', {
+				this.$emit('map-create-marker', {
 					event
 				});
 			},
@@ -110,7 +110,7 @@
 			Map.on('zoomend', this.handleZoom);
 		},
 
-		beforeDestroy() {
+		beforeUnmount() {
 			Map.off();
 		},
 	}

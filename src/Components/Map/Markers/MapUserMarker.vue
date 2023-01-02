@@ -33,7 +33,7 @@
 			this.$bus.$on('goToUserMarker', this.goToMarker);
 		},
 
-		beforeDestroy() {
+		beforeUnmount() {
 			clearInterval(this.checkOldInterval);
 			this.$bus.$off('goToUserMarker', this.goToMarker);
 			Map.stopLocate();

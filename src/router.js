@@ -27,7 +27,7 @@ const router = createRouter({
 	]
 });
 
-router.pushRoute = function (location) {
+router.pushRoute = async function (location) {
 	history.pushState(null, null, `${window.location.protocol}//${window.location.host}/${location}`);
 };
 

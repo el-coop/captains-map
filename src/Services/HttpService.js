@@ -119,8 +119,8 @@ class HttpService {
 		return await this.post(url, data, headers, config, false);
 	}
 
-	static install(vue) {
-		vue.prototype.$http = service;
+	static install(app) {
+		app.config.globalProperties.$http = service;
 	}
 }
 

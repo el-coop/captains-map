@@ -26,7 +26,7 @@
 			</div>
 
 		</div>
-		<ViewMarker/>
+		<ViewMarker @close="$emit('close')" :selectedMarker="selectedMarker"/>
 	</div>
 </template>
 
@@ -42,8 +42,7 @@
 
 	export default {
 		name: "TheDashboard",
-
-
+  
 		components: {
 			ProfileDisplay,
 			ProfileEdit,
@@ -54,11 +53,14 @@
 			LoggedInBar,
 			LoggedOutBar
 		},
+        
+        props: {
+            selectedMarker:{}
+        },
 
 
 		data() {
 			return {
-				selectedMarker: null,
 				mountModal: false,
 			}
 		},

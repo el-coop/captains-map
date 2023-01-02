@@ -20,7 +20,7 @@
 			}
 		},
 
-		beforeDestroy() {
+		beforeUnmount() {
 			this.removeFromMap();
 		},
 
@@ -54,7 +54,7 @@
 				this.$parent.removeObject(this.mapObject);
 			},
 			onClick() {
-				this.$bus.$emit(this.event, this.payload);
+				this.$emit(this.event, this.payload);
 			},
 
 			setIcon(icon) {

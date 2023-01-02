@@ -76,7 +76,7 @@
 			this.$bus.$on('map-create-marker', this.createMarker);
 			this.$bus.$on('user-marker-click', this.createMarker);
 		},
-		beforeDestroy() {
+		beforeUnmount() {
 			this.$bus.$off('map-create-marker', this.createMarker);
 			this.$bus.$off('user-marker-click', this.createMarker);
 		},
