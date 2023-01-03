@@ -9,7 +9,8 @@
 	export default {
 		name: "MapUserAccuracyMarker",
 		mixins: [MapObjectMixin, UserMarkerMixin],
-		props: {
+        emits:['user-marker-click'],
+        props: {
 			lat: {
 				type: Number,
 				required: true

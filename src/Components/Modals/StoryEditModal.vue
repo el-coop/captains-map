@@ -41,7 +41,7 @@
 	export default {
 		name: "StoryEditModal",
 		components: {SelectField, TextField, BaseModal},
-        emits: ['update:modelValue','saved'],
+        emits: ['saved','update:active'],
 		props: {
 			active: {
 				type: Boolean,

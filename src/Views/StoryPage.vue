@@ -12,6 +12,7 @@ import map from "@/Services/LeafletMapService";
 
 export default {
     name: "StoryPage",
+    emits:['update:selectedMarker','update:createMarkerData','env-setup','404'],
     metaInfo() {
         return {
             title: this.$route.params.username

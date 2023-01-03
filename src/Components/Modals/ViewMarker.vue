@@ -55,7 +55,7 @@ import ViewMarkerContent from "@/Components/Modals/ViewMarker/Content";
 export default {
     name: "ViewMarker",
     components: {ViewMarkerContent, ViewMarkerHeader, BaseModal, Photo, Instagram},
-    
+    emits: ['close'],
     props:{
         selectedMarker:{}
     },

@@ -60,6 +60,7 @@
 		mixins: [
 			FormDataMixin
 		],
+        emits: ['close'],
         
         props:{
 		    editData: null,

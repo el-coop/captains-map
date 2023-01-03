@@ -17,7 +17,7 @@
 		name: "MapUserMarker",
 		components: {MapUserAccuracyMarker},
 		mixins: [MapObjectMixin, UserMarkerMixin],
-  
+        emits:['user-marker-click'],
 		data() {
 			return {
 				lat: null,

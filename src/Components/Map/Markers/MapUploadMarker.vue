@@ -5,6 +5,7 @@ import MapMarker from "@/Components/Map/Markers/MapMarker";
 export default {
     name: "MapUploadMarker",
     extends: MapMarker,
+    emits: ['map-create-marker'],
     
     mounted() {
         this.setStatus();

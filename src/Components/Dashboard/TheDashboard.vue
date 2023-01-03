@@ -42,7 +42,8 @@
 
 	export default {
 		name: "TheDashboard",
-  
+        emits:['close'],
+        
 		components: {
 			ProfileDisplay,
 			ProfileEdit,

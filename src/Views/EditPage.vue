@@ -16,6 +16,7 @@ export default {
     metaInfo: {
         title: 'Edit'
     },
+    emits:['update:selectedMarker','update:createMarkerData'],
     
     mixins: [LoadsMarkersMixin],
     

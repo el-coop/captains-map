@@ -1,7 +1,7 @@
 <script>
 	export default {
 		name: "LoadsMarkersMixin",
-
+        emits:['env-setup','404'],
 		created() {
 			this.$_envSetup();
 			this.envSetup();

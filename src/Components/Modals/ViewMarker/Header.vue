@@ -20,6 +20,7 @@
 
 	export default {
 		name: "ViewMarkerHeader",
+        emits: ['view-user-page'],
 		props: {
 			marker: {
 				type: Object

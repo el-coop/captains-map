@@ -1,5 +1,8 @@
 <template>
-	<div id="app">
+    <metainfo>
+        <template #title="{ content }">{{ content }} | Captains Map</template>
+    </metainfo>
+    <div id="app">
 		<TheMap @marker-click="selectedMarker = $event" @map-create-marker="createMarkerData = $event"/>
 		<RouterView @404="notFound = true"
                     @env-setup="notFound = false"
@@ -48,7 +51,6 @@
 		},
 		metaInfo: {
 			title: 'Home',
-			titleTemplate: '%s | Captains Map',
 		}
 	}
 </script>

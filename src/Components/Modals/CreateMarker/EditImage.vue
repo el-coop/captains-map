@@ -33,6 +33,7 @@ import BaseModal from "@/Components/Utilities/BaseModal";
 export default {
     name: "EditImage",
     components: {BaseModal},
+    emits: ['close','save','delete'],
     props: {
         image: {
             default: null

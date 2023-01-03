@@ -13,7 +13,7 @@
 	export default {
 		name: "MapMarker",
 		mixins: [MapObjectMixin, HandlesDataDisplayMixin],
-
+        emits:['marker-click'],
 		props: {
 			marker: {
 				type: Object,

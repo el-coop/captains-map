@@ -37,6 +37,7 @@ export default {
         MapMarker,
         MapUserMarker
     },
+    emits: ['marker-click','map-create-marker'],
     
     props: {
         center: {

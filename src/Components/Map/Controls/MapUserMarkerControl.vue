@@ -29,7 +29,7 @@
 	export default {
 		name: "MapUserMarkerControl",
 		mixins: [MapObjectMixin],
-        emits:['goToUserMarker'],
+        emits:['go-to-user-marker'],
 
 		methods: {
 			prepareMapObject() {
@@ -46,7 +46,7 @@
 
 			goToUserMarker() {
 				if (this.active) {
-					this.$emit('goToUserMarker');
+					this.$emit('go-to-user-marker');
 				}
 			}
 		},

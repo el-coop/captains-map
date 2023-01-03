@@ -11,6 +11,7 @@ import LoadsMarkersMixin from "@/Views/LoadsMarkersMixin";
 
 export default {
     name: "ViewPage",
+    emits:['update:selectedMarker','404'],
     metaInfo() {
         return {
             title: this.$route.params.username || 'Home'
