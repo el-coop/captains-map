@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "test:unit": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit",
     "test:unit:watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit --watch",
     "test:e2e": "vue-cli-service test:e2e"

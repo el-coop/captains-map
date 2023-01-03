@@ -1,4 +1,3 @@
-// TODO: update js
 // TODO: migrate from vue-cli
-// TODO: Fix deprecated sass functions
+// TODO: fix tests
 // TODO: Fix not founds of open-map
