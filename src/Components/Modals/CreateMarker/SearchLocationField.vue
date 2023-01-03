@@ -35,7 +35,6 @@
 
 	export default {
 		name: "SearchLocationField",
-        compatConfig: { COMPONENT_V_MODEL: false },
         emits: ['update:modelValue'],
 
 		props: {

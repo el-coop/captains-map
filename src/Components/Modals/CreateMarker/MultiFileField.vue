@@ -55,7 +55,6 @@ import UploadFile from "@/Classes/UploadFile";
 import EditImage from "@/Components/Modals/CreateMarker/EditImage";
 
 export default {
-    compatConfig: { COMPONENT_V_MODEL: false },
     name: "MultiFileField",
     components: {EditImage},
     emits: ['update:modelValue'],

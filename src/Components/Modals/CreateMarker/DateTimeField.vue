@@ -11,7 +11,6 @@
 
 <script>
 	export default {
-        compatConfig: { COMPONENT_V_MODEL: false },
         name: "DateTimeField",
         emits: ['update:modelValue'],
 

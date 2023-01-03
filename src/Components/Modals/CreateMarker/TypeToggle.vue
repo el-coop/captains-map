@@ -19,7 +19,6 @@
 <script>
 	export default {
 		name: "TypeToggle",
-        compatConfig: { COMPONENT_V_MODEL: false },
         emits: ['update:modelValue'],
         
         props: {
