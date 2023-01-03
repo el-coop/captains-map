@@ -1,7 +1,7 @@
 <template>
     <div class="layout">
         <TheDashboard :selectedMarker="selectedMarker" @close="$emit('update:selectedMarker',null)"/>
-        <CreateMarker/>
+        <CreateMarker :editData="createMarkerData" @close="$emit('update:createMarkerData', null)"/>
     </div>
 </template>
 
@@ -24,7 +24,8 @@ export default {
     },
     
     props: {
-        selectedMarker: {}
+        selectedMarker: {},
+        createMarkerData: {}
     },
     
     

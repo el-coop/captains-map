@@ -16,7 +16,7 @@
 		name: "MapUserMarker",
 		components: {MapUserAccuracyMarker},
 		mixins: [MapObjectMixin, UserMarkerMixin],
-
+  
 		data() {
 			return {
 				lat: null,
@@ -28,14 +28,9 @@
 				checkOldInterval: null
 			}
 		},
-
-		mounted() {
-			this.$bus.$on('goToUserMarker', this.goToMarker);
-		},
-
+  
 		beforeUnmount() {
 			clearInterval(this.checkOldInterval);
-			this.$bus.$off('goToUserMarker', this.goToMarker);
 			Map.stopLocate();
 		},
 

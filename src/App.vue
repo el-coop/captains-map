@@ -1,7 +1,11 @@
 <template>
 	<div id="app">
-		<TheMap @marker-click="selectedMarker = $event"/>
-		<RouterView @404="notFound = true" @env-setup="notFound = false" v-model:selectedMarker="selectedMarker"/>
+		<TheMap @marker-click="selectedMarker = $event" @map-create-marker="createMarkerData = $event"/>
+		<RouterView @404="notFound = true"
+                    @env-setup="notFound = false"
+                    v-model:selectedMarker="selectedMarker"
+                    v-model:createMarkerData="createMarkerData"
+        />
 		<NotFound v-model:active="notFound"/>
 	</div>
 </template>
@@ -17,6 +21,7 @@
 		    return {
                 notFound: false,
                 selectedMarker: null,
+                createMarkerData: null
             }
         },
 

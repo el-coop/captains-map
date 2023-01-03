@@ -11,7 +11,8 @@
 	import FieldMixin from "@/Components/Utilities/FieldMixin";
 
 	export default {
-		name: "TextareaField",
+        compatConfig: { COMPONENT_V_MODEL: false },
+        name: "TextareaField",
 		mixins: [FieldMixin],
 	}
 </script>

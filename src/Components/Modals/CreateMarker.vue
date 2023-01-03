@@ -32,7 +32,7 @@
 						Cancel upload
 					</button>
 					<span v-else>
-                        <a @click="modal=false">Close</a>
+                        <a @click="closeModal()">Close</a>
                     </span>
 				</p>
 				<p class="card__footer-item">
@@ -60,6 +60,10 @@
 		mixins: [
 			FormDataMixin
 		],
+        
+        props:{
+		    editData: null,
+        },
 
 		components: {
 			MultiFileField,
@@ -71,18 +75,9 @@
 			TypeToggle,
 			BaseModal,
 		},
-
-		created() {
-			this.$bus.$on('map-create-marker', this.createMarker);
-			this.$bus.$on('user-marker-click', this.createMarker);
-		},
-		beforeUnmount() {
-			this.$bus.$off('map-create-marker', this.createMarker);
-			this.$bus.$off('user-marker-click', this.createMarker);
-		},
+  
 
 		data() {
-
 			return {
 				form: {
 					story: this.$store.state.Stories.story ? this.$store.state.Stories.story.id : null,
@@ -113,6 +108,10 @@
 
 
 		methods: {
+		    closeModal(){
+                this.modal = false;
+                this.$emit('close');
+            },
 			async queueUpload() {
 				this.loading = true;
 				if (this.marker) {
@@ -124,12 +123,12 @@
 					await this.$store.dispatch('Uploads/upload', this.form);
 				}
 				this.loading = false;
-				this.modal = false;
+				this.closeModal();
 			},
 
 			async cancelUpload() {
 				await this.$store.dispatch('Uploads/cancelUpload', this.marker.uploadTime);
-				this.modal = false;
+                this.closeModal();
 			},
 
 			prefill() {
@@ -186,5 +185,13 @@
 				this.modal = true;
 			},
 		},
+        
+        watch: {
+		    editData(value){
+		        if(value){
+		            this.createMarker(value);
+                }
+            }
+        }
 	}
 </script>

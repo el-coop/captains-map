@@ -1,8 +1,8 @@
 <template>
 	<div :class="zoomStatus">
 		<div class="map" ref="map">
-			<MapUserMarkerControl key="userMarkerController"/>
-			<MapUserMarker v-if="userMarker" key="userMarker"/>
+			<MapUserMarkerControl key="userMarkerController" @goToUserMarker="goToUserMarker" @marker-click/>
+			<MapUserMarker v-if="userMarker" key="userMarker" ref="userMarker"/>
 
 			<template v-if="$router.currentRoute.name === 'edit'">
 				<MapUploadMarker v-for="marker in uploadMarkers" :marker="marker"
@@ -58,6 +58,9 @@
 		},
 
 		methods: {
+		    goToUserMarker(){
+		        this.$refs.userMarker.goToMarker();
+            },
 			rightClick(event) {
 				this.$emit('map-create-marker', {
 					event

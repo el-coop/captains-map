@@ -1,7 +1,8 @@
 <script>
 	export default {
 		name: "FieldMixin",
-		props: {
+        emits: ['update:modelValue'],
+        props: {
 			modelValue: {
 				default: ''
 			},

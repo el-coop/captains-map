@@ -23,6 +23,12 @@
 				required: true
 			}
 		},
+        
+        methods: {
+            addToMap() {
+                this.$parent.addObject(this.mapObject);
+            },
+        },
 
 		data() {
 			return {

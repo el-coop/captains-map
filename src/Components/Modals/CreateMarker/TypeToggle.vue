@@ -19,9 +19,11 @@
 <script>
 	export default {
 		name: "TypeToggle",
-
-		props: {
-			value: {
+        compatConfig: { COMPONENT_V_MODEL: false },
+        emits: ['update:modelValue'],
+        
+        props: {
+			modelValue: {
 				required: true,
 				type: String
 			}
@@ -30,10 +32,10 @@
 		computed: {
 			type: {
 				get() {
-					return this.value
+					return this.modelValue
 				},
 				set(value) {
-					this.$emit('input', value);
+					this.$emit('update:modelValue', value);
 				}
 			}
 		}

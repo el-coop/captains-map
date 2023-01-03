@@ -17,6 +17,7 @@
 	export default {
 		name: "SelectField",
 		mixins: [FieldMixin],
+        compatConfig: { COMPONENT_V_MODEL: false },
 
 		props: {
 			options: {
