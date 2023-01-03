@@ -2,6 +2,7 @@
 	<div class="map__user-marker map__marker" @click="onClick">
 		<MapUserAccuracyMarker v-if="! isOld && accuracy !== null && lat !== null && lng !== null" :accuracy="accuracy"
 							   :lat="lat"
+                               @user-marker-click="$emit(event, $event)"
 							   :lng="lng"/>
 	</div>
 </template>
