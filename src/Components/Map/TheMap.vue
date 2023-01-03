@@ -4,8 +4,9 @@
             <MapUserMarkerControl key="userMarkerController" @go-to-user-marker="goToUserMarker"/>
             <MapUserMarker v-if="userMarker" key="userMarker" ref="userMarker" @user-marker-click="rightClick"/>
             
-            <template v-if="$router.currentRoute.name === 'edit'">
+            <template v-if="$route.name === 'edit'">
                 <MapUploadMarker v-for="marker in uploadMarkers" :marker="marker"
+                                 @map-create-marker="rightClick"
                                  :key="`uploads_${marker.uploadTime}`"/>
             </template>
             <MapMarkerCluster key="cluster">

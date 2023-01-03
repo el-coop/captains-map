@@ -67,8 +67,9 @@
 				}
 
 				const user = this.$store.state.User.user;
-
-				return this.$router.currentRoute.name === 'edit' || (this.$store.state.Stories.story && user && this.$store.state.Stories.story.user_id === user.id);
+    
+				
+				return this.$route.name === 'edit' || (this.$store.state.Stories.story && user && this.$store.state.Stories.story.user_id === user.id);
 			}
 		},
 

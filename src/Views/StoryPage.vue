@@ -47,7 +47,7 @@ export default {
             });
             
             if (responseStatus === 404) {
-                return this.$bus.$emit('404');
+                return this.$emit('404');
             }
             if (responseStatus === 'cached') {
                 this.$toast.info('Markers loaded from cache', '');

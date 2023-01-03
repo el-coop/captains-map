@@ -180,7 +180,7 @@
 					this.form.lat = data.event.latlng.lat;
 					this.form.lng = data.event.latlng.lng;
 				}
-				this.marker = data.marker || null;
+				this.marker = data.event.marker || null;
 				this.prefill();
 				this.modal = true;
 			},
