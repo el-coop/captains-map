@@ -17,7 +17,7 @@ export default {
 
 		add(state, marker) {
 			state.markers.push(marker);
-			if (state.markers.length === 1) {
+			if (state.markers.length === 1 && state.story) {
 				state.story.cover = {
 					type: marker.media[0].type,
 					path: marker.media[0].path,
