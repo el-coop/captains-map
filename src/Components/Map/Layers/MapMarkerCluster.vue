@@ -6,10 +6,10 @@
 
 <script>
 	import leaflet from 'leaflet';
-	import MapObjectMixin from '@/Components/Map/MapObjectMixin';
+	import MapObjectMixin from '@/Components/Map/MapObjectMixin.vue';
 
-	if (process.env.NODE_ENV !== 'test') {
-		require('leaflet.markercluster');
+	if (import.meta.env.NODE_ENV !== 'test') {
+		await import('leaflet.markercluster');
 	}
 
 	export default {

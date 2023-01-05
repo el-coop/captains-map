@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import BaseModal from "@/Components/Utilities/BaseModal";
+import BaseModal from "@/Components/Utilities/BaseModal.vue";
 import atlantis from '@/assets/images/atlantis.jpg';
 import tear from '@/assets/images/tear.png';
 

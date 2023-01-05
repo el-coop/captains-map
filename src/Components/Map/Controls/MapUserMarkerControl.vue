@@ -8,7 +8,7 @@
 
 <script>
 	import leaflet from 'leaflet';
-	import MapObjectMixin from '../MapObjectMixin';
+	import MapObjectMixin from '../MapObjectMixin.vue';
 
 	const LControl = leaflet.Control.extend({
 		element: undefined,

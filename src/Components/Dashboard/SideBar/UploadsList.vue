@@ -7,14 +7,14 @@
 		</button>
 		<ul v-if="open" class="marker-list">
 			<li v-for="marker in markers" class="marker-list__entry" :key="marker.uploadTime">
-				<UploadEntry :marker="marker"></UploadEntry>
+				<UploadEntry :marker="marker"/>
 			</li>
 		</ul>
 	</div>
 </template>
 
 <script>
-	import UploadEntry from "@/Components/Dashboard/SideBar/UploadEntry";
+	import UploadEntry from "@/Components/Dashboard/SideBar/UploadEntry.vue";
 
 	export default {
 		name: "UploadsList",

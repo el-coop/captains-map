@@ -8,10 +8,10 @@
 </template>
 
 <script>
-	import MapObjectMixin from '@/Components/Map/MapObjectMixin';
-	import UserMarkerMixin from '@/Components/Map/Markers/MapUserMarkerMixin';
+	import MapObjectMixin from '@/Components/Map/MapObjectMixin.vue';
+	import UserMarkerMixin from '@/Components/Map/Markers/MapUserMarkerMixin.vue';
 	import Map from '@/Services/LeafletMapService';
-	import MapUserAccuracyMarker from "@/Components/Map/Markers/MapUserAccuracyMarker";
+	import MapUserAccuracyMarker from "@/Components/Map/Markers/MapUserAccuracyMarker.vue";
 
 	export default {
 		name: "MapUserMarker",

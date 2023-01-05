@@ -5,7 +5,7 @@ import markersStore from '@/store/markers';
 import http from '@/Services/HttpService';
 import cache from "@/Services/Cache";
 
-const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+const pageSize = parseInt(import.meta.env.VITE_APP_PAGE_SIZE);
 
 describe('Marker Store', () => {
 

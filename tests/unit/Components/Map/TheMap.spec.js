@@ -4,7 +4,7 @@ import TheMap from '@/Components/Map/TheMap.vue';
 import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
 
-const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+const pageSize = parseInt(import.meta.env.VITE_APP_PAGE_SIZE);
 
 describe('TheMap.vue', () => {
 

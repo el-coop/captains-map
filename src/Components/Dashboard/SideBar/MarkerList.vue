@@ -25,11 +25,11 @@
 </template>
 
 <script>
-	import MarkerEntry from "@/Components/Dashboard/SideBar/MarkerEntry";
-	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter";
-	import UploadsList from "@/Components/Dashboard/SideBar/UploadsList";
+	import MarkerEntry from "@/Components/Dashboard/SideBar/MarkerEntry.vue";
+	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter.vue";
+	import UploadsList from "@/Components/Dashboard/SideBar/UploadsList.vue";
 
-	const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+	const pageSize = parseInt(import.meta.env.VITE_APP_PAGE_SIZE);
 
 	export default {
 		name: "MarkerList",

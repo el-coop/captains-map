@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
+    "serve": "vite",
     "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "test:unit": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit",
     "test:unit:watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit --watch",
@@ -17,28 +17,27 @@
     "axios": "^1.2.2",
     "bulma": "^0.9.4",
     "cross-env": "^7.0.3",
+    "izitoast": "^1.4.0",
     "leaflet": "1.7.1",
     "leaflet.markercluster": "^1.5.3",
     "localforage": "^1.10.0",
     "register-service-worker": "^1.7.2",
     "vue": "^3.2.45",
-    "izitoast": "^1.4.0",
     "vue-meta": "^3.0.0-alpha.10",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-e2e-nightwatch": "^5.0.8",
-    "@vue/cli-plugin-pwa": "^5.0.8",
-    "@vue/cli-plugin-unit-mocha": "^5.0.8",
-    "@vue/cli-service": "^5.0.8",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/compiler-sfc": "^3.2.45",
     "@vue/test-utils": "^2.2.6",
     "chai": "^4.3.7",
     "moxios": "^0.4.0",
     "sass": "^1.57.1",
-    "sass-loader": "^13.2.0",
+    "autoprefixer": "^10.4.13",
     "sinon": "^15.0.1",
-    "@vue/compiler-sfc": "^3.2.45"
+    "vite": "^4.0.4",
+    "vite-plugin-pwa": "^0.14.1"
   },
   "browserslist": [
     "> 1%",

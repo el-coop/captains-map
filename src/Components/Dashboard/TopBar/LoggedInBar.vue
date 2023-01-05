@@ -38,10 +38,10 @@
 </template>
 
 <script>
-	import Logout from "@/Components/Utilities/Logout";
-	import SearchBar from "@/Components/Dashboard/TopBar/SearchBar";
-	import TopBar from "@/Components/Dashboard/TopBar/TheTopBar";
-	import DrawerMobile from "@/Components/Utilities/DrawerMobile";
+	import Logout from "@/Components/Utilities/Logout.vue";
+	import SearchBar from "@/Components/Dashboard/TopBar/SearchBar.vue";
+	import TopBar from "@/Components/Dashboard/TopBar/TheTopBar.vue";
+	import DrawerMobile from "@/Components/Utilities/DrawerMobile.vue";
 
 	export default {
 		name: "LoggedInBar",

@@ -45,15 +45,15 @@
 </template>
 
 <script>
-	import FormDataMixin from "@/Components/Utilities/FormDataMixin";
-	import BaseModal from "@/Components/Utilities/BaseModal";
-	import TypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
-	import TextField from "@/Components/Modals/CreateMarker/TextField";
-	import SelectField from "@/Components/Modals/CreateMarker/SelectField";
-	import DateTimeField from "@/Components/Modals/CreateMarker/DateTimeField";
-	import SearchLocationField from "@/Components/Modals/CreateMarker/SearchLocationField";
-	import TextareaField from "@/Components/Modals/CreateMarker/TextareaField";
-	import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField";
+	import FormDataMixin from "@/Components/Utilities/FormDataMixin.vue";
+	import BaseModal from "@/Components/Utilities/BaseModal.vue";
+	import TypeToggle from "@/Components/Modals/CreateMarker/TypeToggle.vue";
+	import TextField from "@/Components/Modals/CreateMarker/TextField.vue";
+	import SelectField from "@/Components/Modals/CreateMarker/SelectField.vue";
+	import DateTimeField from "@/Components/Modals/CreateMarker/DateTimeField.vue";
+	import SearchLocationField from "@/Components/Modals/CreateMarker/SearchLocationField.vue";
+	import TextareaField from "@/Components/Modals/CreateMarker/TextareaField.vue";
+	import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField.vue";
 
 	export default {
 		name: "CreateMarker",

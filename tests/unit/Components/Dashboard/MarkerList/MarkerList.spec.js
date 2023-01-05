@@ -4,7 +4,7 @@ import MarkerList from '@/Components/Dashboard/SideBar/MarkerList';
 import sinon from 'sinon';
 import Map from '@/Services/LeafletMapService';
 
-const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+const pageSize = parseInt(import.meta.env.VITE_APP_PAGE_SIZE);
 
 describe('MarkerList.vue', () => {
 	let mocks;

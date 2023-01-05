@@ -3,8 +3,8 @@
 </template>
 
 <script>
-	import MapObjectMixin from '@/Components/Map/MapObjectMixin';
-	import UserMarkerMixin from '@/Components/Map/Markers/MapUserMarkerMixin';
+	import MapObjectMixin from '@/Components/Map/MapObjectMixin.vue';
+	import UserMarkerMixin from '@/Components/Map/Markers/MapUserMarkerMixin.vue';
 
 	export default {
 		name: "MapUserAccuracyMarker",

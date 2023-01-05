@@ -1,4 +1,4 @@
-const mapbox_key = process.env.VUE_APP_MAPBOX_TOKEN;
+const mapbox_key = import.meta.env.VITE_APP_MAPBOX_TOKEN;
 
 export const mapboxLayer = {
 	url: `https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${mapbox_key}`,

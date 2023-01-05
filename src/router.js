@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ViewPage from '@/Views/ViewPage';
-import EditPage from '@/Views/EditPage';
-import StoryPage from '@/Views/StoryPage';
+import ViewPage from '@/Views/ViewPage.vue';
+import EditPage from '@/Views/EditPage.vue';
+import StoryPage from '@/Views/StoryPage.vue';
 import Auth from '@/Middleware/AuthMiddleware';
 import cache from "@/Services/Cache";
 

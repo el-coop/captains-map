@@ -20,12 +20,12 @@
 <script>
 
 import Map from '@/Services/LeafletMapService';
-import MapUserMarkerControl from "@/Components/Map/Controls/MapUserMarkerControl";
-import MapUserMarker from '@/Components/Map/Markers/MapUserMarker';
-import MapUploadMarker from "@/Components/Map/Markers/MapUploadMarker";
+import MapUserMarkerControl from "@/Components/Map/Controls/MapUserMarkerControl.vue";
+import MapUserMarker from '@/Components/Map/Markers/MapUserMarker.vue';
+import MapUploadMarker from "@/Components/Map/Markers/MapUploadMarker.vue";
 
-import MapMarker from '@/Components/Map/Markers/MapMarker';
-import MapMarkerCluster from "@/Components/Map/Layers/MapMarkerCluster";
+import MapMarker from '@/Components/Map/Markers/MapMarker.vue';
+import MapMarkerCluster from "@/Components/Map/Layers/MapMarkerCluster.vue";
 
 export default {
     name: "TheMap",
@@ -97,8 +97,8 @@ export default {
             if (this.$store.state.Stories.story) {
                 return this.$store.state.Stories.markers;
             }
-            const start = this.$store.state.Markers.page * process.env.VUE_APP_PAGE_SIZE;
-            const end = this.$store.state.Markers.page * process.env.VUE_APP_PAGE_SIZE + process.env.VUE_APP_PAGE_SIZE;
+            const start = this.$store.state.Markers.page * import.meta.env.VITE_APP_PAGE_SIZE;
+            const end = this.$store.state.Markers.page * import.meta.env.VITE_APP_PAGE_SIZE + import.meta.env.VITE_APP_PAGE_SIZE;
             return this.$store.state.Markers.markers.slice(start, end);
         },
         userMarker() {

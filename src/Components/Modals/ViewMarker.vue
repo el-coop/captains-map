@@ -46,11 +46,11 @@
 </template>
 
 <script>
-import BaseModal from "@/Components/Utilities/BaseModal";
-import Photo from '@/Components/Global/Media/Photo';
-import Instagram from '@/Components/Global/Media/Instagram';
-import ViewMarkerHeader from "@/Components/Modals/ViewMarker/Header";
-import ViewMarkerContent from "@/Components/Modals/ViewMarker/Content";
+import BaseModal from "@/Components/Utilities/BaseModal.vue";
+import Photo from '@/Components/Global/Media/Photo.vue';
+import Instagram from '@/Components/Global/Media/Instagram.vue';
+import ViewMarkerHeader from "@/Components/Modals/ViewMarker/Header.vue";
+import ViewMarkerContent from "@/Components/Modals/ViewMarker/Content.vue";
 
 export default {
     name: "ViewMarker",

@@ -6,7 +6,7 @@ import './registerServiceWorker';
 import VueIzitoast from './Classes/VueIzitoast';
 import {createMetaManager, plugin as vueMetaPlugin} from 'vue-meta'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {installer as HttpService} from '@/Services/HttpService';
+import {installer as HttpService} from './Services/HttpService';
 import './libraries';
 
 const app = createApp(Root)

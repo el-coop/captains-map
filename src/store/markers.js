@@ -2,7 +2,7 @@ import $http from '../Services/HttpService';
 import cache from "@/Services/Cache";
 import axios from "axios";
 
-const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+const pageSize = parseInt(import.meta.env.VITE_APP_PAGE_SIZE);
 
 function calculateRoute({username, borders}, settings) {
 	let route = `marker/${username}`;

@@ -156,7 +156,7 @@ class VueIziToast {
 }
 
 export default function install(app, options = {}) {
-    const isDev = process.env.NODE_ENV !== 'production';
+    const isDev = import.meta.env.NODE_ENV !== 'production';
 
     if (options && options.constructor !== Object) {
         throw 'Options must be a object';
