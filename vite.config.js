@@ -96,4 +96,7 @@ export default defineConfig({
 		splitVendorChunkPlugin(),
 		topLevelAwait({}),
 	],
+	test: {
+		include: ['tests/unit/**/ProfileDisplay.spec.js'],
+	}
 });

@@ -1,20 +1,26 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import UploadsList from '@/Components/Dashboard/SideBar/UploadsList';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import UploadsList from '@/Components/Dashboard/SideBar/UploadsList.vue';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 
 describe('UploadsList.vue', () => {
-	let mocks;
+	let storeOptions;
 	const stubs = {
 		FontAwesomeIcon: true
 	};
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				getters: {
-					'Uploads/allFiles': new Array(3).fill({lat: 0, lng: 0})
+		storeOptions = {
+			modules: {
+				Uploads: {
+					namespaced: true,
+					getters: {
+						allFiles() {
+							return new Array(3).fill({lat: 0, lng: 0});
+						}
+					}
 				}
 			}
 		}
@@ -26,53 +32,64 @@ describe('UploadsList.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(UploadsList, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			}
 		});
 
-		assert.isTrue(wrapper.find('button.is-faded').exists());
-		assert.isFalse(wrapper.find('ul').exists());
+		expect(wrapper.find('button.is-faded').exists()).toBeTruthy();
+		expect(wrapper.find('ul').exists()).toBeFalsy();
 	});
 
-	it('Shows list when button clicked', () => {
+	it('Shows list when button clicked', async () => {
 		const wrapper = shallowMount(UploadsList, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			open: false
 		});
 
 		wrapper.find('button.is-faded').trigger('click');
-		assert.isTrue(wrapper.find('ul').exists());
+		await wrapper.vm.$nextTick();
+		expect(wrapper.find('ul').exists()).toBeTruthy();
 	});
 
 
-	it('Closes list when button clicked and list open', () => {
+	it('Closes list when button clicked and list open', async () => {
 		const wrapper = shallowMount(UploadsList, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			}
 		});
 
-		wrapper.setData({
+
+		await wrapper.setData({
 			open: true
 		});
 
 		wrapper.find('button.is-faded').trigger('click');
-		assert.isFalse(wrapper.find('ul').exists());
+		await wrapper.vm.$nextTick();
+		expect(wrapper.find('ul').exists()).toBeFalsy();
 	});
 
-	it('Lists all the different upload entries', () => {
+	it.only('Lists all the different upload entries', async () => {
 		const wrapper = shallowMount(UploadsList, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			open: true
 		});
 
-		assert.equal(wrapper.findAll('uploadentry-stub').length, 3);
+		expect(wrapper.findAll('upload-entry-stub').length).toBe(3);
 	});
 });

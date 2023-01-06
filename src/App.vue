@@ -46,6 +46,7 @@
 		},
 		methods: {
 			onlineEvent() {
+			    console.log('onlineEvent');
 				this.$store.dispatch('Uploads/uploadOfflineError');
 			},
 		},
