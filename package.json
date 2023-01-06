@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vite",
     "build": "vite build",
+    "preview": "vite preview",
     "test:unit": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit",
     "test:unit:watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit --watch",
     "test:e2e": "vue-cli-service test:e2e"

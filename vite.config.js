@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import {VitePWA} from 'vite-plugin-pwa'
 import {fileURLToPath, URL} from 'node:url'
 import topLevelAwait from "vite-plugin-top-level-await";
+import { splitVendorChunkPlugin } from 'vite'
 
 export default defineConfig({
 	resolve: {
@@ -92,6 +93,7 @@ export default defineConfig({
 				return modules;
 			},
 		},
+		splitVendorChunkPlugin(),
 		topLevelAwait({}),
 	],
 });

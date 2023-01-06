@@ -4,9 +4,8 @@ import { register } from 'register-service-worker'
 import toast from 'izitoast';
 import store from "@/store";
 
-
-if (import.meta.env.NODE_ENV === 'production') {
-	register(`${import.meta.env.BASE_URL}service-worker.js`, {
+if (import.meta.env.PROD) {
+	register(`${import.meta.env.VITE_APP_BASE_URL}service-worker.js`, {
 		ready(registration) {
 			console.log(
 				'App is being served from cache by a service worker.\n' +

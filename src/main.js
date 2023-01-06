@@ -7,7 +7,7 @@ import VueIzitoast from './Classes/VueIzitoast';
 import {createMetaManager, plugin as vueMetaPlugin} from 'vue-meta'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {installer as HttpService} from './Services/HttpService';
-import './libraries';
+import {vueErrorLogger} from "@/libraries";
 
 const app = createApp(Root)
 	.use(router)
@@ -17,6 +17,9 @@ const app = createApp(Root)
 	.use(VueIzitoast)
 	.use(HttpService)
 	.component('FontAwesomeIcon', FontAwesomeIcon);
+
+
+app.config.errorHandler = vueErrorLogger;
 
 app.mount('#app');
 
