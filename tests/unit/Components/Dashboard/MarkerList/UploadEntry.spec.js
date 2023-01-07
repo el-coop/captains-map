@@ -29,7 +29,6 @@ describe('UploadEntry.vue', () => {
 					},
 					mutations: {
 						markAsWorking(state, id) {
-							console.log('here');
 							state.workingId = id;
 						},
 						setProgress(state, progress) {

@@ -1,31 +1,44 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import StoriesOpen from '@/Components/Dashboard/TopBar/StoriesOpen';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import StoriesOpen from '@/Components/Dashboard/TopBar/StoriesOpen.vue';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 
 describe('StoriesOpen.vue', () => {
 
 	let mocks;
 	let stubs;
+	let storeOptions;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				state: {
-					Stories: {
+		storeOptions = {
+			modules: {
+				Stories: {
+					namespaced:true,
+					state:{
 						story: {
 							name: 'story1'
 						}
-					},
-					User: {
+					}
+				},
+				User: {
+					namespaced:true,
+					state:{
 						user: {
 							username: 'username'
 						}
 					}
 				},
-				commit: sinon.stub()
-			},
+				Profile: {
+					namespaced: true,
+					mutations: {
+						trackStory(){}
+					}
+				}
+			}
+		};
+		mocks = {
 			$toast: {
 				success: sinon.stub()
 			},
@@ -51,79 +64,101 @@ describe('StoriesOpen.vue', () => {
 
 
 	it('Renders in non edit mode when no logged in user', () => {
-		mocks.$store.state.User.user = null;
+		storeOptions.modules.User.state.user = null;
 
 		const wrapper = shallowMount(StoriesOpen, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
 		});
 
-		assert.include(wrapper.text(), 'story1');
-		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
-		assert.isTrue(wrapper.find('.profile-open').exists());
+		expect(wrapper.text()).toContain('story1');
+		expect(wrapper.find('story-edit-modal-stub').exists()).toBeFalsy();
+		expect(wrapper.find('.profile-open').exists()).toBeTruthy();
 	});
 
 	it('Renders in non edit mode when logged in user not story owner', () => {
-		mocks.$store.state.User.user = {
+		storeOptions.modules.User.state.user = {
 			username: 'test'
 		};
 
 		const wrapper = shallowMount(StoriesOpen, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
 		});
 
-		assert.include(wrapper.text(), 'story1');
-		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
-		assert.isTrue(wrapper.find('.profile-open').exists());
+
+		expect(wrapper.text()).toContain('story1');
+		expect(wrapper.find('story-edit-modal-stub').exists()).toBeFalsy();
+		expect(wrapper.find('.profile-open').exists()).toBeTruthy();
 	});
 
 	it('Renders in edit mode when username matches user logged in user', () => {
 		const wrapper = shallowMount(StoriesOpen, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
 		});
 
-		assert.include(wrapper.text(), 'story1');
-		assert.isTrue(wrapper.find('StoryEditModal-stub').exists());
-		assert.isTrue(wrapper.find('.profile-open').exists());
+		expect(wrapper.text()).toContain('story1');
+		expect(wrapper.find('story-edit-modal-stub').exists()).toBeTruthy();
+		expect(wrapper.find('.profile-open').exists()).toBeTruthy();
 	});
 
 	it('Exists story when exit clicked', () => {
+		const trackStoryStub = sinon.stub();
+		storeOptions.modules.Profile.mutations.trackStory = trackStoryStub;
+
 		const wrapper = shallowMount(StoriesOpen, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
 		});
 
 		wrapper.find('button.webpush').trigger('click');
 
 
-		assert.isTrue(mocks.$store.commit.calledOnce);
-		assert.isTrue(mocks.$store.commit.calledWith('Profile/trackStory', mocks.$store.state.Stories.story));
+		expect(trackStoryStub.calledOnce).toBeTruthy();
+		expect(trackStoryStub.calledWith(sinon.match.any,storeOptions.modules.Stories.state.story)).toBeTruthy();
 
-		assert.isTrue(mocks.$router.push.calledOnce);
-		assert.isTrue(mocks.$router.push.calledWith('/username'));
+		expect(mocks.$router.push.calledOnce).toBeTruthy();
+		expect(mocks.$router.push.calledWith('/username')).toBeTruthy();
 	});
 
 	it('Opens edit modal when edit is clicked', () => {
 		const wrapper = shallowMount(StoriesOpen, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
 		});
 
 		wrapper.find('button.profile-open__button').trigger('click');
 
-		assert.isTrue(wrapper.vm.$data.edit);
+		expect(wrapper.vm.$data.edit).toBeTruthy();
 	});
 
 	it('Closes edit modal when signled from modal', () => {
 		const wrapper = shallowMount(StoriesOpen, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
 		});
 
-		wrapper.find('StoryEditModal-stub').trigger('saved');
+		wrapper.find('story-edit-modal-stub').trigger('saved');
 
-		assert.isFalse(wrapper.vm.$data.edit);
+		expect(wrapper.vm.$data.edit).toBeFalsy();
 	});
 });

@@ -78,7 +78,7 @@ describe('UploadsList.vue', () => {
 		expect(wrapper.find('ul').exists()).toBeFalsy();
 	});
 
-	it.only('Lists all the different upload entries', async () => {
+	it('Lists all the different upload entries', async () => {
 		const wrapper = shallowMount(UploadsList, {
 			global: {
 				plugins: [createStore(storeOptions)],

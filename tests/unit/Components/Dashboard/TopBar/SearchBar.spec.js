@@ -1,7 +1,7 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import SearchBar from '@/Components/Dashboard/TopBar/SearchBar';
-import Map, { LeafletMapService } from '@/Services/LeafletMapService';
+import {describe, it, expect, afterEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import SearchBar from '@/Components/Dashboard/TopBar/SearchBar.vue';
+import Map, {LeafletMapService} from '@/Services/LeafletMapService';
 import http from '@/Services/HttpService';
 import sinon from 'sinon';
 
@@ -18,49 +18,61 @@ describe('SearchBar.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs
+			}
 		});
 
-		assert.isTrue(wrapper.find('.input.addon-row__control').exists());
-		assert.isTrue(wrapper.find('.button.is-light-background').exists());
+		expect(wrapper.find('.input.addon-row__control').exists()).toBeTruthy();
+		expect(wrapper.find('.button.is-light-background').exists()).toBeTruthy();
 	});
 
 	it('Tracks input', () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs
+			}
 		});
 		wrapper.find('.input').element.value = 'a';
 		wrapper.find('.input').trigger('input');
 
-		assert.equal(wrapper.vm.$data.query, 'a');
+		expect(wrapper.vm.$data.query).toBe('a');
 	});
 
-	it('Changes search category to address', () => {
+	it('Changes search category to address', async () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			searchCategory: 'Users'
 		});
 
 		wrapper.find('.dropdown__content-item').trigger('click');
 
-		assert.equal(wrapper.vm.$data.searchCategory, 'Address');
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.searchCategory).toBe('Address');
 	});
 
-	it('Changes search category to users', () => {
+	it('Changes search category to users', async () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			searchCategory: 'Address'
 		});
 
 		wrapper.find('.dropdown__content-item').trigger('click');
 
-		assert.equal(wrapper.vm.$data.searchCategory, 'Users');
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.searchCategory).toBe('Users');
 	});
 
 	it('Searches for query value location', async () => {
@@ -73,30 +85,34 @@ describe('SearchBar.vue', () => {
 		});
 		const searchUserStub = sinon.stub(http, 'get');
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			query: 'test',
 			searchCategory: 'Address'
 		});
 
 		wrapper.findAll('button').at(1).trigger('click');
 
-		assert.isTrue(wrapper.vm.$data.searching);
-		assert.isFalse(wrapper.vm.$data.searched);
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.searching).toBeTruthy();
+		expect(wrapper.vm.$data.searched).toBeFalsy();
 
 		await wrapper.vm.$nextTick();
 
-		assert.isFalse(wrapper.vm.$data.searching);
-		assert.isTrue(wrapper.vm.$data.searched);
-		assert.isTrue(geocoderStub.calledOnce);
-		assert.isTrue(geocoderStub.calledWith('test', {
+		expect(wrapper.vm.$data.searching).toBeFalsy();
+		expect(wrapper.vm.$data.searched).toBeTruthy();
+		expect(geocoderStub.calledOnce).toBeTruthy();
+		expect(geocoderStub.calledWith('test', {
 			_southWest: {lat: -1, lng: -1},
 			_northEast: {lat: 1, lng: 1}
-		}));
-		assert.isFalse(searchUserStub.called);
-		assert.deepEqual(wrapper.vm.results, ['a', 'b']);
+		})).toBeTruthy();
+		expect(searchUserStub.called).toBeFalsy();
+		expect(wrapper.vm.results).toEqual(['a', 'b']);
 	});
 
 	it('Searches for query value users', async () => {
@@ -108,39 +124,45 @@ describe('SearchBar.vue', () => {
 			]
 		});
 		const wrapper = shallowMount(SearchBar, {
-			stubs,
-			mocks: {
-				$http: http
+			global: {
+				stubs,
+				mocks: {
+					$http: http
+				}
 			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			query: 'test',
 			searchCategory: 'Users'
 		});
 
 		wrapper.findAll('button').at(1).trigger('click');
 
-		assert.isTrue(wrapper.vm.$data.searching);
-		assert.isFalse(wrapper.vm.$data.searched);
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.searching).toBeTruthy();
+		expect(wrapper.vm.$data.searched).toBeFalsy();
 
 		await wrapper.vm.$nextTick();
 
-		assert.isFalse(wrapper.vm.$data.searching);
-		assert.isTrue(wrapper.vm.$data.searched);
-		assert.isTrue(searchUserStub.calledOnce);
-		assert.isTrue(searchUserStub.calledWith('search/users/test'));
-		assert.isFalse(geocoderStub.called);
-		assert.deepEqual(wrapper.vm.$data.results, ['test']);
+		expect(wrapper.vm.$data.searching).toBeFalsy();
+		expect(wrapper.vm.$data.searched).toBeTruthy();
+		expect(searchUserStub.calledOnce).toBeTruthy();
+		expect(searchUserStub.calledWith('search/users/test')).toBeTruthy();
+		expect(geocoderStub.called).toBeFalsy();
+		expect(wrapper.vm.$data.results).toEqual(['test']);
 	});
 
-	it('Renders search result', () => {
+	it('Renders search result', async () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs,
+			}
 		});
 
-		assert.notInclude(wrapper.html(), 'test 1');
-		assert.notInclude(wrapper.html(), 'test 2');
+		expect(wrapper.html()).not.toContain('test 1');
+		expect(wrapper.html()).not.toContain('test 2');
 
 		wrapper.vm.results = [
 			{
@@ -151,31 +173,41 @@ describe('SearchBar.vue', () => {
 			},
 		];
 
-		assert.include(wrapper.html(), 'test 1');
-		assert.include(wrapper.html(), 'test 2');
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.html()).toContain('test 1');
+		expect(wrapper.html()).toContain('test 2');
 	});
 
-	it('Renders no results for empty results', () => {
+	it('Renders no results for empty results', async () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs,
+			}
 		});
 
-		assert.notInclude(wrapper.html(), 'test 1');
-		assert.notInclude(wrapper.html(), 'test 2');
+		expect(wrapper.html(), 'test 1').not.toContain();
+		expect(wrapper.html(), 'test 2').not.toContain();
 
 		wrapper.vm.results = [];
 		wrapper.vm.searched = true;
 
-		assert.include(wrapper.html(), 'No results found for');
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.html()).toContain( 'No results found for');
+
 	});
 
-	it('Moves map when clicking on a address result', () => {
+	it('Moves map when clicking on a address result',async () => {
 		const moveStub = sinon.stub(Map, 'move');
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs,
+			}
 		});
 
-		wrapper.setData({
+
+		await wrapper.setData({
 			searchCategory: 'Address',
 			results: [{
 				longitude: 0,
@@ -185,53 +217,70 @@ describe('SearchBar.vue', () => {
 		});
 
 		wrapper.findAll('.dropdown__content-item').at(1).trigger('click');
-		assert.isTrue(moveStub.calledWith([0, 0]));
-		assert.isTrue(moveStub.calledOnce);
+
+		await wrapper.vm.$nextTick();
+
+		expect(moveStub.calledWith([0, 0])).toBeTruthy();
+		expect(moveStub.calledOnce).toBeTruthy();
 	});
 
-	it('Loads user when clicking on user search results', () => {
+	it('Loads user when clicking on user search results', async () => {
 		const moveStub = sinon.stub(Map, 'move');
 		const routeSpy = sinon.spy();
 		const wrapper = shallowMount(SearchBar, {
-			stubs,
-			mocks: {
-				$router: {
-					push: routeSpy
+			global: {
+				stubs,
+				mocks: {
+					$router: {
+						push: routeSpy
+					}
 				}
 			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			searchCategory: 'Users',
 			results: ['test']
 		});
 
 		wrapper.findAll('.dropdown__content-item').at(1).trigger('click');
-		assert.isTrue(routeSpy.calledWith('test'));
-		assert.isFalse(moveStub.called);
+
+		await wrapper.vm.$nextTick();
+
+		expect(routeSpy.calledWith('test')).toBeTruthy();
+		expect(moveStub.called).toBeFalsy();
 	});
 
-	it('Toggles dropdown on hen hover over search button', () => {
+	it('Toggles dropdown on hen hover over search button', async () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs,
+			}
 		});
-
 
 		wrapper.findAll('button').at('1').trigger('mouseenter');
-		assert.isTrue(wrapper.find('.dropdown.is-active').exists());
+
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('.dropdown.is-active').exists()).toBeTruthy();
 	});
 
-	it('Toggles dropdown off when hover over search button', () => {
+	it('Toggles dropdown off when hover over search button', async () => {
 		const wrapper = shallowMount(SearchBar, {
-			stubs
+			global: {
+				stubs,
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			openResults: true
 		});
 
 
 		wrapper.findAll('button').at('1').trigger('mouseleave');
-		assert.isFalse(wrapper.find('.dropdown.is-active').exists());
+
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('.dropdown.is-active').exists()).toBeFalsy();
 	});
 });

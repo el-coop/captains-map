@@ -97,6 +97,6 @@ export default defineConfig({
 		topLevelAwait({}),
 	],
 	test: {
-		include: ['tests/unit/**/FollowButton.spec.js'],
+		include: ['tests/unit/Components/Dashboard/**/*.spec.js'],
 	}
 });

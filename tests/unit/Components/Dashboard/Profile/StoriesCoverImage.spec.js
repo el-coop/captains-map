@@ -53,7 +53,7 @@ describe('Stories.vue', () => {
 		expect(wrapper.find('img').attributes('src')).toBe(`/api/bla`);
 	});
 
-	it.only('Renders as small', async () => {
+	it('Renders as small', async () => {
 		const props = {
 			cover: {
 				type: 'instagram',
