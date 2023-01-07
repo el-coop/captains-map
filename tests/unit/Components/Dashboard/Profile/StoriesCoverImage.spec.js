@@ -1,6 +1,6 @@
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import { mount } from '@vue/test-utils';
-import StoryCoverImage from '@/Components/Dashboard/Profile/StoryCoverImage';
+import StoryCoverImage from '@/Components/Dashboard/Profile/StoryCoverImage.vue';
 import sinon from 'sinon';
 import globe from '@/assets/images/globe-icon.png';
 
@@ -11,50 +11,50 @@ describe('Stories.vue', () => {
 	});
 
 	it('Renders with globe when cover is null', async () => {
-		const propsData = {
+		const props = {
 			cover: null
 		}
 		const wrapper = mount(StoryCoverImage, {
-			propsData
+			props
 		});
 
-		assert.isTrue(wrapper.find('.story__figure').exists());
-		assert.equal(wrapper.find('img').attributes('src'), globe);
+		expect(wrapper.find('.story__figure').exists()).toBeTruthy();
+		expect(wrapper.find('img').attributes('src')).toBe(globe);
 	});
 
 	it('Renders with instagram when cover is instagram', async () => {
-		const propsData = {
+		const props = {
 			cover: {
 				type: 'instagram',
 				path: 'bla'
 			}
 		}
 		const wrapper = mount(StoryCoverImage, {
-			propsData
+			props
 		});
 
-		assert.isTrue(wrapper.find('.story__figure').exists());
-		assert.isFalse(wrapper.find('.image.is-32x32').exists());
-		assert.equal(wrapper.find('img').attributes('src'), `https://instagram.com/p/bla/media/`);
+		expect(wrapper.find('.story__figure').exists()).toBeTruthy();
+		expect(wrapper.find('.image.is-32x32').exists()).toBeFalsy();
+		expect(wrapper.find('img').attributes('src')).toBe(`https://instagram.com/p/bla/media/`);
 	});
 
 	it('Renders with image when cover is image', async () => {
-		const propsData = {
+		const props = {
 			cover: {
 				type: 'image',
 				path: '/bla'
 			}
 		}
 		const wrapper = mount(StoryCoverImage, {
-			propsData
+			props
 		});
 
-		assert.isTrue(wrapper.find('.story__figure').exists());
-		assert.equal(wrapper.find('img').attributes('src'), `/api/bla`);
+		expect(wrapper.find('.story__figure').exists()).toBeTruthy();
+		expect(wrapper.find('img').attributes('src')).toBe(`/api/bla`);
 	});
 
-	it('Renders as small', async () => {
-		const propsData = {
+	it.only('Renders as small', async () => {
+		const props = {
 			cover: {
 				type: 'instagram',
 				path: 'bla'
@@ -62,10 +62,10 @@ describe('Stories.vue', () => {
 			isSmall: true
 		}
 		const wrapper = mount(StoryCoverImage, {
-			propsData
+			props
 		});
 
-		assert.isTrue(wrapper.find('.story__figure.image.is-32x32').exists());
-		assert.equal(wrapper.find('img').attributes('src'), `https://instagram.com/p/bla/media/`);
+		expect(wrapper.find('.story__figure.image.is-32x32').exists()).toBeTruthy();
+		expect(wrapper.find('img').attributes('src')).toBe(`https://instagram.com/p/bla/media/`);
 	});
 });

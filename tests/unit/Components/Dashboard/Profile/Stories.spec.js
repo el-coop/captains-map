@@ -1,24 +1,30 @@
-import { assert } from 'chai';
-import { mount } from '@vue/test-utils';
-import Stories from '@/Components/Dashboard/Profile/Stories';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {mount} from '@vue/test-utils';
+import Stories from '@/Components/Dashboard/Profile/Stories.vue';
 import sinon from 'sinon';
-import globe from '@/assets/images/globe-icon.png';
+import {createStore} from "vuex";
 
 describe('Stories.vue', () => {
 
 	let mocks;
 	let stubs;
+	let storeOptions;
+
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				state: {
-					User: {
+		storeOptions = {
+			modules: {
+				User: {
+					namespaced: true,
+					state: {
 						user: {
 							username: 'test'
 						}
-					},
-					Profile: {
+					}
+				},
+				Profile: {
+					namespaced: true,
+					state: {
 						user: {
 							username: 'test',
 						},
@@ -29,10 +35,14 @@ describe('Stories.vue', () => {
 							id: 2,
 							name: 'story2'
 						}]
+					},
+					mutations:{
+						toggle(){}
 					}
-				},
-				commit: sinon.stub()
-			},
+				}
+			}
+		};
+		mocks = {
 			$router: {
 				push: sinon.stub()
 			}
@@ -45,110 +55,144 @@ describe('Stories.vue', () => {
 	afterEach(() => {
 		sinon.restore();
 	});
+
 	it('Renders with stories when logged out', async () => {
-		mocks.$store.state.User.user = null;
+		storeOptions.modules.User.state.user = null;
 
 		const wrapper = mount(Stories, {
-			stubs,
-			mocks
+			global:{
+				plugins:[createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.stories').exists());
-		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
-		assert.equal(wrapper.findAll('.story').length, 2)
+		expect(wrapper.find('.stories').exists()).toBeTruthy();
+		expect(wrapper.find('story-edit-modal-stub').exists()).toBeFalsy();
+		expect(wrapper.findAll('.story').length).toBe(2);
 	});
 
 	it('Renders without stories when logged out', async () => {
-		mocks.$store.state.User.user = null;
-		mocks.$store.state.Profile.stories = [];
+		storeOptions.modules.User.state.user = null;
+
+		storeOptions.modules.Profile.state.stories = [];
 
 		const wrapper = mount(Stories, {
-			stubs,
-			mocks
+			global:{
+				plugins:[createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.stories').exists());
-		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
-		assert.equal(wrapper.findAll('.story').length, 0)
+		expect(wrapper.find('.stories').exists()).toBeTruthy();
+		expect(wrapper.find('story-edit-modal-stub').exists()).toBeFalsy();
+		expect(wrapper.findAll('.story').length).toBe(0);
 	});
 
 	it('Renders with stories when not same user', async () => {
-		mocks.$store.state.User.user = {
+		storeOptions.modules.User.state.user = {
 			username: 'kla'
 		};
 
 		const wrapper = mount(Stories, {
-			stubs,
-			mocks
+			global:{
+				plugins:[createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.stories').exists());
-		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
-		assert.equal(wrapper.findAll('.story').length, 2)
+		expect(wrapper.find('.stories').exists()).toBeTruthy();
+		expect(wrapper.find('story-edit-modal-stub').exists()).toBeFalsy();
+		expect(wrapper.findAll('.story').length).toBe(2);
 	});
 
 	it('Renders without stories when not same user', async () => {
-		mocks.$store.state.User.user = {
+		storeOptions.modules.User.state.user = {
 			username: 'kla'
 		};
-		mocks.$store.state.Profile.stories = [];
+		storeOptions.modules.Profile.state.stories = [];
 
 		const wrapper = mount(Stories, {
-			stubs,
-			mocks
+			global:{
+				plugins:[createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.stories').exists());
-		assert.isFalse(wrapper.find('StoryEditModal-stub').exists());
-		assert.equal(wrapper.findAll('.story').length, 0)
+		expect(wrapper.find('.stories').exists()).toBeTruthy();
+		expect(wrapper.find('story-edit-modal-stub').exists()).toBeFalsy();
+		expect(wrapper.findAll('.story').length).toBe(0);
+
 	});
 
 	it('Renders with stories when can edit', async () => {
 		const wrapper = mount(Stories, {
-			stubs,
-			mocks
+			global:{
+				plugins:[createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.stories').exists());
-		assert.isTrue(wrapper.find('StoryEditModal-stub').exists());
-		assert.equal(wrapper.findAll('.story').length, 3)
+		expect(wrapper.find('.stories').exists()).toBeTruthy();
+		expect(wrapper.find('story-edit-modal-stub').exists()).toBeTruthy();
+		expect(wrapper.findAll('.story').length).toBe(3);
 	});
 
 	it('Renders without stories when can edit', async () => {
-		mocks.$store.state.Profile.stories = [];
+		storeOptions.modules.Profile.state.stories = [];
 
 		const wrapper = mount(Stories, {
-			stubs,
-			mocks
+			global:{
+				plugins:[createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.stories').exists());
-		assert.isTrue(wrapper.find('StoryEditModal-stub').exists());
-		assert.equal(wrapper.findAll('.story').length, 1)
+		expect(wrapper.find('.stories').exists()).toBeTruthy();
+		expect(wrapper.find('story-edit-modal-stub').exists()).toBeTruthy();
+		expect(wrapper.findAll('.story').length).toBe(1);
 	});
 
 	it('Opens modal when new is clicked', async () => {
 		const wrapper = mount(Stories, {
-			stubs,
-			mocks
+			global:{
+				plugins:[createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
 		wrapper.find('.story__link').trigger('click');
 
-		assert.isTrue(wrapper.vm.$data.createModal);
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.createModal).toBeTruthy();
 	});
 
 	it('Triggers routing to story when story is clicked', async () => {
+		const profileToggleStub = sinon.stub();
+		storeOptions.modules.Profile.mutations.toggle = profileToggleStub;
+
 		const wrapper = mount(Stories, {
-			stubs,
-			mocks
+			global:{
+				plugins:[createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
 		wrapper.findAll('.story__link').at(1).trigger('click');
 
-		assert.isTrue(mocks.$store.commit.called);
-		assert.isTrue(mocks.$store.commit.calledWith('Profile/toggle'));
-		assert.isTrue(mocks.$router.push.called);
-		assert.isTrue(mocks.$router.push.calledWith('test/story/1'));
+		await wrapper.vm.$nextTick();
+
+		expect(profileToggleStub.called).toBeTruthy();
+		expect(profileToggleStub.calledWith()).toBeTruthy();
+		expect(mocks.$router.push.called).toBeTruthy();
+		expect(mocks.$router.push.calledWith('test/story/1')).toBeTruthy();
 	});
 });

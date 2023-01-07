@@ -1,36 +1,48 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import Profile from '@/Components/Dashboard/Profile';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import Profile from '@/Components/Dashboard/Profile.vue';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 describe('Profile.vue', () => {
 
 	let mocks;
 	let stubs;
+	let storeOptions;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				state: {
-					Profile: {
+		storeOptions = {
+			modules: {
+				Profile: {
+					namespaced: true,
+					state: {
 						user: {
 							username: 'test',
 							description: 'description',
 							path: false
 						}
 					},
-					User: {
+					mutations: {
+						toggle(){}
+					}
+				},
+				User: {
+					namespaced: true,
+					state: {
 						user: null
-					},
-					Stories: {
+
+					}
+				},
+				Stories: {
+					namespaced: true,
+					state: {
 						story: null
 					}
 				},
-				commit: sinon.stub()
-			},
-			$http: {
-
-			},
+			}
+		}
+		mocks = {
+			$http: {},
 			$toast: {
 				success: sinon.stub(),
 				error: sinon.stub()
@@ -48,52 +60,66 @@ describe('Profile.vue', () => {
 
 	it('Renders', async () => {
 		const wrapper = shallowMount(Profile, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 
-		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
-		assert.isTrue(wrapper.find('stories-stub').exists());
-		assert.equal(wrapper.find('.title.is-4').text(), 'test');
+		expect(wrapper.find('.dashboard__control.profile').exists()).toBeTruthy();
+		expect(wrapper.find('stories-stub').exists()).toBeTruthy();
+		expect(wrapper.find('.title.is-4').text()).toBe('test');
 	});
 
 	it('Toggles open', async () => {
-		mocks.$store.state.Profile.open = true;
+		storeOptions.modules.Profile.state.open = true;
 
 		const wrapper = shallowMount(Profile, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 
-		assert.isTrue(wrapper.find('.dashboard__control.profile.profile--open').exists());
+		expect(wrapper.find('.dashboard__control.profile.profile--open').exists()).toBeTruthy();
 	});
 
 	it('Closes when clicked', async () => {
-		mocks.$store.state.Profile.open = true;
+		const profileToggleStub = sinon.stub();
+		storeOptions.modules.Profile.state.open = true;
+		storeOptions.modules.Profile.mutations.toggle = profileToggleStub;
 
 		const wrapper = shallowMount(Profile, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 
 		wrapper.find('.icon.profile__close').trigger('click');
 
 		await wrapper.vm.$nextTick();
 
-		assert.isTrue(mocks.$store.commit.calledOnce);
-		assert.isTrue(mocks.$store.commit.calledWith('Profile/toggle'));
+		expect(profileToggleStub.calledOnce).toBeTruthy();
+		expect(profileToggleStub.calledWith()).toBeTruthy();
 	});
 
 	it('Doesnt open when a story is chosen', async () => {
-		mocks.$store.state.Profile.open = true;
-		mocks.$store.state.Stories.story = 1;
+		storeOptions.modules.Profile.state.open = true;
+		storeOptions.modules.Stories.state.story = 1;
 
 		const wrapper = shallowMount(Profile, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 
-		assert.isFalse(wrapper.find('.dashboard__control.profile.profile--open').exists());
+		expect(wrapper.find('.dashboard__control.profile.profile--open').exists()).toBeFalsy();
 	});
 
 });
