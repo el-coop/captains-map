@@ -1,7 +1,6 @@
-import Vue from 'vue';
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import MapUserMarker from '@/Components/Map/Markers/MapUserMarker';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import MapUserMarker from '@/Components/Map/Markers/MapUserMarker.vue';
 import leaflet from 'leaflet';
 import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
@@ -10,7 +9,6 @@ describe('MapUserMarker.vue', () => {
 
 	let mocks;
 	let mapObject;
-	let parent;
 	let divIcon;
 	let addWatchLocationStub;
 
@@ -28,12 +26,6 @@ describe('MapUserMarker.vue', () => {
 			$toast: {
 				info: sinon.spy(),
 				hide: sinon.spy()
-			}
-		};
-		parent = {
-			methods: {
-				addObject: sinon.spy(),
-				removeObject: sinon.spy()
 			}
 		};
 		divIcon = {
@@ -57,12 +49,10 @@ describe('MapUserMarker.vue', () => {
 	});
 
 	it('watches for location when created', () => {
-		const wrapper = shallowMount(MapUserMarker, {
-			mocks
-		});
+		const wrapper = shallowMount(MapUserMarker);
 
-		assert.isTrue(wrapper.find('div').exists());
-		assert.isTrue(addWatchLocationStub.calledOnce);
+		expect(wrapper.find('div').exists()).toBeTruthy();
+		expect(addWatchLocationStub.calledOnce).toBeTruthy();
 	});
 
 
@@ -72,10 +62,10 @@ describe('MapUserMarker.vue', () => {
 		const createIconStub = sinon.stub(leaflet, 'divIcon').returns(icon);
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(mapObject);
 
-
 		const wrapper = shallowMount(MapUserMarker, {
-			parentComponent: parent,
-			mocks
+			global: {
+				mocks
+			}
 		});
 
 		wrapper.vm.setLocation({
@@ -87,37 +77,38 @@ describe('MapUserMarker.vue', () => {
 			timestamp: Date.now()
 		});
 
-		assert.isTrue(createIconStub.calledOnce);
-		assert.isTrue(createIconStub.calledWith({
+		expect(createIconStub.calledOnce).toBeTruthy();
+		expect(createIconStub.calledWith({
 			html: wrapper.vm.$el.outerHTML,
 			iconSize: [20, 20]
-		}));
-		assert.isTrue(createMarkerStub.calledOnce);
-		assert.isTrue(createMarkerStub.calledWith([0, 0], {icon}));
-		assert.isTrue(mapObject.on.calledOnce);
-		assert.isTrue(mapObject.on.calledWith('click'));
-		assert.isTrue(parent.methods.addObject.calledOnce);
-		assert.isTrue(parent.methods.addObject.calledWith(mapObject));
-		assert.isTrue(mocks.$toast.info.calledOnce);
-		assert.isTrue(mocks.$toast.info.calledWith('You can now go to your location by holding the location icon. (right click on desktop)', ''));
-		assert.isTrue(global.setInterval.calledOnce);
-		assert.isTrue(divIcon.firstChild.classList.remove.calledOnce);
-		assert.isTrue(divIcon.firstChild.classList.remove.calledWith('map__user-marker--old'));
+		})).toBeTruthy();
+		expect(createMarkerStub.calledOnce).toBeTruthy();
+		expect(createMarkerStub.calledWith([0, 0], {icon})).toBeTruthy();
+		expect(mapObject.on.calledOnce).toBeTruthy();
+		expect(mapObject.on.calledWith('click')).toBeTruthy();
+		expect(wrapper.emitted()).toHaveProperty('add-to-map');
+		const addToMapEvent = wrapper.emitted('add-to-map');
+		expect(addToMapEvent[0]).toEqual([mapObject]);
+		expect(mocks.$toast.info.calledOnce).toBeTruthy();
+		expect(mocks.$toast.info.calledWith('You can now go to your location by holding the location icon. (right click on desktop)', '')).toBeTruthy();
+		expect(global.setInterval.calledOnce).toBeTruthy();
+		expect(divIcon.firstChild.classList.remove.calledOnce).toBeTruthy();
+		expect(divIcon.firstChild.classList.remove.calledWith('map__user-marker--old')).toBeTruthy();
 	});
 
-	it('doesnt set interval if already set', () => {
+	it('doesnt set interval if already set', async () => {
 		global.setInterval = sinon.stub();
 		const icon = sinon.spy();
 		sinon.stub(leaflet, 'divIcon').returns(icon);
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 
-
 		const wrapper = shallowMount(MapUserMarker, {
-			parentComponent: parent,
-			mocks
+			global: {
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			checkOldInterval: () => {
 			}
 		});
@@ -131,22 +122,23 @@ describe('MapUserMarker.vue', () => {
 			timestamp: Date.now()
 		});
 
-		assert.isFalse(global.setInterval.called);
+		expect(global.setInterval.called).toBeFalsy();
 	});
 
 
-	it('updates location for already existent marker', () => {
+	it('updates location for already existent marker', async () => {
 
 		const icon = sinon.spy();
 		const createIconStub = sinon.stub(leaflet, 'divIcon').returns(icon);
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(mapObject);
 
 		const wrapper = shallowMount(MapUserMarker, {
-			parentComponent: parent,
-			mocks
+			global: {
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			mapObject
 		});
 
@@ -159,25 +151,26 @@ describe('MapUserMarker.vue', () => {
 			timestamp: Date.now()
 		});
 
-		assert.isFalse(createIconStub.called);
-		assert.isFalse(createMarkerStub.called);
-		assert.isFalse(parent.methods.addObject.called);
-		assert.isTrue(mapObject.setLatLng.calledOnce);
-		assert.isTrue(mapObject.setLatLng.calledWith({
+		expect(createIconStub.called).toBeFalsy;
+		expect(createMarkerStub.called).toBeFalsy;
+		expect(wrapper.emitted()).not.toHaveProperty('add-to-map');
+		expect(mapObject.setLatLng.calledOnce).toBeTruthy();
+		expect(mapObject.setLatLng.calledWith({
 			lat: 0,
 			lng: 0
-		}));
-		assert.isTrue(divIcon.firstChild.classList.remove.calledOnce);
-		assert.isTrue(divIcon.firstChild.classList.remove.calledWith('map__user-marker--old'));
+		})).toBeTruthy();
+		expect(divIcon.firstChild.classList.remove.calledOnce).toBeTruthy();
+		expect(divIcon.firstChild.classList.remove.calledWith('map__user-marker--old')).toBeTruthy();
 	});
 
-	it('renders accuracy marker', () => {
+	it('renders accuracy marker',async () => {
 		const wrapper = shallowMount(MapUserMarker, {
-			parentComponent: parent,
-			mocks
+			global: {
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			mapObject
 		});
 
@@ -192,16 +185,19 @@ describe('MapUserMarker.vue', () => {
 
 		wrapper.vm.checkIfOld();
 
-		assert.isTrue(wrapper.find('mapuseraccuracymarker-stub').exists());
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('map-user-accuracy-marker-stub').exists()).toBeTruthy();
 	});
 
-	it('doesnt renders accuracy marker if old', () => {
+	it('doesnt renders accuracy marker if old', async () => {
 		const wrapper = shallowMount(MapUserMarker, {
-			parentComponent: parent,
-			mocks
+			global: {
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			mapObject,
 			accuracy: 51,
 			lat: 0,
@@ -211,28 +207,32 @@ describe('MapUserMarker.vue', () => {
 
 		wrapper.vm.checkIfOld();
 
-		assert.isFalse(wrapper.find('mapuseraccuracymarker-stub').exists());
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('map-user-accuracy-marker-stub').exists()).toBeFalsy();
 	});
 
 
-	it('removes marker when destroyed', () => {
+	it('removes marker when destroyed', async () => {
 		global.clearInterval = sinon.stub();
 
 		const wrapper = shallowMount(MapUserMarker, {
-			parentComponent: parent,
-			mocks
+			global: {
+				mocks
+			}
 		});
-		wrapper.setData({
+
+		await wrapper.setData({
 			checkOldInterval: 'interval',
 			mapObject
 		});
 
-		wrapper.destroy();
-		assert.isTrue(parent.methods.removeObject.calledOnce);
-		assert.isTrue(parent.methods.removeObject.calledWith(mapObject));
-		assert.isTrue(mocks.$bus.$off.calledOnce);
-		assert.isTrue(global.clearInterval.calledOnce);
-		assert.isTrue(global.clearInterval.calledWith('interval'));
+		wrapper.unmount();
+		expect(wrapper.emitted()).toHaveProperty('remove-from-map');
+		const removeFromMapEvent = wrapper.emitted('remove-from-map');
+		expect(removeFromMapEvent[0]).toEqual([mapObject]);
+		expect(global.clearInterval.calledOnce).toBeTruthy();
+		expect(global.clearInterval.calledWith('interval')).toBeTruthy();
 
 	});
 
@@ -240,70 +240,81 @@ describe('MapUserMarker.vue', () => {
 	it('emits events when detects click', () => {
 
 		const wrapper = shallowMount(MapUserMarker, {
-			mocks
+			global: {
+				mocks
+			}
 		});
 
 		wrapper.vm.lat = 0;
 		wrapper.vm.lng = 0;
 
 		wrapper.trigger('click');
-		assert.isTrue(mocks.$bus.$emit.calledOnce);
-		assert.isTrue(mocks.$bus.$emit.calledWith('user-marker-click', {
-			lat: 0,
-			lng: 0
-		}));
+		expect(wrapper.emitted()).toHaveProperty('user-marker-click');
+		const userMarkerClickEvent = wrapper.emitted('user-marker-click');
+		expect(userMarkerClickEvent[0]).toEqual([{
+			latlng: {
+				lat: 0,
+				lng: 0
+			}
+		}]);
+
 	});
 
-	it('responds to right click event by going to marker', () => {
-		mocks.$bus = new Vue();
+	it('responds to right click event by going to marker', async () => {
 		const mapSetViewStub = sinon.stub(mapService, 'setView');
 
 		const wrapper = shallowMount(MapUserMarker, {
-			mocks
+			global: {
+				mocks
+			}
 		});
 
-		wrapper.setData({
+
+		await wrapper.setData({
 			lat: 1,
 			lng: 1
 		});
 
-		mocks.$bus.$emit('goToUserMarker');
+		wrapper.vm.goToMarker();
 
-		assert.isTrue(mapSetViewStub.calledOnce);
-		assert.isTrue(mapSetViewStub.calledWith([1, 1]));
+		expect(mapSetViewStub.calledOnce).toBeTruthy();
+		expect(mapSetViewStub.calledWith([1, 1])).toBeTruthy();
 	});
 
-	it('adds class and sets old to false if timestamp is old', () => {
+	it('adds class and sets old to false if timestamp is old', async () => {
 		const wrapper = shallowMount(MapUserMarker, {
-			mocks
+			global: {
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			mapObject,
 			timestamp: Date.now() - 6 * 60 * 1000
 		});
 
 		wrapper.vm.checkIfOld();
 
-		assert.isTrue(divIcon.firstChild.classList.add.calledOnce);
-		assert.isTrue(divIcon.firstChild.classList.add.calledWith('map__user-marker--old'));
-		assert.isTrue(wrapper.vm.isOld);
+		expect(divIcon.firstChild.classList.add.calledOnce).toBeTruthy();
+		expect(divIcon.firstChild.classList.add.calledWith('map__user-marker--old')).toBeTruthy();
+		expect(wrapper.vm.isOld).toBeTruthy();
 	});
 
-	it('removes class and sets old to false if timestamp is new', () => {
+	it('removes class and sets old to false if timestamp is new', async () => {
 		const wrapper = shallowMount(MapUserMarker, {
-			mocks
+			global: {
+				mocks
+			}
 		});
-
-		wrapper.setData({
+		await wrapper.setData({
 			mapObject,
 			timestamp: Date.now() - 3 * 60 * 1000
 		});
 
 		wrapper.vm.checkIfOld();
 
-		assert.isTrue(divIcon.firstChild.classList.remove.calledOnce);
-		assert.isTrue(divIcon.firstChild.classList.remove.calledWith('map__user-marker--old'));
-		assert.isFalse(wrapper.vm.isOld);
+		expect(divIcon.firstChild.classList.remove.calledOnce).toBeTruthy();
+		expect(divIcon.firstChild.classList.remove.calledWith('map__user-marker--old')).toBeTruthy();
+		expect(wrapper.vm.isOld).toBeFalsy();
 	});
 });

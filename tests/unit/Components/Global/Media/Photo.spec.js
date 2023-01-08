@@ -1,6 +1,6 @@
-import { assert } from 'chai';
+import {describe, it, expect} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import Photo from '@/Components/Global/Media/Photo';
+import Photo from '@/Components/Global/Media/Photo.vue';
 import sinon from 'sinon';
 
 describe('Photo.vue', () => {
@@ -11,30 +11,34 @@ describe('Photo.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(Photo, {
-			propsData: {
+			global:{
+				stubs
+			},
+			props: {
 				path: '/test'
 			},
-			stubs
 		});
 
-		assert.isTrue(wrapper.find('img').exists());
-		assert.equal(wrapper.find('img').element.src, 'http://localhost/api/test');
+		expect(wrapper.find('img').exists()).toBeTruthy();
+		expect(wrapper.find('img').element.src).toBe('http://localhost:3000/api/test');
 	});
 
 	it('Opens image in new window when button is clicked', () => {
 		global.window.open = sinon.stub();
 
 		const wrapper = shallowMount(Photo, {
-			propsData: {
+			global:{
+				stubs
+			},
+			props: {
 				path: '/test'
 			},
-			stubs
 		});
 
 		wrapper.find('button').trigger('click');
 
-		assert.isTrue(global.window.open.calledOnce);
-		assert.isTrue(global.window.open.calledWith('/api/test'));
+		expect(global.window.open.calledOnce).toBeTruthy();
+		expect(global.window.open.calledWith('/api/test')).toBeTruthy();
 
 		delete global.window.open;
 	});

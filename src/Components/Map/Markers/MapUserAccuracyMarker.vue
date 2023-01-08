@@ -24,16 +24,11 @@
 				required: true
 			}
 		},
-        
-        methods: {
-            addToMap() {
-                this.$parent.addObject(this.mapObject);
-            },
-        },
 
 		data() {
 			return {
-				iconSize: Math.min(750, this.accuracy / 2)
+				iconSize: Math.min(750, this.accuracy / 2),
+                event: 'user-marker-click'
 			}
 		},
 

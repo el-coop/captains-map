@@ -1,18 +1,11 @@
-import { assert } from 'chai';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import MapMarker from '@/Components/Map/Markers/MapMarker';
+import MapMarker from '@/Components/Map/Markers/MapMarker.vue';
 import leaflet from 'leaflet';
 import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
 
 describe('MapMarker.vue', () => {
-	const parent = {
-		methods: {
-			addObject: sinon.spy(),
-			removeObject: sinon.spy()
-		}
-	};
-
 
 	const marker = {
 		media: {
@@ -25,6 +18,9 @@ describe('MapMarker.vue', () => {
 			username: 'test'
 		},
 	};
+	let stubs = {
+		FontAwesomeIcon: true,
+	}
 
 	beforeEach(() => {
 		marker.on = sinon.stub().returns(marker);
@@ -39,22 +35,27 @@ describe('MapMarker.vue', () => {
 		const createIconStub = sinon.stub(leaflet, 'divIcon').returns(icon);
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(marker);
 		const wrapper = shallowMount(MapMarker, {
-			parentComponent: parent,
-			propsData: {
+			global: {
+				stubs
+			},
+			props: {
 				marker
 			}
 		});
-		assert.isTrue(wrapper.find('div').exists());
-		assert.isTrue(createIconStub.calledOnce);
-		assert.isTrue(createIconStub.calledWith({
+		expect(wrapper.find('div').exists()).toBeTruthy();
+		expect(createIconStub.calledOnce).toBeTruthy();
+		expect(createIconStub.calledWith({
 			html: wrapper.vm.$el.outerHTML,
 			iconSize: ['auto', 'auto']
-		}));
-		assert.isTrue(createMarkerStub.calledOnce);
-		assert.isTrue(parent.methods.addObject.calledOnce);
-		assert.isTrue(parent.methods.addObject.calledWith(marker));
-		assert.isTrue(marker.on.calledOnce);
-		assert.isTrue(marker.on.calledWith('click'));
+		})).toBeTruthy();
+		expect(createMarkerStub.calledOnce).toBeTruthy();
+		expect(marker.on.calledOnce).toBeTruthy();
+		expect(marker.on.calledWith('click')).toBeTruthy();
+
+		expect(wrapper.emitted()).toHaveProperty('add-to-map');
+		const addToMapEvent = wrapper.emitted('add-to-map');
+		expect(addToMapEvent[0]).toEqual([marker]);
+
 	});
 
 	it('Removes marker when destroyed', () => {
@@ -62,37 +63,40 @@ describe('MapMarker.vue', () => {
 		sinon.stub(mapService, 'addObject');
 
 		const wrapper = shallowMount(MapMarker, {
-			parentComponent: parent,
-			propsData: {
+			global: {
+				stubs
+			},
+			props: {
 				marker
 			}
 		});
 
-		wrapper.destroy();
-		assert.isTrue(parent.methods.removeObject.calledOnce);
-		assert.isTrue(parent.methods.removeObject.calledWith(marker));
+		wrapper.unmount();
+
+
+		expect(wrapper.emitted()).toHaveProperty('remove-from-map');
+		const removeFromMapEvent = wrapper.emitted('remove-from-map');
+		expect(removeFromMapEvent[0]).toEqual([marker]);
 	});
 
 
 	it('Emit events when detects click', () => {
-		const $bus = {
-			$emit: sinon.stub()
-		};
 		sinon.stub(leaflet, 'marker').returns(marker);
 
 		const wrapper = shallowMount(MapMarker, {
-			parentComponent: parent,
-			mocks: {
-				$bus,
+			global: {
+				stubs
 			},
-			propsData: {
+			props: {
 				marker
 			}
 		});
 
 		wrapper.vm.onClick();
-		assert.isTrue($bus.$emit.calledOnce);
-		assert.isTrue($bus.$emit.calledWith('marker-click', wrapper.vm.$props.marker));
+
+		expect(wrapper.emitted()).toHaveProperty('marker-click');
+		const markerClickEvent = wrapper.emitted('marker-click');
+		expect(markerClickEvent[0]).toEqual([marker]);
 	});
 
 });

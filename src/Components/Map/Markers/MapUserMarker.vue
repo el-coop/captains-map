@@ -2,6 +2,7 @@
 	<div class="map__user-marker map__marker" @click="onClick">
 		<MapUserAccuracyMarker v-if="! isOld && accuracy !== null && lat !== null && lng !== null" :accuracy="accuracy"
 							   :lat="lat"
+                               @add-to-map="$emit('add-to-map',$event)"
                                @user-marker-click="$emit(event, $event)"
 							   :lng="lng"/>
 	</div>
@@ -44,7 +45,7 @@
 				if (!this.checkOldInterval) {
 					this.checkOldInterval = setInterval(this.checkIfOld.bind(this), 60 * 1000);
 				}
-				this.accuracy = location.accuracy;
+                this.accuracy = location.accuracy;
 				this.timestamp = location.timestamp;
 
 				if (!location.latlng || (this.lat === location.latlng.lat && this.lng === location.latlng.lng)) {
@@ -64,13 +65,6 @@
 				}
 				this.setLatLng(this.lat, this.lng);
 				this.checkIfOld();
-			},
-			addObject(marker) {
-				this.$parent.addObject(marker);
-			},
-
-			removeObject(marker) {
-				this.$parent.removeObject(marker);
 			},
 
 			goToMarker() {

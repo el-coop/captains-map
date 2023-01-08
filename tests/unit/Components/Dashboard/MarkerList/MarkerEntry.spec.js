@@ -1,11 +1,15 @@
 import {describe, it, expect, afterEach, beforeEach} from 'vitest';
-import { shallowMount } from '@vue/test-utils';
+import {shallowMount} from '@vue/test-utils';
 import MarkerEntry from '@/Components/Dashboard/SideBar/MarkerEntry.vue';
 import sinon from 'sinon';
 import map from '@/Services/LeafletMapService';
 
 describe('MarkerEntry.vue', () => {
 	let marker;
+	let stubs = {
+		FontAwesomeIcon: true
+	}
+
 
 	beforeEach(() => {
 		global.window.matchMedia = sinon.stub().returns({
@@ -39,7 +43,10 @@ describe('MarkerEntry.vue', () => {
 
 	it('Renders', async () => {
 		const wrapper = shallowMount(MarkerEntry, {
-			propsData: {
+			global: {
+				stubs
+			},
+			props: {
 				marker
 			}
 		});
@@ -64,10 +71,8 @@ describe('MarkerEntry.vue', () => {
 			props: {
 				marker
 			},
-			global:{
-				stubs: {
-					FontAwesomeIcon: true
-				}
+			global: {
+				stubs
 			}
 		});
 
@@ -77,9 +82,13 @@ describe('MarkerEntry.vue', () => {
 
 	it('Calculates image src for image type', () => {
 		const wrapper = shallowMount(MarkerEntry, {
-			propsData: {
+			global: {
+				stubs
+			},
+			props: {
 				marker
 			}
+
 		});
 
 		expect(wrapper.vm.$data.src).toBe(`/api${marker.media[0].path.replace('images', 'thumbnails')}`);
@@ -89,9 +98,13 @@ describe('MarkerEntry.vue', () => {
 		marker.media[0].type = 'instagram';
 
 		const wrapper = shallowMount(MarkerEntry, {
+			global: {
+				stubs
+			},
 			props: {
 				marker
 			}
+
 		});
 
 		expect(wrapper.vm.$data.src).toBe(`https://instagram.com/p/${marker.media[0].path}/media/`);
@@ -103,9 +116,13 @@ describe('MarkerEntry.vue', () => {
 		};
 		const mapMoveStub = sinon.stub(map, 'move');
 		const wrapper = shallowMount(MarkerEntry, {
+			global: {
+				stubs
+			},
 			props: {
 				marker
-			},
+			}
+
 		});
 
 		wrapper.find('.marker-entry__card').trigger('click');

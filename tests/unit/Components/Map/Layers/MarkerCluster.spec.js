@@ -1,6 +1,6 @@
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import MapMarkerCluster from '@/Components/Map/Layers/MapMarkerCluster';
+import MapMarkerCluster from '@/Components/Map/Layers/MapMarkerCluster.vue';
 import sinon from 'sinon';
 import leaflet from 'leaflet';
 
@@ -11,17 +11,10 @@ describe('MapMarkerCluster.vue', () => {
 	});
 
 	it('Renders', () => {
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
 		leaflet.markerClusterGroup = sinon.spy();
-		const wrapper = shallowMount(MapMarkerCluster, {
-			parentComponent: parent
-		});
+		const wrapper = shallowMount(MapMarkerCluster);
 
-		assert.isTrue(wrapper.find('.map__marker').exists());
+		expect(wrapper.find('.map__marker').exists()).toBeTruthy();
 	});
 
 	it('creates markerCluster', () => {
@@ -29,109 +22,72 @@ describe('MapMarkerCluster.vue', () => {
 		const cluster = {
 			addLayer: sinon.spy()
 		};
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
 		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
 
-		shallowMount(MapMarkerCluster, {
-			parentComponent: parent
-		});
+		const wrapper = shallowMount(MapMarkerCluster);
 
-
-
-		assert.isTrue(leaflet.markerClusterGroup.calledOnce);
-		assert.isTrue(parent.methods.addObject.calledOnce);
-		assert.isTrue(parent.methods.addObject.calledWith(cluster));
+		expect(leaflet.markerClusterGroup.calledOnce).toBeTruthy();
+		expect(wrapper.emitted()).toHaveProperty('add-to-map');
 	});
 
 	it('Adds marker to cluster', () => {
 		const cluster = {
 			addLayer: sinon.spy()
 		};
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
 		const marker = {};
 		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
 
-		const wrapper = shallowMount(MapMarkerCluster, {
-			parentComponent: parent
-		});
+		const wrapper = shallowMount(MapMarkerCluster);
 
 		wrapper.vm.addObject(marker);
 
-
-		assert.isTrue(cluster.addLayer.calledOnce);
-		assert.isTrue(cluster.addLayer.calledWith(marker));
+		expect(cluster.addLayer.calledOnce).toBeTruthy();
+		expect(cluster.addLayer.calledWith(marker)).toBeTruthy();
 	});
 
 	it('Queues adding markers when no object', () => {
 		const cluster = {
 			addLayer: sinon.spy()
 		};
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
 		const marker = {};
 		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
 
-		const wrapper = shallowMount(MapMarkerCluster, {
-			parentComponent: parent
-		});
+		const wrapper = shallowMount(MapMarkerCluster);
 
 		wrapper.vm.mapObject = null;
 
 		wrapper.vm.addObject(marker);
 
 
-		assert.equal(wrapper.vm.queuedActions.length,1);
-		assert.deepEqual(wrapper.vm.queuedActions[0],['addObject',[marker]]);
+		expect(wrapper.vm.queuedActions.length).toBe(1);
+		expect(wrapper.vm.queuedActions[0]).toEqual(['addObject',[marker]]);
 	});
 
 	it('Removes layer from cluster', () => {
 		const cluster = {
 			removeLayer: sinon.spy()
 		};
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
 		const marker = {};
 		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
 
-		const wrapper = shallowMount(MapMarkerCluster, {
-			parentComponent: parent
-		});
+		const wrapper = shallowMount(MapMarkerCluster);
 
 		wrapper.vm.removeObject(marker);
 
-
-		assert.isTrue(cluster.removeLayer.calledOnce);
-		assert.isTrue(cluster.removeLayer.calledWith(marker));
+		expect(cluster.removeLayer.calledOnce).toBeTruthy();
+		expect(cluster.removeLayer.calledWith(marker)).toBeTruthy();
 	});
 
 	it('Removes control when destroyed', () => {
-		const parent = {
-			methods: {
-				addObject: sinon.spy(),
-				removeObject: sinon.spy(),
-			}
+		const cluster = {
+			removeLayer: sinon.spy()
 		};
-		const wrapper = shallowMount(MapMarkerCluster, {
-			parentComponent: parent,
-		});
+		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
 
-		wrapper.destroy();
-		assert.isTrue(parent.methods.removeObject.calledOnce);
-		assert.isTrue(parent.methods.removeObject.calledWith(wrapper.vm.mapObject));
+		const wrapper = shallowMount(MapMarkerCluster);
+
+		wrapper.unmount();
+		expect(wrapper.emitted()).toHaveProperty('remove-from-map');
 	});
 
 	it('Generates icon',() => {
@@ -158,25 +114,20 @@ describe('MapMarkerCluster.vue', () => {
 
 			}])
 		};
-		const parent = {
-			methods: {
-				addObject: sinon.spy(),
-			}
-		};
 		const divIconStub = sinon.stub(leaflet,'divIcon');
-		const wrapper = shallowMount(MapMarkerCluster, {
-			parentComponent: parent,
-		});
+		leaflet.markerClusterGroup = sinon.stub().returns(cluster);
+
+		const wrapper = shallowMount(MapMarkerCluster);
 
 		wrapper.vm.createIcon(cluster);
 
-		assert.isTrue(divIconStub.calledOnce);
-		assert.isTrue(divIconStub.calledWith({
+		expect(divIconStub.calledOnce).toBeTruthy();
+		expect(divIconStub.calledWith({
 			html: `<div class="map__cluster-wrapper">1` +
 				`<span class="map__cluster-wrapper-counter">2</span>` +
 				`</div>`,
 			iconSize: ['auto', 'auto']
-		}));
+		})).toBeTruthy();
 
 
 	});

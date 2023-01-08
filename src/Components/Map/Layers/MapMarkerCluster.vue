@@ -1,6 +1,6 @@
 <template>
 	<div class="map__marker">
-		<slot></slot>
+		<slot/>
 	</div>
 </template>
 
