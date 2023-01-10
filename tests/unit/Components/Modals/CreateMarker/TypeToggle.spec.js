@@ -1,6 +1,6 @@
-import { assert } from 'chai';
+import {describe, it, expect} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import TypeToggle from '@/Components/Modals/CreateMarker/TypeToggle';
+import TypeToggle from '@/Components/Modals/CreateMarker/TypeToggle.vue';
 
 describe('CreateMarker/TypeToggle.vue', () => {
 
@@ -10,41 +10,41 @@ describe('CreateMarker/TypeToggle.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(TypeToggle, {
-			stubs,
-			propsData: {
-				value: 'image'
+			global:{stubs},
+			props: {
+				modelValue: 'image'
 			}
 		});
 
-		assert.isTrue(wrapper.find('input[type=hidden]').exists());
-		assert.isTrue(wrapper.find('input[type=hidden]').exists());
+		expect(wrapper.find('input[type=hidden]').exists()).toBeTruthy();
+		expect(wrapper.find('input[type=hidden]').exists()).toBeTruthy();
 	});
 
 
 	it('It emits image input when image selected', async () => {
 		const wrapper = shallowMount(TypeToggle, {
-			stubs,
-			propsData: {
-				value: 'image'
+			global:{stubs},
+			props: {
+				modelValue: 'image'
 			}
 		});
 
 		wrapper.findAll('a').at(0).trigger('click');
 
-		assert.deepEqual(wrapper.emitted().input[0][0], 'image');
+		expect(wrapper.emitted()['update:modelValue'][0][0]).toBe('image');
 	});
 
 	it('It emits instagram input when image selected', async () => {
 		const wrapper = shallowMount(TypeToggle, {
-			stubs,
-			propsData: {
-				value: 'image'
+			global:{stubs},
+			props: {
+				modelValue: 'image'
 			}
 		});
 
 		wrapper.findAll('a').at(1).trigger('click');
 
-		assert.deepEqual(wrapper.emitted().input[0][0], 'instagram');
+		expect(wrapper.emitted()['update:modelValue'][0][0]).toBe('instagram');
 	});
 
 });

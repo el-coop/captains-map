@@ -1,10 +1,10 @@
-import {assert} from 'chai';
+import {describe, it, expect} from 'vitest';
 import {mount, shallowMount} from '@vue/test-utils';
-import EditImage from "@/Components/Modals/CreateMarker/EditImage";
+import EditImage from "@/Components/Modals/CreateMarker/EditImage.vue";
 import sinon from 'sinon';
 import ImageService from "@/Services/ImageService";
 import UploadFile from "@/Classes/UploadFile";
-import BaseModal from "@/Components/Utilities/BaseModal";
+import BaseModal from "@/Components/Utilities/BaseModal.vue";
 
 describe('CreateMarker/EditImage.vue', () => {
 	const stubs = {
@@ -13,13 +13,14 @@ describe('CreateMarker/EditImage.vue', () => {
 
 	it('Renders closed modal when no image', () => {
 		const wrapper = mount(EditImage, {
-			stubs
+			global:{
+				stubs
+			}
 		});
 
-
-		assert.isFalse(wrapper.find('.view-marker__image-img').exists());
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.isFalse(wrapper.vm.$data.modal);
+		expect(wrapper.find('.view-marker__image-img').exists()).toBeFalsy();
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.vm.$data.modal).toBeFalsy();
 	});
 
 
@@ -27,67 +28,74 @@ describe('CreateMarker/EditImage.vue', () => {
 
 		const image =  new UploadFile('name', 'image');
 		const wrapper = mount(EditImage, {
-			stubs
+			global:{
+				stubs
+			}
 		});
 
-		wrapper.setProps({
+		await wrapper.setProps({
 			image
 		});
 		await wrapper.vm.$nextTick();
 
-		assert.isTrue(wrapper.vm.$data.modal);
-		assert.isTrue(wrapper.find('.view-marker__image-img').exists());
-		assert.equal(wrapper.find('.view-marker__image-img').attributes().src, image.preview);
+		expect(wrapper.vm.$data.modal).toBeTruthy();
+		expect(wrapper.find('.view-marker__image-img').exists()).toBeTruthy();
+		expect(wrapper.find('.view-marker__image-img').attributes().src).toBe(image.preview);
 	});
 
 	it('Emits close on modal close', async () => {
 
 		const wrapper = mount(EditImage, {
-			propsData: {
+			props: {
 				image:  new UploadFile('name', 'image')
 			},
-			stubs
+			global:{
+				stubs
+			}
 		});
 
-		wrapper.find(BaseModal).vm.$emit('close');
+		wrapper.findComponent(BaseModal).vm.$emit('close');
 
 		const emittedEvent = wrapper.emitted().close[0];
-		assert.deepEqual(Object.values(emittedEvent),[]) ;
+		expect(Object.values(emittedEvent)).toEqual([]);
 	});
 
 	it('Closes modal when props image removed', async () => {
 
 		const wrapper = mount(EditImage, {
-			stubs
+			global:{
+				stubs
+			}
 		});
 
-		wrapper.setProps({
+		await wrapper.setProps({
 			image: new UploadFile('name', 'image')
 		});
-		wrapper.setData({
+		await wrapper.setData({
 			rotation: 90,
 			preview: 'bla'
 		});
 		await wrapper.vm.$nextTick();
 
+		await wrapper.setProps({image: null})
 
-		wrapper.setProps({image: null})
-
-		assert.isFalse(wrapper.find('.view-marker__image-img').exists());
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.isFalse(wrapper.vm.$data.modal);
-		assert.isNull(wrapper.vm.$data.preview);
-		assert.equal(wrapper.vm.$data.rotation,0);
+		expect(wrapper.find('.view-marker__image-img').exists()).toBeFalsy();
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.vm.$data.modal).toBeFalsy();
+		expect(wrapper.vm.$data.preview).toBeNull();
+		expect(wrapper.vm.$data.rotation).toBe(0);
 
 	});
 
 	it('Emits delete marker when delete clicked', async () => {
 
 		const wrapper = mount(EditImage, {
-			stubs
+			global:{
+				stubs
+			}
 		});
 
-		wrapper.setProps({
+		await wrapper.setProps({
 			image: new UploadFile('name', 'image')
 		});
 		await wrapper.vm.$nextTick();
@@ -95,29 +103,31 @@ describe('CreateMarker/EditImage.vue', () => {
 		wrapper.find('.button.is-danger-background').trigger('click');
 
 		const emittedEvent = wrapper.emitted().delete[0];
-		assert.deepEqual(Object.values(emittedEvent),[]) ;
+		expect(Object.values(emittedEvent)).toEqual([]);
 
 	});
 
 	it('Emits save marker when save clicked', async () => {
 
 		const wrapper = mount(EditImage, {
-			stubs
+			global:{
+				stubs
+			}
 		});
 
-		wrapper.setProps({
+		await wrapper.setProps({
 			image: new UploadFile('name', 'image')
 		});
 		await wrapper.vm.$nextTick();
 
-		wrapper.setData({
+		await wrapper.setData({
 			rotation: 90
 		})
 
 		wrapper.find('.button.is-primary-background').trigger('click');
 
 		const emittedEvent = wrapper.emitted().save[0];
-		assert.deepEqual(Object.values(emittedEvent),[{rotation: 90}]) ;
+		expect(Object.values(emittedEvent)).toEqual([{rotation: 90}]);
 
 	});
 
@@ -126,23 +136,28 @@ describe('CreateMarker/EditImage.vue', () => {
 		const rotateStub = sinon.stub(ImageService,'rotate').returns('rotatedImage');
 
 		const wrapper = mount(EditImage, {
-			stubs
+			global:{
+				stubs
+			}
 		});
 
-
-		wrapper.setProps({
+		await wrapper.setProps({
 			image: new UploadFile('name', 'image')
 		});
 		await wrapper.vm.$nextTick();
 
 		wrapper.find('.button.is-selected-background').trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.equal(wrapper.vm.$data.rotation, 90);
-		assert.equal(wrapper.find('.view-marker__image-img').attributes().src, 'data:image/jpeg;base64,' + btoa('rotatedImage'));
-		assert.isTrue(rotateStub.calledOnce);
-		assert.isTrue(rotateStub.calledWith('image',90));
+		expect(wrapper.vm.$data.rotation).toBe(90);
+		expect(wrapper.find('.view-marker__image-img').attributes().src).toBe('data:image/jpeg;base64,' + btoa('rotatedImage'));
+		expect(rotateStub.calledOnce).toBeTruthy();
+		expect(rotateStub.calledWith('image', 90)).toBeTruthy();
 
 		sinon.restore();
 	});

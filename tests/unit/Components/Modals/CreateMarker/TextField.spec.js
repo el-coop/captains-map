@@ -1,58 +1,58 @@
-import { assert } from 'chai';
+import {describe, it, expect} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import TextField from '@/Components/Modals/CreateMarker/TextField';
+import TextField from '@/Components/Modals/CreateMarker/TextField.vue';
 
 describe('CreateMarker/TextField.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(TextField);
 
-		assert.isTrue(wrapper.find('input[type=text]').exists());
-		assert.isFalse(wrapper.find('.help.is-danger').exists());
-		assert.isFalse(wrapper.find('.label').exists());
-		assert.isFalse(wrapper.find('input[placeholder=placeholder]').exists());
+		expect(wrapper.find('input[type=text]').exists()).toBeTruthy();
+		expect(wrapper.find('.help.is-danger').exists()).toBeFalsy();
+		expect(wrapper.find('.label').exists()).toBeFalsy();
+		expect(wrapper.find('input[placeholder=placeholder]').exists()).toBeFalsy();
 	});
 
 	it('Sets type', () => {
 		const wrapper = shallowMount(TextField, {
-			propsData: {
+			props: {
 				type: 'password'
 			}
 		});
 
-		assert.isFalse(wrapper.find('input[type=text]').exists());
-		assert.isTrue(wrapper.find('input[type=password]').exists());
+		expect(wrapper.find('input[type=text]').exists()).toBeFalsy();
+		expect(wrapper.find('input[type=password]').exists()).toBeTruthy();
 	});
 
 	it('Sets placeholder', () => {
 		const wrapper = shallowMount(TextField, {
-			propsData: {
+			props: {
 				placeholder: 'placeholder'
 			}
 		});
 
-		assert.isTrue(wrapper.find('input[placeholder=placeholder]').exists());
+		expect(wrapper.find('input[placeholder=placeholder]').exists()).toBeTruthy();
 	});
 
 	it('Sets label', () => {
 		const wrapper = shallowMount(TextField, {
-			propsData: {
+			props: {
 				label: 'label'
 			}
 		});
-		assert.equal(wrapper.find('.label').text(),'label');
+		expect(wrapper.find('.label').text()).toBe('label');
 
 	});
 
 	it('Renders error', () => {
 		const wrapper = shallowMount(TextField, {
-			propsData: {
+			props: {
 				error: 'Error'
 			},
 		});
 
-		assert.isTrue(wrapper.find('.help.is-danger').exists());
-		assert.equal(wrapper.find('.help.is-danger').text(), 'Error');
+		expect(wrapper.find('.help.is-danger').exists()).toBeTruthy();
+		expect(wrapper.find('.help.is-danger').text()).toBe('Error');
 
 	});
 
@@ -63,7 +63,7 @@ describe('CreateMarker/TextField.vue', () => {
 		wrapper.find('input[type=text]').setValue('instagram');
 		wrapper.find('input[type=text]').trigger('change');
 
-		assert.deepEqual(wrapper.emitted().input[0][0], 'instagram');
+		expect(wrapper.emitted()['update:modelValue'][0][0]).toBe('instagram');
 	});
 
 });
