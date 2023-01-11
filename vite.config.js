@@ -97,6 +97,6 @@ export default defineConfig({
 		topLevelAwait({}),
 	],
 	test: {
-		include: ['tests/unit/**/CreateMarker/*.spec.js'],
+		include: ['tests/unit/**/Modals/**/*.spec.js'],
 	}
 });

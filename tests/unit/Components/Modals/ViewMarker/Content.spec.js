@@ -1,6 +1,6 @@
-import { assert } from 'chai';
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import Content from '@/Components/Modals/ViewMarker/Content';
+import Content from '@/Components/Modals/ViewMarker/Content.vue';
 import sinon from 'sinon';
 
 describe('ViewMarker/Content.vue', () => {
@@ -51,77 +51,85 @@ describe('ViewMarker/Content.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(Content, {
-			propsData: {
+			props: {
 				marker
 			},
-			mocks,
-			stubs
+			global: {
+				mocks,
+				stubs
+			}
 		});
 
-		assert.isTrue(wrapper.find('.view-marker__content-text').exists());
-		assert.isTrue(wrapper.find('.view-marker__content-buttons').exists());
+		expect(wrapper.find('.view-marker__content-text').exists()).toBeTruthy();
+		expect(wrapper.find('.view-marker__content-buttons').exists()).toBeTruthy();
 	});
 
 
 	it('Copies links', async () => {
 		const wrapper = shallowMount(Content, {
-			propsData: {
+			props: {
 				marker
 			},
-			mocks,
-			stubs
+			global: {
+				mocks,
+				stubs
+			}
 		});
 
 		wrapper.find('button').trigger('click');
 
 		await wrapper.vm.$nextTick();
 
-		assert.isTrue(global.navigator.clipboard.writeText.calledOnce);
-		assert.isTrue(global.navigator.clipboard.writeText.calledWith(`${window.location.protocol}//${window.location.host}href`));
-		assert.isTrue(mocks.$toast.info.calledOnce);
-		assert.isTrue(mocks.$toast.info.calledWith('You can paste it anywhere', 'Link copied'));
+		expect(global.navigator.clipboard.writeText.calledOnce).toBeTruthy();
+		expect(global.navigator.clipboard.writeText.calledWith(`${window.location.protocol}//${window.location.host}href`)).toBeTruthy();
+		expect(mocks.$toast.info.calledOnce).toBeTruthy();
+		expect(mocks.$toast.info.calledWith('You can paste it anywhere', 'Link copied')).toBeTruthy();
 	});
 
 
 	it('Shares to facebook when navigator.share is not available and prints 2 buttons', async () => {
 		const wrapper = shallowMount(Content, {
-			propsData: {
+			props: {
 				marker
 			},
-			mocks,
-			stubs
+			global: {
+				mocks,
+				stubs
+			}
 		});
 
 		wrapper.findAll('button').at(1).trigger('click');
 
 		await wrapper.vm.$nextTick();
 
-		assert.equal(2,wrapper.findAll('button').length);
-		assert.isTrue(global.window.open.calledOnce);
-		assert.isTrue(global.window.open.calledWith(`https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}href`));
+		expect(wrapper.findAll('button').length).toBe(2);
+		expect(global.window.open.calledOnce).toBeTruthy();
+		expect(global.window.open.calledWith(`https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}href`)).toBeTruthy();
 	});
 
 	it('Shares when navigator.share is available and shows only one button', async () => {
 		global.navigator.share = sinon.stub();
 		const wrapper = shallowMount(Content, {
-			propsData: {
+			props: {
 				marker
 			},
-			mocks,
-			stubs
+			global: {
+				mocks,
+				stubs
+			}
 		});
 
 		wrapper.find('button').trigger('click');
 
 		await wrapper.vm.$nextTick();
 
-		assert.equal(1,wrapper.findAll('button').length);
-		assert.isTrue(global.window.open.notCalled);
-		assert.isTrue(global.navigator.share.calledOnce);
-		assert.isTrue(global.navigator.share.calledWith({
+		expect(wrapper.findAll('button').length).toBe(1);
+		expect(global.window.open.notCalled).toBeTruthy();
+		expect(global.navigator.share.calledOnce).toBeTruthy();
+		expect(global.navigator.share.calledWith({
 			title: '',
 			text: '',
 			url: `${window.location.protocol}//${window.location.host}href`,
-		}));
+		})).toBeTruthy();
 	});
 });

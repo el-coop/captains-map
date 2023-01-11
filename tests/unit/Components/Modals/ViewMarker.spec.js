@@ -1,7 +1,9 @@
-import { assert } from 'chai';
-import { shallowMount, mount } from '@vue/test-utils';
-import ViewMarker from '@/Components/Modals/ViewMarker';
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import {shallowMount, mount} from '@vue/test-utils';
+import ViewMarker from '@/Components/Modals/ViewMarker.vue';
+import ViewMarkerHeader from "@/Components/Modals/ViewMarker/Header.vue";
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 describe('ViewMarker.vue', () => {
 	let marker;
@@ -14,9 +16,26 @@ describe('ViewMarker.vue', () => {
 	};
 
 	let mocks;
+	let storeOptions;
 
 
 	beforeEach(() => {
+		storeOptions = {
+			modules: {
+				User: {
+					namespaced: true,
+					state: {
+						user: null
+					}
+				},
+				Markers: {
+					namespaced: true,
+					actions: {
+						delete(){}
+					}
+				}
+			}
+		};
 		marker = {
 			id: 1,
 			user_id: 1,
@@ -30,27 +49,14 @@ describe('ViewMarker.vue', () => {
 			}]
 		};
 		mocks = {
-			$bus: {
-				$on: sinon.stub(),
-				$off: sinon.stub(),
-			},
 			$router: {
 				pushRoute: sinon.stub(),
 				push: sinon.stub(),
-				currentRoute: {
-					params: {},
-					path: '/'
-				}
+
 			},
 			$route: {
-				params: {}
-			},
-			$store: {
-				state: {
-					User: {
-						user: null
-					}
-				}
+				params: {},
+				path: '/'
 			},
 			$toast: {
 				error: sinon.spy()
@@ -62,44 +68,28 @@ describe('ViewMarker.vue', () => {
 		sinon.restore();
 	});
 
-	it('Registers listeners', () => {
-		shallowMount(ViewMarker, {
-			stubs,
-			mocks
-		});
 
-		assert.isTrue(mocks.$bus.$on.calledWith('marker-click'));
-	});
-
-	it('Unregisters listeners', () => {
-		const wrapper = shallowMount(ViewMarker, {
-			stubs,
-			mocks
-		});
-
-		wrapper.destroy();
-
-		assert.isTrue(mocks.$bus.$off.calledWith('marker-click'));
-	});
-
-	it('Renders with photo content', () => {
+	it('Renders with photo content', async () => {
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
-		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
-		assert.isTrue(wrapper.find('photo-stub').exists());
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.find('view-marker-header-stub').exists()).toBeTruthy();
+		expect(wrapper.find('view-marker-content-stub').exists()).toBeTruthy();
+		expect(wrapper.find('photo-stub').exists()).toBeTruthy();
 	});
 
-	it('Renders pagination when there are multiple media and selected media', () => {
+	it('Renders pagination when there are multiple media and selected media', async () => {
 		marker.media = [{
 			type: 'image',
 			path: 'test',
@@ -111,145 +101,177 @@ describe('ViewMarker.vue', () => {
 		}];
 
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			currentMedia: 1,
 			marker
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
-		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isTrue(wrapper.find('photo-stub[id="2"]').exists());
-		assert.isTrue(wrapper.find('.click-pagination').exists());
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.find('view-marker-header-stub').exists()).toBeTruthy();
+		expect(wrapper.find('view-marker-content-stub').exists()).toBeTruthy();
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeFalsy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeTruthy();
+		expect(wrapper.find('.click-pagination').exists()).toBeTruthy();
 	});
 
 
-	it('Renders with instagram content', () => {
+	it('Renders with instagram content', async () => {
 		marker.media[0].type = 'instagram';
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
+
 		});
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.isTrue(wrapper.find('viewmarkerheader-stub').exists());
-		assert.isTrue(wrapper.find('viewmarkercontent-stub').exists());
-		assert.isTrue(wrapper.find('instagram-stub').exists());
+		expect(wrapper.find('.modal').exists());
+		expect(wrapper.find('view-marker-header-stub').exists()).toBeTruthy();
+		expect(wrapper.find('view-marker-content-stub').exists()).toBeTruthy();
+		expect(wrapper.find('instagram-stub').exists()).toBeTruthy();
 	});
 
-	it('doesnt render when modal not active', () => {
+	it('doesnt render when modal not active', async () => {
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
-		wrapper.setData({
+		await wrapper.setData({
 			modal: false,
 			marker
 		});
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.isFalse(wrapper.find('viewmarkerheader-stub').exists());
-		assert.isFalse(wrapper.find('viewmarkercontent-stub').exists());
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.find('view-marker-header-stub').exists()).toBeFalsy();
+		expect(wrapper.find('view-marker-content-stub').exists()).toBeFalsy();
 	});
 
-	it('Shows delete button for markers user', () => {
-		mocks.$store.state.User.user = {
+	it('Shows delete button for markers user', async () => {
+		storeOptions.modules.User.state.user = {
 			id: 1
 		};
 		const wrapper = mount(ViewMarker, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
-		assert.isTrue(wrapper.find('button.is-danger-background').exists());
+		expect(wrapper.find('button.is-danger-background').exists()).toBeTruthy();
 	});
 
-	it('Doesnt show delete button for different user', () => {
+	it('Doesnt show delete button for different user', async () => {
 
 		const wrapper = shallowMount(ViewMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
-		assert.isFalse(wrapper.find('button.is-danger').exists());
+		expect(wrapper.find('button.is-danger').exists()).toBeFalsy();
 	});
 
 	it('Closes modal with close button', async () => {
 		const wrapper = mount(ViewMarker, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
 		wrapper.find('.card__footer-item a').trigger('click');
 
-		assert.isFalse(wrapper.vm.$data.modal);
+		expect(wrapper.vm.$data.modal).toBeFalsy();
 	});
 
-	it('Calculates route name', () => {
+	it('Calculates route name', async () => {
 		const wrapper = shallowMount(ViewMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
-		assert.equal(wrapper.vm.routeName, 'test/1');
+		expect(wrapper.vm.routeName).toBe('test/1');
 	});
 
-	it('Calculates route name with story', () => {
+	it('Calculates route name with story', async () => {
 		mocks.$route.params.story = 1;
 		const wrapper = shallowMount(ViewMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
-		assert.equal(wrapper.vm.routeName, 'test/story/1/1');
+		expect(wrapper.vm.routeName).toBe('test/story/1/1');
 	});
 
 	it('Shows marker', async () => {
 		const wrapper = shallowMount(ViewMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: false,
 		});
 
 		await wrapper.vm.showMarker(marker);
 
-		assert.isTrue(wrapper.vm.$data.modal);
-		assert.deepEqual(wrapper.vm.$data.marker, marker);
+		expect(wrapper.vm.$data.modal).toBeTruthy();
+		expect(wrapper.vm.$data.marker).toEqual(marker);
 	});
 
-	it('Shows marker with pagination hint when album', (done) => {
+	it('Shows marker with pagination hint when album', async () => {
 		marker.media = [{
 			type: 'image',
 			path: 'test',
@@ -260,103 +282,127 @@ describe('ViewMarker.vue', () => {
 			id: 2
 		}];
 		const wrapper = shallowMount(ViewMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: false,
 		});
 
 		wrapper.vm.showMarker(marker);
 
-		assert.isTrue(wrapper.vm.$data.modal);
-		assert.deepEqual(wrapper.vm.$data.marker, marker);
-		assert.isTrue(wrapper.vm.$data.showAlbumHint);
+		expect(wrapper.vm.$data.modal).toBeTruthy();
+		expect(wrapper.vm.$data.marker).toEqual(marker);
+		expect(wrapper.vm.$data.showAlbumHint).toBeTruthy();
 
-		setTimeout(() => {
-			assert.isFalse(wrapper.vm.$data.showAlbumHint);
-			done();
-		}, 1510);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 1510);
+		});
+
+		expect(wrapper.vm.$data.showAlbumHint).toBeFalsy();
+
 	});
 
 	it('Deletes marker', async () => {
-		const dispatchStub = sinon.stub().returns(true);
-		mocks.$store = {
-			dispatch: dispatchStub
-		};
+		const deleteStub = sinon.stub().returns(true);
+		storeOptions.modules.Markers.actions.delete = deleteStub;
+
 		const wrapper = shallowMount(ViewMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
 		await wrapper.vm.deleteMarker();
-		assert.isFalse(wrapper.vm.$data.modal);
+
+		expect(deleteStub.calledOnce).toBeTruthy();
+		expect(deleteStub.calledWith(sinon.match.any, {id: 1, story: null})).toBeTruthy();
+
+		expect(wrapper.vm.$data.modal).toBeFalsy();
 	});
 
 	it('Shows toast when deleteing a marker fails', async () => {
 
-		const dispatchStub = sinon.stub().returns(false);
-		mocks.$store = {
-			dispatch: dispatchStub
-		};
+		const deleteStub = sinon.stub().returns(false);
+		storeOptions.modules.Markers.actions.delete = deleteStub;
+
 		const wrapper = shallowMount(ViewMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
 		await wrapper.vm.deleteMarker();
 
-		assert.isTrue(dispatchStub.calledOnce);
-		assert.isTrue(dispatchStub.calledWith('Markers/delete', {id: 1, story: null}));
-		assert.isTrue(mocks.$toast.error.calledOnce);
-		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
+		expect(deleteStub.calledOnce).toBeTruthy();
+		expect(deleteStub.calledWith(sinon.match.any, {id: 1, story: null})).toBeTruthy();
+		expect(mocks.$toast.error.calledOnce).toBeTruthy();
+		expect(mocks.$toast.error.calledWith('Please try again at a later time', 'Delete failed.')).toBeTruthy();
 	});
 
 	it('Calls with delete with story when in story page', async () => {
 		mocks.$route.params.story = 1;
-		const dispatchStub = sinon.stub().returns(true);
-		mocks.$store = {
-			dispatch: dispatchStub
-		};
+		const deleteStub = sinon.stub().returns(true);
+		storeOptions.modules.Markers.actions.delete = deleteStub;
+
 		const wrapper = shallowMount(ViewMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
 		await wrapper.vm.deleteMarker();
 
-		assert.isTrue(dispatchStub.calledOnce);
-		assert.isTrue(dispatchStub.calledWith('Markers/delete', {id: 1, story: 1}));
-		assert.isFalse(wrapper.vm.$data.modal);
+		expect(deleteStub.calledOnce).toBeTruthy();
+		expect(deleteStub.calledWith(sinon.match.any, {id: 1, story: 1})).toBeTruthy();
+		expect(wrapper.vm.$data.modal).toBeFalsy();
 	});
 
 	it('Closes modal and enables user navigation flag', async () => {
 		const wrapper = mount(ViewMarker, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
-		wrapper.find('viewmarkerheader-stub').vm.$emit('view-user-page');
+		wrapper.findComponent(ViewMarkerHeader).vm.$emit('view-user-page');
 
-		assert.isFalse(wrapper.vm.$data.modal);
-		assert.isTrue(wrapper.vm.$data.userNavigation);
+		expect(wrapper.vm.$data.modal).toBeFalsy();
+		expect(wrapper.vm.$data.userNavigation).toBeTruthy();
 	});
 
 	it('Changes media', async () => {
@@ -371,50 +417,76 @@ describe('ViewMarker.vue', () => {
 		}];
 
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
-		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
-		assert.equal(wrapper.vm.$data.currentMedia, 0);
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeTruthy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeFalsy();
+		expect(wrapper.vm.$data.currentMedia).toBe(0);
 
 		wrapper.vm.changeMedia(1);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isTrue(wrapper.find('photo-stub[id="2"]').exists());
-		assert.equal(wrapper.vm.$data.currentMedia, 1);
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeFalsy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeTruthy();
+		expect(wrapper.vm.$data.currentMedia).toBe(1);
 
 		wrapper.vm.changeMedia(-1);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
-		assert.equal(wrapper.vm.$data.currentMedia, 0);
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeTruthy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeFalsy();
+		expect(wrapper.vm.$data.currentMedia).toBe(0);
 
 		wrapper.vm.changeMedia(-1);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isTrue(wrapper.find('photo-stub[id="2"]').exists());
-		assert.equal(wrapper.vm.$data.currentMedia, 1);
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeFalsy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeTruthy();
+		expect(wrapper.vm.$data.currentMedia).toBe(1);
 
 		wrapper.vm.changeMedia(1);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
-		assert.equal(wrapper.vm.$data.currentMedia, 0);
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeTruthy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeFalsy();
+		expect(wrapper.vm.$data.currentMedia).toBe(0);
 	});
 
 	it('Navigates to user when flag is true and modal is closed', async () => {
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker,
 			userNavigation: true
@@ -422,64 +494,73 @@ describe('ViewMarker.vue', () => {
 
 		wrapper.vm.closedNavigation();
 
-		assert.isTrue(mocks.$router.push.calledOnce);
-		assert.isTrue(mocks.$router.push.calledWith('/test'));
-		assert.isFalse(wrapper.vm.$data.userNavigation);
+		expect(mocks.$router.push.calledOnce).toBeTruthy();
+		expect(mocks.$router.push.calledWith('/test')).toBeTruthy();
+		expect(wrapper.vm.$data.userNavigation).toBeFalsy();
 	});
 
 	it('Navigates back to story when it was loaded before', async () => {
-		mocks.$router.currentRoute.params.username = 'test';
+		mocks.$route.params.username = 'test';
 		mocks.$route.params.story = 1;
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker,
 		});
 
 		wrapper.vm.closedNavigation();
 
-		assert.isTrue(mocks.$router.pushRoute.calledTwice);
-		assert.isTrue(mocks.$router.pushRoute.secondCall.calledWith('test/story/1'));
+		expect(mocks.$router.pushRoute.calledTwice).toBeTruthy();
+		expect(mocks.$router.pushRoute.secondCall.calledWith('test/story/1')).toBeTruthy();
 	});
 
 	it('Navigates back to user when it was loaded before', async () => {
-		mocks.$router.currentRoute.params.username = 'test';
+		mocks.$route.params.username = 'test';
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker,
 		});
 
 		wrapper.vm.closedNavigation();
 
-		assert.isTrue(mocks.$router.pushRoute.calledTwice);
-		assert.isTrue(mocks.$router.pushRoute.secondCall.calledWith('test'));
+		expect(mocks.$router.pushRoute.calledTwice).toBeTruthy();
+		expect(mocks.$router.pushRoute.secondCall.calledWith('test')).toBeTruthy();
 	});
 
 	it('Navigates back to previous url if there was no user before', async () => {
-		mocks.$router.currentRoute.path = 'edit';
+		mocks.$route.path = 'edit';
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker,
 		});
 
 		wrapper.vm.closedNavigation();
 
-		assert.isTrue(mocks.$router.pushRoute.calledTwice);
-		assert.isTrue(mocks.$router.pushRoute.secondCall.calledWith('edit'));
+		expect(mocks.$router.pushRoute.calledTwice).toBeTruthy();
+		expect(mocks.$router.pushRoute.secondCall.calledWith('edit')).toBeTruthy();
 	});
 
 	it('Displays pagination indicators', async () => {
@@ -498,42 +579,60 @@ describe('ViewMarker.vue', () => {
 		}];
 
 		const wrapper = mount(ViewMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
 		const indicators = wrapper.findAll('.pagination-indicators__indicator');
 
-		assert.isTrue(wrapper.find('.pagination-indicators').exists());
-		assert.equal(3, indicators.length);
+		expect(wrapper.find('.pagination-indicators').exists()).toBeTruthy();
+		expect(indicators.length).toBe(3);
 
-		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="3"]').exists());
-		assert.equal(wrapper.vm.$data.currentMedia, 0);
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeTruthy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeFalsy();
+		expect(wrapper.find('photo-stub[id="3"]').exists()).toBeFalsy();
+		expect(wrapper.vm.$data.currentMedia).toBe(0);
 
 		indicators.at(1).trigger('click');
-		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isTrue(wrapper.find('photo-stub[id="2"]').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="3"]').exists());
-		assert.equal(wrapper.vm.$data.currentMedia, 1);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeFalsy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeTruthy();
+		expect(wrapper.find('photo-stub[id="3"]').exists()).toBeFalsy();
+		expect(wrapper.vm.$data.currentMedia).toBe(1);
 
 		indicators.at(2).trigger('click');
-		assert.isFalse(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
-		assert.isTrue(wrapper.find('photo-stub[id="3"]').exists());
-		assert.equal(wrapper.vm.$data.currentMedia, 2);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeFalsy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeFalsy();
+		expect(wrapper.find('photo-stub[id="3"]').exists()).toBeTruthy();
+		expect(wrapper.vm.$data.currentMedia).toBe(2);
 
 		indicators.at(0).trigger('click');
-		assert.isTrue(wrapper.find('photo-stub[id="1"]').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="2"]').exists());
-		assert.isFalse(wrapper.find('photo-stub[id="3"]').exists());
-		assert.equal(wrapper.vm.$data.currentMedia, 0);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+		expect(wrapper.find('photo-stub[id="1"]').exists()).toBeTruthy();
+		expect(wrapper.find('photo-stub[id="2"]').exists()).toBeFalsy();
+		expect(wrapper.find('photo-stub[id="3"]').exists()).toBeFalsy();
+		expect(wrapper.vm.$data.currentMedia).toBe(0);
 
 	});
 });

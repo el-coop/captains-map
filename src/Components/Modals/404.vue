@@ -1,5 +1,5 @@
 <template>
-    <BaseModal @close="$router.push('/')" route-name="404" v-model:active="active">
+    <BaseModal @update:active="closeModal" @close="closeModal" route-name="404" :active="active">
         <template #header>
             <p class="card__header-title">404</p>
         </template>
@@ -14,7 +14,7 @@
         <template #footer>
             <p class="card__footer-item">
 				<span>
-					<a @click="$emit('update:active',false)">Take me out of here!</a>
+					<a @click="closeModal">Take me out of here!</a>
 				</span>
             </p>
         </template>
@@ -31,13 +31,26 @@ export default {
     components: {BaseModal},
     emits: ['update:active'],
     
+    props: {
+        active: {
+            type: Boolean,
+            required: true,
+        }
+    },
+    
     data() {
         return {
             atlantis,
             tear,
-            active: false
         }
     },
+    
+    methods: {
+        closeModal(){
+            this.$emit('update:active',false);
+            this.$router.push('/');
+        }
+    }
     
 }
 </script>

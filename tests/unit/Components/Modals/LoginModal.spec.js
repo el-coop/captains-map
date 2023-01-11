@@ -1,24 +1,36 @@
-import { assert } from 'chai';
-import { mount } from '@vue/test-utils';
-import LoginModal from '@/Components/Modals/LoginModal';
+import {describe, it, expect, afterEach} from 'vitest';
+import {mount} from '@vue/test-utils';
+import LoginModal from '@/Components/Modals/LoginModal.vue';
+import BaseModal from "@/Components/Utilities/BaseModal.vue"
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 describe('LoginModal.vue', () => {
 	const stubs = {
 		FontAwesomeIcon: true
 	};
 
-	const propsData = {
+	const props = {
 		active: true
 	};
 
 	const mocks = {
-		$store: {
-			dispatch: sinon.stub().returns(false)
-		},
 		$router: {
 			push: sinon.spy()
 		}
+	};
+
+	const storeOptions = {
+		modules: {
+			User: {
+				namespaced: true,
+				actions: {
+					login() {
+					}
+				}
+			}
+		},
+
 	};
 
 	afterEach(() => {
@@ -27,54 +39,66 @@ describe('LoginModal.vue', () => {
 
 	it('renders modal when active', () => {
 		const wrapper = mount(LoginModal, {
-			propsData,
-			stubs
+			global: {
+				stubs
+			},
+			props,
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.include(wrapper.html(), 'Login');
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.html()).toContain('Login');
 	});
 
 	it('doesnt render modal when not active', () => {
 		const wrapper = mount(LoginModal, {
-			stubs
+			global: {
+				stubs
+			},
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.notInclude(wrapper.html(), 'Login');
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.html()).not.toContain('Login');
 	});
 
 	it('closes modal on click', () => {
 		const wrapper = mount(LoginModal, {
-			stubs,
-			propsData,
+			global: {
+				stubs
+			},
+			props,
 		});
 
 		wrapper.find('.card__footer-item a').trigger('click');
 
-		assert.equal(wrapper.emitted()['update:active'][0][0], false);
+		expect(wrapper.emitted()['update:active'][0][0]).toBeFalsy();
 	});
 
 	it('closes modal when emitted form modal', () => {
 		const wrapper = mount(LoginModal, {
-			stubs,
-			propsData,
+			global: {
+				stubs
+			},
+			props,
 		});
 
-		wrapper.vm.$children[0].$emit('update:active',false);
+		wrapper.findComponent(BaseModal).vm.$emit('update:active', false);
 
-		assert.equal(wrapper.emitted()['update:active'][0][0], false);
+		expect(wrapper.emitted()['update:active'][0][0]).toBeFalsy();
 	});
 
 	it('Attempts logging in and shows errors', async () => {
-
+		const loginStub = sinon.stub().returns(false);
+		storeOptions.modules.User.actions.login = loginStub;
 		const wrapper = mount(LoginModal, {
-			stubs,
-			mocks,
-			propsData
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			form: {
 				username: 'test',
 				password: 'test'
@@ -83,27 +107,36 @@ describe('LoginModal.vue', () => {
 
 		wrapper.find('button').trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('User/login', {
+		expect(loginStub.calledOnce).toBeTruthy();
+		expect(loginStub.calledWith(sinon.match.any, {
 			username: 'test',
 			password: 'test'
-		}));
-		assert.isTrue(wrapper.find('.help.is-danger').exists());
+		})).toBeTruthy();
+
+		expect(wrapper.find('.help.is-danger').exists()).toBeTruthy();
 
 	});
 
 
 	it('Attempts logging in and changes route on success', async () => {
-		mocks.$store.dispatch = sinon.stub().returns(true);
+		const loginStub = sinon.stub().returns(true);
+		storeOptions.modules.User.actions.login = loginStub;
 		const wrapper = mount(LoginModal, {
-			stubs,
-			mocks,
-			propsData
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks,
+			},
+			props
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			form: {
 				username: 'test',
 				password: 'test'
@@ -111,16 +144,20 @@ describe('LoginModal.vue', () => {
 		});
 
 		wrapper.find('button').trigger('click');
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('User/login', {
+		expect(loginStub.calledOnce).toBeTruthy();
+		expect(loginStub.calledWith(sinon.match.any, {
 			username: 'test',
 			password: 'test'
-		}));
+		})).toBeTruthy();
 
-		assert.isTrue(mocks.$router.push.calledOnce);
-		assert.isTrue(mocks.$router.push.calledWith('/edit'));
+		expect(mocks.$router.push.calledOnce).toBeTruthy();
+		expect(mocks.$router.push.calledWith('/edit')).toBeTruthy();
 
 	});
 });
