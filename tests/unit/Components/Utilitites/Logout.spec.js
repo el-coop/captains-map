@@ -1,24 +1,21 @@
-import { assert } from 'chai';
-import { createLocalVue, shallowMount } from '@vue/test-utils';
-import Logout from '@/Components/Utilities/Logout';
-import Vuex from 'vuex'
+import {describe, it, expect} from 'vitest';
+import { shallowMount } from '@vue/test-utils';
+import Logout from '@/Components/Utilities/Logout.vue';
+import {createStore} from 'vuex'
 import sinon from 'sinon';
-
-const localVue = createLocalVue();
-
-localVue.use(Vuex);
-
 
 describe('Logout.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(Logout, {
-			stubs: {
-				FontAwesomeIcon: true
+			global: {
+				stubs: {
+					FontAwesomeIcon: true
+				}
 			}
 		});
 
-		assert.isTrue(wrapper.find('fontawesomeicon-stub[icon=sign-out-alt]').exists());
+		expect(wrapper.find('font-awesome-icon-stub[icon=sign-out-alt]').exists()).toBeTruthy();
 	});
 
 	it('Logsout on click', () => {
@@ -28,22 +25,24 @@ describe('Logout.vue', () => {
 				logout: sinon.spy()
 			},
 		};
-		const store = new Vuex.Store({
+		const store = createStore({
 			modules: {
 				User
 			}
 		});
 		const wrapper = shallowMount(Logout, {
-			store,
-			localVue,
-			stubs: {
-				FontAwesomeIcon: true
-			}
+			global: {
+				plugins:[store]	,
+				stubs: {
+					FontAwesomeIcon: true
+				}
+			},
+
 		});
 
 		wrapper.find('button').trigger('click');
 
-		assert.isTrue(User.actions.logout.calledOnce);
+		expect(User.actions.logout.calledOnce).toBeTruthy();
 	});
 
 });

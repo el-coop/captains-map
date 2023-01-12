@@ -97,6 +97,6 @@ export default defineConfig({
 		topLevelAwait({}),
 	],
 	test: {
-		include: ['tests/unit/**/Modals/**/*.spec.js'],
+		include: ['tests/unit/Middleware/**/*.spec.js'],
 	}
 });
