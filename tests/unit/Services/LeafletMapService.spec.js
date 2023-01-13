@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import Leaflet from 'leaflet';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import Map, { LeafletMapService } from '@/Services/LeafletMapService';
 import Http from '@/Services/HttpService';
 import { tileLayer, geocoder } from '@/Settings/leaflet.settings';
@@ -10,6 +10,7 @@ const el = {};
 describe('Map Service', () => {
 
 	afterEach(() => {
+		Map.queuedActions = [];
 		sinon.restore();
 	});
 
@@ -27,16 +28,16 @@ describe('Map Service', () => {
 
 		Map.init(el, [0, 0], 15);
 
-		assert.isTrue(mapInitStub.calledWith(el, {
+		expect(mapInitStub.calledWith(el, {
 			center: [0, 0],
 			zoom: 15,
 			zoomControl: false
-		}));
-		assert.isTrue(zoomStub.calledWith({position: 'bottomleft'}));
-		assert.isTrue(layerStub.calledWith(tileLayer.url, tileLayer.options));
-		assert.isTrue(addToMapStub.addTo.alwaysCalledWith(mapStub));
-		assert.isTrue(addToMapStub.addTo.calledTwice);
-		assert.isTrue(queuedActionsStub.calledOnce);
+		})).toBeTruthy();
+		expect(zoomStub.calledWith({position: 'bottomleft'})).toBeTruthy();
+		expect(layerStub.calledWith(tileLayer.url, tileLayer.options)).toBeTruthy();
+		expect(addToMapStub.addTo.alwaysCalledWith(mapStub)).toBeTruthy();
+		expect(addToMapStub.addTo.calledTwice).toBeTruthy();
+		expect(queuedActionsStub.calledOnce).toBeTruthy();
 	});
 
 	it('Initializes map without zoom on mobile and runs queued actions', () => {
@@ -53,16 +54,16 @@ describe('Map Service', () => {
 
 		Map.init(el, [0, 0], 15);
 
-		assert.isTrue(mapInitStub.calledWith(el, {
+		expect(mapInitStub.calledWith(el, {
 			center: [0, 0],
 			zoom: 15,
 			zoomControl: false
 		}));
-		assert.isTrue(zoomStub.notCalled);
-		assert.isTrue(layerStub.calledWith(tileLayer.url, tileLayer.options));
-		assert.isTrue(addToMapStub.addTo.calledWith(mapStub));
-		assert.isTrue(addToMapStub.addTo.calledOnce);
-		assert.isTrue(queuedActionsStub.calledOnce);
+		expect(zoomStub.notCalled).toBeTruthy();
+		expect(layerStub.calledWith(tileLayer.url, tileLayer.options)).toBeTruthy();
+		expect(addToMapStub.addTo.calledWith(mapStub)).toBeTruthy();
+		expect(addToMapStub.addTo.calledOnce).toBeTruthy();
+		expect(queuedActionsStub.calledOnce).toBeTruthy();
 	});
 
 
@@ -78,10 +79,10 @@ describe('Map Service', () => {
 
 		Map.runQueuedActions();
 
-		assert.isTrue(addMarkerStub.calledTwice);
-		assert.isTrue(addMarkerStub.alwaysCalledWith(marker));
-		assert.isTrue(watchLocationStub.called);
-		assert.isTrue(watchLocationStub.calledWith(callback));
+		expect(addMarkerStub.calledTwice).toBeTruthy();
+		expect(addMarkerStub.alwaysCalledWith(marker)).toBeTruthy();
+		expect(watchLocationStub.called).toBeTruthy();
+		expect(watchLocationStub.calledWith(callback)).toBeTruthy();
 	});
 
 	it('Adds object', () => {
@@ -91,16 +92,16 @@ describe('Map Service', () => {
 		Map.map = {};
 		Map.addObject(marker);
 
-		assert.isTrue(marker.addTo.calledOnce);
-		assert.isTrue(marker.addTo.calledWith(Map.map));
+		expect(marker.addTo.calledOnce).toBeTruthy();
+		expect(marker.addTo.calledWith(Map.map)).toBeTruthy();
 	});
 
 	it('Queues add object if no map yet', () => {
 		const marker = {};
 		Map.map = null;
 		Map.addObject(marker);
-		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['addObject', [marker]]]);
+		expect(Map.queuedActions.length === 1).toBeTruthy();
+		expect(Map.queuedActions).toEqual([['addObject', [marker]]]);
 		Map.queuedActions = [];
 	});
 
@@ -112,16 +113,16 @@ describe('Map Service', () => {
 		};
 		Map.removeObject(marker);
 
-		assert.isTrue(Map.map.removeLayer.calledOnce);
-		assert.isTrue(Map.map.removeLayer.calledWith(marker));
+		expect(Map.map.removeLayer.calledOnce).toBeTruthy();
+		expect(Map.map.removeLayer.calledWith(marker)).toBeTruthy();
 	});
 
 	it('Queues remove object if no map yet', () => {
 		const marker = {};
 		Map.map = null;
 		Map.removeObject(marker);
-		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['removeObject', [marker]]]);
+		expect(Map.queuedActions.length === 1).toBeTruthy();
+		expect(Map.queuedActions).toEqual([['removeObject', [marker]]]);
 		Map.queuedActions = [];
 	});
 
@@ -131,15 +132,15 @@ describe('Map Service', () => {
 		};
 		Map.move([0, 0]);
 
-		assert.isTrue(Map.map.flyTo.calledOnce);
-		assert.isTrue(Map.map.flyTo.calledWith([0, 0]));
+		expect(Map.map.flyTo.calledOnce).toBeTruthy();
+		expect(Map.map.flyTo.calledWith([0, 0])).toBeTruthy();
 	});
 
 	it('Queues move if no map yet', () => {
 		Map.map = null;
 		Map.move([0, 0]);
-		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['move', [[0, 0], 18]]]);
+		expect(Map.queuedActions.length === 1).toBeTruthy();
+		expect(Map.queuedActions).toEqual([['move', [[0, 0], 18]]]);
 		Map.queuedActions = [];
 	});
 
@@ -149,15 +150,15 @@ describe('Map Service', () => {
 		};
 		Map.setView([0, 0]);
 
-		assert.isTrue(Map.map.setView.calledOnce);
-		assert.isTrue(Map.map.setView.calledWith([0, 0]));
+		expect(Map.map.setView.calledOnce).toBeTruthy();
+		expect(Map.map.setView.calledWith([0, 0])).toBeTruthy();
 	});
 
 	it('Queues setView if no map yet', () => {
 		Map.map = null;
 		Map.setView([0, 0]);
-		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['setView', [[0, 0], 15]]]);
+		expect(Map.queuedActions.length === 1).toBeTruthy();
+		expect(Map.queuedActions).toEqual([['setView', [[0, 0], 15]]]);
 		Map.queuedActions = [];
 	});
 
@@ -168,13 +169,13 @@ describe('Map Service', () => {
 		};
 		Map.goToCurrentLocation();
 
-		assert.isTrue(Map.map.locate.calledOnce);
-		assert.isTrue(Map.map.locate.calledWith({
+		expect(Map.map.locate.calledOnce).toBeTruthy();
+		expect(Map.map.locate.calledWith({
 			watch: false,
 			setView: false,
 			maxZoom: 17,
 			enableHighAccuracy: true
-		}));
+		})).toBeTruthy();
 	});
 
 	it('Goes to location that is already found', () => {
@@ -182,15 +183,15 @@ describe('Map Service', () => {
 		const setViewStub = sinon.stub(Map, 'setView');
 		Map.goToCurrentLocation();
 
-		assert.isTrue(setViewStub.calledOnce);
-		assert.isTrue(setViewStub.calledWith([0, 0], 17));
+		expect(setViewStub.calledOnce).toBeTruthy();
+		expect(setViewStub.calledWith([0, 0], 17)).toBeTruthy();
 	});
 
 	it('Queues goToUserLocation if no map yet', () => {
 		Map.map = null;
 		Map.goToCurrentLocation();
-		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['goToCurrentLocation', []]]);
+		expect(Map.queuedActions.length === 1).toBeTruthy();
+		expect(Map.queuedActions).toEqual([['goToCurrentLocation', []]]);
 		Map.queuedActions = [];
 	});
 
@@ -203,15 +204,15 @@ describe('Map Service', () => {
 		};
 		Map.watchLocation(callback);
 
-		assert.isTrue(Map.map.locate.calledOnce);
-		assert.isTrue(Map.map.locate.calledWith({
+		expect(Map.map.locate.calledOnce).toBeTruthy();
+		expect(Map.map.locate.calledWith({
 			watch: true,
 			setView: false,
 			enableHighAccuracy: true
-		}));
+		})).toBeTruthy();
 
-		assert.isTrue(Map.map.on.calledTwice);
-		assert.isTrue(Map.map.on.calledWith('locationfound', callback));
+		expect(Map.map.on.calledTwice).toBeTruthy();
+		expect(Map.map.on.calledWith('locationfound', callback)).toBeTruthy();
 
 	});
 
@@ -220,8 +221,8 @@ describe('Map Service', () => {
 		};
 		Map.map = null;
 		Map.watchLocation(callback);
-		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['watchLocation', [callback]]]);
+		expect(Map.queuedActions.length === 1).toBeTruthy();
+		expect(Map.queuedActions).toEqual([['watchLocation', [callback]]]);
 		Map.queuedActions = [];
 	});
 
@@ -235,8 +236,8 @@ describe('Map Service', () => {
 
 		Map.on('event', callback);
 
-		assert.isTrue(Map.map.on.calledOnce);
-		assert.isTrue(Map.map.on.calledWith('event', callback));
+		expect(Map.map.on.calledOnce).toBeTruthy();
+		expect(Map.map.on.calledWith('event', callback)).toBeTruthy();
 	});
 
 
@@ -247,8 +248,8 @@ describe('Map Service', () => {
 
 		Map.on('event', callback);
 
-		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['on', ['event', callback]]]);
+		expect(Map.queuedActions.length === 1).toBeTruthy();
+		expect(Map.queuedActions).toEqual([['on', ['event', callback]]]);
 		Map.queuedActions = [];
 	});
 
@@ -261,8 +262,8 @@ describe('Map Service', () => {
 
 		Map.off('event', callback);
 
-		assert.isTrue(Map.map.off.calledOnce);
-		assert.isTrue(Map.map.off.calledWith('event', callback));
+		expect(Map.map.off.calledOnce).toBeTruthy();
+		expect(Map.map.off.calledWith('event', callback)).toBeTruthy();
 	});
 
 
@@ -273,8 +274,8 @@ describe('Map Service', () => {
 
 		Map.off('event', callback);
 
-		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['off', ['event', callback]]]);
+		expect(Map.queuedActions.length === 1).toBeTruthy();
+		expect(Map.queuedActions).toEqual([['off', ['event', callback]]]);
 		Map.queuedActions = [];
 	});
 
@@ -285,7 +286,7 @@ describe('Map Service', () => {
 		});
 
 		const response = await LeafletMapService.locate('test');
-		assert.deepEqual(response, []);
+		expect(response).toEqual([]);
 	});
 
 	it('Returns response data when address found', async () => {
@@ -302,15 +303,15 @@ describe('Map Service', () => {
 			_northEast: {lat: 1, lng: 1}
 		});
 
-		assert.isTrue(locateStub.calledWith('geocode/test', {
+		expect(locateStub.calledWith('geocode/test', {
 			params: {
 				south: -1,
 				west: -1,
 				north: 1,
 				east: 1,
 			}
-		}));
-		assert.deepEqual(response, data);
+		})).toBeTruthy();
+		expect(response).toEqual(data);
 	});
 
 	it('Returns empty on reverse geolocation error', async () => {
@@ -319,7 +320,7 @@ describe('Map Service', () => {
 		});
 
 		const response = await LeafletMapService.reverseGeocode({lat: 0, lng: 0});
-		assert.deepEqual(response, []);
+		expect(response).toEqual([]);
 	});
 
 	it('Returns response data when address found', async () => {
@@ -331,7 +332,7 @@ describe('Map Service', () => {
 		});
 
 		const response = await LeafletMapService.reverseGeocode({lat: 0, lng: 0});
-		assert.deepEqual(response, data);
+		expect(response).toEqual(data);
 	});
 
 	it('Stops watching location', () => {
@@ -342,22 +343,22 @@ describe('Map Service', () => {
 		Map.location = [];
 		Map.stopLocate();
 
-		assert.isTrue(Map.map.stopLocate.calledOnce);
-		assert.isTrue(Map.map.off.calledOnce);
-		assert.isNull(Map.location);
+		expect(Map.map.stopLocate.calledOnce).toBeTruthy();
+		expect(Map.map.off.calledOnce).toBeTruthy();
+		expect(Map.location).toBeNull();
 	});
 
 	it('Queues stopLocate if no map yet', () => {
 		Map.map = null;
 		Map.stopLocate();
-		assert.isTrue(Map.queuedActions.length === 1);
-		assert.deepEqual(Map.queuedActions, [['stopLocate', []]]);
+		expect(Map.queuedActions.length === 1).toBeTruthy();
+		expect(Map.queuedActions).toEqual([['stopLocate', []]]);
 		Map.queuedActions = [];
 	});
 
 	it('Returns default boundaries value when map is null', () => {
 		Map.map = null;
-		assert.deepEqual(Map.getBorders(), {
+		expect(Map.getBorders()).toEqual({
 			_southWest: {
 				lat: -90,
 				lng: -180
@@ -375,7 +376,7 @@ describe('Map Service', () => {
 				return 'data'
 			}
 		};
-		assert.deepEqual(Map.getBorders(), 'data');
+		expect(Map.getBorders()).toEqual('data');
 	});
 
 });
