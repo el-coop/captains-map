@@ -23,7 +23,7 @@ export const actions = {
 			dispatch('Markers/toggleUserMarker');
 		}
 		const route = await cache.get('settings', 'route', false);
-		if (route && router.currentRoute.fullPath === '/' && route !== router.currentRoute.fullPath) {
+		if (route && router.currentRoute.value.fullPath === '/' && route !== router.currentRoute.value.fullPath) {
 			router.push(route);
 		}
 	},
