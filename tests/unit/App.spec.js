@@ -15,13 +15,15 @@ describe('App.vue', () => {
 			Uploads: {
 				namespaced: true,
 				actions: {
-					init(){},
+					init() {
+					},
 				}
 			},
-			actions: {
-				initSettings(){},
-			}
 		},
+		actions: {
+			initSettings() {
+			},
+		}
 	};
 	const store = createStore(storeOptions);
 

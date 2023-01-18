@@ -1,3 +1,1 @@
-// TODO: migrate from vue-cli
-// TODO: fix tests
 // TODO: Fix not founds of open-map
