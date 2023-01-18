@@ -28,8 +28,9 @@ if (import.meta.env.PROD) {
 				buttons: [
 					['<button>Update</button>', () => {
 						try {
-							console.log(registration);
-							console.log(registration.waiting);
+							console.log('here');
+							console.log('registration',registration);
+							console.log('waiting',registration.waiting);
 							registration.waiting.postMessage({action: 'skipWaiting'});
 						} catch (error) {
 							console.log(error);
