@@ -1,7 +1,7 @@
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { setCacheNameDetails } from 'workbox-core';
-import { cacheFirst } from 'workbox-strategies';
+import { CacheFirst  } from 'workbox-strategies';
 
 setCacheNameDetails({prefix: "captains-map"});
 
@@ -12,14 +12,14 @@ precacheAndRoute(self.__precacheManifest, {});
 
 registerRoute(
 	new RegExp('/api/images/.*'),
-	cacheFirst({
+	new CacheFirst({
 		cacheName: 'image-cache',
 	})
 );
 
 registerRoute(
 	new RegExp('/api/thumbnails/.*'),
-	cacheFirst({
+	new CacheFirst({
 		cacheName: 'image-cache',
 	})
 );
