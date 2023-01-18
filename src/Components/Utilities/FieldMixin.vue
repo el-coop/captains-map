@@ -25,7 +25,7 @@
 		},
 		data() {
 			return {
-				inputId: `label_${this._uid}`
+                id: `label_${getCurrentInstance().uid}`
 			}
 		},
 
