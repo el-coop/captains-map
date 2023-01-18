@@ -18,6 +18,7 @@ if (import.meta.env.PROD) {
 		},
 		updated(registration) {
 			console.log('New content is available; please refresh.');
+			console.log('test');
 			toast.question({
 				title: "Update available for Captain's Map.",
 				message: '',
