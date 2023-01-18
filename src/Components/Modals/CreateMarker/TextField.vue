@@ -8,7 +8,7 @@
 </template>
 
 <script>
-	import FieldMixin from "@/Components/Utilities/FieldMixin";
+	import FieldMixin from "@/Components/Utilities/FieldMixin.vue";
 
 	export default {
         

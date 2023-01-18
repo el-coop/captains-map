@@ -13,7 +13,7 @@
 
 <script>
 	import globe from '../../../assets/images/globe-icon.png';
-	import Profile from "@/Components/Dashboard/Profile";
+	import Profile from "@/Components/Dashboard/Profile.vue";
 
 	export default {
 		name: "ProfileDisplay",

@@ -30,8 +30,8 @@
 </template>
 
 <script>
-	import BaseModal from "@/Components/Utilities/BaseModal";
-	import TextField from "@/Components/Modals/CreateMarker/TextField";
+	import BaseModal from "@/Components/Utilities/BaseModal.vue";
+	import TextField from "@/Components/Modals/CreateMarker/TextField.vue";
 
 	export default {
 		components: {TextField, BaseModal},

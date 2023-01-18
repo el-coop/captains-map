@@ -1,22 +1,41 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import App from '@/App';
+import {describe, it, expect} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import App from '@/App.vue';
+import {createStore} from 'vuex'
 import sinon from "sinon";
 
 describe('App.vue', () => {
-
 	const stubs = {
-		RouterView: true
+		RouterView: true,
+		metainfo: true
 	};
+
+	const storeOptions = {
+		modules: {
+			Uploads: {
+				namespaced: true,
+				actions: {
+					init(){},
+				}
+			},
+			actions: {
+				initSettings(){},
+			}
+		},
+	};
+	const store = createStore(storeOptions);
 
 	it('renders', () => {
 		const wrapper = shallowMount(App, {
-			stubs
+			global: {
+				plugins: [store],
+				stubs
+			},
 		});
 
-		assert.isTrue(wrapper.find('themap-stub').exists());
-		assert.isTrue(wrapper.find('notfound-stub').exists());
-		assert.isTrue(wrapper.find('routerview-stub').exists());
+		expect(wrapper.find('the-map-stub').exists()).toBeTruthy();
+		expect(wrapper.find('not-found-stub').exists()).toBeTruthy();
+		expect(wrapper.find('router-view-stub').exists()).toBeTruthy();
 
 	});
 
@@ -25,30 +44,34 @@ describe('App.vue', () => {
 		global.window.addEventListener = sinon.stub();
 
 		const wrapper = shallowMount(App, {
-			stubs
+			global: {
+				plugins: [store],
+				stubs
+			},
 		});
 
-		assert.isTrue(global.window.addEventListener.calledOnce);
-		assert.isTrue(global.window.addEventListener.calledWith('online', wrapper.vm.onlineEvent));
+		expect(global.window.addEventListener.calledOnce).toBeTruthy();
+		expect(global.window.addEventListener.calledWith('online', wrapper.vm.onlineEvent)).toBeTruthy();
 	});
 
 	it('dispatches uploads offline errors when onlineEventCalled', () => {
-		const dispatchStub = sinon.stub().returns(true);
+		const uploadOfflineErrorStub = sinon.stub().returns(true);
+
+		const mockStoreOptions = storeOptions;
+		mockStoreOptions.modules.Uploads.actions.uploadOfflineError = uploadOfflineErrorStub;
+		const mockStore = createStore(mockStoreOptions);
 
 		const wrapper = shallowMount(App, {
-			stubs,
-			mocks: {
-				$store: {
-					dispatch: dispatchStub
-				}
-			}
+			global: {
+				plugins: [mockStore],
+				stubs,
+			},
+
 		});
 
 		wrapper.vm.onlineEvent();
 
-
-		assert.isTrue(dispatchStub.calledOnce);
-		assert.isTrue(dispatchStub.calledWith('Uploads/uploadOfflineError'));
+		expect(uploadOfflineErrorStub.calledOnce).toBeTruthy();
 
 	});
 
@@ -57,13 +80,16 @@ describe('App.vue', () => {
 		global.window.removeEventListener = sinon.stub();
 
 		const wrapper = shallowMount(App, {
-			stubs
+			global: {
+				plugins: [store],
+				stubs
+			},
 		});
 
-		wrapper.destroy();
+		wrapper.unmount();
 
-		assert.isTrue(global.window.removeEventListener.calledOnce);
-		assert.isTrue(global.window.removeEventListener.calledWith('online', wrapper.vm.onlineEvent));
+		expect(global.window.removeEventListener.calledOnce).toBeTruthy();
+		expect(global.window.removeEventListener.calledWith('online', wrapper.vm.onlineEvent)).toBeTruthy();
 	});
 
 });

@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import LoginModal from "@/Components/Modals/LoginModal";
-import RegisterModal from "@/Components/Modals/RegisterModal";
-import TheTopBar from "@/Components/Dashboard/TopBar/TheTopBar";
+import LoginModal from "@/Components/Modals/LoginModal.vue";
+import RegisterModal from "@/Components/Modals/RegisterModal.vue";
+import TheTopBar from "@/Components/Dashboard/TopBar/TheTopBar.vue";
 
 export default {
     name: "LoggedOutBar",

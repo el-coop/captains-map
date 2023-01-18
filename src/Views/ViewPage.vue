@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import TheDashboard from "@/Components/Dashboard/TheDashboard";
+import TheDashboard from "@/Components/Dashboard/TheDashboard.vue";
 import map from '@/Services/LeafletMapService';
-import LoadsMarkersMixin from "@/Views/LoadsMarkersMixin";
+import LoadsMarkersMixin from "@/Views/LoadsMarkersMixin.vue";
 
 export default {
     name: "ViewPage",

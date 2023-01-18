@@ -1,11 +1,15 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import MarkerEntry from '@/Components/Dashboard/SideBar/MarkerEntry';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import MarkerEntry from '@/Components/Dashboard/SideBar/MarkerEntry.vue';
 import sinon from 'sinon';
 import map from '@/Services/LeafletMapService';
 
 describe('MarkerEntry.vue', () => {
 	let marker;
+	let stubs = {
+		FontAwesomeIcon: true
+	}
+
 
 	beforeEach(() => {
 		global.window.matchMedia = sinon.stub().returns({
@@ -39,16 +43,19 @@ describe('MarkerEntry.vue', () => {
 
 	it('Renders', async () => {
 		const wrapper = shallowMount(MarkerEntry, {
-			propsData: {
+			global: {
+				stubs
+			},
+			props: {
 				marker
 			}
 		});
 
 		await wrapper.vm.$nextTick();
 
-		assert.isTrue(wrapper.find('.marker-entry__card-image').exists());
-		assert.equal(wrapper.find('.marker-entry__card-content').text(), 'Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0...');
-		assert.equal(wrapper.find('.marker-entry__card-profile-img').attributes().src, '/api/wrath');
+		expect(wrapper.find('.marker-entry__card-image').exists()).toBeTruthy();
+		expect(wrapper.find('.marker-entry__card-content').text()).toBe('Z0ZX6tdEBGAZYYCJT1NPZ0ZX6tdEBGAZYYCJT1NPZ0...');
+		expect(wrapper.find('.marker-entry__card-profile-img').attributes().src).toBe('/api/wrath');
 
 	});
 
@@ -61,38 +68,46 @@ describe('MarkerEntry.vue', () => {
 			path: '/images/testPath'
 		}];
 		const wrapper = shallowMount(MarkerEntry, {
-			propsData: {
+			props: {
 				marker
 			},
-			stubs: {
-				FontAwesomeIcon: true
+			global: {
+				stubs
 			}
 		});
 
-		assert.isTrue(wrapper.find('fontawesomeicon-stub').exists());
+		expect(wrapper.find('font-awesome-icon-stub').exists()).toBeTruthy();
 
 	});
 
 	it('Calculates image src for image type', () => {
 		const wrapper = shallowMount(MarkerEntry, {
-			propsData: {
+			global: {
+				stubs
+			},
+			props: {
 				marker
 			}
+
 		});
 
-		assert.equal(wrapper.vm.$data.src, `/api${marker.media[0].path.replace('images', 'thumbnails')}`);
+		expect(wrapper.vm.$data.src).toBe(`/api${marker.media[0].path.replace('images', 'thumbnails')}`);
 	});
 
 	it('Calculates image src for instagram type', () => {
 		marker.media[0].type = 'instagram';
 
 		const wrapper = shallowMount(MarkerEntry, {
-			propsData: {
+			global: {
+				stubs
+			},
+			props: {
 				marker
 			}
+
 		});
 
-		assert.equal(wrapper.vm.$data.src, `https://instagram.com/p/${marker.media[0].path}/media/`);
+		expect(wrapper.vm.$data.src).toBe(`https://instagram.com/p/${marker.media[0].path}/media/`);
 	});
 
 	it('Reacts to click', () => {
@@ -101,18 +116,19 @@ describe('MarkerEntry.vue', () => {
 		};
 		const mapMoveStub = sinon.stub(map, 'move');
 		const wrapper = shallowMount(MarkerEntry, {
-			propsData: {
-				marker
+			global: {
+				stubs
 			},
-			mocks: {
-				$bus
+			props: {
+				marker
 			}
+
 		});
 
 		wrapper.find('.marker-entry__card').trigger('click');
 
-		assert.isTrue(mapMoveStub.calledOnce);
-		assert.isTrue(mapMoveStub.calledWith([1, 1], 16));
+		expect(mapMoveStub.calledOnce).toBeTruthy();
+		expect(mapMoveStub.calledWith([1, 1], 16)).toBeTruthy();
 
 	});
 });

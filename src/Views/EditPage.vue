@@ -6,10 +6,10 @@
 </template>
 
 <script>
-import TheDashboard from '@/Components/Dashboard/TheDashboard';
+import TheDashboard from '@/Components/Dashboard/TheDashboard.vue';
 import map from '@/Services/LeafletMapService';
-import LoadsMarkersMixin from "@/Views/LoadsMarkersMixin";
-import CreateMarker from "@/Components/Modals/CreateMarker";
+import LoadsMarkersMixin from "@/Views/LoadsMarkersMixin.vue";
+import CreateMarker from "@/Components/Modals/CreateMarker.vue";
 
 export default {
     name: "EditPage",

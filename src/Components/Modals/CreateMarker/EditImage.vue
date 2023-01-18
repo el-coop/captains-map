@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import BaseModal from "@/Components/Utilities/BaseModal";
+import BaseModal from "@/Components/Utilities/BaseModal.vue";
 
 export default {
     name: "EditImage",

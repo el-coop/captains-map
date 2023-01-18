@@ -1,38 +1,62 @@
-import { shallowMount } from '@vue/test-utils';
+import {shallowMount} from '@vue/test-utils';
 import EditPage from '@/Views/EditPage.vue';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
 import sinon from "sinon";
 import map from "@/Services/LeafletMapService";
+import {createStore} from "vuex";
+import LoadsMarkersMixin from "@/Views/LoadsMarkersMixin.vue";
 
 describe('EditPage.vue', () => {
-	let mocks;
 	let goToCurrentLocationStub;
+	let storeOptions;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				commit: sinon.spy(),
-				dispatch: sinon.stub().returns({
-					status: 200
-				}),
-				state: {
-					Markers: {
+		storeOptions = {
+			modules: {
+				Markers: {
+					namespaced: true,
+					state: {
 						markers: [{
 							lat: 1,
 							lng: -1
 						}]
 					},
-					User: {
+					actions: {
+						load(){
+							return {
+								status: 200
+							}
+						}
+					},
+					mutations: {
+						setBorders(){},
+						setUser(){},
+					}
+				},
+				User: {
+					namespaced: true,
+					state: {
 						user: {
 							username: 'test'
 						}
 					}
+				},
+				Stories: {
+					namespaced: true,
+					mutations: {
+						exit(){}
+					}
+				},
+				Profile:{
+					namespaced: true,
+					actions: {
+						load(){}
+					}
 				}
-			},
-			$bus: {
-				$emit: sinon.spy(),
+
 			}
 		};
+
 		goToCurrentLocationStub = sinon.stub(map, 'goToCurrentLocation');
 	});
 
@@ -42,53 +66,89 @@ describe('EditPage.vue', () => {
 	});
 
 	it('renders', () => {
-		const loadMarkersSpy = sinon.spy();
+		const loadMarkersSpy = sinon.stub(LoadsMarkersMixin.methods, 'loadMarkers');
+
 		const wrapper = shallowMount(EditPage, {
-			methods: {
-				loadMarkers: loadMarkersSpy
+			global: {
+				plugins: [createStore(storeOptions)]
 			},
-			mocks
 		});
 
-		assert.isTrue(wrapper.find('.layout').exists());
-		assert.isTrue(wrapper.find('TheDashboard-stub').exists());
-		assert.isTrue(wrapper.find('CreateMarker-stub').exists());
-		assert.isTrue(loadMarkersSpy.calledOnce);
+		expect(wrapper.find('.layout').exists()).toBeTruthy();
+		expect(wrapper.find('the-dashboard-stub').exists()).toBeTruthy();
+		expect(wrapper.find('create-marker-stub').exists()).toBeTruthy();
+		expect(loadMarkersSpy.calledOnce).toBeTruthy();
 	});
 
 	it('Loads Markers', async () => {
-		await shallowMount(EditPage, {
-			mocks
+		const setBordersStub = sinon.stub();
+		storeOptions.modules.Markers.mutations.setBorders = setBordersStub;
+
+		const setUserStub = sinon.stub();
+		storeOptions.modules.Markers.mutations.setUser = setUserStub;
+
+		const markersLoadStub = sinon.stub().returns({
+			status: 200
+		});
+		storeOptions.modules.Markers.actions.load = markersLoadStub;
+
+		const storiesExitStub = sinon.stub();
+		storeOptions.modules.Stories.mutations.exit = storiesExitStub;
+
+		const profileLoadStub = sinon.stub();
+		storeOptions.modules.Profile.actions.load = profileLoadStub;
+
+		const wrapper = await shallowMount(EditPage, {
+			global: {
+				plugins: [createStore(storeOptions)]
+			},
 		});
 
-		assert.isTrue(mocks.$bus.$emit.calledWith('env-setup'));
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.commit.calledThrice);
-		assert.isTrue(mocks.$store.commit.calledWith('Markers/setBorders', false));
-		assert.isTrue(mocks.$store.commit.calledWith('Markers/setUser', 'test'));
-		assert.isTrue(mocks.$store.commit.calledWith('Stories/exit'));
+		expect(wrapper.emitted()).toHaveProperty('env-setup');
 
-		assert.isTrue(mocks.$store.dispatch.calledTwice);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Markers/load'));
-		assert.isTrue(mocks.$store.dispatch.calledWith('Profile/load'));
+		expect(setBordersStub.calledWith(sinon.match.any, false)).toBeTruthy();
+		expect(setUserStub.calledWith(sinon.match.any, 'test')).toBeTruthy();
+		expect(storiesExitStub.calledWith()).toBeTruthy();
 
-		assert.isTrue(goToCurrentLocationStub.calledOnce);
-		assert.isTrue(goToCurrentLocationStub.calledWith());
+		expect(markersLoadStub.calledWith()).toBeTruthy();
+		expect(profileLoadStub.calledWith()).toBeTruthy();
+
+		expect(goToCurrentLocationStub.calledOnce).toBeTruthy();
+		expect(goToCurrentLocationStub.calledWith()).toBeTruthy();
 	});
 
 	it('Shows cache toast when loaded from cache', async () => {
-		mocks.$store.dispatch.returns({
+		const markersLoadStub = sinon.stub().returns({
 			status: 'cached'
 		});
-		mocks.$toast = {
-			info: sinon.spy()
+		storeOptions.modules.Markers.actions.load = markersLoadStub;
+
+		const mocks = {
+			$toast: {
+				info: sinon.spy()
+			}
 		};
 		await shallowMount(EditPage, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			},
 		});
 
-		assert.isTrue(mocks.$toast.info.calledOnce);
-		assert.isTrue(mocks.$toast.info.calledWith('Markers loaded from cache', ''));
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+
+		expect(mocks.$toast.info.calledOnce).toBeTruthy();
+		expect(mocks.$toast.info.calledWith('Markers loaded from cache', '')).toBeTruthy();
 	});
 
 });

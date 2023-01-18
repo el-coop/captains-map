@@ -1,33 +1,41 @@
-import { assert } from 'chai';
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import MarkerBoardersFilter from '@/Components/Utilities/MarkerBordersFilter';
+import MarkerBordersFilter from '@/Components/Utilities/MarkerBordersFilter.vue';
 import map from '@/Services/LeafletMapService';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 
-describe('MarkerBoardersFilter.vue', () => {
+describe('MarkerBordersFilter.vue', () => {
 
-	let $store;
 	let mapOnStub;
 
 	const stubs = {
 		FontAwesomeIcon: true
 	};
+	let storeOptions;
 
 	beforeEach(() => {
-		mapOnStub = sinon.stub(map,'on');
-		$store = {
-			commit: sinon.spy(),
-			dispatch: sinon.spy(),
-			state: {
+		storeOptions = {
+			modules: {
 				Markers: {
-					markers: [{
-						lat: 0,
-						lng: 0
-					}]
+					namespaced: true,
+					state: {
+						markers: [{
+							lat: 0,
+							lng: 0
+						}]
+					},
+					mutations: {
+						setBorders(){}
+					},
+					actions: {
+						load(){}
+					}
 				}
 			}
-		}
+		};
+		mapOnStub = sinon.stub(map,'on');
 	});
 
 	afterEach(() => {
@@ -35,40 +43,48 @@ describe('MarkerBoardersFilter.vue', () => {
 	});
 
 	it('Renders', () => {
-		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs
+		const wrapper = shallowMount(MarkerBordersFilter, {
+			global: {
+				stubs
+			}
 		});
 
-		assert.equal(wrapper.findAll('button').length, 3);
-		assert.isTrue(wrapper.find('button[disabled]').exists());
+		expect(wrapper.findAll('button').length).toBe(3);
+		expect(wrapper.find('button[disabled]').exists()).toBeTruthy();
 	});
 
-	it('Toggles filters on and off', () => {
-		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs
+	it('Toggles filters on and off',async () => {
+		const wrapper = shallowMount(MarkerBordersFilter, {
+			global: {
+				stubs
+			}
 		});
 
-		assert.isFalse(wrapper.vm.$data.open);
-		assert.isFalse(wrapper.find('.marker-border-filter--open').exists());
+		expect(wrapper.vm.$data.open).toBeFalsy();
+		expect(wrapper.find('.marker-border-filter--open').exists()).toBeFalsy();
 		wrapper.find('.marker-border-filter__open').trigger('click');
-		assert.isTrue(wrapper.vm.$data.open);
-		assert.isTrue(wrapper.find('.marker-border-filter--open').exists());
+		await wrapper.vm.$nextTick();
+		expect(wrapper.vm.$data.open).toBeTruthy();
+		expect(wrapper.find('.marker-border-filter--open').exists()).toBeTruthy();
 		wrapper.find('.marker-border-filter__open').trigger('click');
-		assert.isFalse(wrapper.vm.$data.open);
-		assert.isFalse(wrapper.find('.marker-border-filter--open').exists());
+		await wrapper.vm.$nextTick();
+		expect(wrapper.vm.$data.open).toBeFalsy();
+		expect(wrapper.find('.marker-border-filter--open').exists()).toBeFalsy();
 	});
 
 	it('Listens for map move end', () => {
-		shallowMount(MarkerBoardersFilter, {
-			stubs
+		shallowMount(MarkerBordersFilter, {
+			global: {
+				stubs
+			}
 		});
 
-		assert.isTrue(mapOnStub.calledOnce);
-		assert.isTrue(mapOnStub.calledWith('moveend'));
+		expect(mapOnStub.calledOnce).toBeTruthy();
+		expect(mapOnStub.calledWith('moveend')).toBeTruthy();
 	});
 
 
-	it('Searches only in specific map bounds', () => {
+	it('Searches only in specific map bounds', async () => {
 		sinon.stub(map, 'getBorders').returns({
 			_southWest: {
 				lat: 0,
@@ -79,78 +95,100 @@ describe('MarkerBoardersFilter.vue', () => {
 				lng: 1
 			}
 		});
-		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs,
-			mocks: {
-				$store
-			}
+		const setBordersStub = sinon.stub();
+		storeOptions.modules.Markers.mutations.setBorders = setBordersStub;
+		const loadStub = sinon.stub();
+		storeOptions.modules.Markers.actions.load = loadStub;
+		const wrapper = shallowMount(MarkerBordersFilter, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			},
 		});
 
 		wrapper.findAll('button').at(1).trigger('click');
 
-		assert.isTrue($store.commit.calledOnce);
-		assert.isTrue($store.commit.calledWith('Markers/setBorders', [{
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+
+		expect(setBordersStub.calledOnce).toBeTruthy();
+		expect(setBordersStub.calledWith(sinon.match.any, [{
 			lat: 0,
 			lng: 0
 		}, {
 			lat: 1,
 			lng: 1
-		}]));
-		assert.isTrue($store.dispatch.calledOnce);
-		assert.isTrue($store.dispatch.calledWith('Markers/load'));
-		assert.equal(wrapper.vm.$data.location, 'current');
-		assert.equal(wrapper.find('button[disabled]').text(), 'Only Here');
-		assert.equal(wrapper.findAll('button[disabled]').length, 1);
+		}])).toBeTruthy();
+		expect(loadStub.calledOnce).toBeTruthy();
+		expect(loadStub.calledWith()).toBeTruthy();
+		expect(wrapper.vm.$data.location).toBe('current');
+		expect(wrapper.find('button[disabled]').text()).toBe('Only Here');
+		expect(wrapper.findAll('button[disabled]').length).toBe(1);
 	});
 
 	it('Clears search boundaries', async () => {
 		const mapSetViewStub = sinon.stub(map, 'setView');
-		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs,
-			mocks: {
-				$store
-			}
+		const setBordersStub = sinon.stub();
+		storeOptions.modules.Markers.mutations.setBorders = setBordersStub;
+		const loadStub = sinon.stub();
+		storeOptions.modules.Markers.actions.load = loadStub;
+
+		const wrapper = shallowMount(MarkerBordersFilter, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			},
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			location: 'current'
 		});
 
 		wrapper.findAll('button').at(2).trigger('click');
-		await wrapper.vm.$nextTick();
-
-		assert.isTrue($store.commit.calledOnce);
-		assert.isTrue($store.commit.calledWith('Markers/setBorders', false));
-		assert.isTrue($store.dispatch.calledOnce);
-		assert.isTrue($store.dispatch.calledWith('Markers/load'));
-		assert.equal(wrapper.vm.$data.location, 'everywhere');
-		assert.isTrue(mapSetViewStub.calledOnce);
-		assert.isTrue(mapSetViewStub.calledWith([0, 0], 16));
-		assert.equal(wrapper.find('button[disabled]').text(), 'Everywhere');
-		assert.equal(wrapper.findAll('button[disabled]').length, 1);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+		expect(setBordersStub.calledOnce).toBeTruthy();
+		expect(setBordersStub.calledWith(sinon.match.any, false)).toBeTruthy();
+		expect(loadStub.calledOnce).toBeTruthy();
+		expect(loadStub.calledWith()).toBeTruthy();
+		expect(wrapper.vm.$data.location).toBe('everywhere');
+		expect(mapSetViewStub.calledOnce).toBeTruthy();
+		expect(mapSetViewStub.calledWith([0, 0], 16)).toBeTruthy();
+		expect(wrapper.find('button[disabled]').text()).toBe('Everywhere');
+		expect(wrapper.findAll('button[disabled]').length).toBe(1);
 	});
 
-	it('Sets location when map moved and state not equal everywhere', () => {
-		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs
+	it('Sets location when map moved and state not equal everywhere', async () => {
+		const wrapper = shallowMount(MarkerBordersFilter, {
+			global: {
+				stubs
+			}
 		});
-		wrapper.setData({
+		await wrapper.setData({
 			location: 'current'
 		});
 
 		wrapper.vm.onMoveEnd();
 
-		assert.equal(wrapper.vm.$data.location, 'changed');
+		expect(wrapper.vm.$data.location).toBe('changed');
 	});
 
 	it('Doesnt Set location when map moved and state equals everywhere', () => {
-		const wrapper = shallowMount(MarkerBoardersFilter, {
-			stubs
+		const wrapper = shallowMount(MarkerBordersFilter, {
+			global: {
+				stubs
+			}
 		});
 
 		wrapper.vm.onMoveEnd();
 
-		assert.equal(wrapper.vm.$data.location, 'everywhere');
+		expect(wrapper.vm.$data.location).toBe('everywhere');
 	});
 
 });

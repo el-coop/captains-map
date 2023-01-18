@@ -1,45 +1,57 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
 import TheMap from '@/Components/Map/TheMap.vue';
 import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
+import {createStore} from "vuex";
+import leaflet from "leaflet";
 
-const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+const pageSize = parseInt(import.meta.env.VITE_APP_PAGE_SIZE);
 
 describe('TheMap.vue', () => {
 
 	let mocks;
 	let mapInitStub;
 	let mapOnStub;
+	let storeOptions;
 
 	beforeEach(() => {
 		mapOnStub = sinon.stub(mapService, 'on');
-		mocks = {
-			$store: {
-				state: {
-					Markers: {
+		storeOptions = {
+			modules: {
+				Markers: {
+					namespaced: true,
+					state: {
 						markers: [],
 						page: 0
-					},
-					Stories: {
+					}
+				},
+				Stories: {
+					namespaced: true,
+					state: {
 						story: null
 					}
 				},
-				getters: {
-					'Uploads/allFiles': [{
-						uploadTime: 1
-					}, {
-						uploadTime: 2,
-						error: {
-							status: 500
+				Uploads: {
+					namespaced: true,
+					getters: {
+						allFiles() {
+							return [{
+								uploadTime: 1
+							}, {
+								uploadTime: 2,
+								error: {
+									status: 500
+								}
+							}];
 						}
-					}]
-				}
-			},
-			$router: {
-				currentRoute: {
-					name: 'view'
-				}
+					}
+				},
+			}
+		};
+		mocks = {
+			$route: {
+				name: 'view'
 			}
 		};
 
@@ -52,72 +64,108 @@ describe('TheMap.vue', () => {
 
 	it('renders without markers', () => {
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			},
 		});
-		assert.isTrue(wrapper.find('.map').exists());
-		assert.isFalse(wrapper.find('usermarker-stub').exists());
-		assert.isFalse(wrapper.find('mapmarker-stub').exists());
+		expect(wrapper.find('.map').exists()).toBeTruthy();
+		expect(wrapper.find('user-marker-stub').exists()).toBeFalsy();
+		expect(wrapper.find('map-marker-stub').exists()).toBeFalsy();
 	});
 
 	it('Initiates maps and listeners', () => {
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			},
 		});
-		assert.isTrue(mapInitStub.calledOnce);
-		assert.isTrue(mapInitStub.calledWith(wrapper.vm.$refs.map, wrapper.vm.$props.center, wrapper.vm.$props.zoom));
 
-		assert.isTrue(mapOnStub.calledTwice);
-		assert.isTrue(mapOnStub.calledWith('contextmenu', wrapper.vm.rightClick));
-		assert.isTrue(mapOnStub.calledWith('zoomend', wrapper.vm.handleZoom));
+		expect(mapInitStub.calledOnce).toBeTruthy();
+		expect(mapInitStub.calledWith(wrapper.vm.$refs.map, wrapper.vm.$props.center, wrapper.vm.$props.zoom)).toBeTruthy();
+
+		expect(mapOnStub.calledTwice).toBeTruthy();
+		expect(mapOnStub.calledWith('contextmenu', wrapper.vm.rightClick)).toBeTruthy();
+		expect(mapOnStub.calledWith('zoomend', wrapper.vm.handleZoom)).toBeTruthy();
 	});
 
 	it('renders markers', () => {
-		mocks.$store.state.Markers.markers = [
+		leaflet.markerClusterGroup = sinon.spy();
+		storeOptions.modules.Markers.state.markers = [
 			{id: 1}, {id: 2}, {id: 3}
 		];
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs: {
+					MapMarkerCluster: false
+				}
+			},
 		});
-		assert.equal(wrapper.findAll('mapmarker-stub').length, 3);
+
+		expect(wrapper.findAll('map-marker-stub').length).toBe(3);
 	});
 
 	it('renders story markers', () => {
-		mocks.$store.state.Markers.markers = [
+		leaflet.markerClusterGroup = sinon.spy();
+		storeOptions.modules.Markers.state.markers = [
 			{id: 1}, {id: 2}, {id: 3}
 		];
 
-		mocks.$store.state.Markers.markers = [
+		storeOptions.modules.Markers.state.markers = [
 			{id: 4}, {id: 5}, {id: 6}, {id: 7}
 		];
 
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs: {
+					MapMarkerCluster: false
+				}
+			},
 		});
-		assert.equal(wrapper.findAll('mapmarker-stub').length, 4);
+
+		expect(wrapper.findAll('map-marker-stub').length).toBe(4);
 	});
 
 	it('renders second page of markers markers', () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize).fill({});
-		mocks.$store.state.Markers.markers.push({id: 1}, {id: 2}, {id: 3});
-		mocks.$store.state.Markers.page = 1;
+		leaflet.markerClusterGroup = sinon.spy();
+		storeOptions.modules.Markers.state.markers = new Array(pageSize).fill({});
+		storeOptions.modules.Markers.state.markers.push({id: 1}, {id: 2}, {id: 3});
+		storeOptions.modules.Markers.state.page = 1;
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs: {
+					MapMarkerCluster: false
+				}
+			},
 		});
-		assert.equal(wrapper.findAll('mapmarker-stub').length, 3);
+		expect(wrapper.findAll('map-marker-stub').length).toBe(3);
 	});
 
 	it('renders userMarker', () => {
-		mocks.$store.state.Markers.userMarker = true;
+		storeOptions.modules.Markers.state.userMarker = true;
 
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+			},
 		});
-		assert.isTrue(wrapper.find('mapusermarker-stub').exists());
+		expect(wrapper.find('map-user-marker-stub').exists()).toBeTruthy();
 	});
 
-	it('reacts to zoom change', () => {
+	it('reacts to zoom change', async () => {
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+			},
 		});
 
 		wrapper.vm.handleZoom({
@@ -125,23 +173,29 @@ describe('TheMap.vue', () => {
 				_animateToZoom: 4
 			}
 		});
-		assert.isTrue(wrapper.find('.map--zoom-far').exists());
 
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('.map--zoom-far').exists()).toBeTruthy();
 
 		wrapper.vm.handleZoom({
 			target: {
 				_animateToZoom: 9
 			}
 		});
-		assert.isTrue(wrapper.find('.map--zoom-medium').exists());
 
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('.map--zoom-medium').exists()).toBeTruthy();
 
 		wrapper.vm.handleZoom({
 			target: {
 				_animateToZoom: 14
 			}
 		});
-		assert.isTrue(wrapper.find('.map--zoom-normal').exists());
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('.map--zoom-normal').exists()).toBeTruthy();
 
 
 		wrapper.vm.handleZoom({
@@ -149,53 +203,54 @@ describe('TheMap.vue', () => {
 				_animateToZoom: 18
 			}
 		});
-		assert.isTrue(wrapper.find('.map--zoom-close').exists());
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('.map--zoom-close').exists()).toBeTruthy();
 	});
 
 	it('reacts to right click event', () => {
-		mocks.$bus = {
-			$emit: sinon.stub()
-		};
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+			},
 		});
+
 		const event = sinon.stub();
 
-
 		wrapper.vm.rightClick(event);
-		assert.isTrue(mocks.$bus.$emit.calledOnce);
-		assert.isTrue(mocks.$bus.$emit.calledWith('map-create-marker', {event}));
+
+		expect(wrapper.emitted()).toHaveProperty('map-create-marker');
+		const rightClickEvent = wrapper.emitted('map-create-marker');
+		expect(rightClickEvent[0]).toEqual([{event}]);
+
 	});
 
 	it('renders the queue markers when it has entries and mode is edit', () => {
-		mocks.$router.currentRoute.name = 'edit';
+		mocks.$route.name = 'edit';
 
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+			},
 		});
 
-		const queueMarkers = wrapper.findAll('mapuploadmarker-stub');
+		const queueMarkers = wrapper.findAll('map-upload-marker-stub');
 
-		assert.equal(queueMarkers.length, 2);
+		expect(queueMarkers.length).toBe(2);
 	});
 
 	it('doesnt render the queue markers when it has entries and mode isnt edit', () => {
 		const wrapper = shallowMount(TheMap, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+			},
 		});
 
-		const queueMarkers = wrapper.findAll('mapuploadmarker-stub');
+		const queueMarkers = wrapper.findAll('map-upload-marker-stub');
 
-		assert.equal(queueMarkers.length, 0);
-	});
-
-	it('doesnt render the errored markers it has entries and mode isnt edit', () => {
-		const wrapper = shallowMount(TheMap, {
-			mocks
-		});
-
-		const queueMarkers = wrapper.findAll('mapuploadmarker-stub');
-
-		assert.equal(queueMarkers.length, 0);
+		expect(queueMarkers.length).toBe(0);
 	});
 });

@@ -1,12 +1,12 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import store from '@/store';
 import profileStore from '@/store/profile';
 import http from '@/Services/HttpService';
 
 describe('User Store', () => {
 
-	afterEach('Reset sinon and settings', () => {
+	afterEach(() => {
 		sinon.restore();
 	});
 
@@ -14,14 +14,14 @@ describe('User Store', () => {
 
 		profileStore.mutations.toggle(profileStore.state);
 
-		assert.isTrue(profileStore.state.open);
+		expect(profileStore.state.open).toBeTruthy();
 	});
 
 	it('Toggles profile closed', () => {
 		profileStore.state.open = true;
 		profileStore.mutations.toggle(profileStore.state);
 
-		assert.isFalse(profileStore.state.open);
+		expect(profileStore.state.open).toBeFalsy();
 	});
 
 	it('Updates user profile', () => {
@@ -31,7 +31,7 @@ describe('User Store', () => {
 			path: 'path'
 		});
 
-		assert.deepEqual(profileStore.state.user, {
+		expect(profileStore.state.user).toEqual({
 			description: 'desc',
 			path: 'path'
 		});
@@ -43,7 +43,7 @@ describe('User Store', () => {
 			id: 1
 		});
 
-		assert.deepEqual(profileStore.state.stories, [{
+		expect(profileStore.state.stories).toEqual([{
 			id: 1
 		}]);
 	});
@@ -57,7 +57,7 @@ describe('User Store', () => {
 			id: 1
 		});
 
-		assert.deepEqual(profileStore.state.stories, []);
+		expect(profileStore.state.stories).toEqual([]);
 	});
 
 	it('sets stories', () => {
@@ -67,7 +67,7 @@ describe('User Store', () => {
 
 		profileStore.mutations.setStories(profileStore.state, [{id: 2}, {id: 3}]);
 
-		assert.deepEqual(profileStore.state.stories, [{id: 2}, {id: 3}]);
+		expect(profileStore.state.stories).toEqual([{id: 2}, {id: 3}]);
 	});
 
 	it('Tracks stories cover photos', async () => {
@@ -87,7 +87,7 @@ describe('User Store', () => {
 			}
 		})
 
-		assert.deepEqual(profileStore.state.stories[0].cover, {
+		expect(profileStore.state.stories[0].cover).toEqual({
 			'type': 'type2',
 			'path': 'path2'
 		});
@@ -106,7 +106,7 @@ describe('User Store', () => {
 			published: 1
 		})
 
-		assert.deepEqual(profileStore.state.stories[0], {
+		expect(profileStore.state.stories[0]).toEqual({
 			id: 1,
 			name: 'story',
 			published: 1
@@ -134,22 +134,22 @@ describe('User Store', () => {
 			state: profileStore.state,
 		}, 'test');
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('bio/test'));
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('bio/test')).toBeTruthy();
 
-		assert.equal(commit.callCount, 4);
+		expect(commit.callCount).toBe(4);
 
-		assert.deepEqual(commit.firstCall.args, [
+		expect(commit.firstCall.args).toEqual([
 			'updateBio',
 			{}
 		]);
 
-		assert.deepEqual(commit.secondCall.args, [
+		expect(commit.secondCall.args).toEqual([
 			'setStories',
 			[]
 		]);
 
-		assert.deepEqual(commit.thirdCall.args, [
+		expect(commit.thirdCall.args).toEqual([
 			'updateBio',
 			{
 				username: 'test',
@@ -158,7 +158,7 @@ describe('User Store', () => {
 			}
 		]);
 
-		assert.deepEqual(commit.getCall(3).args, [
+		expect(commit.getCall(3).args).toEqual([
 			'setStories',
 			[{
 				id: 1
@@ -180,8 +180,8 @@ describe('User Store', () => {
 			state: profileStore.state,
 		}, 'test');
 
-		assert.isFalse(getStub.called);
-		assert.isFalse(commit.called);
+		expect(getStub.called).toBeFalsy();
+		expect(commit.called).toBeFalsy();
 
 	});
 
@@ -193,9 +193,9 @@ describe('User Store', () => {
 			commit,
 		});
 
-		assert.isTrue(commit.calledTwice);
-		assert.isTrue(commit.firstCall.calledWith('updateBio', {}));
-		assert.isTrue(commit.secondCall.calledWith('setStories', []));
+		expect(commit.calledTwice).toBeTruthy();
+		expect(commit.firstCall.calledWith('updateBio', {})).toBeTruthy();
+		expect(commit.secondCall.calledWith('setStories', [])).toBeTruthy();
 
 	});
 });

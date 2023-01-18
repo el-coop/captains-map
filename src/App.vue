@@ -14,8 +14,8 @@
 </template>
 
 <script>
-	import NotFound from '@/Components/Modals/404';
-	import TheMap from '@/Components/Map/TheMap';
+	import NotFound from '@/Components/Modals/404.vue';
+	import TheMap from '@/Components/Map/TheMap.vue';
 
 	export default {
 		name: 'App',

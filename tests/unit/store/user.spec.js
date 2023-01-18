@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import Store from '@/store';
 import userStore from '@/store/user';
 import cache from '@/Services/Cache';
@@ -8,7 +8,7 @@ import http from '@/Services/HttpService';
 
 describe('User Store', () => {
 
-	afterEach('Reset sinon and settings', () => {
+	afterEach(() => {
 		sinon.restore();
 	});
 
@@ -21,8 +21,8 @@ describe('User Store', () => {
 		const state = {user: null};
 		await userStore.actions.init({state});
 
-		assert.deepEqual(state.user, user);
-		assert.isTrue(state.initialized);
+		expect(state.user).toEqual(user);
+		expect(state.initialized).toBeTruthy();
 	});
 
 	it('Returns false when no user in state', async () => {
@@ -32,8 +32,8 @@ describe('User Store', () => {
 		};
 		const dispatch = sinon.stub();
 
-		assert.isFalse(await userStore.actions.isLoggedIn({state, dispatch}));
-		assert.isFalse(dispatch.calledOnce);
+		expect(await userStore.actions.isLoggedIn({state, dispatch})).toBeFalsy();
+		expect(dispatch.calledOnce).toBeFalsy();
 	});
 
 	it('Returns false when expired user in state', async () => {
@@ -45,9 +45,9 @@ describe('User Store', () => {
 		};
 		const dispatch = sinon.stub();
 
-		assert.isFalse(await userStore.actions.isLoggedIn({state, dispatch}));
-		assert.isTrue(dispatch.calledOnce);
-		assert.isTrue(dispatch.calledWith('logout'));
+		expect(await userStore.actions.isLoggedIn({state, dispatch})).toBeFalsy();
+		expect(dispatch.calledOnce).toBeTruthy();
+		expect(dispatch.calledWith('logout')).toBeTruthy();
 	});
 
 	it('Returns true when expired user in state', async () => {
@@ -59,8 +59,8 @@ describe('User Store', () => {
 		};
 		const dispatch = sinon.stub();
 
-		assert.isTrue(await userStore.actions.isLoggedIn({state, dispatch}));
-		assert.isFalse(dispatch.calledOnce);
+		expect(await userStore.actions.isLoggedIn({state, dispatch})).toBeTruthy();
+		expect(dispatch.calledOnce).toBeFalsy();
 	});
 
 
@@ -71,9 +71,9 @@ describe('User Store', () => {
 		};
 		const dispatch = sinon.stub();
 
-		assert.isFalse(await userStore.actions.isLoggedIn({state, dispatch}));
-		assert.isTrue(dispatch.calledOnce);
-		assert.isTrue(dispatch.firstCall.calledWith('init'));
+		expect(await userStore.actions.isLoggedIn({state, dispatch})).toBeFalsy();
+		expect(dispatch.calledOnce).toBeTruthy();
+		expect(dispatch.firstCall.calledWith('init')).toBeTruthy();
 	});
 
 	it('Calls log out and redirects on logout', async () => {
@@ -98,21 +98,21 @@ describe('User Store', () => {
 
 		await userStore.actions.logout({state, dispatch});
 
-		assert.isNull(state.user);
+		expect(state.user).toBeNull();
 
-		assert.isTrue(dispatch.calledTwice);
-		assert.isTrue(dispatch.firstCall.calledWith('Uploads/purge'));
-		assert.isTrue(dispatch.secondCall.calledWith('Profile/purge'));
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith('settings', 'user'));
-		assert.isTrue(cacheClearStub.calledOnce);
-		assert.isTrue(cacheClearStub.calledWith('requests'));
+		expect(dispatch.calledTwice).toBeTruthy();
+		expect(dispatch.firstCall.calledWith('Uploads/purge')).toBeTruthy();
+		expect(dispatch.secondCall.calledWith('Profile/purge')).toBeTruthy();
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.calledWith('settings', 'user')).toBeTruthy();
+		expect(cacheClearStub.calledOnce).toBeTruthy();
+		expect(cacheClearStub.calledWith('requests')).toBeTruthy();
 
-		assert.isTrue(httpStub.calledOnce);
-		assert.isTrue(httpStub.calledWith('auth/logout'));
+		expect(httpStub.calledOnce).toBeTruthy();
+		expect(httpStub.calledWith('auth/logout')).toBeTruthy();
 
-		assert.isTrue(routerStub.calledWith('/'));
-		assert.isTrue(routerStub.calledOnce);
+		expect(routerStub.calledWith('/')).toBeTruthy();
+		expect(routerStub.calledOnce).toBeTruthy();
 	});
 
 	it('Login returns true when user logs in', async () => {
@@ -139,18 +139,18 @@ describe('User Store', () => {
 			dispatch
 		}, {});
 
-		assert.isTrue(dispatch.called);
-		assert.isTrue(dispatch.calledWith('Profile/purge', {}, {root: true}));
-		assert.isTrue(response);
-		assert.deepEqual(state, {
+		expect(dispatch.called).toBeTruthy();
+		expect(dispatch.calledWith('Profile/purge', {}, {root: true})).toBeTruthy();
+		expect(response).toBeTruthy();
+		expect(state).toEqual({
 			user
 		});
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.firstCall.calledWith('settings', 'user', {
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.firstCall.calledWith('settings', 'user', {
 			id: user.id,
 			username: user.username,
 			exp: user.exp,
-		}));
+		})).toBeTruthy();
 	});
 
 	it('Login returns false when user fails to log in', async () => {
@@ -169,9 +169,9 @@ describe('User Store', () => {
 			state
 		}, {});
 
-		assert.isFalse(response);
-		assert.isNull(state.user);
-		assert.isFalse(cacheStub.called);
+		expect(response).toBeFalsy();
+		expect(state.user).toBeNull();
+		expect(cacheStub.called).toBeFalsy();
 	});
 
 	it('Extend extends user login duration', async () => {
@@ -187,12 +187,12 @@ describe('User Store', () => {
 
 		await userStore.actions.extend({state}, 100);
 
-		assert.equal(state.user.exp, 100);
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.firstCall.calledWith('settings', 'user', {
+		expect(state.user.exp).toBe(100);
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.firstCall.calledWith('settings', 'user', {
 			id: 1,
 			username: 'test',
 			exp: 100,
-		}));
+		})).toBeTruthy();
 	});
 });

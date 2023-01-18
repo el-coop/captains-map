@@ -1,21 +1,47 @@
-import { assert } from 'chai';
-import { mount } from '@vue/test-utils';
-import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {mount} from '@vue/test-utils';
+import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar.vue';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 describe('LoggedInBar.vue', () => {
 
 	let mocks;
 	let stubs;
+	let storeOptions;
 
 	beforeEach(() => {
 		stubs = {
 			FontAwesomeIcon: true,
 			SearchBar: true,
 			ProfileOpen: true,
-			DrawerMobile: true,
+			// DrawerMobile: true,
 			logout: true,
 		};
+		storeOptions = {
+			modules: {
+				Markers: {
+					namespaced: true,
+					state: {
+						username: false
+					}
+				},
+				User: {
+					namespaced: true,
+					state: {
+						user: {
+							username: 'user',
+						},
+					}
+				},
+				Stories: {
+					namespaced: true,
+					state: {
+						story: null
+					}
+				},
+			}
+		}
 		mocks = {
 			$router: {
 				push: sinon.spy(),
@@ -23,22 +49,6 @@ describe('LoggedInBar.vue', () => {
 					path: '/'
 				}
 			},
-			$store: {
-				state: {
-					Markers: {
-						username: false
-					},
-					User: {
-						user: {
-							username: 'user',
-						},
-						isLoggedIn: sinon.stub().returns(true)
-					},
-					Stories: {
-						story: null
-					}
-				}
-			}
 		};
 
 	});
@@ -50,54 +60,69 @@ describe('LoggedInBar.vue', () => {
 
 	it('Renders with disabled home button in home', () => {
 		const wrapper = mount(LoggedInBar, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
-
-		assert.equal(wrapper.find('.button:disabled > span:last-child').text(), 'Home');
-		assert.isTrue(wrapper.find('.top-bar').exists());
-		assert.isTrue(wrapper.find('.button--logout').exists());
-		assert.isTrue(wrapper.find('searchbar-stub').exists());
+		expect(wrapper.find('.button:disabled > span:last-child').text()).toBe('Home');
+		expect(wrapper.find('.top-bar').exists()).toBeTruthy();
+		expect(wrapper.find('logout-stub').exists()).toBeTruthy();
+		expect(wrapper.find('search-bar-stub').exists()).toBeTruthy();
 	});
 
-	it('Changes route when edit button clicked', () => {
+	it('Changes route when edit button clicked', async () => {
 
 		const wrapper = mount(LoggedInBar, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.findAll('.button').at(1).trigger('click');
+		wrapper.findAll('.button').at(2).trigger('click');
 
-		assert.isTrue(mocks.$router.push.calledOnce);
-		assert.isTrue(mocks.$router.push.calledWith('/edit'));
+		await wrapper.vm.$nextTick();
 
+		expect(mocks.$router.push.calledOnce).toBeTruthy();
+		expect(mocks.$router.push.calledWith('/edit')).toBeTruthy();
 	});
+
 
 	it('Renders with disabled edit button in edit page', () => {
 		mocks.$router.currentRoute.path = "/edit";
 
 		const wrapper = mount(LoggedInBar, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
-		assert.equal(wrapper.find('.button:disabled > span:last-child').text(), 'user');
-		assert.isTrue(wrapper.find('.button').exists());
-		assert.isTrue(wrapper.find('searchbar-stub').exists());
+
+		expect(wrapper.find('.button:disabled > span:last-child').text()).toBe('user');
+		expect(wrapper.find('.button').exists()).toBeTruthy();
+		expect(wrapper.find('search-bar-stub').exists()).toBeTruthy();
 	});
 
-	it('Changes route when home button clicked clicked', () => {
-		mocks.$store.state.Markers.username = "test";
+	it('Changes route when home button clicked clicked', async () => {
+		storeOptions.modules.Markers.state.username = "test";
 
 		const wrapper = mount(LoggedInBar, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.findAll('.button').at(2).trigger('click');
 
-		assert.isTrue(mocks.$router.push.calledOnce);
-		assert.isTrue(mocks.$router.push.calledWith('/'));
+		wrapper.findAll('.button').at(3).trigger('click');
+		await wrapper.vm.$nextTick();
+		expect(mocks.$router.push.calledOnce).toBeTruthy();
+		expect(mocks.$router.push.calledWith('/')).toBeTruthy();
 	});
 
 });

@@ -1,90 +1,99 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach, beforeEach, afterAll} from 'vitest';
 import axios from 'axios';
-import moxios from 'moxios';
+import MockAdapter from 'axios-mock-adapter';
 import http from '@/Services/HttpService';
 import cache from '@/Services/Cache';
 import Store from '@/store';
 
 describe('Http service', () => {
-	beforeEach(() => {
-		moxios.install()
-	});
 
-	afterEach('Reset sinon and settings', () => {
+	const mock = new MockAdapter(axios);
+
+
+	afterEach(() =>{
 		sinon.restore();
-		moxios.uninstall();
-	});
+	})
+
+	afterAll(() => {
+		mock.reset();
+	})
 
 	it('Saves CSRF token and notify app', async () => {
 		const storeStub = sinon.stub(Store, 'dispatch');
 
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 200,
-				headers: {
+		mock.onGet('/api/test').reply((config) => {
+			return [
+				200,
+				{},
+				{
 					csrftoken: 'test'
 				}
-			});
+			]
 		});
 		await http.get('test');
-		assert.equal(axios.defaults.headers.common['X-CSRF-TOKEN'], 'test');
-		assert.isTrue(storeStub.calledOnce);
-		assert.isTrue(storeStub.calledWith('CSRFReady'));
+		expect(axios.defaults.headers.common['X-CSRF-TOKEN']).toBe('test');
+		expect(storeStub.calledOnce).toBeTruthy();
+		expect(storeStub.calledWith('CSRFReady')).toBeTruthy();
 	});
 
 	it('Issues as logout when clearToken error is found', async () => {
 		const storeStub = sinon.stub(Store, 'dispatch');
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 403,
-				response: {
+
+		mock.onGet('/api/test').reply((config) => {
+			return [
+				403,
+				{
 					clearToken: true
-				}
-			});
+				},
+				{}
+			]
 		});
+
+
 		await http.get('test');
-		assert.isTrue(storeStub.calledOnce);
-		assert.isTrue(storeStub.calledWith('User/logout'));
+		expect(storeStub.calledOnce).toBeTruthy();
+		expect(storeStub.calledWith('User/logout')).toBeTruthy();
 	});
 
 	it('Extends user login when userextend header found', async () => {
 		const storeStub = sinon.stub(Store, 'dispatch');
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 200,
-				headers: {
+
+		mock.onGet('/api/test').reply((config) => {
+			return [
+				200,
+				{},
+				{
 					userextend: 10
 				}
-			});
+			]
 		});
+
 		await http.get('test');
-		assert.isTrue(storeStub.calledOnce);
-		assert.isTrue(storeStub.calledWith('User/extend',10));
+		expect(storeStub.calledOnce).toBeTruthy();
+		expect(storeStub.calledWith('User/extend', '10')).toBeTruthy();
 	});
 
 	it('returns the get response and caches', async () => {
 		const cacheStub = sinon.stub(cache, 'store');
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 200,
-				headers: {},
-				response: {
+
+		mock.onGet('/api/test').reply((config) => {
+			return [
+				200,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
+
 		const response = await http.get('test');
-		assert.equal(response.status, 200);
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe(200);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith('request', '/api/test', response.data));
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.calledWith('request', '/api/test', response.data)).toBeTruthy();
 	});
 
 	it('returns the cached response on axios error', async () => {
@@ -93,43 +102,44 @@ describe('Http service', () => {
 				'message': 'cached'
 			};
 		});
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 400,
-				headers: {},
-				response: {
+
+		mock.onGet('/api/test').reply((config) => {
+			return [
+				400,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
+
 		const response = await http.get('test');
-		assert.equal(response.status, 'cached');
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe('cached');
+		expect(response.data).toEqual({
 			'message': 'cached'
 		});
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith('request', '/api/test'));
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.calledWith('request', '/api/test')).toBeTruthy();
 	});
 
 	it('Doesnt return cached response for 404 error', async () => {
 		const cacheStub = sinon.stub(cache, 'get');
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 404,
-				headers: {},
-				response: {
+
+		mock.onGet('/api/test').reply((config) => {
+			return [
+				404,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
 		const response = await http.get('test');
-		assert.equal(response.status, 404);
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe(404);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
-		assert.isTrue(cacheStub.notCalled);
+		expect(cacheStub.notCalled).toBeTruthy();
 	});
 
 
@@ -137,242 +147,231 @@ describe('Http service', () => {
 		sinon.stub(cache, 'get').callsFake(() => {
 			return null;
 		});
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 400,
-				headers: {},
-				response: {
+		mock.onGet('/api/test').reply((config) => {
+			return [
+				400,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
 		const response = await http.get('test');
-		assert.equal(response.status, 400);
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe(400);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});
 
 	it('returns the response from post', async () => {
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 200,
-				headers: {},
-				response: {
+		mock.onPost('/api/test').reply((config) => {
+			return [
+				200,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
+
 		const response = await http.post('test');
-		assert.equal(response.status, 200);
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe(200);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});
 
 
 	it('returns the response from patch', async () => {
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 200,
-				headers: {},
-				response: {
+		mock.onPatch('/api/test').reply((config) => {
+			return [
+				200,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
+
 		const response = await http.patch('test');
-		assert.equal(response.status, 200);
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe(200);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});
 
 	it('returns the error response from post', async () => {
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 400,
-				headers: {},
-				response: {
+		mock.onPost('/api/test').reply((config) => {
+			return [
+				400,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
 		const response = await http.post('test');
-		assert.equal(response.status, 400);
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe(400);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});
 
 	it('returns the error response from patch', async () => {
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 400,
-				headers: {},
-				response: {
+		mock.onPatch('/api/test').reply((config) => {
+			return [
+				400,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
+
 		const response = await http.patch('test');
-		assert.equal(response.status, 400);
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe(400);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});
 
 	it('returns the response from delete', async () => {
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 200,
-				headers: {},
-				response: {
+		mock.onDelete('/api/test').reply((config) => {
+			return [
+				200,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
+
 		const response = await http.delete('test');
-		assert.equal(response.status, 200);
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe(200);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});
 
 	it('returns the error response from delete', async () => {
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 400,
-				headers: {},
-				response: {
+		mock.onDelete('/api/test').reply((config) => {
+			return [
+				400,
+				{
 					message: 'test'
-				}
-			});
+				},
+				{}
+			]
 		});
+
 		const response = await http.delete('test');
-		assert.equal(response.status, 400);
-		assert.deepEqual(response.data, {
+		expect(response.status).toBe(400);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});
 
 	it('repeats request from post with csrf error', async () => {
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 403,
-				response: {
-					message: 'invalid csrf token'
-				}
+		let calls = 0;
+		let responses = [[
+			403,
+			{
+				message: 'invalid csrf token'
+			},
+			{}
+		], [
+			200,
+			{
+				message: 'test'
+			},
+			{}
+		]];
+		mock.onGet('/api/getCsrf').reply(200,
+			{},
+			{
+				csrftoken: 'test'
 			});
-			moxios.wait(() => {
-				request = moxios.requests.mostRecent();
-				request.respondWith({
-					status: 200,
-					headers: {
-						csrftoken: 'test'
-					}
-				});
-				moxios.wait(() => {
-					request = moxios.requests.mostRecent();
-					request.respondWith({
-						status: 200,
-						headers: {},
-						response: {
-							message: 'test'
-						}
-					});
-				});
-			});
+		mock.onPost('/api/test').reply((config) => {
+			const response = responses[calls];
+			calls++;
+			return response;
 		});
 
 		const response = await http.post('test');
-		assert.equal(axios.defaults.headers.common['X-CSRF-TOKEN'], 'test');
-		assert.equal(response.status, 200);
-		assert.deepEqual(response.data, {
+		expect(axios.defaults.headers.common['X-CSRF-TOKEN']).toBe('test');
+		expect(response.status).toBe(200);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});
 
 	it('repeats request from patch with csrf error', async () => {
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 403,
-				response: {
-					message: 'invalid csrf token'
-				}
+		let calls = 0;
+		let responses = [[
+			403,
+			{
+				message: 'invalid csrf token'
+			},
+			{}
+		], [
+			200,
+			{
+				message: 'test'
+			},
+			{}
+		]];
+
+		mock.onGet('/api/getCsrf').reply(200,
+			{},
+			{
+				csrftoken: 'test'
 			});
-			moxios.wait(() => {
-				request = moxios.requests.mostRecent();
-				request.respondWith({
-					status: 200,
-					headers: {
-						csrftoken: 'test'
-					}
-				});
-				moxios.wait(() => {
-					request = moxios.requests.mostRecent();
-					request.respondWith({
-						status: 200,
-						headers: {},
-						response: {
-							message: 'test'
-						}
-					});
-				});
-			});
+		mock.onPatch('/api/test').reply((config) => {
+			const response = responses[calls];
+			calls++;
+			return response;
 		});
 
 		const response = await http.patch('test');
-		assert.equal(axios.defaults.headers.common['X-CSRF-TOKEN'], 'test');
-		assert.equal(response.status, 200);
-		assert.deepEqual(response.data, {
+
+		expect(axios.defaults.headers.common['X-CSRF-TOKEN']).toBe('test');
+		expect(response.status).toBe(200);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});
 
 	it('repeats request from delete with csrf error', async () => {
-		moxios.wait(() => {
-			let request = moxios.requests.mostRecent();
-			request.respondWith({
-				status: 403,
-				response: {
-					message: 'invalid csrf token'
-				}
+		let calls = 0;
+		let responses = [[
+			403,
+			{
+				message: 'invalid csrf token'
+			},
+			{}
+		], [
+			200,
+			{
+				message: 'test'
+			},
+			{}
+		]];
+
+		mock.onGet('/api/getCsrf').reply(200,
+			{},
+			{
+				csrftoken: 'test'
 			});
-			moxios.wait(() => {
-				request = moxios.requests.mostRecent();
-				request.respondWith({
-					status: 200,
-					headers: {
-						csrftoken: 'test'
-					}
-				});
-				moxios.wait(() => {
-					request = moxios.requests.mostRecent();
-					request.respondWith({
-						status: 200,
-						headers: {},
-						response: {
-							message: 'test'
-						}
-					});
-				});
-			});
+		mock.onDelete('/api/test').reply((config) => {
+			const response = responses[calls];
+			calls++;
+			return response;
 		});
 
 		const response = await http.delete('test');
-		assert.equal(axios.defaults.headers.common['X-CSRF-TOKEN'], 'test');
-		assert.equal(response.status, 200);
-		assert.deepEqual(response.data, {
+		expect(axios.defaults.headers.common['X-CSRF-TOKEN']).toBe('test');
+		expect(response.status).toBe(200);
+		expect(response.data).toEqual({
 			'message': 'test'
 		});
 	});

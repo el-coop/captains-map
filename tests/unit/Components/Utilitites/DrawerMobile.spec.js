@@ -1,27 +1,33 @@
 import { mount } from "@vue/test-utils";
-import { assert } from 'chai';
-import DrawerMobile from '@/Components/Utilities/DrawerMobile';
+import {describe, it, expect} from 'vitest';
+import DrawerMobile from '@/Components/Utilities/DrawerMobile.vue';
 
 
-describe('Logout.vue', () => {
+describe('DrawerMobile.vue', () => {
 
 	const stubs = {
 		FontAwesomeIcon: true
 	};
 
-	it('Toggles drawer in', () => {
+	it('Toggles drawer in', async () => {
 		const wrapper = mount(DrawerMobile, {
-			stubs
+			global: {
+				stubs
+			}
 		});
 
 		wrapper.vm.open();
 
-		assert.isTrue(wrapper.find('.drawer-mobile--open').exists());
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('.drawer-mobile--open').exists()).toBeTruthy();
 	});
 
 	it('Toggles drawer out with function', () => {
 		const wrapper = mount(DrawerMobile, {
-			stubs
+			global: {
+				stubs
+			}
 		});
 
 		wrapper.setData({
@@ -30,7 +36,7 @@ describe('Logout.vue', () => {
 
 		wrapper.find('button').trigger('click');
 
-		assert.isFalse(wrapper.find('.drawer-mobile--open').exists());
+		expect(wrapper.find('.drawer-mobile--open').exists()).toBeFalsy();
 	});
 
 });

@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import cache from '@/Services/Cache';
 
 describe('Cache Service', () => {
@@ -22,7 +22,7 @@ describe('Cache Service', () => {
 		});
 		const result = await cache.get('request', 'key');
 
-		assert.equal(result, 'request');
+		expect(result).toBe('request');
 	});
 
 	it('Returns null when no value', async () => {
@@ -32,7 +32,7 @@ describe('Cache Service', () => {
 		});
 		const result = await cache.get('request', 'key');
 
-		assert.equal(result, null);
+		expect(result).toBeNull();
 	});
 
 	it('Returns default valye when no value and default given', async () => {
@@ -42,7 +42,7 @@ describe('Cache Service', () => {
 		});
 		const result = await cache.get('request', 'key', 'default');
 
-		assert.equal(result, 'default');
+		expect(result).toBe('default');
 	});
 
 	it('Expires data', async () => {
@@ -56,9 +56,9 @@ describe('Cache Service', () => {
 		});
 		const result = await cache.get('request', 'key');
 
-		assert.equal(result, null);
-		assert.isTrue(forgetSpy.calledOnce);
-		assert.isTrue(forgetSpy.calledWith('request', 'key'));
+		expect(result).toBeNull();
+		expect(forgetSpy.calledOnce).toBeTruthy();
+		expect(forgetSpy.calledWith('request', 'key')).toBeTruthy();
 	});
 
 	it('Forgets data', async () => {
@@ -67,8 +67,8 @@ describe('Cache Service', () => {
 
 		await cache.forget('request', 'key');
 
-		assert.isTrue(removeItemStub.calledOnce);
-		assert.isTrue(removeItemStub.calledWith('key'));
+		expect(removeItemStub.calledOnce).toBeTruthy();
+		expect(removeItemStub.calledWith('key')).toBeTruthy();
 	});
 
 	it('Stores data', async () => {
@@ -77,11 +77,11 @@ describe('Cache Service', () => {
 
 		await cache.store('request', 'key', 'value');
 
-		assert.isTrue(setItemStub.calledOnce);
-		assert.isTrue(setItemStub.calledWith('key', {
+		expect(setItemStub.calledOnce).toBeTruthy();
+		expect(setItemStub.calledWith('key', {
 			value: 'value',
 			expiry: null
-		}));
+		})).toBeTruthy();
 	});
 
 	it('Stores data with expiration', async () => {
@@ -91,11 +91,11 @@ describe('Cache Service', () => {
 		const expiry = Date.now() + 100;
 		await cache.store('request', 'key', 'value', 100);
 
-		assert.isTrue(setItemStub.calledOnce);
-		assert.isTrue(setItemStub.calledWith('key', {
+		expect(setItemStub.calledOnce).toBeTruthy();
+		expect(setItemStub.calledWith('key', {
 			value: 'value',
 			expiry
-		}));
+		})).toBeTruthy();
 	});
 
 	it('Clears Cache', async () => {
@@ -105,6 +105,6 @@ describe('Cache Service', () => {
 		const expiry = Date.now() + 100;
 		await cache.clear('request');
 
-		assert.isTrue(clearCacheStub.calledOnce);
+		expect(clearCacheStub.calledOnce).toBeTruthy();
 	});
 });

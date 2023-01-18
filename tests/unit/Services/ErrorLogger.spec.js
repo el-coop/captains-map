@@ -1,17 +1,19 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import errorLogger from '@/Services/ErrorLogger';
 import http from '@/Services/HttpService';
 
 describe('ErrorLogger.js', () => {
 
-	afterEach('Reset sinon and settings', () => {
+	afterEach(() => {
 		sinon.restore();
 	});
 
 	it('logs errors', async () => {
 
-		const httpStub = sinon.stub(http, 'post');
+		const httpStub = sinon.stub();
+
+		http.post = httpStub;
 
 		await errorLogger.handle({
 			name: 'name',
@@ -26,10 +28,10 @@ describe('ErrorLogger.js', () => {
 			},
 		});
 
-		assert.isTrue(httpStub.calledOnce);
-		assert.isTrue(httpStub.calledWith('errors', {
+		expect(httpStub.calledOnce).toBeTruthy();
+		expect(httpStub.calledWith('errors', {
 			url: window.location.href,
-			userAgent: 'Mozilla/5.0 (win32) AppleWebKit/537.36 (KHTML, like Gecko) jsdom/15.2.1',
+			userAgent: navigator.userAgent,
 			error: {
 				name: 'name',
 				stack: 'stack',
@@ -41,7 +43,7 @@ describe('ErrorLogger.js', () => {
 				},
 				tag: 'tag'
 			}
-		}));
+		})).toBeTruthy();
 	});
 
 });

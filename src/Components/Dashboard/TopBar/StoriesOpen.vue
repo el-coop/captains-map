@@ -15,8 +15,8 @@
 </template>
 
 <script>
-	import StoryEditModal from "@/Components/Modals/StoryEditModal";
-	import StoryCoverImage from "@/Components/Dashboard/Profile/StoryCoverImage";
+	import StoryEditModal from "@/Components/Modals/StoryEditModal.vue";
+	import StoryCoverImage from "@/Components/Dashboard/Profile/StoryCoverImage.vue";
 
 	export default {
 		name: "StoriesOpen",

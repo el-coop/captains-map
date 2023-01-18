@@ -1,10 +1,11 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import MapUploadMarker from '@/Components/Map/Markers/MapUploadMarker';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import MapUploadMarker from '@/Components/Map/Markers/MapUploadMarker.vue';
 import leaflet from 'leaflet';
 import mapService from '@/Services/LeafletMapService';
 import sinon from 'sinon';
 import UploadFile from "@/Classes/UploadFile";
+import {createStore} from "vuex";
 
 describe('MapUploadMarker.vue', () => {
 	const parent = {
@@ -15,23 +16,30 @@ describe('MapUploadMarker.vue', () => {
 	};
 
 
-	let mocks;
 	let marker;
 	let divIcon;
 	let mapObject;
+	let storeOptions;
+	let stubs = {
+		FontAwesomeIcon: true
+	};
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				state: {
-					Uploads: {
+
+		storeOptions = {
+			modules: {
+				Uploads: {
+					namespaced: true,
+					state: {
 						workingId: 1
+					},
+					mutations: {
+						markAsWorking(state, id) {
+							state.workingId = id;
+						},
 					}
 				}
 			},
-			$bus: {
-				$emit: sinon.stub()
-			}
 		};
 		divIcon = {
 			firstChild: {
@@ -61,6 +69,9 @@ describe('MapUploadMarker.vue', () => {
 			uploadTime: 2,
 			error: null,
 		};
+		marker.getElement = sinon.stub();
+		marker.setIcon = sinon.stub();
+		marker.setLatLng = sinon.stub();
 		marker.on = sinon.stub().returns(marker);
 	});
 
@@ -68,46 +79,56 @@ describe('MapUploadMarker.vue', () => {
 		sinon.restore();
 	});
 
-	it('Adds marker to map on creation', (done) => {
+	it('Adds marker to map on creation', async () => {
 		const createIconStub = sinon.stub(leaflet, 'divIcon');
 		const createMarkerStub = sinon.stub(leaflet, 'marker').returns(mapObject);
 		const wrapper = shallowMount(MapUploadMarker, {
-			parentComponent: parent,
-			propsData: {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			},
+			props: {
 				marker
 			},
-			mocks
 		});
 
-		assert.isTrue(wrapper.find('div').exists());
-		assert.isTrue(createIconStub.calledOnce);
-		assert.isTrue(createIconStub.calledWith({
+		expect(wrapper.find('div').exists()).toBeTruthy();
+		expect(createIconStub.calledOnce).toBeTruthy();
+		expect(createIconStub.calledWith({
 			html: wrapper.vm.$el.outerHTML,
 			iconSize: ['auto', 'auto']
-		}));
-		assert.isTrue(createMarkerStub.calledOnce);
-		assert.isTrue(parent.methods.addObject.calledOnce);
-		assert.isTrue(parent.methods.addObject.calledWith(mapObject));
-		assert.isTrue(mapObject.on.calledOnce);
-		assert.isTrue(mapObject.on.calledWith('click'));
-		setTimeout(()=> {
-			assert.isTrue(divIcon.firstChild.classList.add.calledOnce);
-			assert.isTrue(divIcon.firstChild.classList.add.calledWith('map__marker--queued'));
-			done();
-		},10);
+		})).toBeTruthy();
+		expect(createMarkerStub.calledOnce).toBeTruthy();
+		expect(wrapper.emitted()).toHaveProperty('add-to-map');
+		const addToMapEvent = wrapper.emitted('add-to-map');
+		expect(addToMapEvent[0]).toEqual([mapObject]);
+		expect(mapObject.on.calledOnce).toBeTruthy();
+		expect(mapObject.on.calledWith('click')).toBeTruthy();
+
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 10);
+		});
+
+		expect(divIcon.firstChild.classList.add.calledOnce).toBeTruthy();
+		expect(divIcon.firstChild.classList.add.calledWith('map__marker--queued')).toBeTruthy();
 	});
 
 	it('Renders instagram marker path', () => {
 		sinon.stub(leaflet, 'divIcon');
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 		const wrapper = shallowMount(MapUploadMarker, {
-			parentComponent: parent,
-			propsData: {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			},
+			props: {
 				marker
 			},
-			mocks
 		});
-		assert.isTrue(wrapper.find('img[src="https://instagram.com/p/path/media/"]').exists());
+
+		expect(wrapper.find('img[src="https://instagram.com/p/path/media/"]').exists()).toBeTruthy();
 	});
 
 	it('Renders images marker preview', () => {
@@ -122,57 +143,72 @@ describe('MapUploadMarker.vue', () => {
 		sinon.stub(leaflet, 'divIcon');
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 		const wrapper = shallowMount(MapUploadMarker, {
-			parentComponent: parent,
-			propsData: {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			},
+			props: {
 				marker
 			},
-			mocks
 		});
-		assert.isTrue(wrapper.find(`img[src="${file.preview}"]`).exists());
+
+		expect(wrapper.find(`img[src="${file.preview}"]`).exists()).toBeTruthy();
 	});
 
-	it('Renders the object with error status', (done) => {
+	it('Renders the object with error status', async () => {
 		sinon.stub(leaflet, 'divIcon');
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 
 		marker.error = {
 			status: 500
 		};
-		shallowMount(MapUploadMarker, {
-			parentComponent: parent,
-			propsData: {
-				marker,
+		const wrapper = shallowMount(MapUploadMarker, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
 			},
-			mocks
+			props: {
+				marker
+			},
 		});
 
-		setTimeout(()=> {
-			assert.isTrue(divIcon.firstChild.classList.add.calledOnce);
-			assert.isTrue(divIcon.firstChild.classList.add.calledWith('map__marker--error'));
-			done();
-		},10);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 10);
+		});
+
+		expect(divIcon.firstChild.classList.add.calledOnce).toBeTruthy();
+		expect(divIcon.firstChild.classList.add.calledWith('map__marker--error')).toBeTruthy();
 	});
 
-	it('Sets marker to upload when it is being worked', (done) => {
+	it('Sets marker to upload when it is being worked', async () => {
 		sinon.stub(leaflet, 'divIcon');
 		sinon.stub(leaflet, 'marker').returns(mapObject);
+		const mockStore = createStore(storeOptions);
 
 		const wrapper = shallowMount(MapUploadMarker, {
-			parentComponent: parent,
-			propsData: {
-				marker,
+			global: {
+				plugins: [mockStore],
+				stubs
 			},
-			mocks
+			props: {
+				marker
+			},
 		});
 
-		mocks.$store.state.Uploads.workingId = 2;
+		mockStore.commit('Uploads/markAsWorking',2);
 
-		setTimeout(()=>{
-			assert.isTrue(divIcon.firstChild.classList.add.calledTwice);
-			assert.isTrue(divIcon.firstChild.classList.add.firstCall.calledWith('map__marker--queued'));
-			assert.isTrue(divIcon.firstChild.classList.add.secondCall.calledWith('map__marker--uploading'));
-			done();
-		}, 10)
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 10);
+		});
+
+		expect(divIcon.firstChild.classList.add.calledTwice).toBeTruthy();
+		expect(divIcon.firstChild.classList.add.firstCall.calledWith('map__marker--queued')).toBeTruthy();
+		expect(divIcon.firstChild.classList.add.secondCall.calledWith('map__marker--uploading')).toBeTruthy();
+
 	});
 
 	it('Changes marker image when updated', async () => {
@@ -196,45 +232,55 @@ describe('MapUploadMarker.vue', () => {
 		};
 
 		const wrapper = shallowMount(MapUploadMarker, {
-			parentComponent: parent,
-			propsData: {
-				marker,
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
 			},
-			mocks
+			props: {
+				marker
+			},
 		});
 
-		wrapper.setProps({
+		await wrapper.setProps({
 			marker: marker2
 		});
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 10);
+		});
 
-		assert.isTrue(mapObject.setIcon.calledOnce);
-		assert.isTrue(mapObject.setIcon.calledWith(leaflet.divIcon({
-			html: wrapper.html(),
+		expect(mapObject.setIcon.calledOnce).toBeTruthy();
+
+		expect(mapObject.setIcon.calledWith(leaflet.divIcon({
+			html: wrapper.vm.$el.outerHTML,
 			iconSize: ['auto', 'auto']
-		})));
+		}))).toBeTruthy();
 	});
 
-	it('Removes marker when destroyed', () => {
+	it('Removes marker when destroyed',async () => {
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 		sinon.stub(mapService, 'addObject');
 
 		const wrapper = shallowMount(MapUploadMarker, {
-			parentComponent: parent,
-			propsData: {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			},
+			props: {
 				marker
 			},
-			mocks
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			mapObject
 		});
 
-		wrapper.destroy();
-		assert.isTrue(parent.methods.removeObject.calledOnce);
-		assert.isTrue(parent.methods.removeObject.calledWith(mapObject));
+		wrapper.unmount();
+		expect(wrapper.emitted()).toHaveProperty('remove-from-map');
+		const removeFromMapEvent = wrapper.emitted('remove-from-map');
+		expect(removeFromMapEvent[0]).toEqual([mapObject]);
 	});
 
 	it('Emit events when clicks on errored marker', () => {
@@ -244,20 +290,28 @@ describe('MapUploadMarker.vue', () => {
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 
 		const wrapper = shallowMount(MapUploadMarker, {
-			parentComponent: parent,
-			mocks,
-			propsData: {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			},
+			props: {
 				marker
-			}
+			},
 		});
 
 		wrapper.vm.onClick();
-		assert.isTrue(mocks.$bus.$emit.calledOnce);
-		assert.isTrue(mocks.$bus.$emit.calledWith('map-create-marker', {
-			lat: 0,
-			lng: 0,
+
+
+		expect(wrapper.emitted()).toHaveProperty('map-create-marker');
+		const mapCreateMarkerEvent = wrapper.emitted('map-create-marker');
+		expect(mapCreateMarkerEvent[0]).toEqual([{
+			latlng: {
+				lat: 0,
+				lng: 0,
+			},
 			marker: marker
-		}));
+		}]);
+
 	});
 
 	it('Doesnt emit events when clicks on queued marker', () => {
@@ -265,15 +319,17 @@ describe('MapUploadMarker.vue', () => {
 		sinon.stub(leaflet, 'marker').returns(mapObject);
 
 		const wrapper = shallowMount(MapUploadMarker, {
-			parentComponent: parent,
-			mocks,
-			propsData: {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			},
+			props: {
 				marker
-			}
+			},
 		});
 
 		wrapper.vm.onClick();
-		assert.isFalse(mocks.$bus.$emit.called);
+		expect(wrapper.emitted()).not.toHaveProperty('map-create-marker');
 
 	});
 });

@@ -1,6 +1,6 @@
 <script>
 import leaflet from 'leaflet';
-import MapMarker from "@/Components/Map/Markers/MapMarker";
+import MapMarker from "@/Components/Map/Markers/MapMarker.vue";
 
 export default {
     name: "MapUploadMarker",

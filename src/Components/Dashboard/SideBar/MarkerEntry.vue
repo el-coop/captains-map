@@ -25,7 +25,7 @@
 
 <script>
 import map from '@/Services/LeafletMapService';
-import HandlesDataDisplayMixin from "@/Components/Utilities/HandlesDataDisplayMixin";
+import HandlesDataDisplayMixin from "@/Components/Utilities/HandlesDataDisplayMixin.vue";
 import globe from '../../../assets/images/globe-icon.png';
 
 export default {

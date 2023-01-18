@@ -1,25 +1,32 @@
-import { assert } from 'chai';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import FollowButton from '@/Components/Dashboard/TopBar/FollowButton';
+import FollowButton from '@/Components/Dashboard/TopBar/FollowButton.vue';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 
 describe('FollowButton.vue', () => {
 
 	let mocks;
 	let stubs;
+	let storeOptions;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				state: {
-					Webpush: {
+		storeOptions = {
+			modules: {
+				Webpush: {
+					namespaced: true,
+					state:{
 						hasPush: true,
 						following: []
+					},
+					actions: {
+						toggleFollow(){}
 					}
-				},
-				dispatch: sinon.stub()
-			},
+				}
+			}
+		}
+		mocks = {
 			$toast: {
 				error: sinon.stub()
 			}
@@ -36,97 +43,132 @@ describe('FollowButton.vue', () => {
 
 	it('Renders with follow button', () => {
 		const wrapper = shallowMount(FollowButton, {
-			propsData: {
+			global:{
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props: {
 				user: 'test'
 			},
-			mocks,
-			stubs
 		});
 
-		assert.isTrue(wrapper.find('button.webpush').exists());
-		assert.equal(wrapper.find('span').text(), 'Follow');
+		expect(wrapper.find('button.webpush').exists()).toBeTruthy();
+		expect(wrapper.find('span').text()).toBe('Follow');
 	});
 
 	it('Renders with follow button', () => {
-		mocks.$store.state.Webpush.following = ['test'];
-		mocks.$store.state.Webpush.following = ['test'];
+		storeOptions.modules.Webpush.state.following = ['test'];
+
 		const wrapper = shallowMount(FollowButton, {
-			propsData: {
+			global:{
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props: {
 				user: 'test'
 			},
-			mocks,
-			stubs
 		});
 
-		assert.isTrue(wrapper.find('button.webpush').exists());
-		assert.equal(wrapper.find('span').text(), 'Unfollow');
+
+		expect(wrapper.find('button.webpush').exists()).toBeTruthy();
+		expect(wrapper.find('span').text()).toBe('Unfollow');
 	});
 
 	it('Toggles following on', async () => {
-		mocks.$store.state.Webpush.following = [];
-		mocks.$store.dispatch = sinon.stub().returns(201);
+		const toggleFollowStub = sinon.stub().returns(201);
+		storeOptions.modules.Webpush.state.following = [];
+		storeOptions.modules.Webpush.actions.toggleFollow = toggleFollowStub;
+
 		const wrapper = shallowMount(FollowButton, {
-			propsData: {
+			global:{
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props: {
 				user: 'test'
 			},
-			mocks,
-			stubs
 		});
 
 		wrapper.find('button').trigger('click');
 
 		await wrapper.vm.$nextTick();
 
-		assert.isFalse(wrapper.vm.$data.loading);
-		assert.isTrue(wrapper.vm.$data.following);
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Webpush/toggleFollow','test'));
+		expect(wrapper.vm.$data.loading).toBeTruthy();
+
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.loading).toBeFalsy();
+		expect(wrapper.vm.$data.following).toBeTruthy();
+		expect(toggleFollowStub.calledOnce).toBeTruthy();
+		expect(toggleFollowStub.calledWith(sinon.match.any,'test')).toBeTruthy();
 
 	});
 
 	it('Toggles following off', async () => {
-		mocks.$store.state.Webpush.following = ["test"];
-		mocks.$store.dispatch = sinon.stub().returns(200);
+		const toggleFollowStub = sinon.stub().returns(200);
+		storeOptions.modules.Webpush.state.following = ['test'];
+		storeOptions.modules.Webpush.actions.toggleFollow = toggleFollowStub;
+
 		const wrapper = shallowMount(FollowButton, {
-			propsData: {
+			global:{
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props: {
 				user: 'test'
 			},
-			mocks,
-			stubs
 		});
 
 		wrapper.find('button').trigger('click');
 
 		await wrapper.vm.$nextTick();
 
-		assert.isFalse(wrapper.vm.$data.loading);
-		assert.isFalse(wrapper.vm.$data.following);
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Webpush/toggleFollow','test'));
+		expect(wrapper.vm.$data.loading).toBeTruthy();
+
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.loading).toBeFalsy();
+		expect(wrapper.vm.$data.following).toBeFalsy();
+		expect(toggleFollowStub.calledOnce).toBeTruthy();
+		expect(toggleFollowStub.calledWith(sinon.match.any,'test')).toBeTruthy();
 
 	});
 
 	it('Throws error when result is false', async () => {
-		mocks.$store.state.Webpush.following = [];
-		mocks.$store.dispatch = sinon.stub().returns(false);
+		const toggleFollowStub = sinon.stub().returns(false);
+		storeOptions.modules.Webpush.state.following = [];
+		storeOptions.modules.Webpush.actions.toggleFollow = toggleFollowStub;
+
 		const wrapper = shallowMount(FollowButton, {
-			propsData: {
+			global:{
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props: {
 				user: 'test'
 			},
-			mocks,
-			stubs
 		});
 
 		wrapper.find('button').trigger('click');
 
 		await wrapper.vm.$nextTick();
 
-		assert.isFalse(wrapper.vm.$data.loading);
-		assert.isFalse(wrapper.vm.$data.following);
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Webpush/toggleFollow','test'));
-		assert.isTrue(mocks.$toast.error.calledOnce);
-		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Following failed.'));
+		expect(wrapper.vm.$data.loading).toBeTruthy();
+
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.loading).toBeFalsy();
+		expect(wrapper.vm.$data.following).toBeFalsy();
+		expect(toggleFollowStub.calledOnce).toBeTruthy();
+		expect(toggleFollowStub.calledWith(sinon.match.any,'test')).toBeTruthy();
+		expect(mocks.$toast.error.calledOnce).toBeTruthy();
+		expect(mocks.$toast.error.calledWith('Please try again at a later time', 'Following failed.')).toBeTruthy();
+
 
 	});
 });

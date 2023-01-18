@@ -1,6 +1,7 @@
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import { mount } from '@vue/test-utils';
-import RegisterModal from '@/Components/Modals/RegisterModal';
+import RegisterModal from '@/Components/Modals/RegisterModal.vue';
+import BaseModal from "@/Components/Utilities/BaseModal.vue"
 import sinon from 'sinon';
 
 describe('RegisterModal.vue', () => {
@@ -9,7 +10,7 @@ describe('RegisterModal.vue', () => {
 		FontAwesomeIcon: true
 	};
 
-	const propsData = {
+	const props = {
 		active: true
 	};
 
@@ -19,43 +20,51 @@ describe('RegisterModal.vue', () => {
 
 	it('renders modal when active', () => {
 		const wrapper = mount(RegisterModal, {
-			stubs,
-			propsData
+			global:{
+				stubs,
+			},
+			props
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.include(wrapper.html(), 'Registration is closed at the moment');
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.html()).toContain('Registration is closed at the moment');
 	});
 
 	it('doesnt render modal when not active', () => {
 		const wrapper = mount(RegisterModal, {
-			stubs,
+			global:{
+				stubs,
+			},
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.notInclude(wrapper.html(), 'Registration is closed at the moment');
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.html()).not.toContain('Registration is closed at the moment');
 	});
 
 	it('closes modal on click', () => {
 
 		const wrapper = mount(RegisterModal, {
-			stubs,
-			propsData
+			global:{
+				stubs,
+			},
+			props
 		});
 
 		wrapper.find('.card__footer-item a').trigger('click');
 
-		assert.equal(wrapper.emitted()['update:active'][0][0], false);
+		expect(wrapper.emitted()['update:active'][0][0]).toBeFalsy();
 	});
 
 	it('closes modal when change emitted form modal', () => {
 		const wrapper = mount(RegisterModal, {
-			stubs,
-			propsData,
+			global:{
+				stubs,
+			},
+			props,
 		});
 
-		wrapper.vm.$children[0].$emit('update:active', false);
+		wrapper.findComponent(BaseModal).vm.$emit('update:active', false);
 
-		assert.equal(wrapper.emitted()['update:active'][0][0], false);
+		expect(wrapper.emitted()['update:active'][0][0]).toBeFalsy();
 	});
 });

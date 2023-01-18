@@ -16,7 +16,7 @@
 
 <script>
 
-	import Stories from "@/Components/Dashboard/Profile/Stories";
+	import Stories from "@/Components/Dashboard/Profile/Stories.vue";
 	export default {
 		name: "Profile",
 		components: {Stories},

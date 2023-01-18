@@ -1,31 +1,49 @@
-import { assert } from 'chai';
-import { mount } from '@vue/test-utils';
-import ProfileEdit from '@/Components/Dashboard/Profile/ProfileEdit';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {mount} from '@vue/test-utils';
+import ProfileEdit from '@/Components/Dashboard/Profile/ProfileEdit.vue';
 import sinon from 'sinon';
 import globe from '@/assets/images/globe-icon.png';
+import {createStore} from "vuex";
 
 describe('ProfileEdit.vue', () => {
 
 	let mocks;
 	let stubs;
+	let storeOptions;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				state: {
-					Profile: {
+		storeOptions = {
+			modules: {
+				Profile: {
+					namespaced: true,
+					state: {
 						user: {
 							username: 'test',
 							description: 'description',
 							path: false
 						}
 					},
-					User: {
+					mutations: {
+						updateBio() {
+						}
+					}
+				},
+				User: {
+					namespaced: true,
+					state: {
 						user: null
 					}
 				},
-				commit: sinon.stub()
-			},
+				Markers: {
+					namespaced: true,
+					mutations: {
+						updateProfilePic() {
+						}
+					}
+				}
+			}
+		};
+		mocks = {
 			$http: {},
 			$toast: {
 				success: sinon.stub(),
@@ -44,29 +62,35 @@ describe('ProfileEdit.vue', () => {
 
 	it('Renders profile with globe picture', async () => {
 		const wrapper = mount(ProfileEdit, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
-		assert.equal(wrapper.find('multifilefield-stub').attributes().preview, globe);
-		assert.equal(wrapper.find('h4').text(), 'test');
-		assert.equal(wrapper.vm.$data.description, 'description');
+		expect(wrapper.find('.dashboard__control.profile').exists()).toBeTruthy();
+		expect(wrapper.find('multi-file-field-stub').attributes().preview).toBe(globe);
+		expect(wrapper.find('h4').text()).toBe('test');
+		expect(wrapper.vm.$data.description).toBe('description');
 	});
 
 	it('Renders profile with actual profile picture', async () => {
 
-		mocks.$store.state.Profile.user.path = '/path';
+		storeOptions.modules.Profile.state.user.path = '/path';
 
 		const wrapper = mount(ProfileEdit, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.dashboard__control.profile').exists());
-		assert.equal(wrapper.find('multifilefield-stub').attributes().preview, '/api/path');
-		assert.equal(wrapper.find('h4').text(), 'test');
-		assert.equal(wrapper.vm.$data.description, 'description');
+		expect(wrapper.find('.dashboard__control.profile').exists()).toBeTruthy();
+		expect(wrapper.find('multi-file-field-stub').attributes().preview).toBe('/api/path');
+		expect(wrapper.find('h4').text()).toBe('test');
+		expect(wrapper.vm.$data.description).toBe('description');
 	});
 
 	it('Reacts to failure submission', async () => {
@@ -74,24 +98,27 @@ describe('ProfileEdit.vue', () => {
 		mocks.$http.post = sinon.stub().returns({
 			status: 500,
 		});
-		mocks.$store.state.Profile.user.path = '/path';
+		storeOptions.modules.Profile.state.user.path = '/path';
 
 		const wrapper = mount(ProfileEdit, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
 		wrapper.find('button.is-primary-background').trigger('click');
 
 		await wrapper.vm.$nextTick;
 
-		assert.isTrue(mocks.$toast.error.calledOnce);
-		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Update failed.'));
+		expect(mocks.$toast.error.calledOnce).toBeTruthy();
+		expect(mocks.$toast.error.calledWith('Please try again at a later time', 'Update failed.')).toBeTruthy();
 	});
 
 	it('Submits data successfully', async () => {
 
-		mocks.$store.state.User.user = {
+		storeOptions.modules.User.state.user = {
 			username: 'test'
 		};
 
@@ -102,33 +129,45 @@ describe('ProfileEdit.vue', () => {
 				path: 'patha'
 			}
 		});
-		mocks.$store.state.Profile.user.path = '/path';
+		storeOptions.modules.Profile.state.user.path = '/path';
+		const updateProfilePicStub = sinon.stub();
+		const updateBioStub = sinon.stub();
+		storeOptions.modules.Profile.mutations.updateBio = updateBioStub;
+		storeOptions.modules.Markers.mutations.updateProfilePic = updateProfilePicStub;
+
 
 		const wrapper = mount(ProfileEdit, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
 		wrapper.find('button.is-primary-background').trigger('click');
 
-		assert.isTrue(wrapper.find('button.is-primary-background.is-loading').exists());
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.find('button.is-primary-background.is-loading').exists()).toBeTruthy();
 
 		await wrapper.vm.$nextTick();
 
-		assert.isFalse(wrapper.find('button.is-primary-background.is-loading').exists());
+		expect(wrapper.find('button.is-primary-background.is-loading').exists()).toBeFalsy();
 
-		assert.isTrue(mocks.$toast.success.calledOnce);
-		assert.isTrue(mocks.$toast.success.calledWith(' ', 'Profile updated.'));
-		assert.isTrue(mocks.$store.commit.calledTwice);
-		assert.isTrue(mocks.$store.commit.firstCall.calledWith('Markers/updateProfilePic', {
+		expect(mocks.$toast.success.calledOnce).toBeTruthy();
+		expect(mocks.$toast.success.calledWith(' ', 'Profile updated.')).toBeTruthy();
+
+		expect(updateProfilePicStub.calledOnce).toBeTruthy();
+		expect(updateProfilePicStub.calledWith({}, {
 			username: 'test',
 			path: 'patha'
-		}));
-		assert.isTrue(mocks.$store.commit.secondCall.calledWith('Profile/updateBio', {
+		})).toBeTruthy();
+		expect(updateBioStub.calledOnce).toBeTruthy();
+		expect(updateBioStub.calledWith(sinon.match.any, {
 			username: 'test',
 			description: 'desc',
 			path: 'patha'
-		}));
+		})).toBeTruthy();
 	});
 
 });

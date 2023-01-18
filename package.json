@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
-    "test:unit": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit",
-    "test:unit:watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service test:unit --watch",
-    "test:e2e": "vue-cli-service test:e2e"
+    "serve": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:unit": "vitest --environment jsdom",
+    "test:e2e": "start-server-and-test preview :4173 'cypress run --e2e'",
+    "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' :4173 'cypress open --e2e'"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.3.0",
@@ -17,28 +18,31 @@
     "axios": "^1.2.2",
     "bulma": "^0.9.4",
     "cross-env": "^7.0.3",
+    "izitoast": "^1.4.0",
     "leaflet": "1.7.1",
     "leaflet.markercluster": "^1.5.3",
     "localforage": "^1.10.0",
     "register-service-worker": "^1.7.2",
     "vue": "^3.2.45",
-    "izitoast": "^1.4.0",
     "vue-meta": "^3.0.0-alpha.10",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-e2e-nightwatch": "^5.0.8",
-    "@vue/cli-plugin-pwa": "^5.0.8",
-    "@vue/cli-plugin-unit-mocha": "^5.0.8",
-    "@vue/cli-service": "^5.0.8",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/compiler-sfc": "^3.2.45",
     "@vue/test-utils": "^2.2.6",
+    "autoprefixer": "^10.4.13",
+    "axios-mock-adapter": "^1.21.2",
     "chai": "^4.3.7",
-    "moxios": "^0.4.0",
+    "cypress": "^12.0.2",
+    "jsdom": "^20.0.3",
     "sass": "^1.57.1",
-    "sass-loader": "^13.2.0",
     "sinon": "^15.0.1",
-    "@vue/compiler-sfc": "^3.2.45"
+    "vite": "^4.0.4",
+    "vite-plugin-pwa": "^0.14.1",
+    "vite-plugin-top-level-await": "^1.2.2",
+    "vitest": "^0.25.6"
   },
   "browserslist": [
     "> 1%",

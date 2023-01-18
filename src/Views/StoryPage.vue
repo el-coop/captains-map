@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import TheDashboard from "@/Components/Dashboard/TheDashboard";
-import CreateMarker from "@/Components/Modals/CreateMarker";
+import TheDashboard from "@/Components/Dashboard/TheDashboard.vue";
+import CreateMarker from "@/Components/Modals/CreateMarker.vue";
 import map from "@/Services/LeafletMapService";
 
 export default {

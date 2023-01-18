@@ -1,6 +1,6 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import Istangram from '@/Components/Global/Media/Instagram';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import Istangram from '@/Components/Global/Media/Instagram.vue';
 import sinon from "sinon";
 
 
@@ -28,21 +28,24 @@ describe('Instagram.vue', () => {
 			})
 		};
 		const wrapper = shallowMount(Istangram, {
-			propsData: {
+			global: {
+				mocks: {
+					$http,
+				}
+			},
+			props: {
 				id: 1
 			},
-			mocks: {
-				$http,
-			}
+
 		});
 
-		assert.isTrue(wrapper.find('h4.title').exists());
-		assert.isTrue($http.get.calledOnce);
-		assert.isTrue($http.get.calledWith('marker/instagram/1'));
+		expect(wrapper.find('h4.title').exists()).toBeTruthy();
+		expect($http.get.calledOnce).toBeTruthy();
+		expect($http.get.calledWith('marker/instagram/1')).toBeTruthy();
 
 		await wrapper.vm.$nextTick();
 
-		assert.equal(wrapper.vm.$data.embedCode, 'html');
-		assert.isTrue(global.instgrm.Embeds.process.calledOnce);
+		expect(wrapper.vm.$data.embedCode).toBe('html');
+		expect(global.instgrm.Embeds.process.calledOnce).toBeTruthy();
 	});
 });

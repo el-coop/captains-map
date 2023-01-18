@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
 import store from '@/store';
 import http from '@/Services/HttpService';
 
@@ -12,7 +12,7 @@ describe('Webpush Store', () => {
 		};
 	});
 
-	afterEach('Reset sinon and settings', () => {
+	afterEach(() => {
 		sinon.restore();
 	});
 
@@ -24,10 +24,10 @@ describe('Webpush Store', () => {
 		};
 		await store.dispatch('Webpush/initialize', registrationStub)
 
-		assert.isTrue(store.state.Webpush.hasPush);
-		assert.deepEqual(store.state.Webpush.registration, registrationStub);
-		assert.isNull(store.state.Webpush.subscription);
-		assert.deepEqual(store.state.Webpush.following, []);
+		expect(store.state.Webpush.hasPush).toBeTruthy();
+		expect(store.state.Webpush.registration).toEqual(registrationStub);
+		expect(store.state.Webpush.subscription).toBeNull();
+		expect(store.state.Webpush.following).toEqual([]);
 	});
 
 	it('Initializes when registration exists', async () => {
@@ -46,10 +46,10 @@ describe('Webpush Store', () => {
 		};
 		await store.dispatch('Webpush/initialize', registrationStub);
 
-		assert.isTrue(store.state.Webpush.hasPush);
-		assert.deepEqual(store.state.Webpush.registration, registrationStub);
-		assert.deepEqual(store.state.Webpush.subscription, subscription);
-		assert.deepEqual(store.state.Webpush.following, following);
+		expect(store.state.Webpush.hasPush).toBeTruthy();
+		expect(store.state.Webpush.registration).toEqual(registrationStub);
+		expect(store.state.Webpush.subscription).toEqual(subscription);
+		expect(store.state.Webpush.following).toEqual(following);
 	});
 
 	it('Registers when there is no subscription', async () => {
@@ -75,8 +75,8 @@ describe('Webpush Store', () => {
 
 		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
 
-		assert.isTrue(response);
-		assert.deepEqual(store.state.Webpush.following, ['nur']);
+		expect(response).toBeTruthy();
+		expect(store.state.Webpush.following).toEqual(['nur']);
 	});
 
 	it('Returns false when subscription fails', async () => {
@@ -99,8 +99,8 @@ describe('Webpush Store', () => {
 
 		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
 
-		assert.isFalse(response);
-		assert.deepEqual(store.state.Webpush.following, []);
+		expect(response).toBeFalsy();
+		expect(store.state.Webpush.following).toEqual([]);
 	});
 
 	it('Toggles follow', async () => {
@@ -115,8 +115,8 @@ describe('Webpush Store', () => {
 
 		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
 
-		assert.isTrue(response);
-		assert.deepEqual(store.state.Webpush.following, ['nur']);
+		expect(response).toBeTruthy();
+		expect(store.state.Webpush.following).toEqual(['nur']);
 	});
 
 	it('Toggles follow off', async () => {
@@ -131,8 +131,8 @@ describe('Webpush Store', () => {
 
 		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
 
-		assert.isTrue(response);
-		assert.deepEqual(store.state.Webpush.following, []);
+		expect(response).toBeTruthy();
+		expect(store.state.Webpush.following).toEqual([]);
 	});
 
 	it('Returns false when errors', async () => {
@@ -147,7 +147,7 @@ describe('Webpush Store', () => {
 
 		const response = await store.dispatch('Webpush/toggleFollow', 'nur');
 
-		assert.isFalse(response);
-		assert.deepEqual(store.state.Webpush.following, ['nur']);
+		expect(response).toBeFalsy();
+		expect(store.state.Webpush.following).toEqual(['nur']);
 	});
 });

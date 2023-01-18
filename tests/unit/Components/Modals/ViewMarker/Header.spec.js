@@ -1,6 +1,6 @@
-import { assert } from 'chai';
+import {describe, it, expect, beforeEach} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import Header from '@/Components/Modals/ViewMarker/Header';
+import Header from '@/Components/Modals/ViewMarker/Header.vue';
 import globe from '@/assets/images/globe-icon.png';
 
 describe('ViewMarker/Header.vue', () => {
@@ -26,69 +26,69 @@ describe('ViewMarker/Header.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(Header, {
-			propsData: {
+			props: {
 				marker
 			}
 		});
 
-		assert.isTrue(wrapper.find('.view-marker__profile').exists());
-		assert.equal('test',wrapper.find('a.is-size-5').text());
+		expect(wrapper.find('.view-marker__profile').exists()).toBeTruthy();
+		expect(wrapper.find('a.is-size-5').text()).toBe('test');
 	});
 
 
 	it('Formats date properly', () => {
 		marker.time = new Date(Date.UTC(2018, 11, 24, 10, 33, 30, 0));
 		const wrapper = shallowMount(Header, {
-			propsData: {
+			props: {
 				marker
 			}
 		});
 
-		assert.equal(wrapper.vm.dateDisplay, '24/12/2018 10:33');
+		expect(wrapper.vm.dateDisplay).toBe('24/12/2018 10:33');
 	});
 
 
 	it('Formats date properly when hour is under 10', () => {
 		marker.time = new Date(Date.UTC(2018, 11, 24, 5, 33, 30, 0));
 		const wrapper = shallowMount(Header, {
-			propsData: {
+			props: {
 				marker
 			}
 		});
 
-		assert.equal(wrapper.vm.dateDisplay, '24/12/2018 05:33');
+		expect(wrapper.vm.dateDisplay).toBe('24/12/2018 05:33');
 	});
 
 	it('Shows user profile picture when supplied', () => {
 		const wrapper = shallowMount(Header, {
-			propsData: {
+			props: {
 				marker
 			}
 		});
 
-		assert.equal(wrapper.find('img.is-rounded').element.src, 'http://localhost/api/path');
+		expect(wrapper.find('img.is-rounded').element.src).toBe('http://localhost:3000/api/path');
 	});
 
 	it('Shows globe when no profile picture exists', () => {
 		marker.user.bio.path = null;
 		const wrapper = shallowMount(Header, {
-			propsData: {
+			props: {
 				marker
 			}
 		});
 
-		assert.equal(wrapper.find('img.is-rounded').element.src, `http://localhost${globe}`);
+		expect(wrapper.find('img.is-rounded').element.src).toBe(`http://localhost:3000${globe}`);
 	});
 
 
 	it('Emits event when user clicks profile link', () => {
 		const wrapper = shallowMount(Header, {
-			propsData: {
+			props: {
 				marker
 			}
 		});
 
 		wrapper.find('a').trigger('click');
-		assert.isOk(wrapper.emitted()['view-user-page']);
+		expect(wrapper.emitted()['view-user-page']).toBeTruthy();
 	});
 });

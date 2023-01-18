@@ -16,7 +16,7 @@
 
 <script>
 	import globe from '@/assets/images/globe-icon.png';
-	import DataDisplay from '@/Components/Utilities/HandlesDataDisplayMixin';
+	import DataDisplay from '@/Components/Utilities/HandlesDataDisplayMixin.vue';
 
 	export default {
 		name: "ViewMarkerHeader",

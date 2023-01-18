@@ -1,16 +1,14 @@
-import { assert } from 'chai';
-import { shallowMount, mount } from '@vue/test-utils';
-import CreateMarker from '@/Components/Modals/CreateMarker';
-import sinon, { mock } from 'sinon';
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import {shallowMount, mount} from '@vue/test-utils';
+import CreateMarker from '@/Components/Modals/CreateMarker.vue';
+import sinon, {mock} from 'sinon';
 import UploadFile from "@/Classes/UploadFile";
+import {createStore} from "vuex";
 
 describe('CreateMarker.vue', () => {
 
 	let marker;
-	const latLng = {
-		lat: 1,
-		lng: 1,
-	};
+	let storeOptions;
 	let mocks;
 	const stubs = {
 		FontAwesomeIcon: true,
@@ -21,6 +19,28 @@ describe('CreateMarker.vue', () => {
 	};
 
 	beforeEach(() => {
+		storeOptions = {
+			modules: {
+				Stories: {
+					namespaced: true,
+					state: {
+						story: null
+					}
+				},
+				Uploads: {
+					namespaced: true,
+					actions: {
+						upload() {
+						},
+						returnToQueue() {
+						},
+						cancelUpload() {
+						}
+					}
+				}
+
+			}
+		};
 		marker = {
 			uploadTime: 1,
 			lat: 0,
@@ -48,18 +68,6 @@ describe('CreateMarker.vue', () => {
 			}
 		};
 		mocks = {
-			$bus: {
-				$on: sinon.stub(),
-				$off: sinon.stub(),
-			},
-			$store: {
-				dispatch: sinon.stub(),
-				state: {
-					Stories: {
-						story: null
-					}
-				}
-			},
 			$router: {
 				pushRoute: sinon.stub(),
 				back: sinon.stub(),
@@ -71,39 +79,20 @@ describe('CreateMarker.vue', () => {
 		sinon.restore();
 	});
 
-	it('Registers listeners', () => {
-		shallowMount(CreateMarker, {
-			stubs,
-			mocks
-		});
-
-		assert.isTrue(mocks.$bus.$on.calledWith('map-create-marker'));
-		assert.isTrue(mocks.$bus.$on.calledWith('user-marker-click'));
-	});
-
-	it('Unregisters listeners', () => {
-		const wrapper = shallowMount(CreateMarker, {
-			stubs,
-			mocks
-		});
-
-		wrapper.destroy();
-
-		assert.isTrue(mocks.$bus.$off.calledWith('map-create-marker'));
-		assert.isTrue(mocks.$bus.$off.calledWith('user-marker-click'));
-	});
-
-	it('Shows empty form when there is no data marker', () => {
+	it('Shows empty form when there is no data marker', async () => {
 		const latlng = {
 			lat: 0,
 			lng: 0
 		};
 		const wrapper = shallowMount(CreateMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: false
 		});
 
@@ -113,9 +102,10 @@ describe('CreateMarker.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.vm.$data.modal);
-		assert.isNull(wrapper.vm.$data.marker);
-		assert.deepInclude(wrapper.vm.$data.form, {
+		expect(wrapper.vm.$data.modal).toBeTruthy();
+		expect(wrapper.vm.$data.marker).toBeNull();
+		expect(wrapper.vm.$data.form).toMatchObject({
+			story: null,
 			media: {
 				type: 'image',
 				files: {},
@@ -129,8 +119,8 @@ describe('CreateMarker.vue', () => {
 		});
 	});
 
-	it('Shows empty form with story id when there is no data marker but there is a story', () => {
-		mocks.$store.state.Stories.story = {
+	it('Shows empty form with story id when there is no data marker but there is a story', async () => {
+		storeOptions.modules.Stories.state.story = {
 			id: 1
 		};
 
@@ -139,11 +129,14 @@ describe('CreateMarker.vue', () => {
 			lng: 0
 		};
 		const wrapper = shallowMount(CreateMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: false
 		});
 
@@ -153,9 +146,9 @@ describe('CreateMarker.vue', () => {
 			}
 		});
 
-		assert.isTrue(wrapper.vm.$data.modal);
-		assert.isNull(wrapper.vm.$data.marker);
-		assert.deepInclude(wrapper.vm.$data.form, {
+		expect(wrapper.vm.$data.modal).toBeTruthy();
+		expect(wrapper.vm.$data.marker).toBeNull();
+		expect(wrapper.vm.$data.form).toMatchObject({
 			story: 1,
 			media: {
 				type: 'image',
@@ -170,31 +163,35 @@ describe('CreateMarker.vue', () => {
 		});
 	});
 
-	it('Shows filled form when there is data marker', () => {
+	it('Shows filled form when there is data marker', async () => {
 		const latlng = {
 			lat: 0,
 			lng: 0
 		};
 		const wrapper = shallowMount(CreateMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: false,
 		});
 
 		wrapper.vm.createMarker({
 			event: {
-				latlng
+				latlng,
+				marker
+
 			},
-			marker
 		});
 		const date = new Date(2);
 
-		assert.isTrue(wrapper.vm.$data.modal);
-		assert.deepEqual(wrapper.vm.$data.marker, marker);
-		assert.deepEqual(wrapper.vm.$data.form, {
+		expect(wrapper.vm.$data.modal).toBeTruthy();
+		expect(wrapper.vm.$data.marker).toMatchObject(marker);
+		expect(wrapper.vm.$data.form).toMatchObject({
 			media: {
 				type: 'instagram',
 				path: 'path',
@@ -213,7 +210,7 @@ describe('CreateMarker.vue', () => {
 		});
 	});
 
-	it('Shows filled form when there is data marker with original story', () => {
+	it('Shows filled form when there is data marker with original story', async () => {
 		const latlng = {
 			lat: 0,
 			lng: 0
@@ -221,25 +218,28 @@ describe('CreateMarker.vue', () => {
 		marker.story = 1;
 
 		const wrapper = shallowMount(CreateMarker, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: false,
 		});
 
 		wrapper.vm.createMarker({
 			event: {
-				latlng
+				latlng,
+				marker
 			},
-			marker
 		});
 		const date = new Date(2);
 
-		assert.isTrue(wrapper.vm.$data.modal);
-		assert.deepEqual(wrapper.vm.$data.marker, marker);
-		assert.deepEqual(wrapper.vm.$data.form, {
+		expect(wrapper.vm.$data.modal).toBeTruthy();
+		expect(wrapper.vm.$data.marker).toMatchObject(marker);
+		expect(wrapper.vm.$data.form).toMatchObject({
 			media: {
 				type: 'instagram',
 				path: 'path',
@@ -258,135 +258,184 @@ describe('CreateMarker.vue', () => {
 		});
 	});
 
-	it('Renders entirely when modal is activated', () => {
+	it('Renders entirely when modal is activated', async () => {
 		const wrapper = mount(CreateMarker, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true
 		});
 
-		assert.isTrue(wrapper.find('typetoggle-stub').exists());
-		assert.isTrue(wrapper.find('multifilefield-stub').exists());
-		assert.isTrue(wrapper.find('datetimefield-stub').exists());
-		assert.isTrue(wrapper.find('selectfield-stub').exists());
-		assert.isTrue(wrapper.find('a').exists());
+		expect(wrapper.find('type-toggle-stub').exists()).toBeTruthy();
+		expect(wrapper.find('multi-file-field-stub').exists()).toBeTruthy();
+		expect(wrapper.find('date-time-field-stub').exists()).toBeTruthy();
+		expect(wrapper.find('select-field-stub').exists()).toBeTruthy();
+		expect(wrapper.find('a').exists()).toBeTruthy();
 	});
 
 	it('Closes modal with cancel button', async () => {
 		const wrapper = mount(CreateMarker, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 		});
 
 		wrapper.find('.card__footer-item a').trigger('click');
 
-		assert.isFalse(wrapper.vm.$data.modal);
+		expect(wrapper.vm.$data.modal).toBeFalsy();
 	});
 
-	it('hides when modal is not activated', () => {
+	it('hides when modal is not activated', async () => {
 		const wrapper = mount(CreateMarker, {
-			mocks,
-			stubs
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: false
 		});
 
-		assert.isFalse(wrapper.find('typetoggle-stub').exists());
-		assert.isFalse(wrapper.find('filefield-stub').exists());
-		assert.isFalse(wrapper.find('datetimefield-stub').exists());
-		assert.isFalse(wrapper.find('selectfield-stub').exists());
+		expect(wrapper.find('type-toggle-stub').exists()).toBeFalsy();
+		expect(wrapper.find('file-field-stub').exists()).toBeFalsy();
+		expect(wrapper.find('date-time-field-stub').exists()).toBeFalsy();
+		expect(wrapper.find('select-field-stub').exists()).toBeFalsy();
 	});
 
 	it('Adds new marker to upload queue', async () => {
+		const uploadStub = sinon.stub();
+		storeOptions.modules.Uploads.actions.upload = uploadStub;
 		const wrapper = shallowMount(CreateMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true
 		});
 
 		wrapper.find('form').trigger('submit');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/upload', wrapper.vm.$data.form));
+		expect(uploadStub.calledOnce).toBeTruthy();
+		expect(uploadStub.calledWith(sinon.match.any, wrapper.vm.$data.form)).toBeTruthy();
 
-		assert.isFalse(wrapper.vm.$data.modal);
+		expect(wrapper.vm.$data.modal).toBeFalsy();
 	});
 
 	it('Returns old marker to upload queue', async () => {
+		const returnToQueueStub = sinon.stub();
+		storeOptions.modules.Uploads.actions.returnToQueue = returnToQueueStub;
+
 		const wrapper = shallowMount(CreateMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 		wrapper.vm.prefill();
 		wrapper.find('form').trigger('submit');
 
-		await wrapper.vm.$nextTick();
-
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/returnToQueue', {
-			...wrapper.vm.$data.form,
-			uploadTime: marker.uploadTime
-		}));
-
-		assert.isFalse(wrapper.vm.$data.modal);
-	});
-
-	it('Shows cancel button when working with errored marker', () => {
-		const wrapper = mount(CreateMarker, {
-			mocks,
-			stubs
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
 		});
 
-		wrapper.setData({
+		expect(returnToQueueStub.calledOnce).toBeTruthy();
+		expect(returnToQueueStub.calledWith(sinon.match.any, {
+			...wrapper.vm.$data.form,
+			uploadTime: marker.uploadTime
+		})).toBeTruthy();
+
+		expect(wrapper.vm.$data.modal).toBeFalsy();
+	});
+
+	it('Shows cancel button when working with errored marker', async () => {
+		const wrapper = mount(CreateMarker, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
+		});
+
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
-		assert.isTrue(wrapper.find('button.is-danger-background').exists());
+		expect(wrapper.find('button.is-danger-background').exists()).toBeTruthy();
 	});
 
 	it('Cancels marker upload', async () => {
-		const wrapper = mount(CreateMarker, {
-			mocks,
-			stubs
+		const cancelUploadStub = sinon.stub();
+		storeOptions.modules.Uploads.actions.cancelUpload = cancelUploadStub;
+		stubs.BaseModal = false;
+
+		const wrapper = shallowMount(CreateMarker, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
 		wrapper.find('button.is-danger-background').trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Uploads/cancelUpload', 1));
 
-		assert.isFalse(wrapper.vm.$data.modal);
+		expect(cancelUploadStub.calledOnce).toBeTruthy();
+		expect(cancelUploadStub.calledWith(sinon.match.any, 1)).toBeTruthy();
+
+		expect(wrapper.vm.$data.modal).toBeFalsy();
 	});
 
 
-	it('Prefills data', () => {
+	it('Prefills data', async () => {
 		const wrapper = shallowMount(CreateMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
@@ -395,7 +444,7 @@ describe('CreateMarker.vue', () => {
 
 		const date = new Date(2);
 
-		assert.deepEqual(wrapper.vm.$data.form, {
+		expect(wrapper.vm.$data.form).toMatchObject({
 			media: {
 				files: [
 					new UploadFile('name', 'image'),
@@ -414,13 +463,17 @@ describe('CreateMarker.vue', () => {
 		});
 	});
 
-	it('Prefills data with marker story', () => {
+	it('Prefills data with marker story', async () => {
 		marker.story = 1;
 
 		const wrapper = shallowMount(CreateMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
@@ -429,7 +482,7 @@ describe('CreateMarker.vue', () => {
 
 		const date = new Date(2);
 
-		assert.deepEqual(wrapper.vm.$data.form, {
+		expect(wrapper.vm.$data.form).toMatchObject({
 			media: {
 				files: [
 					new UploadFile('name', 'image'),
@@ -450,28 +503,36 @@ describe('CreateMarker.vue', () => {
 
 	it('Prefills errors', async () => {
 		const wrapper = shallowMount(CreateMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
-		wrapper.setData({
+		await wrapper.setData({
 			modal: true,
 			marker
 		});
 
 		wrapper.vm.prefill();
 
-		assert.deepEqual(wrapper.vm.$data.errors, {
+		expect(wrapper.vm.$data.errors).toMatchObject({
 			'media.path': 'invalid'
 		});
 
 	});
 
 
-	it('Resets form', () => {
+	it('Resets form', async () => {
 		const wrapper = shallowMount(CreateMarker, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			errors: [
 				'test'
 			],
@@ -482,14 +543,14 @@ describe('CreateMarker.vue', () => {
 
 		wrapper.vm.resetForm();
 
-		assert.equal(wrapper.vm.$data.errors, null);
+		expect(wrapper.vm.$data.errors).toBeNull();
 
-		assert.include(wrapper.vm.$data.form, {
+		expect(wrapper.vm.$data.form).toMatchObject({
 			description: '',
 			type: 'Visited'
 		});
 
-		assert.deepEqual(wrapper.vm.$data.form.media, {
+		expect(wrapper.vm.$data.form.media).toMatchObject({
 			type: 'image',
 			files: {},
 			path: ''

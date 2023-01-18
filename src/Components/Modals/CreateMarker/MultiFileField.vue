@@ -52,7 +52,7 @@
 
 <script>
 import UploadFile from "@/Classes/UploadFile";
-import EditImage from "@/Components/Modals/CreateMarker/EditImage";
+import EditImage from "@/Components/Modals/CreateMarker/EditImage.vue";
 
 export default {
     name: "MultiFileField",

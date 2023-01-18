@@ -1,7 +1,8 @@
-import { assert } from 'chai';
-import { mount } from '@vue/test-utils';
-import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {mount} from '@vue/test-utils';
+import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar.vue';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 describe('LoggedOutBar.vue', () => {
 
@@ -10,23 +11,23 @@ describe('LoggedOutBar.vue', () => {
 		LoginModal: true,
 		RegisterModal: true,
 	};
-	let mocks;
-
+	let storeOptions;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				state: {
-					Markers: {
+		storeOptions = {
+			modules: {
+				Markers: {
+					namespaced: true,
+					state: {
 						username: false
-					},
-					Stories: {
+					}
+				},
+				Stories: {
+					namespaced: true,
+					state: {
 						story: null
 					}
 				},
-				getters: {
-					'Uploads/allFiles': []
-				}
 			}
 		};
 	});
@@ -37,46 +38,55 @@ describe('LoggedOutBar.vue', () => {
 
 	it('Renders login and register', () => {
 		const wrapper = mount(LoggedOutBar, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+			}
 		});
 
-		assert.isTrue(wrapper.find('.top-bar').exists());
-		assert.isTrue(wrapper.find('loginmodal-stub').exists());
-		assert.isTrue(wrapper.find('registermodal-stub').exists());
-		assert.equal(wrapper.findAll('button').at(0).text(), 'Log In');
-		assert.equal(wrapper.findAll('button').at(1).text(), 'Register');
+		expect(wrapper.find('.top-bar').exists()).toBeTruthy();
+		expect(wrapper.find('login-modal-stub').exists()).toBeTruthy();
+		expect(wrapper.find('register-modal-stub').exists()).toBeTruthy();
+		expect(wrapper.findAll('button').at(0).text()).toBe('Log In');
+		expect(wrapper.findAll('button').at(1).text()).toBe('Register');
 	});
 
-	it('Starts login modal when log in clicked', () => {
+	it('Starts login modal when log in clicked', async () => {
 		const wrapper = mount(LoggedOutBar, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			loginModal: false
 		});
 
 		wrapper.findAll('.button').at(0).trigger('click');
 
-		assert.isTrue(wrapper.vm.$data.loginModal);
+		await wrapper.vm.$nextTick();
 
+		expect(wrapper.vm.$data.loginModal).toBeTruthy();
 	});
 
-	it('Calls register modal when register in clicked', () => {
+	it('Calls register modal when register in clicked',async () => {
 		const wrapper = mount(LoggedOutBar, {
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+			}
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			registerModal: false
 		});
 
 		wrapper.findAll('.button').at(1).trigger('click');
 
-		assert.isTrue(wrapper.vm.$data.registerModal);
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.registerModal).toBeTruthy();
 
 	});
 });

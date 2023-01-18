@@ -1,21 +1,46 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import StoryPage from '@/Views/StoryPage.vue';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
 import map from '@/Services/LeafletMapService';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 describe('StoryPage.vue', () => {
 	let mocks;
+	let storeOptions;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				dispatch: sinon.stub(),
-				state: {
-					User: {
-						user: null
+		storeOptions = {
+			modules: {
+				Markers: {
+					namespaced: true,
+					state: {
+						markers: [{
+							lat: 1,
+							lng: -1
+						}]
 					},
-					Stories: {
+					actions: {
+						load(){
+							return {
+								status: 200
+							}
+						}
+					},
+					mutations: {
+						setBorders(){},
+						setUser(){},
+					}
+				},
+				User: {
+					namespaced: true,
+					state: {
+						user: null
+					}
+				},
+				Stories: {
+					namespaced: true,
+					state:{
 						story: {
 							user_id: 1
 						},
@@ -24,17 +49,29 @@ describe('StoryPage.vue', () => {
 							lat: 1,
 							lng: -1
 						}]
+					},
+					mutations: {
+						exit(){}
+					},
+					actions:{
+						load(){}
+					}
+				},
+				Profile:{
+					namespaced: true,
+					actions: {
+						load(){}
 					}
 				}
-			},
+
+			}
+		};
+		mocks = {
 			$route: {
 				params: {
 					story: 1
 				}
 			},
-			$bus: {
-				$emit: sinon.stub()
-			}
 		};
 	});
 
@@ -45,110 +82,159 @@ describe('StoryPage.vue', () => {
 
 	it('Renders without create marker when no logged in user', () => {
 		sinon.stub(map, 'setView');
+		const storiesLoadStub = sinon.stub();
+		storeOptions.modules.Stories.actions.load = storiesLoadStub;
+
 		const wrapper = shallowMount(StoryPage, {
-			mocks
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.layout').exists());
-		assert.isTrue(wrapper.find('TheDashboard-stub').exists());
-		assert.isFalse(wrapper.find('CreateMarker-stub').exists());
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/load', {
+		expect(wrapper.find('.layout').exists()).toBeTruthy();
+		expect(wrapper.find('The-Dashboard-stub').exists()).toBeTruthy();
+		expect(wrapper.find('Create-Marker-stub').exists()).toBeFalsy();
+		expect(storiesLoadStub.calledOnce).toBeTruthy();
+		expect(storiesLoadStub.calledWith(sinon.match.any, {
 			user: mocks.$route.params.username,
 			storyId: mocks.$route.params.story,
-		}));
+		})).toBeTruthy();
 	});
 
 
 	it('Renders without create marker when user didnt create story', () => {
 		sinon.stub(map, 'setView');
-		mocks.$store.state.User.user = {
+		const storiesLoadStub = sinon.stub();
+		storeOptions.modules.Stories.actions.load = storiesLoadStub;
+
+		storeOptions.modules.User.state.user = {
 			id: 2
 		};
 		const wrapper = shallowMount(StoryPage, {
-			mocks
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
+
 		});
 
-		assert.isTrue(wrapper.find('.layout').exists());
-		assert.isTrue(wrapper.find('TheDashboard-stub').exists());
-		assert.isFalse(wrapper.find('CreateMarker-stub').exists());
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/load', {
+		expect(wrapper.find('.layout').exists()).toBeTruthy();
+		expect(wrapper.find('The-Dashboard-stub').exists()).toBeTruthy();
+		expect(wrapper.find('Create-Marker-stub').exists()).toBeFalsy();
+		expect(storiesLoadStub.calledOnce).toBeTruthy();
+		expect(storiesLoadStub.calledWith(sinon.match.any, {
 			user: mocks.$route.params.username,
 			storyId: mocks.$route.params.story,
-		}));
+		})).toBeTruthy();
 
 	});
 
 	it('Renders with create marker when user created story', () => {
 		sinon.stub(map, 'setView');
-		mocks.$store.state.User.user = {
+		const storiesLoadStub = sinon.stub();
+		storeOptions.modules.Stories.actions.load = storiesLoadStub;
+		storeOptions.modules.User.state.user = {
 			id: 1
 		};
-
 		const wrapper = shallowMount(StoryPage, {
-			mocks
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('.layout').exists());
-		assert.isTrue(wrapper.find('TheDashboard-stub').exists());
-		assert.isTrue(wrapper.find('CreateMarker-stub').exists());
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/load', {
+		expect(wrapper.find('.layout').exists()).toBeTruthy();
+		expect(wrapper.find('The-Dashboard-stub').exists()).toBeTruthy();
+		expect(wrapper.find('Create-Marker-stub').exists()).toBeTruthy();
+		expect(storiesLoadStub.calledOnce).toBeTruthy();
+		expect(storiesLoadStub.calledWith(sinon.match.any, {
 			user: mocks.$route.params.username,
 			storyId: mocks.$route.params.story,
-		}));
+		})).toBeTruthy();
 
 	});
 
 	it('Loads Markers', async () => {
 		const mapSetViewStub = sinon.stub(map, 'setView');
-		await shallowMount(StoryPage, {
-			mocks
+		const storiesLoadStub = sinon.stub();
+		storeOptions.modules.Stories.actions.load = storiesLoadStub;
+		const wrapper = await shallowMount(StoryPage, {
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isTrue(mocks.$bus.$emit.calledWith('env-setup'));
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/load', {
+		expect(wrapper.emitted()).toHaveProperty('env-setup');
+
+		expect(storiesLoadStub.calledOnce).toBeTruthy();
+		expect(storiesLoadStub.calledWith(sinon.match.any, {
 			user: mocks.$route.params.username,
 			storyId: mocks.$route.params.story,
-		}));
+		})).toBeTruthy();
 
-		assert.isTrue(mapSetViewStub.calledOnce);
-		assert.isTrue(mapSetViewStub.calledWith([1, -1]));
+		expect(mapSetViewStub.calledOnce).toBeTruthy();
+		expect(mapSetViewStub.calledWith([1, -1])).toBeTruthy();
 
 	});
 
 	it('Loads 404 when response returns 404', async () => {
-		mocks.$store.dispatch.returns(404);
+		const storiesLoadStub = sinon.stub().returns(404);
+		storeOptions.modules.Stories.actions.load = storiesLoadStub;
 
-		await shallowMount(StoryPage, {
-			mocks
+		const wrapper = await shallowMount(StoryPage, {
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isTrue(mocks.$bus.$emit.calledTwice);
-		assert.deepEqual(mocks.$bus.$emit.secondCall.args, ['404']);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+
+		expect(wrapper.emitted()).toHaveProperty('404');
+
 	});
 
 	it('Shows cache toast when loaded from cache', async () => {
 		sinon.stub(map, 'setView');
-		mocks.$store.dispatch.returns('cached');
+		const storiesLoadStub = sinon.stub().returns('cached');
+		storeOptions.modules.Stories.actions.load = storiesLoadStub;
+
 		mocks.$toast = {
 			info: sinon.spy()
 		};
 		await shallowMount(StoryPage, {
-			mocks
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isTrue(mocks.$toast.info.calledOnce);
-		assert.isTrue(mocks.$toast.info.calledWith('Markers loaded from cache', ''));
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+
+		expect(mocks.$toast.info.calledOnce).toBeTruthy();
+		expect(mocks.$toast.info.calledWith('Markers loaded from cache', '')).toBeTruthy();
 	});
 
 
 	it('Loads 404 when specified marker isnt found', async () => {
 		const mapSetViewStub = sinon.stub(map, 'setView');
-		mocks.$store.state.Stories.markers = [{
+		storeOptions.modules.Stories.state.markers = [{
 			id: 1,
 			lat: 1,
 			lng: 1
@@ -159,17 +245,26 @@ describe('StoryPage.vue', () => {
 		}];
 
 		mocks.$route.params.marker = 3;
-		await shallowMount(StoryPage, {
-			mocks
+		const wrapper = await shallowMount(StoryPage, {
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isTrue(mocks.$bus.$emit.calledWith('404'));
-		assert.isFalse(mapSetViewStub.called);
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+
+		expect(wrapper.emitted()).toHaveProperty('404');
+		expect(mapSetViewStub.called).toBeFalsy();
 	});
 
 	it('Sets view to specific marker when it is found', async () => {
 		const mapSetViewStub = sinon.stub(map, 'setView');
-		mocks.$store.state.Stories.markers = [{
+		storeOptions.modules.Stories.state.markers = [{
 			id: 1,
 			lat: 1,
 			lng: 1
@@ -181,13 +276,22 @@ describe('StoryPage.vue', () => {
 
 		mocks.$route.params.marker = 2;
 		await shallowMount(StoryPage, {
-			mocks
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isTrue(mapSetViewStub.called);
-		assert.isTrue(mapSetViewStub.calledWith([
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+
+		expect(mapSetViewStub.called).toBeTruthy();
+		expect(mapSetViewStub.calledWith([
 			10, 10
-		]));
-	});
+		])).toBeTruthy();
+	})
 
 });
