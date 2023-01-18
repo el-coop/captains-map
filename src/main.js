@@ -1,20 +1,31 @@
-import Vue from 'vue';
-import App from './App.vue';
-import Router from "vue-router";
+import {createApp} from 'vue';
+import Root from './App.vue';
 import router from './router';
 import store from './store';
 import './registerServiceWorker';
-import './libraries';
+import VueIzitoast from './Classes/VueIzitoast';
+import {createMetaManager, plugin as vueMetaPlugin} from 'vue-meta'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {installer as HttpService} from './Services/HttpService';
+import {vueErrorLogger, jsErrorLoggr} from "@/libraries";
 
-Vue.use(Router);
+if (import.meta.env.PROD) {
+	window.onerror = jsErrorLoggr;
+}
 
-new Vue({
-	router,
-	store,
-	beforeCreate() {
-		this.$store.dispatch('Uploads/init');
-		this.$store.dispatch('initSettings');
-	},
-	render: h => h(App)
-}).$mount('#app');
+const app = createApp(Root)
+	.use(router)
+	.use(createMetaManager())
+	.use(vueMetaPlugin)
+	.use(store)
+	.use(VueIzitoast)
+	.use(HttpService)
+	.component('FontAwesomeIcon', FontAwesomeIcon);
+
+if (import.meta.env.PROD) {
+	app.config.errorHandler = vueErrorLogger;
+}
+
+app.mount('#app');
+
 

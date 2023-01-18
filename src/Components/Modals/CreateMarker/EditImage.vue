@@ -1,5 +1,5 @@
 <template>
-    <BaseModal :active.sync="modal" @close="$emit('close')">
+    <BaseModal v-model:active="modal" @close="$emit('close')">
         <template #header>
             <p class="card__header-title">Edit Image</p>
         </template>
@@ -28,11 +28,12 @@
 </template>
 
 <script>
-import BaseModal from "@/Components/Utilities/BaseModal";
+import BaseModal from "@/Components/Utilities/BaseModal.vue";
 
 export default {
     name: "EditImage",
     components: {BaseModal},
+    emits: ['close','save','delete'],
     props: {
         image: {
             default: null

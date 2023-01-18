@@ -8,7 +8,7 @@
 
 <script>
 	import leaflet from 'leaflet';
-	import MapObjectMixin from '../MapObjectMixin';
+	import MapObjectMixin from '../MapObjectMixin.vue';
 
 	const LControl = leaflet.Control.extend({
 		element: undefined,
@@ -29,6 +29,7 @@
 	export default {
 		name: "MapUserMarkerControl",
 		mixins: [MapObjectMixin],
+        emits:['go-to-user-marker'],
 
 		methods: {
 			prepareMapObject() {
@@ -45,7 +46,7 @@
 
 			goToUserMarker() {
 				if (this.active) {
-					this.$bus.$emit('goToUserMarker');
+					this.$emit('go-to-user-marker');
 				}
 			}
 		},

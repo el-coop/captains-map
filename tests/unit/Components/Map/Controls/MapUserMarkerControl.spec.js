@@ -1,27 +1,32 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import UserMarkerControl from '@/Components/Map/Controls/MapUserMarkerControl';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import UserMarkerControl from '@/Components/Map/Controls/MapUserMarkerControl.vue';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 describe('MapUserMarkerControl.vue', () => {
 
+	let storeOptions;
 	let mocks;
-
 	const stubs = {
 		FontAwesomeIcon: true
 	};
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				dispatch: sinon.spy(),
-				state: {
-					Markers: {
+		mocks = {};
+		storeOptions = {
+			modules: {
+				Markers: {
+					namespaced: true,
+					state: {
 						userMarker: false
+					},
+					actions: {
+						toggleUserMarker(){}
 					}
 				}
 			}
-		}
+		};
 	});
 
 	afterEach(() => {
@@ -29,163 +34,131 @@ describe('MapUserMarkerControl.vue', () => {
 	});
 
 	it('Renders', () => {
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
 		const wrapper = shallowMount(UserMarkerControl, {
-			parentComponent: parent,
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+			},
 		});
 
-		assert.isTrue(wrapper.find('.leaflet-bar.leaflet-control').exists());
-		assert.isFalse(wrapper.find('.active').exists());
+		expect(wrapper.find('.leaflet-bar.leaflet-control').exists()).toBeTruthy();
+		expect(wrapper.find('.active').exists()).toBeFalsy();
 	});
 
 
 	it('Puts active class when turned on', () => {
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
-		mocks.$store.state.Markers.userMarker = true;
+		storeOptions.modules.Markers.state.userMarker = true;
 
 		const wrapper = shallowMount(UserMarkerControl, {
-			parentComponent: parent,
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+			},
 		});
 
-		assert.isTrue(wrapper.find('.map__user-marker-control--active').exists());
+		expect(wrapper.find('.map__user-marker-control--active').exists()).toBeTruthy();
 	});
 
 	it('Toggles on user marker on click', async () => {
-
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
+		const toggleUserMarkerStub = sinon.stub();
+		storeOptions.modules.Markers.actions.toggleUserMarker = toggleUserMarkerStub;
 		mocks.$toast = {
 			info: sinon.spy()
 		};
+
 		const wrapper = shallowMount(UserMarkerControl, {
-			parentComponent: parent,
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 
 		wrapper.find('a').trigger('click');
 
-		assert.isTrue(mocks.$toast.info.calledOnce);
-		assert.isTrue(mocks.$toast.info.calledWith('Calculating location, please wait.', ''));
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Markers/toggleUserMarker'));
+		expect(mocks.$toast.info.calledOnce).toBeTruthy();
+		expect(mocks.$toast.info.calledWith('Calculating location, please wait.', '')).toBeTruthy();
+		expect(toggleUserMarkerStub.calledOnce).toBeTruthy();
+		expect(toggleUserMarkerStub.calledWith()).toBeTruthy();
 
 	});
 
 	it('Toggles off user marker on click', () => {
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
 		mocks.$toast = {
 			info: sinon.spy()
 		};
-		mocks.$store.state.Markers.userMarker = true;
+		storeOptions.modules.Markers.state.userMarker = true;
+		const toggleUserMarkerStub = sinon.stub();
+		storeOptions.modules.Markers.actions.toggleUserMarker = toggleUserMarkerStub;
+
 		const wrapper = shallowMount(UserMarkerControl, {
-			parentComponent: parent,
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 
 		wrapper.find('a').trigger('click');
 
-		assert.isTrue(mocks.$toast.info.calledOnce);
-		assert.isTrue(mocks.$toast.info.calledWith('Turning off location service.', ''));
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Markers/toggleUserMarker'));
+		expect(mocks.$toast.info.calledOnce).toBeTruthy();
+		expect(mocks.$toast.info.calledWith('Turning off location service.', '')).toBeTruthy();
+		expect(toggleUserMarkerStub.calledOnce).toBeTruthy();
+		expect(toggleUserMarkerStub.calledWith()).toBeTruthy();
 	});
 
 	it('Adds control when created', () => {
-		const parent = {
-			methods: {
-				addObject: sinon.spy()
-			}
-		};
 		const wrapper = shallowMount(UserMarkerControl, {
-			parentComponent: parent,
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 
-		assert.isTrue(parent.methods.addObject.calledOnce);
-		assert.isTrue(parent.methods.addObject.calledWith(wrapper.vm.mapObject));
+		expect(wrapper.emitted()).toHaveProperty('add-to-map');
 	});
 
 	it('Removes control when destroyed', () => {
-		const parent = {
-			methods: {
-				addObject: sinon.spy(),
-				removeObject: sinon.spy(),
-			}
-		};
 		const wrapper = shallowMount(UserMarkerControl, {
-			parentComponent: parent,
-
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 
-		wrapper.destroy();
-		assert.isTrue(parent.methods.removeObject.calledOnce);
-		assert.isTrue(parent.methods.removeObject.calledWith(wrapper.vm.mapObject));
+		wrapper.unmount();
+		expect(wrapper.emitted()).toHaveProperty('remove-from-map');
 	});
 
 	it('Fires go to marker event when right clicked and user marker is on', () => {
-		const parent = {
-			methods: {
-				addObject: sinon.spy(),
-			}
-		};
-		mocks.$bus = {
-			$emit: sinon.spy()
-		};
-		mocks.$store.state.Markers.userMarker = true;
+		storeOptions.modules.Markers.state.userMarker = true;
 
 		const wrapper = shallowMount(UserMarkerControl, {
-			parentComponent: parent,
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 		wrapper.find('a').trigger('contextmenu');
 
-		assert.isTrue(mocks.$bus.$emit.calledOnce);
-		assert.isTrue(mocks.$bus.$emit.calledWith('goToUserMarker'));
+		expect(wrapper.emitted()).toHaveProperty('go-to-user-marker');
 
 	});
 
 	it('Doesnt fire go to marker event when right clicked and user marker is off', () => {
-		const parent = {
-			methods: {
-				addObject: sinon.spy(),
-			}
-		};
-		mocks.$bus = {
-			$emit: sinon.spy()
-		};
 		const wrapper = shallowMount(UserMarkerControl, {
-			parentComponent: parent,
-			stubs,
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			},
 		});
 		wrapper.find('a').trigger('contextmenu');
 
-		assert.isFalse(mocks.$bus.$emit.called);
+		expect(wrapper.emitted()).not.toHaveProperty('go-to-user-marker');
 
 	});
 });

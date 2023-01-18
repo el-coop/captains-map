@@ -1,10 +1,10 @@
 <template>
     <div class="field">
-        <label class="dropzone" :class="{'dropzone--empty': ! Object.keys(value).length, 'is-loading': loading}">
+        <label class="dropzone" :class="{'dropzone--empty': ! Object.keys(modelValue).length, 'is-loading': loading}">
             <input class="dropzone__input" type="file" :name="name" @change="imageAdded" :multiple="limit > 1"
                    accept="image/*">
-            <template v-if="Object.keys(value).length">
-                <div v-for="(file,key) in value" :key="key" class="dropzone__preview">
+            <template v-if="Object.keys(modelValue).length">
+                <div v-for="(file,key) in modelValue" :key="key" class="dropzone__preview">
                     <img class="dropzone__preview-image" :src="file.preview" @click.prevent="editImage(key)">
                     <button class="dropzone__preview-edit button is-selected-background is-fullwidth is-opaque"
                             type="button" @click.prevent="editImage(key)">
@@ -16,13 +16,13 @@
                         <span v-text="file.name"/>
                     </div>
                 </div>
-                <div class="dropzone__preview" v-if="Object.keys(value).length < this.limit">
+                <div class="dropzone__preview" v-if="Object.keys(modelValue).length < this.limit">
 					<span class="dropzone__icon">
 						<FontAwesomeIcon icon="upload"/>
 					</span>
                     <span>
 						Add images<br>
-						<span v-text="`${this.limit - Object.keys(value).length} Left`"/>
+						<span v-text="`${this.limit - Object.keys(modelValue).length} Left`"/>
 					</span>
                 </div>
             </template>
@@ -45,20 +45,21 @@
             </template>
         </label>
         <p class="help is-danger" v-if="error" v-text="error"/>
-        <EditImage :image="value[editedImage]" @close="editedImage = null" @delete="removeImage(editedImage)"
+        <EditImage :image="modelValue[editedImage]" @close="editedImage = null" @delete="removeImage(editedImage)"
                    @save="saveImageChanges"/>
     </div>
 </template>
 
 <script>
 import UploadFile from "@/Classes/UploadFile";
-import EditImage from "@/Components/Modals/CreateMarker/EditImage";
+import EditImage from "@/Components/Modals/CreateMarker/EditImage.vue";
 
 export default {
     name: "MultiFileField",
     components: {EditImage},
+    emits: ['update:modelValue'],
     props: {
-        value: {
+        modelValue: {
             type: Object,
             default() {
                 return {};
@@ -92,7 +93,7 @@ export default {
     
     methods: {
         async imageAdded(event) {
-            const filesObject = this.value;
+            const filesObject = this.modelValue;
             const files = event.target.files;
             this.loading = true;
             for (let i = 0; i < files.length && Object.values(filesObject).length < this.limit; i++) {
@@ -101,15 +102,15 @@ export default {
                     filesObject[`${file.name}-${Date.now()}`] = await UploadFile.makeFromFile(file);
                 }
             }
-            this.$emit('input', {...filesObject});
+            this.$emit('update:modelValue', {...filesObject});
             this.loading = false;
         },
         
         removeImage(key) {
             this.editedImage = null;
-            const filesObject = this.value;
+            const filesObject = this.modelValue;
             delete filesObject[key];
-            this.$emit('input', {...filesObject});
+            this.$emit('update:modelValue', {...filesObject});
         },
         
         editImage(key) {
@@ -117,7 +118,7 @@ export default {
         },
         
         async saveImageChanges(changes) {
-            const image = this.value[this.editedImage];
+            const image = this.modelValue[this.editedImage];
             await image.rotate(changes.rotation);
             this.editedImage = null
         }

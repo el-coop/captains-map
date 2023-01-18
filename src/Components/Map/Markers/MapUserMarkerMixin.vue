@@ -9,8 +9,10 @@
 		computed: {
 			payload() {
 				return {
-					lng: this.lng,
-					lat: this.lat
+				    latlng: {
+                        lng: this.lng,
+                        lat: this.lat
+                    }
 				}
 			}
 		}

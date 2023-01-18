@@ -38,42 +38,40 @@
 				const date = new Date(value);
 
 				return `${zeroFormat(date.getUTCDate())}/${zeroFormat(date.getUTCMonth() + 1)}/${date.getUTCFullYear()} ${zeroFormat(date.getUTCHours())}:${zeroFormat(date.getUTCMinutes())}`;
-			}
-		},
-
-		filters: {
-			truncate(text, length) {
-				let hasEnters = false;
-				if (text.indexOf('\n') > 0) {
-					text = text.substring(0, text.indexOf('\n'));
-					hasEnters = true;
-				}
-				if (text.length <= length - 4) {
-					return text + (hasEnters ? ' ...' : '');
-				}
-				let tcText = text.slice(0, length - 3);
-				let last = tcText.length;
-
-
-				while (last > 0 && tcText[last] !== ' ' && tcText[last] !== '.') {
-					last--;
-				}
-
-				last = last || length - 3;
-
-				tcText = tcText.slice(0, last);
-
-				return tcText + '...';
 			},
-
-			textAfterLine(text) {
-				const splitText = text.split('-');
-				if (splitText.length > 1) {
-					text = splitText[1];
-				}
-
-				return text.trim();
-			}
-		}
-	}
+            
+            truncate(text, length) {
+                let hasEnters = false;
+                if (text.indexOf('\n') > 0) {
+                    text = text.substring(0, text.indexOf('\n'));
+                    hasEnters = true;
+                }
+                if (text.length <= length - 4) {
+                    return text + (hasEnters ? ' ...' : '');
+                }
+                let tcText = text.slice(0, length - 3);
+                let last = tcText.length;
+                
+                
+                while (last > 0 && tcText[last] !== ' ' && tcText[last] !== '.') {
+                    last--;
+                }
+                
+                last = last || length - 3;
+                
+                tcText = tcText.slice(0, last);
+                
+                return tcText + '...';
+            },
+            
+            textAfterLine(text) {
+                const splitText = text.split('-');
+                if (splitText.length > 1) {
+                    text = splitText[1];
+                }
+                
+                return text.trim();
+            }
+		},
+    }
 </script>

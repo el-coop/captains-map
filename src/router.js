@@ -1,12 +1,12 @@
-import Router from 'vue-router';
-import ViewPage from '@/Views/ViewPage';
-import EditPage from '@/Views/EditPage';
-import StoryPage from '@/Views/StoryPage';
+import { createRouter, createWebHistory } from 'vue-router'
+import ViewPage from '@/Views/ViewPage.vue';
+import EditPage from '@/Views/EditPage.vue';
+import StoryPage from '@/Views/StoryPage.vue';
 import Auth from '@/Middleware/AuthMiddleware';
 import cache from "@/Services/Cache";
 
-const router = new Router({
-	mode: 'history',
+const router = createRouter({
+	history: createWebHistory(),
 	routes: [
 		{
 			path: '/edit',
@@ -27,7 +27,7 @@ const router = new Router({
 	]
 });
 
-router.pushRoute = function (location) {
+router.pushRoute = async function (location) {
 	history.pushState(null, null, `${window.location.protocol}//${window.location.host}/${location}`);
 };
 

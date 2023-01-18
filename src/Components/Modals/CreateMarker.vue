@@ -1,6 +1,6 @@
 <template>
 	<form @submitting="loading = true" @submit.prevent="queueUpload">
-		<BaseModal route-name="edit" :active.sync="modal">
+		<BaseModal route-name="edit" v-model:active="modal">
 			<template #header>
 				<p class="card__header-title">Create new marker</p>
 			</template>
@@ -32,7 +32,7 @@
 						Cancel upload
 					</button>
 					<span v-else>
-                        <a @click="modal=false">Close</a>
+                        <a @click="closeModal()">Close</a>
                     </span>
 				</p>
 				<p class="card__footer-item">
@@ -45,21 +45,26 @@
 </template>
 
 <script>
-	import FormDataMixin from "@/Components/Utilities/FormDataMixin";
-	import BaseModal from "@/Components/Utilities/BaseModal";
-	import TypeToggle from "@/Components/Modals/CreateMarker/TypeToggle";
-	import TextField from "@/Components/Modals/CreateMarker/TextField";
-	import SelectField from "@/Components/Modals/CreateMarker/SelectField";
-	import DateTimeField from "@/Components/Modals/CreateMarker/DateTimeField";
-	import SearchLocationField from "@/Components/Modals/CreateMarker/SearchLocationField";
-	import TextareaField from "@/Components/Modals/CreateMarker/TextareaField";
-	import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField";
+	import FormDataMixin from "@/Components/Utilities/FormDataMixin.vue";
+	import BaseModal from "@/Components/Utilities/BaseModal.vue";
+	import TypeToggle from "@/Components/Modals/CreateMarker/TypeToggle.vue";
+	import TextField from "@/Components/Modals/CreateMarker/TextField.vue";
+	import SelectField from "@/Components/Modals/CreateMarker/SelectField.vue";
+	import DateTimeField from "@/Components/Modals/CreateMarker/DateTimeField.vue";
+	import SearchLocationField from "@/Components/Modals/CreateMarker/SearchLocationField.vue";
+	import TextareaField from "@/Components/Modals/CreateMarker/TextareaField.vue";
+	import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField.vue";
 
 	export default {
 		name: "CreateMarker",
 		mixins: [
 			FormDataMixin
 		],
+        emits: ['close'],
+        
+        props:{
+		    editData: null,
+        },
 
 		components: {
 			MultiFileField,
@@ -71,18 +76,9 @@
 			TypeToggle,
 			BaseModal,
 		},
-
-		created() {
-			this.$bus.$on('map-create-marker', this.createMarker);
-			this.$bus.$on('user-marker-click', this.createMarker);
-		},
-		beforeDestroy() {
-			this.$bus.$off('map-create-marker', this.createMarker);
-			this.$bus.$off('user-marker-click', this.createMarker);
-		},
+  
 
 		data() {
-
 			return {
 				form: {
 					story: this.$store.state.Stories.story ? this.$store.state.Stories.story.id : null,
@@ -113,6 +109,10 @@
 
 
 		methods: {
+		    closeModal(){
+                this.modal = false;
+                this.$emit('close');
+            },
 			async queueUpload() {
 				this.loading = true;
 				if (this.marker) {
@@ -124,12 +124,12 @@
 					await this.$store.dispatch('Uploads/upload', this.form);
 				}
 				this.loading = false;
-				this.modal = false;
+				this.closeModal();
 			},
 
 			async cancelUpload() {
 				await this.$store.dispatch('Uploads/cancelUpload', this.marker.uploadTime);
-				this.modal = false;
+                this.closeModal();
 			},
 
 			prefill() {
@@ -181,10 +181,18 @@
 					this.form.lat = data.event.latlng.lat;
 					this.form.lng = data.event.latlng.lng;
 				}
-				this.marker = data.marker || null;
+				this.marker = data.event.marker || null;
 				this.prefill();
 				this.modal = true;
 			},
 		},
+        
+        watch: {
+		    editData(value){
+		        if(value){
+		            this.createMarker(value);
+                }
+            }
+        }
 	}
 </script>

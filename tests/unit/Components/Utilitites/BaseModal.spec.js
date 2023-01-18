@@ -1,6 +1,6 @@
-import { assert } from 'chai';
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import BaseModal from '@/Components/Utilities/BaseModal';
+import BaseModal from '@/Components/Utilities/BaseModal.vue';
 import sinon from 'sinon';
 
 describe('BaseModal.vue', () => {
@@ -16,122 +16,138 @@ describe('BaseModal.vue', () => {
 		}
 	};
 
-	let propsData;
+	let props;
 
 	beforeEach(() => {
-		propsData = {
+		global.window.addEventListener = sinon.stub();
+		global.window.removeEventListener = sinon.stub();
+
+		props = {
 			routeName: 'modal',
 		};
 	});
 
 	afterEach(() => {
+		delete global.window.addEventListener;
+		delete global.window.removeEventListener;
 		sinon.restore();
 	});
 
 	it('Registers and destroys window pop state event', () => {
-		global.window.addEventListener = sinon.stub();
-		global.window.removeEventListener = sinon.stub();
 
 		const wrapper = shallowMount(BaseModal, {
-			propsData,
-			stubs
+			props,
+			global: {
+				stubs
+			}
 		});
 
-		assert.isTrue(global.window.addEventListener.calledOnce);
-		assert.isTrue(global.window.addEventListener.calledWith('popstate'));
+		expect(global.window.addEventListener.calledOnce).toBeTruthy();
+		expect(global.window.addEventListener.calledWith('popstate')).toBeTruthy();
 
-		wrapper.destroy();
+		wrapper.unmount();
 
-		assert.isTrue(global.window.removeEventListener.calledOnce);
-		assert.isTrue(global.window.removeEventListener.calledWith('popstate'));
+		expect(global.window.removeEventListener.calledOnce).toBeTruthy();
+		expect(global.window.removeEventListener.calledWith('popstate')).toBeTruthy();
 
-		delete global.window.addEventListener;
-		delete global.window.removeEventListener;
 
 	});
 
 
 	it('Renders hidden when not active', () => {
 		const wrapper = shallowMount(BaseModal, {
-			propsData,
-			stubs
+			props,
+			global: {
+				stubs
+			}
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.isFalse(wrapper.find('.modal-content').exists());
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.find('.modal-content').exists()).toBeFalsy();
 	});
 
 	it('Renders shown when active', () => {
-		propsData.active = true;
+		props.active = true;
 
 		const wrapper = shallowMount(BaseModal, {
-			propsData,
-			stubs,
-			mocks
+			props,
+			global: {
+				stubs,
+				mocks
+			},
+
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.isTrue(wrapper.find('.modal__content').exists());
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.find('.modal__content').exists()).toBeTruthy();
 	});
 
-	it('Emits close when closes', () => {
-		propsData.active = true;
+	it('Emits close when closes', async () => {
+		props.active = true;
 
 		const wrapper = shallowMount(BaseModal, {
-			propsData,
-			stubs,
-			mocks
+			props,
+			global: {
+				stubs,
+				mocks
+			},
+
 		});
 
-		wrapper.setProps({
+		await wrapper.setProps({
 			active: false
 		});
 
 
-		assert.equal(wrapper.emitted().close.length, 1);
+		expect(wrapper.emitted().close.length).toBe(1);
 	});
 
 
-	it('It changes route to given route name', () => {
+	it('It changes route to given route name', async () => {
 		const wrapper = shallowMount(BaseModal, {
-			propsData,
-			stubs,
-			mocks
+			props,
+			global: {
+				stubs,
+				mocks
+			},
 		});
 
-		wrapper.setProps({
+		await wrapper.setProps({
 			active: true
 		});
 
-		assert.isTrue(mocks.$router.pushRoute.calledOnce);
-		assert.isTrue(mocks.$router.pushRoute.calledWith('modal'));
+		expect(mocks.$router.pushRoute.calledOnce).toBeTruthy();
+		expect(mocks.$router.pushRoute.calledWith('modal')).toBeTruthy();
 	});
 
 	it('goes back when modal closes and emits events', () => {
-		propsData.active = true;
+		props.active = true;
 		const wrapper = shallowMount(BaseModal, {
-			stubs,
-			mocks,
-			propsData
+			global: {
+				stubs,
+				mocks,
+			},
+			props
 		});
 
 		wrapper.vm.close();
 
-		assert.isTrue(mocks.$router.back.calledOnce);
-		assert.isFalse(wrapper.emitted()['update:active'][0][0]);
+		expect(mocks.$router.back.calledOnce).toBeTruthy();
+		expect(wrapper.emitted()['update:active'][0][0]).toBeFalsy();
 	});
 
 	it('goes back when back is pressed and emits events', () => {
-		propsData.active = true;
+		props.active = true;
 		const wrapper = shallowMount(BaseModal, {
-			stubs,
+			global: {
+				stubs
+			},
 			mocks,
-			propsData
+			props
 		});
 
 		wrapper.vm.hideOnBack();
 
-		assert.isTrue(mocks.$router.back.calledOnce);
-		assert.isFalse(wrapper.emitted()['update:active'][0][0]);
+		expect(wrapper.emitted()['update:active'][0][0]).toBeFalsy();
 	});
 });

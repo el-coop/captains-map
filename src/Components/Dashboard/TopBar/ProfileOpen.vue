@@ -18,7 +18,7 @@
 
 <script>
 	import globe from '@/assets/images/globe-icon.png';
-	import FollowButton from "@/Components/Dashboard/TopBar/FollowButton";
+	import FollowButton from "@/Components/Dashboard/TopBar/FollowButton.vue";
 
 	export default {
 		name: "ProfileOpen",

@@ -19,7 +19,7 @@ html {
 	--text: #{$white-ter};
 	--text-strong: #{$white-bis};
 	--text-muted: #{$grey-light};
-	--text-invert: #{invert($text, 100)};
+	--text-invert: #{invert($text, 100 * 1%)};
 	--text-dark: #{$grey-darker};
 	--text-darker: #{$black-ter};
 

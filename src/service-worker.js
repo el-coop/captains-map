@@ -1,6 +1,8 @@
 workbox.core.setCacheNameDetails({prefix: "captains-map"});
 
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
+workbox.precaching.cleanupOutdatedCaches()
+
+self.__precacheManifest = [].concat(self.__WB_MANIFEST || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 

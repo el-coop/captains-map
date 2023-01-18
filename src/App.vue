@@ -1,27 +1,46 @@
 <template>
-	<div id="app">
-		<TheMap/>
-		<RouterView/>
-		<NotFound/>
+    <metainfo>
+        <template #title="{ content }">{{ content }} | Captains Map</template>
+    </metainfo>
+    <div id="app">
+		<TheMap @marker-click="selectedMarker = $event" @map-create-marker="createMarkerData = $event"/>
+		<RouterView @404="notFound = true"
+                    @env-setup="notFound = false"
+                    v-model:selectedMarker="selectedMarker"
+                    v-model:createMarkerData="createMarkerData"
+        />
+		<NotFound v-model:active="notFound"/>
 	</div>
 </template>
 
 <script>
-	import NotFound from '@/Components/Modals/404';
-	import TheMap from '@/Components/Map/TheMap';
+	import NotFound from '@/Components/Modals/404.vue';
+	import TheMap from '@/Components/Map/TheMap.vue';
 
 	export default {
 		name: 'App',
+        
+        data(){
+		    return {
+                notFound: false,
+                selectedMarker: null,
+                createMarkerData: null
+            }
+        },
 
 		components: {
 			TheMap,
 			NotFound
 		},
-		created() {
+        beforeCreate() {
+            this.$store.dispatch('Uploads/init');
+            this.$store.dispatch('initSettings');
+        },
+        created() {
 			window.addEventListener('online', this.onlineEvent);
 		},
 
-		beforeDestroy() {
+		beforeUnmount() {
 			window.removeEventListener('online', this.onlineEvent);
 
 		},
@@ -32,7 +51,6 @@
 		},
 		metaInfo: {
 			title: 'Home',
-			titleTemplate: '%s | Captains Map',
 		}
 	}
 </script>

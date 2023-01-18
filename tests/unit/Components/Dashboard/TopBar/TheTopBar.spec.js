@@ -1,24 +1,29 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import TheTopBar from '@/Components/Dashboard/TopBar/TheTopBar';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import TheTopBar from '@/Components/Dashboard/TopBar/TheTopBar.vue';
 import sinon from 'sinon';
+import {createStore} from "vuex";
 
 describe('TheTopBar.vue', () => {
 
-	let mocks;
 	let stubs;
+	let storeOptions;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				state: {
-					Markers: {
+		storeOptions = {
+			modules: {
+				Markers: {
+					namespaced: true,
+					state: {
 						username: false
-					},
-					Stories: {
+					}
+				},
+				Stories: {
+					namespaced: true,
+					state: {
 						story: null
 					}
-				}
+				},
 			}
 		};
 		stubs = {
@@ -33,42 +38,51 @@ describe('TheTopBar.vue', () => {
 
 	it('Renders without profile when no username', () => {
 		const wrapper = shallowMount(TheTopBar, {
-			mocks,
-			stubs
+			global:{
+				plugins: [createStore(storeOptions)],
+				stubs
+			}
 		});
 
-		assert.isFalse(wrapper.find('ProfileOpen-stub').exists());
-		assert.isFalse(wrapper.find('StoriesOpen-stub').exists());
-		assert.isTrue(wrapper.find('.top-bar__left.top-bar__left--logged-out').exists());
-		assert.include(wrapper.find('img').element.src,'globe-icon');
+		expect(wrapper.find('profile-open-stub').exists()).toBeFalsy();
+		expect(wrapper.find('stories-open-stub').exists()).toBeFalsy();
+		expect(wrapper.find('.top-bar__left.top-bar__left--logged-out').exists()).toBeTruthy();
+		expect(wrapper.find('img').element.src).toContain('globe-icon');
 	});
 
 	it('Renders profile when has username and no story', () => {
-		mocks.$store.state.Markers.username = 'test';
+		storeOptions.modules.Markers.state.username = 'test';
 		const wrapper = shallowMount(TheTopBar, {
-			mocks,
-			stubs
+			global:{
+				plugins: [createStore(storeOptions)],
+				stubs
+			}
 		});
 
-		assert.isTrue(wrapper.find('ProfileOpen-stub').exists());
-		assert.isFalse(wrapper.find('.top-bar__left.top-bar__left--logged-out').exists());
-		assert.isFalse(wrapper.find('StoriesOpen-stub').exists());
-		assert.isFalse(wrapper.find('img').exists());
+		expect(wrapper.find('profile-open-stub').exists()).toBeTruthy();
+		expect(wrapper.find('stories-open-stub').exists()).toBeFalsy();
+		expect(wrapper.find('.top-bar__left.top-bar__left--logged-out').exists()).toBeFalsy();
+		expect(wrapper.find('img').exists()).toBeFalsy();
+
 	});
 
 	it('Renders stories open when story is chosen', () => {
-		mocks.$store.state.Markers.username = 'test';
-		mocks.$store.state.Stories.story = {
+		storeOptions.modules.Markers.state.username = 'test';
+		storeOptions.modules.Stories.state.story = {
 			id: 1
 		};
 		const wrapper = shallowMount(TheTopBar, {
-			mocks,
-			stubs
+			global:{
+				plugins: [createStore(storeOptions)],
+				stubs
+			}
 		});
 
-		assert.isFalse(wrapper.find('ProfileOpen-stub').exists());
-		assert.isTrue(wrapper.find('StoriesOpen-stub').exists());
-		assert.isFalse(wrapper.find('.top-bar__left.top-bar__left--logged-out').exists());
-		assert.isFalse(wrapper.find('img').exists());
+
+		expect(wrapper.find('profile-open-stub').exists()).toBeFalsy();
+		expect(wrapper.find('stories-open-stub').exists()).toBeTruthy();
+		expect(wrapper.find('.top-bar__left.top-bar__left--logged-out').exists()).toBeFalsy();
+		expect(wrapper.find('img').exists()).toBeFalsy();
+
 	});
 });

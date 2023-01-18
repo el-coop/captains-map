@@ -37,7 +37,7 @@
 			async toggleFollow() {
 				this.loading = true;
 				const success = await this.$store.dispatch('Webpush/toggleFollow', this.user);
-
+    
 				if (!success) {
 					this.$toast.error('Please try again at a later time', 'Following failed.');
 				} else if (success === 201) {

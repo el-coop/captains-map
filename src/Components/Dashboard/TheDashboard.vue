@@ -26,24 +26,24 @@
 			</div>
 
 		</div>
-		<ViewMarker/>
+		<ViewMarker @close="$emit('close')" :selectedMarker="selectedMarker"/>
 	</div>
 </template>
 
 <script>
-	import MarkerList from "@/Components/Dashboard/SideBar/MarkerList";
-	import ViewMarker from "@/Components/Modals/ViewMarker";
-	import Profile from "@/Components/Dashboard/Profile";
-	import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar';
-	import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar';
-	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter";
-	import ProfileEdit from "@/Components/Dashboard/Profile/ProfileEdit";
-	import ProfileDisplay from "@/Components/Dashboard/Profile/ProfileDisplay";
+	import MarkerList from "@/Components/Dashboard/SideBar/MarkerList.vue";
+	import ViewMarker from "@/Components/Modals/ViewMarker.vue";
+	import Profile from "@/Components/Dashboard/Profile.vue";
+	import LoggedInBar from '@/Components/Dashboard/TopBar/LoggedInBar.vue';
+	import LoggedOutBar from '@/Components/Dashboard/TopBar/LoggedOutBar.vue';
+	import MarkerBordersFilter from "@/Components/Utilities/MarkerBordersFilter.vue";
+	import ProfileEdit from "@/Components/Dashboard/Profile/ProfileEdit.vue";
+	import ProfileDisplay from "@/Components/Dashboard/Profile/ProfileDisplay.vue";
 
 	export default {
 		name: "TheDashboard",
-
-
+        emits:['close'],
+        
 		components: {
 			ProfileDisplay,
 			ProfileEdit,
@@ -54,11 +54,14 @@
 			LoggedInBar,
 			LoggedOutBar
 		},
+        
+        props: {
+            selectedMarker:{}
+        },
 
 
 		data() {
 			return {
-				selectedMarker: null,
 				mountModal: false,
 			}
 		},

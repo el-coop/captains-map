@@ -18,8 +18,8 @@
 
 <script>
 	import globe from '@/assets/images/globe-icon.png';
-	import ProfileOpen from "@/Components/Dashboard/TopBar/ProfileOpen";
-	import StoriesOpen from "@/Components/Dashboard/TopBar/StoriesOpen";
+	import ProfileOpen from "@/Components/Dashboard/TopBar/ProfileOpen.vue";
+	import StoriesOpen from "@/Components/Dashboard/TopBar/StoriesOpen.vue";
 
 	export default {
 		name: "TheTopBar",

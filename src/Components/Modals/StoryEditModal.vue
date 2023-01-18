@@ -34,14 +34,14 @@
 </template>
 
 <script>
-	import BaseModal from "@/Components/Utilities/BaseModal";
-	import TextField from "@/Components/Modals/CreateMarker/TextField";
-	import SelectField from "@/Components/Modals/CreateMarker/SelectField";
+	import BaseModal from "@/Components/Utilities/BaseModal.vue";
+	import TextField from "@/Components/Modals/CreateMarker/TextField.vue";
+	import SelectField from "@/Components/Modals/CreateMarker/SelectField.vue";
 
 	export default {
 		name: "StoryEditModal",
 		components: {SelectField, TextField, BaseModal},
-
+        emits: ['saved','update:active'],
 		props: {
 			active: {
 				type: Boolean,

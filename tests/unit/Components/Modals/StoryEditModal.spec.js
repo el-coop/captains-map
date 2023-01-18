@@ -1,7 +1,9 @@
-import { assert } from 'chai';
-import { mount } from '@vue/test-utils';
-import StoryEditModal from '@/Components/Modals/StoryEditModal';
-import sinon, { mock } from 'sinon';
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import {mount} from '@vue/test-utils';
+import StoryEditModal from '@/Components/Modals/StoryEditModal.vue';
+import BaseModal from "@/Components/Utilities/BaseModal.vue"
+import sinon from 'sinon';
+import {createStore} from "vuex";
 
 describe('StoryEditModal.vue', () => {
 	const stubs = {
@@ -11,29 +13,37 @@ describe('StoryEditModal.vue', () => {
 	const story = {
 		user_id: 1,
 		name: 'dla',
-		published: 0,
+		published: false,
 	};
 
 
-	let propsData;
+	let props;
 	let mocks;
+	let storeOptions;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				commit: sinon.stub(),
-				dispatch: sinon.stub().returns({
-					status: 422,
-					id: 1
-				}),
-				state: {
-					User: {
+		storeOptions = {
+			modules: {
+				User:{
+					namespaced: true,
+					state: {
 						user: {
 							id: 1
 						}
+					}
+				},
+				Stories: {
+					namespaced: true,
+					actions: {
+						save(){}
 					},
+					mutations: {
+						exit(){}
+					}
 				}
-			},
+			}
+		};
+		mocks = {
 			$router: {
 				push: sinon.spy()
 			},
@@ -45,9 +55,9 @@ describe('StoryEditModal.vue', () => {
 				params: {
 					username: 'username'
 				}
-			}
+			},
 		};
-		propsData = {
+		props = {
 			active: true,
 		};
 	});
@@ -58,297 +68,391 @@ describe('StoryEditModal.vue', () => {
 
 	it('renders modal when active', () => {
 		const wrapper = mount(StoryEditModal, {
-			propsData,
-			mocks,
-			stubs
+			props,
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			}
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.include(wrapper.html(), 'Choose story name');
-		assert.isFalse(wrapper.find('select').exists());
-		assert.isFalse(wrapper.find('button.is-danger-background').exists());
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.html()).toContain('Choose story name');
+		expect(wrapper.find('select').exists()).toBeFalsy();
+		expect(wrapper.find('button.is-danger-background').exists()).toBeFalsy();
 	});
 
 	it('doesnt render modal when not active', () => {
 		const wrapper = mount(StoryEditModal, {
-			stubs
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			}
 		});
 
-		assert.isTrue(wrapper.find('.modal').exists());
-		assert.notInclude(wrapper.html(), 'Choose story name');
+		expect(wrapper.find('.modal').exists()).toBeTruthy();
+		expect(wrapper.html()).not.toContain('Choose story name');
 	});
 
 	it('closes modal on click when not editing', () => {
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData,
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props,
 		});
 
 		wrapper.find('.card__footer-item a').trigger('click');
 
-		assert.equal(wrapper.emitted()['update:active'][0][0], false);
+		expect(wrapper.emitted()['update:active'][0][0]).toBeFalsy();
 	});
 
 	it('closes modal when emitted form modal', () => {
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData,
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props,
 		});
 
-		wrapper.vm.$children[0].$emit('update:active', false);
+		wrapper.findComponent(BaseModal).vm.$emit('update:active', false);
 
-		assert.equal(wrapper.emitted()['update:active'][0][0], false);
+		expect(wrapper.emitted()['update:active'][0][0]).toBeFalsy();
 	});
 
 	it('Attempts to save a new story and shows validation errors', async () => {
+		const saveStub = sinon.stub().returns({
+			status: 422,
+			id: 1
+		});
+		storeOptions.modules.Stories.actions.save = saveStub;
+
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
 		wrapper.find('button').trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/save', {
+		expect(saveStub.calledOnce).toBeTruthy();
+		expect(saveStub.calledWith(sinon.match.any, {
 			name: '',
-			published: 0
-		}));
+			published: false
+		})).toBeTruthy();
 
-		assert.isTrue(wrapper.find('.help.is-danger').exists());
+		expect(wrapper.find('.help.is-danger').exists()).toBeTruthy();
 	});
 
 	it('Attempts to save a new story and shows server error toast', async () => {
-		mocks.$store.dispatch = sinon.stub().returns({
-			status: 500
+		const saveStub = sinon.stub().returns({
+			status: 500,
 		});
+		storeOptions.modules.Stories.actions.save = saveStub;
 
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			name: 'asd'
 		});
 
 		wrapper.find('button').trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/save', {
+
+		expect(saveStub.calledOnce).toBeTruthy();
+		expect(saveStub.calledWith(sinon.match.any, {
 			name: 'asd',
-			published: 0
-		}));
+			published: false
+		})).toBeTruthy();
 
-		assert.isTrue(mocks.$toast.error.calledOnce);
-		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Saving failed.'));
+		expect(mocks.$toast.error.calledOnce).toBeTruthy();
+		expect(mocks.$toast.error.calledWith('Please try again at a later time', 'Saving failed.')).toBeTruthy();
 	});
 
 	it('Saves new story and emits success', async () => {
-		mocks.$emit = sinon.stub();
-		mocks.$store.dispatch = sinon.stub().returns({
+		const saveStub = sinon.stub().returns({
 			status: 201,
 			id: 1
 		});
+		storeOptions.modules.Stories.actions.save = saveStub;
 
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			name: 'dsa'
 		});
 
 		wrapper.find('button').trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/save', {
+		expect(saveStub.calledOnce).toBeTruthy();
+		expect(saveStub.calledWith(sinon.match.any, {
 			name: 'dsa',
-			published: 0
-		}));
+			published: false
+		})).toBeTruthy();
 
-		assert.isTrue(mocks.$toast.success.calledOnce);
-		assert.isTrue(mocks.$toast.success.calledWith(' ', 'Story saved.'));
+		expect(mocks.$toast.success.calledOnce).toBeTruthy();
+		expect(mocks.$toast.success.calledWith(' ', 'Story saved.')).toBeTruthy();
 
-		assert.isTrue(mocks.$emit.calledOnce);
-		assert.isTrue(mocks.$emit.calledWith('saved', 1));
+		expect(wrapper.emitted()['saved'][0][0]).toBe(1);
+
 	});
 
 	it('Prefills story data when edit', async () => {
 
-		propsData.story = story;
+		props.story = story;
 
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
-		assert.equal(wrapper.vm.$data.name, story.name);
-		assert.equal(wrapper.vm.$data.published, story.published);
+		expect(wrapper.vm.$data.name).toBe(story.name);
+		expect(wrapper.vm.$data.published).toBe(story.published);
 	});
 
 	it('Renders edit options when user is prefilled', async () => {
-		propsData.story = story;
+		props.story = story;
 
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
-		assert.isTrue(wrapper.find('select').exists());
-		assert.isTrue(wrapper.find('button.is-danger-background').exists());
+		expect(wrapper.find('select').exists()).toBeTruthy();
+		expect(wrapper.find('button.is-danger-background').exists()).toBeTruthy();
 	});
 
 	it('Attempts to update an existing story and shows server errors', async () => {
-		mocks.$store.dispatch = sinon.stub().returns({
-			status: 422
+		const saveStub = sinon.stub().returns({
+			status: 422,
 		});
+		storeOptions.modules.Stories.actions.save = saveStub;
 
-		propsData.story = story;
+		props.story = story;
 
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			name: ''
 		});
 
 		wrapper.findAll('button').at(1).trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/save', {
+		expect(saveStub.calledOnce).toBeTruthy();
+		expect(saveStub.calledWith(sinon.match.any, {
 			name: '',
-			published: 0
-		}));
+			published: false
+		})).toBeTruthy();
 
-		assert.isTrue(wrapper.find('.help.is-danger').exists());
+		expect(wrapper.find('.help.is-danger').exists()).toBeTruthy();
 	});
 
 	it('Attempts to update an existing story and shows server errors', async () => {
-		mocks.$store.dispatch = sinon.stub().returns({
-			status: 500
+		const saveStub = sinon.stub().returns({
+			status: 500,
 		});
-		propsData.story = story;
+		storeOptions.modules.Stories.actions.save = saveStub;
+
+		props.story = story;
 
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
 		wrapper.findAll('button').at(1).trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/save', {
+		expect(saveStub.calledOnce).toBeTruthy();
+		expect(saveStub.calledWith(sinon.match.any, {
 			name: 'dla',
-			published: 0
-		}));
+			published: false
+		})).toBeTruthy();
 
-		assert.isTrue(mocks.$toast.error.calledOnce);
-		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Saving failed.'));
+		expect(mocks.$toast.error.calledOnce).toBeTruthy();
+		expect(mocks.$toast.error.calledWith('Please try again at a later time', 'Saving failed.')).toBeTruthy();
 	});
 
 	it('Updates an existing story and emits success', async () => {
-		mocks.$emit = sinon.stub();
-		mocks.$store.dispatch = sinon.stub().returns({
+
+		const saveStub = sinon.stub().returns({
 			status: 200,
 			id: 1
 		});
-		propsData.story = story;
+		storeOptions.modules.Stories.actions.save = saveStub;
+
+		props.story = story;
 
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
-		wrapper.setData({
+		await wrapper.setData({
 			name: 'story',
-			published: 1
+			published: true
 		});
 
 		wrapper.findAll('button').at(1).trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/save', {
+		expect(saveStub.calledOnce).toBeTruthy();
+		expect(saveStub.calledWith(sinon.match.any, {
 			name: 'story',
-			published: 1
-		}));
+			published: true
+		})).toBeTruthy();
 
-		assert.isTrue(mocks.$toast.success.calledOnce);
-		assert.isTrue(mocks.$toast.success.calledWith(' ', 'Story saved.'));
+		expect(mocks.$toast.success.calledOnce).toBeTruthy();
+		expect(mocks.$toast.success.calledWith(' ', 'Story saved.')).toBeTruthy();
 
-		assert.isTrue(mocks.$emit.calledOnce);
-		assert.isTrue(mocks.$emit.calledWith('saved', 1));
+		expect(wrapper.emitted()['saved'][0][0]).toBe(1);
 	});
 
 	it('Shows error message when delete fails', async () => {
-		mocks.$store.dispatch = sinon.stub().returns(false);
-		propsData.story = story;
+		const deleteStub = sinon.stub().returns(false);
+		storeOptions.modules.Stories.actions.delete = deleteStub;
+
+		props.story = story;
 
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
 		wrapper.findAll('button').at(0).trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/delete'));
+		expect(deleteStub.calledOnce).toBeTruthy();
+		expect(deleteStub.calledWith()).toBeTruthy();
 
-		assert.isTrue(mocks.$toast.error.calledOnce);
-		assert.isTrue(mocks.$toast.error.calledWith('Please try again at a later time', 'Delete failed.'));
+		expect(mocks.$toast.error.calledOnce).toBeTruthy();
+		expect(mocks.$toast.error.calledWith('Please try again at a later time', 'Delete failed.')).toBeTruthy();
 	});
 
 	it('Deletes story and does completes process', async () => {
-		mocks.$store.dispatch = sinon.stub().returns(true);
-		propsData.story = story;
+
+		const deleteStub = sinon.stub().returns(true);
+		storeOptions.modules.Stories.actions.delete = deleteStub;
+		const exitStub = sinon.stub();
+		storeOptions.modules.Stories.mutations.exit = exitStub;
+
+		props.story = story;
 
 		const wrapper = mount(StoryEditModal, {
-			stubs,
-			mocks,
-			propsData
+			global:{
+				plugins:[createStore(storeOptions)],
+				mocks,
+				stubs
+			},
+			props
 		});
 
 		wrapper.findAll('button').at(0).trigger('click');
 
-		await wrapper.vm.$nextTick();
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
 
-		assert.isTrue(mocks.$store.dispatch.calledOnce);
-		assert.isTrue(mocks.$store.dispatch.calledWith('Stories/delete'));
+		expect(deleteStub.calledOnce).toBeTruthy();
+		expect(deleteStub.calledWith()).toBeTruthy();
 
-		assert.isTrue(mocks.$toast.success.calledOnce);
-		assert.isTrue(mocks.$toast.success.calledWith(' ', 'Story deleted.'));
+		expect(mocks.$toast.success.calledOnce).toBeTruthy();
+		expect(mocks.$toast.success.calledWith(' ', 'Story deleted.')).toBeTruthy();
 
-		assert.isTrue(mocks.$store.commit.calledOnce);
-		assert.isTrue(mocks.$store.commit.calledWith('Stories/exit'));
+		expect(exitStub.calledOnce).toBeTruthy();
+		expect(exitStub.calledWith()).toBeTruthy();
 
-		assert.isTrue(mocks.$router.push.calledOnce);
-		assert.isTrue(mocks.$router.push.calledWith('/username'));
+		expect(mocks.$router.push.calledOnce).toBeTruthy();
+		expect(mocks.$router.push.calledWith('/username')).toBeTruthy();
 	});
 });

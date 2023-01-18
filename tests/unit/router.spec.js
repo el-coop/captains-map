@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import router from '@/router';
 import sinon from 'sinon';
 
@@ -8,17 +8,12 @@ describe('router', () => {
 		sinon.restore();
 	});
 
-
-	it('uses history mode', () => {
-		assert.equal(router.mode, 'history');
-	});
-
 	it('pushes history on pushRoute', () => {
 		const historyStub = sinon.stub(history, 'pushState');
 		router.pushRoute('test');
 
-		assert.isTrue(historyStub.calledOnce);
-		assert.isTrue(historyStub.calledWith(null, null, `${window.location.protocol}//${window.location.host}/test`));
+		expect(historyStub.calledOnce).toBeTruthy();
+		expect(historyStub.calledWith(null, null, `${window.location.protocol}//${window.location.host}/test`)).toBeTruthy();
 
 	});
 
@@ -26,8 +21,8 @@ describe('router', () => {
 		const editRoute = router.options.routes.find((item) => {
 			return item.path === '/edit';
 		});
-		assert.isNotNull(editRoute);
-		assert.equal(editRoute.component.name,'EditPage');
+		expect(editRoute);
+		expect(editRoute.component.name).toBe('EditPage');
 	});
 
 
@@ -35,15 +30,15 @@ describe('router', () => {
 		const viewRoute = router.options.routes.find((item) => {
 			return item.path === '/:username?/:marker?';
 		});
-		assert.isNotNull(viewRoute);
-		assert.equal(viewRoute.component.name,'ViewPage');
+		expect(viewRoute).not.toBeNull();
+		expect(viewRoute.component.name).toBe('ViewPage');
 	});
 
 	it('defines story route', () => {
 		const storyRoute = router.options.routes.find((item) => {
 			return item.path === '/:username/story/:story/:marker?';
 		});
-		assert.isNotNull(storyRoute);
-		assert.equal(storyRoute.component.name,'StoryPage');
+		expect(storyRoute).not.toBeNull();
+		expect(storyRoute.component.name).toBe('StoryPage');
 	});
 });

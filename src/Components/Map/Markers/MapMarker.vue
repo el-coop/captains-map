@@ -7,13 +7,13 @@
 </template>
 
 <script>
-	import MapObjectMixin from '@/Components/Map/MapObjectMixin';
-	import HandlesDataDisplayMixin from "@/Components/Utilities/HandlesDataDisplayMixin";
+	import MapObjectMixin from '@/Components/Map/MapObjectMixin.vue';
+	import HandlesDataDisplayMixin from "@/Components/Utilities/HandlesDataDisplayMixin.vue";
 
 	export default {
 		name: "MapMarker",
 		mixins: [MapObjectMixin, HandlesDataDisplayMixin],
-
+        emits:['marker-click'],
 		props: {
 			marker: {
 				type: Object,

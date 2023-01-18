@@ -1,15 +1,15 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import store from '@/store';
 import markersStore from '@/store/markers';
 import http from '@/Services/HttpService';
 import cache from "@/Services/Cache";
 
-const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+const pageSize = parseInt(import.meta.env.VITE_APP_PAGE_SIZE);
 
 describe('Marker Store', () => {
 
-	afterEach('Reset sinon and settings', () => {
+	afterEach(() => {
 		sinon.restore();
 	});
 
@@ -23,8 +23,8 @@ describe('Marker Store', () => {
 			name: 'test'
 		});
 
-		assert.equal(state.markers.length, 1);
-		assert.deepEqual(state.markers[0], {
+		expect(state.markers.length).toBe(1);
+		expect(state.markers[0]).toEqual({
 			id: 1,
 			name: 'test'
 		});
@@ -42,8 +42,8 @@ describe('Marker Store', () => {
 			name: 'test'
 		});
 
-		assert.equal(state.markers.length, 2);
-		assert.deepEqual(state.markers[0], {
+		expect(state.markers.length).toBe(2);
+		expect(state.markers[0]).toEqual({
 			id: 1,
 			name: 'test'
 		});
@@ -59,8 +59,8 @@ describe('Marker Store', () => {
 
 		markersStore.mutations.remove(state, 1);
 
-		assert.equal(state.markers.length, 0);
-		assert.deepEqual(state.markers, []);
+		expect(state.markers.length).toBe(0);
+		expect(state.markers).toEqual([]);
 	});
 
 
@@ -77,11 +77,11 @@ describe('Marker Store', () => {
 
 		markersStore.mutations.clear(state);
 
-		assert.equal(state.markers.length, 0);
-		assert.equal(state.hasNext, false);
-		assert.equal(state.page, 0);
-		assert.equal(state.serverPage, 0);
-		assert.deepEqual(state.markers, []);
+		expect(state.markers.length).toBe(0);
+		expect(state.hasNext).toBe(false);
+		expect(state.page).toBe(0);
+		expect(state.serverPage).toBe(0);
+		expect(state.markers).toEqual([]);
 	});
 
 	it('Removes markers on successful delete', async () => {
@@ -96,10 +96,10 @@ describe('Marker Store', () => {
 			id: 1
 		});
 
-		assert.isTrue(deleteStub.calledOnce);
-		assert.isTrue(deleteStub.calledWith('marker/1'));
-		assert.isTrue(commitSpy.calledOnce);
-		assert.isTrue(commitSpy.calledWith('remove', 1));
+		expect(deleteStub.calledOnce).toBeTruthy();
+		expect(deleteStub.calledWith('marker/1')).toBeTruthy();
+		expect(commitSpy.calledOnce).toBeTruthy();
+		expect(commitSpy.calledWith('remove', 1)).toBeTruthy();
 	});
 
 	it('Keeps markers on failed delete', async () => {
@@ -112,8 +112,8 @@ describe('Marker Store', () => {
 			commit: commitSpy
 		}, 1);
 
-		assert.isFalse(commitSpy.calledOnce);
-		assert.isFalse(commitSpy.calledWith('remove', 1));
+		expect(commitSpy.calledOnce).toBeFalsy();
+		expect(commitSpy.calledWith('remove', 1)).toBeFalsy();
 	});
 
 	it('Loads markers', async () => {
@@ -145,18 +145,18 @@ describe('Marker Store', () => {
 			state
 		});
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/'));
-		assert.isTrue(commitSpy.calledThrice);
-		assert.isTrue(commitSpy.calledWith('clear'));
-		assert.isTrue(commitSpy.calledWith('add', {
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/')).toBeTruthy();
+		expect(commitSpy.calledThrice).toBeTruthy();
+		expect(commitSpy.calledWith('clear')).toBeTruthy();
+		expect(commitSpy.calledWith('add', {
 			id: 1
-		}));
-		assert.isTrue(commitSpy.calledWith('add', {
+		})).toBeTruthy();
+		expect(commitSpy.calledWith('add', {
 			id: 2
-		}));
-		assert.isFalse(state.hasNext);
-		assert.deepEqual(response, {
+		})).toBeTruthy();
+		expect(state.hasNext).toBeFalsy();
+		expect(response).toEqual({
 			status: 200,
 			data
 		});
@@ -198,18 +198,18 @@ describe('Marker Store', () => {
 			state
 		});
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/?borders=' + JSON.stringify(state.borders)));
-		assert.isTrue(commitSpy.calledThrice);
-		assert.isTrue(commitSpy.calledWith('clear'));
-		assert.isTrue(commitSpy.calledWith('add', {
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/?borders=' + JSON.stringify(state.borders))).toBeTruthy();
+		expect(commitSpy.calledThrice).toBeTruthy();
+		expect(commitSpy.calledWith('clear')).toBeTruthy();
+		expect(commitSpy.calledWith('add', {
 			id: 1
-		}));
-		assert.isTrue(commitSpy.calledWith('add', {
+		})).toBeTruthy();
+		expect(commitSpy.calledWith('add', {
 			id: 2
-		}));
-		assert.isFalse(state.hasNext);
-		assert.deepEqual(response, {
+		})).toBeTruthy();
+		expect(state.hasNext).toBeFalsy();
+		expect(response).toEqual({
 			status: 200,
 			data
 		});
@@ -244,18 +244,18 @@ describe('Marker Store', () => {
 			state
 		}, 2);
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/?startingId=2'));
-		assert.isTrue(commitSpy.calledTwice);
-		assert.isFalse(commitSpy.calledWith('clear'));
-		assert.isTrue(commitSpy.calledWith('add', {
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/?startingId=2')).toBeTruthy();
+		expect(commitSpy.calledTwice).toBeTruthy();
+		expect(commitSpy.calledWith('clear')).toBeFalsy();
+		expect(commitSpy.calledWith('add', {
 			id: 3
-		}));
-		assert.isTrue(commitSpy.calledWith('add', {
+		})).toBeTruthy();
+		expect(commitSpy.calledWith('add', {
 			id: 4
-		}));
-		assert.isFalse(state.hasNext);
-		assert.deepEqual(response, {
+		})).toBeTruthy();
+		expect(state.hasNext).toBeFalsy();
+		expect(response).toEqual({
 			status: 200,
 			data
 		});
@@ -288,15 +288,15 @@ describe('Marker Store', () => {
 			state
 		});
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/test'));
-		assert.isTrue(commitSpy.calledTwice);
-		assert.isTrue(commitSpy.calledWith('clear'));
-		assert.isTrue(commitSpy.calledWith('add', {
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/test')).toBeTruthy();
+		expect(commitSpy.calledTwice).toBeTruthy();
+		expect(commitSpy.calledWith('clear')).toBeTruthy();
+		expect(commitSpy.calledWith('add', {
 			id: 1
-		}));
-		assert.isTrue(state.hasNext);
-		assert.deepEqual(response, {
+		})).toBeTruthy();
+		expect(state.hasNext).toBeTruthy();
+		expect(response).toEqual({
 			status: 200,
 			data
 		});
@@ -337,15 +337,15 @@ describe('Marker Store', () => {
 			state
 		});
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/test?borders=' + JSON.stringify(state.borders)));
-		assert.isTrue(commitSpy.calledTwice);
-		assert.isTrue(commitSpy.calledWith('clear'));
-		assert.isTrue(commitSpy.calledWith('add', {
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/test?borders=' + JSON.stringify(state.borders))).toBeTruthy();
+		expect(commitSpy.calledTwice).toBeTruthy();
+		expect(commitSpy.calledWith('clear')).toBeTruthy();
+		expect(commitSpy.calledWith('add', {
 			id: 1
-		}));
-		assert.isTrue(state.hasNext);
-		assert.deepEqual(response, {
+		})).toBeTruthy();
+		expect(state.hasNext).toBeTruthy();
+		expect(response).toEqual({
 			status: 200,
 			data
 		});
@@ -383,15 +383,15 @@ describe('Marker Store', () => {
 			pageIncluding: true
 		});
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/test/2'));
-		assert.isTrue(commitSpy.calledOnce);
-		assert.isTrue(commitSpy.calledWith('add', {
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/test/2')).toBeTruthy();
+		expect(commitSpy.calledOnce).toBeTruthy();
+		expect(commitSpy.calledWith('add', {
 			id: 1
-		}));
-		assert.isTrue(state.hasNext);
-		assert.equal(state.serverPage, 2);
-		assert.deepEqual(response, {
+		})).toBeTruthy();
+		expect(state.hasNext).toBeTruthy();
+		expect(state.serverPage).toBe(2);
+		expect(response).toEqual({
 			status: 200,
 			data
 		});
@@ -424,15 +424,15 @@ describe('Marker Store', () => {
 			state
 		});
 
-		assert.isTrue(state.hasNext);
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/'));
-		assert.isTrue(commitSpy.calledTwice);
-		assert.isTrue(commitSpy.calledWith('clear'));
-		assert.isTrue(commitSpy.calledWith('add', {
+		expect(state.hasNext).toBeTruthy();
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/')).toBeTruthy();
+		expect(commitSpy.calledTwice).toBeTruthy();
+		expect(commitSpy.calledWith('clear')).toBeTruthy();
+		expect(commitSpy.calledWith('add', {
 			id: 1
 		}));
-		assert.deepEqual(response, {
+		expect(response).toEqual({
 			status: 'cached',
 			data
 		});
@@ -453,12 +453,12 @@ describe('Marker Store', () => {
 			}
 		});
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/'));
-		assert.isTrue(commitSpy.calledOnce);
-		assert.isTrue(commitSpy.calledWith('clear'));
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/')).toBeTruthy();
+		expect(commitSpy.calledOnce).toBeTruthy();
+		expect(commitSpy.calledWith('clear')).toBeTruthy();
 
-		assert.deepEqual(response, {
+		expect(response).toEqual({
 			status: 403,
 		});
 	});
@@ -472,8 +472,8 @@ describe('Marker Store', () => {
 
 		markersStore.actions.toggleUserMarker({state});
 
-		assert.isTrue(state.userMarker);
-		assert.isTrue(cacheStub.calledWith('settings', 'userMarker', true));
+		expect(state.userMarker).toBeTruthy();
+		expect(cacheStub.calledWith('settings', 'userMarker', true)).toBeTruthy();
 
 	});
 
@@ -485,10 +485,10 @@ describe('Marker Store', () => {
 
 		markersStore.actions.toggleUserMarker({state});
 
-		assert.isFalse(state.userMarker);
+		expect(state.userMarker).toBeFalsy();
 
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith('settings', 'userMarker', false));
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.calledWith('settings', 'userMarker', false)).toBeTruthy();
 	});
 
 	it('Sets specific user', () => {
@@ -498,7 +498,7 @@ describe('Marker Store', () => {
 
 		markersStore.mutations.setUser(state, 'user');
 
-		assert.equal(state.username, 'user');
+		expect(state.username).toBe('user');
 	});
 
 	it('Updates page', () => {
@@ -509,7 +509,7 @@ describe('Marker Store', () => {
 
 		markersStore.mutations.changePage(state, -1);
 
-		assert.equal(state.page, 0);
+		expect(state.page).toBe(0);
 	});
 
 
@@ -524,8 +524,8 @@ describe('Marker Store', () => {
 			commit
 		}, 1);
 
-		assert.isTrue(commit.calledOnce);
-		assert.isTrue(commit.calledWith('changePage', -1));
+		expect(commit.calledOnce).toBeTruthy();
+		expect(commit.calledWith('changePage', -1)).toBeTruthy();
 	});
 
 
@@ -540,7 +540,7 @@ describe('Marker Store', () => {
 			commit
 		}, 1);
 
-		assert.isFalse(commit.called);
+		expect(commit.called).toBeFalsy();
 	});
 
 	it('Loads previous page from server when page is 0 and serverPage is bigger than 0', () => {
@@ -556,9 +556,9 @@ describe('Marker Store', () => {
 			dispatch
 		}, 1);
 
-		assert.isTrue(dispatch.calledOnce);
-		assert.isTrue(dispatch.calledWith('loadPrevious'));
-		assert.equal(state.serverPage, 0);
+		expect(dispatch.calledOnce).toBeTruthy();
+		expect(dispatch.calledWith('loadPrevious')).toBeTruthy();
+		expect(state.serverPage).toBe(0);
 	});
 
 	it('Commits next page and loads from server when hasNext', async () => {
@@ -576,11 +576,11 @@ describe('Marker Store', () => {
 			dispatch
 		}, 1);
 
-		assert.isTrue(commit.calledOnce);
-		assert.isTrue(commit.calledWith('changePage', 1));
+		expect(commit.calledOnce).toBeTruthy();
+		expect(commit.calledWith('changePage', 1)).toBeTruthy();
 
-		assert.isTrue(dispatch.calledOnce);
-		assert.isTrue(dispatch.calledWith('load', 1));
+		expect(dispatch.calledOnce).toBeTruthy();
+		expect(dispatch.calledWith('load', 1)).toBeTruthy();
 	});
 
 	it('Commits next page when not on last page', async () => {
@@ -598,8 +598,8 @@ describe('Marker Store', () => {
 			dispatch
 		}, 1);
 
-		assert.isTrue(commit.calledOnce);
-		assert.isTrue(commit.calledWith('changePage', 1));
+		expect(commit.calledOnce).toBeTruthy();
+		expect(commit.calledWith('changePage', 1)).toBeTruthy();
 	});
 
 
@@ -618,7 +618,7 @@ describe('Marker Store', () => {
 			dispatch
 		}, 1);
 
-		assert.isFalse(commit.called);
+		expect(commit.called).toBeFalsy();
 	});
 
 	it('Loads previous page of markers', async () => {
@@ -655,17 +655,17 @@ describe('Marker Store', () => {
 			state
 		});
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/nur/3/previous'));
-		assert.isTrue(commitSpy.calledTwice);
-		assert.isTrue(commitSpy.calledWith('addAtStart', {
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/nur/3/previous')).toBeTruthy();
+		expect(commitSpy.calledTwice).toBeTruthy();
+		expect(commitSpy.calledWith('addAtStart', {
 			id: 1
-		}));
-		assert.isTrue(commitSpy.calledWith('addAtStart', {
+		})).toBeTruthy();
+		expect(commitSpy.calledWith('addAtStart', {
 			id: 2
-		}));
-		assert.isFalse(state.hasNext);
-		assert.deepEqual(response, {
+		})).toBeTruthy();
+		expect(state.hasNext).toBeFalsy();
+		expect(response).toEqual({
 			status: 200,
 			data
 		});
@@ -712,17 +712,17 @@ describe('Marker Store', () => {
 			state
 		});
 
-		assert.isTrue(getStub.calledOnce);
-		assert.isTrue(getStub.calledWith('marker/nur/3/previous?borders=' + JSON.stringify(state.borders)));
-		assert.isTrue(commitSpy.calledTwice);
-		assert.isTrue(commitSpy.calledWith('addAtStart', {
+		expect(getStub.calledOnce).toBeTruthy();
+		expect(getStub.calledWith('marker/nur/3/previous?borders=' + JSON.stringify(state.borders))).toBeTruthy();
+		expect(commitSpy.calledTwice).toBeTruthy();
+		expect(commitSpy.calledWith('addAtStart', {
 			id: 1
-		}));
-		assert.isTrue(commitSpy.calledWith('addAtStart', {
+		})).toBeTruthy();
+		expect(commitSpy.calledWith('addAtStart', {
 			id: 2
-		}));
-		assert.isFalse(state.hasNext);
-		assert.deepEqual(response, {
+		})).toBeTruthy();
+		expect(state.hasNext).toBeFalsy();
+		expect(response).toEqual({
 			status: 200,
 			data
 		});
@@ -761,8 +761,8 @@ describe('Marker Store', () => {
 
 		markersStore.mutations.updateProfilePic(state, {username: 'test', path: 'new'});
 
-		assert.equal(state.markers[0].user.bio.path, 'new');
-		assert.equal(state.markers[1].user.bio.path, 'new');
-		assert.equal(state.markers[2].user.bio.path, 'old');
+		expect(state.markers[0].user.bio.path).toBe('new');
+		expect(state.markers[1].user.bio.path).toBe('new');
+		expect(state.markers[2].user.bio.path).toBe('old');
 	});
 });

@@ -1,38 +1,38 @@
-import { assert } from 'chai';
+import {describe, it, expect} from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import DateTimeField from '@/Components/Modals/CreateMarker/DateTimeField';
+import DateTimeField from '@/Components/Modals/CreateMarker/DateTimeField.vue';
 
 describe('CreateMarker/DateTimeField.vue', () => {
 	it('Renders', () => {
 		const wrapper = shallowMount(DateTimeField);
 
-		assert.isTrue(wrapper.find('.input[type=date]').exists());
-		assert.isTrue(wrapper.find('.input[type=time]').exists());
-		assert.isFalse(wrapper.find('.help.is-danger').exists());
+		expect(wrapper.find('.input[type=date]').exists()).toBeTruthy();
+		expect(wrapper.find('.input[type=time]').exists()).toBeTruthy();
+		expect(wrapper.find('.help.is-danger').exists()).toBeFalsy();
 	});
 
 	it('Renders error', () => {
 		const wrapper = shallowMount(DateTimeField, {
-			propsData: {
+			props: {
 				error: 'Invalid date or time.'
 			},
 		});
 
-		assert.isTrue(wrapper.find('.help.is-danger').exists());
-		assert.equal(wrapper.find('.help.is-danger').text(), 'Invalid date or time.');
+		expect(wrapper.find('.help.is-danger').exists()).toBeTruthy();
+		expect(wrapper.find('.help.is-danger').text()).toBe('Invalid date or time.');
 	});
 
-	it('Calculates date time', () => {
+	it('Calculates date time', async () => {
 		const wrapper = shallowMount(DateTimeField);
 
-		wrapper.setData({
+		await wrapper.setData({
 			date: '2018-12-17',
 			time: '13:55'
 		});
 
 		const expectedTime = new Date('2018-12-17T13:55Z');
 
-		assert.deepEqual(wrapper.vm.getDateTime(), expectedTime);
+		expect(wrapper.vm.getDateTime()).toEqual(expectedTime);
 	});
 
 
@@ -50,8 +50,7 @@ describe('CreateMarker/DateTimeField.vue', () => {
 			month = `0${month}`;
 		}
 
-
-		assert.deepEqual(wrapper.vm.formatDate(Date.now()), `${expectedDate.getFullYear()}-${month}-${day}`);
+		expect(wrapper.vm.formatDate(Date.now())).toEqual(`${expectedDate.getFullYear()}-${month}-${day}`);
 	});
 
 	it('It gets current time formatted', () => {
@@ -68,37 +67,36 @@ describe('CreateMarker/DateTimeField.vue', () => {
 			minutes = `0${minutes}`;
 		}
 
-		assert.deepEqual(wrapper.vm.formatTime(Date.now()), `${hour}:${minutes}`);
+		expect(wrapper.vm.formatTime(Date.now())).toEqual(`${hour}:${minutes}`);
+
 	});
 
 	it('It emits input at start', () => {
 		const wrapper = shallowMount(DateTimeField);
 
-
-		assert.deepEqual(wrapper.emitted().input[0][0], wrapper.vm.getDateTime());
+		expect(wrapper.emitted()['update:modelValue'][0][0], wrapper.vm.getDateTime());
 	});
 
 
-	it('It emits input when time is changed', () => {
+	it('It emits input when time is changed', async () => {
 		const wrapper = shallowMount(DateTimeField);
 
-		wrapper.setData({
+		await wrapper.setData({
 			time: '13:55'
 		});
 
-
-		assert.deepEqual(wrapper.emitted().input[1][0], wrapper.vm.getDateTime());
+		expect(wrapper.emitted()['update:modelValue'][1][0], wrapper.vm.getDateTime());
 	});
 
 
 	it('It emits input when date is changed', async() => {
 		const wrapper = shallowMount(DateTimeField);
 
-		wrapper.setData({
+		await wrapper.setData({
 			date: '2018-12-17',
 		});
 
 
-		assert.deepEqual(wrapper.emitted().input[1][0], wrapper.vm.getDateTime());
+		expect(wrapper.emitted()['update:modelValue'][1][0], wrapper.vm.getDateTime());
 	});
 });

@@ -1,7 +1,8 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
-import authMiddleware from '@/Middleware/AuthMiddleware';
+import {describe, it, expect, afterEach} from 'vitest';
 import store from '@/store';
+
+import Auth from '@/Middleware/AuthMiddleware';
 
 describe('Authentication Middleware', () => {
 
@@ -14,10 +15,10 @@ describe('Authentication Middleware', () => {
 
 		const nextSpy = sinon.spy();
 
-		await authMiddleware.handle({},{}, nextSpy);
+		await Auth.handle({},{}, nextSpy);
 
-		assert.isTrue(nextSpy.calledOnce);
-		assert.isTrue(nextSpy.calledWith());
+		expect(nextSpy.calledOnce).toBeTruthy();
+		expect(nextSpy.calledWith()).toBeTruthy();
 	});
 
 
@@ -26,9 +27,9 @@ describe('Authentication Middleware', () => {
 
 		const nextSpy = sinon.spy();
 
-		await authMiddleware.handle({},{}, nextSpy);
+		await Auth.handle({},{}, nextSpy);
 
-		assert.isTrue(nextSpy.calledOnce);
-		assert.isTrue(nextSpy.calledWith('/'));
+		expect(nextSpy.calledOnce).toBeTruthy();
+		expect(nextSpy.calledWith('/')).toBeTruthy();
 	});
 });

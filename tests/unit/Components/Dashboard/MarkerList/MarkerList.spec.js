@@ -1,41 +1,64 @@
-import { assert } from 'chai';
-import { shallowMount } from '@vue/test-utils';
-import MarkerList from '@/Components/Dashboard/SideBar/MarkerList';
+import {describe, it, expect, afterEach, beforeEach} from 'vitest';
+import {shallowMount} from '@vue/test-utils';
+import MarkerList from '@/Components/Dashboard/SideBar/MarkerList.vue';
 import sinon from 'sinon';
-import Map from '@/Services/LeafletMapService';
+import {createStore} from "vuex";
 
-const pageSize = parseInt(process.env.VUE_APP_PAGE_SIZE);
+const pageSize = parseInt(import.meta.env.VITE_APP_PAGE_SIZE);
 
 describe('MarkerList.vue', () => {
+	let storeOptions;
 	let mocks;
 
 	beforeEach(() => {
-		mocks = {
-			$store: {
-				state: {
-					Markers: {
+		storeOptions = {
+			modules: {
+				Markers: {
+					namespaced: true,
+					state: {
 						markers: [],
 						hasNext: false,
 						page: 0,
 						serverPage: 0
 					},
-					Stories: {
-						story: null
+					actions: {
+						nextPage() {
+						},
+						previousPage() {
+						}
+					}
+				},
+				Stories: {
+					namespaced: true,
+					state: {
+						story: null,
+						markers: [],
+						loading: false,
 					},
-					User: {
+
+				},
+				Uploads: {
+					namespaced: true,
+					getters: {
+						allFiles(state) {
+							return [];
+						}
+					},
+				},
+				User: {
+					state: {
 						user: {
 							id: 1
 						}
 					}
-				},
-				getters: {
-					'Uploads/allFiles': []
 				}
-			},
-			$router: {
-				currentRoute: {
-					name: 'edit'
-				}
+			}
+
+		};
+
+		mocks = {
+			$route: {
+				name: 'edit'
 			}
 		}
 	});
@@ -46,202 +69,252 @@ describe('MarkerList.vue', () => {
 
 	it('Renders', () => {
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isTrue(wrapper.find('ul').exists());
-		assert.isFalse(wrapper.find('.loader').exists());
+		expect(wrapper.find('ul').exists()).toBeTruthy();
+		expect(wrapper.find('.loader').exists()).toBeFalsy();
 	});
 
 	it('Shows loader when loading normal markers', () => {
-		mocks.$store.state.Markers.loading = true;
+		storeOptions.modules.Markers.state.loading = true;
 
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isFalse(wrapper.find('ul').exists());
-		assert.isTrue(wrapper.find('.is-loading').exists());
+		expect(wrapper.find('ul').exists()).toBeFalsy();
+		expect(wrapper.find('.is-loading').exists()).toBeTruthy();
 	});
 
 
 	it('Shows loader when loading story markers', () => {
-		mocks.$store.state.Markers.loading = false;
-		mocks.$store.state.Stories.loading = true;
+		storeOptions.modules.Markers.state.loading = false;
+		storeOptions.modules.Stories.state.loading = true;
 
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isFalse(wrapper.find('ul').exists());
-		assert.isTrue(wrapper.find('.is-loading').exists());
+		expect(wrapper.find('ul').exists()).toBeFalsy();
+		expect(wrapper.find('.is-loading').exists()).toBeTruthy();
 	});
 
 	it('Renders list of markers and hides pagination when no hasNext', () => {
-		mocks.$store.state.Markers.markers = new Array(2).fill({lat: 0, lng: 0});
+		storeOptions.modules.Markers.state.markers = new Array(2).fill({lat: 0, lng: 0});
 
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
-		assert.isFalse(wrapper.findAll('.button').exists());
+		expect(wrapper.findAll('marker-entry-stub').length).toBe(2);
+		expect(wrapper.find('.button').exists()).toBeFalsy();
 	});
 
 	it('Renders list of markers and hides pagination when story is chosen', () => {
-		mocks.$store.state.Markers.hasNext = true;
-		mocks.$store.state.Markers.page = 1;
-		mocks.$store.state.Markers.markers = new Array(2).fill({lat: 0, lng: 0});
-		mocks.$store.state.Stories.story = 1;
-		mocks.$store.state.Stories.markers = new Array(3).fill({lat: 0, lng: 0});
+		storeOptions.modules.Markers.state.hasNext = true;
+		storeOptions.modules.Markers.state.page = 1;
+		storeOptions.modules.Markers.state.markers = new Array(2).fill({lat: 0, lng: 0});
+
+		storeOptions.modules.Stories.state.story = 1;
+		storeOptions.modules.Stories.state.markers = new Array(3).fill({lat: 0, lng: 0});
 
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.equal(wrapper.findAll('markerentry-stub').length, 3);
-		assert.isFalse(wrapper.findAll('.button').exists());
+		expect(wrapper.findAll('marker-entry-stub').length).toBe(3);
+		expect(wrapper.find('.button').exists()).toBeFalsy();
+
 	});
 
 	it('Renders next pagination buttons when there is next', () => {
-		mocks.$store.state.Markers.markers = new Array(2).fill({lat: 0, lng: 0});
-		mocks.$store.state.Markers.hasNext = true;
+		storeOptions.modules.Markers.state.markers = new Array(2).fill({lat: 0, lng: 0});
+		storeOptions.modules.Markers.state.hasNext = true;
 
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.equal(wrapper.findAll('markerentry-stub').length, 2);
-		assert.equal(wrapper.find('.button').text(), 'Load Next');
+		expect(wrapper.findAll('marker-entry-stub').length).toBe(2);
+		expect(wrapper.find('.button').text()).toBe('Load Next');
 	});
 
 	it('Shows previous button when page is 0 and server page is bigger', async () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$store.state.Markers.hasNext = true;
-		mocks.$store.state.Markers.serverPage = 2;
+		storeOptions.modules.Markers.state.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		storeOptions.modules.Markers.state.hasNext = true;
+		storeOptions.modules.Markers.state.serverPage = 2;
 
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
 		await wrapper.vm.$nextTick();
 
-		assert.equal(wrapper.find('.button').text(), 'Load Previous');
+		expect(wrapper.find('.button').text()).toBe('Load Previous');
 	});
 
 	it('Loads next page', async () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$store.state.Markers.hasNext = true;
-		mocks.$store.state.Markers.page = 1;
+		const nextPageStub = sinon.spy();
 
-		const storeDispatchSpy = sinon.spy();
-		sinon.stub(Map, 'setView');
-		const $bus = {
-			$emit: sinon.spy()
-		};
-		mocks.$store.dispatch = storeDispatchSpy;
-		mocks.$bus = $bus;
+		storeOptions.modules.Markers.state.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		storeOptions.modules.Markers.state.hasNext = true;
+		storeOptions.modules.Markers.state.page = 1;
+		storeOptions.modules.Markers.actions.nextPage = nextPageStub;
+
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
 		await wrapper.vm.nextPage();
-		assert.isTrue(storeDispatchSpy.calledOnce);
-		assert.isTrue(storeDispatchSpy.calledWith('Markers/nextPage'));
+		expect(nextPageStub.calledOnce).toBeTruthy();
 	});
 
 	it('Loads prev page', async () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$store.state.Markers.hasNext = true;
-		mocks.$store.state.Markers.page = 1;
+		const prevPageStub = sinon.spy();
 
-		const storeDispatchSpy = sinon.spy();
-		sinon.stub(Map, 'setView');
-		const $bus = {
-			$emit: sinon.spy()
-		};
-		mocks.$store.dispatch = storeDispatchSpy;
-		mocks.$bus = $bus;
+		storeOptions.modules.Markers.state.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		storeOptions.modules.Markers.state.hasNext = true;
+		storeOptions.modules.Markers.state.page = 1;
+		storeOptions.modules.Markers.actions.previousPage = prevPageStub;
+
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
 		await wrapper.vm.previousPage();
-		assert.isTrue(storeDispatchSpy.calledOnce);
-		assert.isTrue(storeDispatchSpy.calledWith('Markers/previousPage'));
+		expect(prevPageStub.calledOnce).toBeTruthy();
+
 	});
 
 	it('Calls nextPage on click', () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$store.state.Markers.hasNext = true;
-		mocks.$store.state.Markers.page = 1;
+		storeOptions.modules.Markers.state.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		storeOptions.modules.Markers.state.hasNext = true;
+		storeOptions.modules.Markers.state.page = 1;
 
 		const nextPageStub = sinon.stub(MarkerList.methods, 'nextPage');
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
+
 		wrapper.findAll('.button').at(1).trigger('click');
-		assert.isTrue(nextPageStub.calledOnce);
+		expect(nextPageStub.calledOnce).toBeTruthy();
 	});
 
 	it('Calls previousPage on click', () => {
-		mocks.$store.state.Markers.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$store.state.Markers.hasNext = true;
-		mocks.$store.state.Markers.page = 1;
+		storeOptions.modules.Markers.state.markers = new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		storeOptions.modules.Markers.state.hasNext = true;
+		storeOptions.modules.Markers.state.page = 1;
 
 		const previousPageStub = sinon.stub(MarkerList.methods, 'previousPage');
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
 		wrapper.findAll('.button').at(0).trigger('click');
-		assert.isTrue(previousPageStub.calledOnce);
+		expect(previousPageStub.calledOnce).toBeTruthy();
 	});
 
 	it('Shows upload list when there are pending uploads and current route is edit', () => {
-		mocks.$store.getters["Uploads/allFiles"] = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-
-		const wrapper = shallowMount(MarkerList, {
-			mocks
-		});
-		assert.isTrue(wrapper.find('uploadslist-stub').exists());
-	});
-
-	it('Shows upload list when there are pending uploads and a users story is chosen', () => {
-		mocks.$store.getters["Uploads/allFiles"] = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$router.currentRoute.name = 'story';
-		mocks.$store.state.Stories.story = {
-			user_id: 1
+		storeOptions.modules.Uploads.getters.allFiles = (state) => {
+			return new Array(pageSize * 3).fill({lat: 0, lng: 0});
 		};
 
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
-		assert.isTrue(wrapper.find('uploadslist-stub').exists());
+
+		expect(wrapper.find('uploads-list-stub').exists()).toBeTruthy();
+	});
+
+	it('Shows upload list when there are pending uploads and a users story is chosen', () => {
+		storeOptions.modules.Uploads.getters.allFiles = (state) => {
+			return new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		};
+		storeOptions.modules.Stories.state.story = {
+			user_id: 1
+		};
+		mocks.$route.name = 'story';
+
+		const wrapper = shallowMount(MarkerList, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
+		});
+
+		expect(wrapper.find('uploads-list-stub').exists()).toBeTruthy();
 	});
 
 	it('Doesnt show upload list when there are pending uploads and current route is not edit', () => {
-		mocks.$store.getters["Uploads/allFiles"] = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$router.currentRoute.name = 'view';
+		storeOptions.modules.Uploads.getters.allFiles = (state) => {
+			return new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		};
+		mocks.$route.name = 'view';
 
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
-		assert.isFalse(wrapper.find('uploadslist-stub').exists());
+		expect(wrapper.find('uploads-list-stub').exists()).toBeFalsy();
 	});
 
 	it('Doesnt Show upload list when there are pending uploads and route is story of other user', () => {
-		mocks.$store.getters["Uploads/allFiles"] = new Array(pageSize * 3).fill({lat: 0, lng: 0});
-		mocks.$router.currentRoute.name = 'story';
-		mocks.$store.state.Stories.story = {
+		storeOptions.modules.Uploads.getters.allFiles = (state) => {
+			return new Array(pageSize * 3).fill({lat: 0, lng: 0});
+		};
+		mocks.$route.name = 'story';
+		storeOptions.modules.Stories.state.story = {
 			user_id: 2
 		};
 
 		const wrapper = shallowMount(MarkerList, {
-			mocks
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
 		});
 
-		assert.isFalse(wrapper.find('uploadslist-stub').exists());
+		expect(wrapper.find('uploads-list-stub').exists()).toBeFalsy();
 	});
-});
+})
+;

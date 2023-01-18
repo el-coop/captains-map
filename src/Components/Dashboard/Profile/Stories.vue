@@ -15,13 +15,13 @@
 			<span class="story__name" v-text="story.name"/>
 		</div>
 
-		<StoryEditModal v-if="edit" :active.sync="createModal" @saved="chooseStory"/>
+		<StoryEditModal v-if="edit" v-model:active="createModal" @saved="chooseStory"/>
 	</div>
 </template>
 
 <script>
-	import StoryEditModal from "@/Components/Modals/StoryEditModal";
-	import StoryCoverImage from "@/Components/Dashboard/Profile/StoryCoverImage";
+	import StoryEditModal from "@/Components/Modals/StoryEditModal.vue";
+	import StoryCoverImage from "@/Components/Dashboard/Profile/StoryCoverImage.vue";
 
 	export default {
 		name: "Stories",

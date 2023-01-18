@@ -8,10 +8,10 @@
 </template>
 
 <script>
-	import FieldMixin from "@/Components/Utilities/FieldMixin";
+	import FieldMixin from "@/Components/Utilities/FieldMixin.vue";
 
 	export default {
-		name: "TextareaField",
+        name: "TextareaField",
 		mixins: [FieldMixin],
 	}
 </script>

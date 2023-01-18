@@ -1,5 +1,5 @@
 <script>
-	import MarkerEntry from "@/Components/Dashboard/SideBar/MarkerEntry";
+	import MarkerEntry from "@/Components/Dashboard/SideBar/MarkerEntry.vue";
 	import globe from '../../../assets/images/globe-icon.png';
 
 	export default {

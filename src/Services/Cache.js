@@ -1,4 +1,5 @@
 import localForage from 'localforage';
+import {isProxy} from "vue";
 
 const caches = {
 	request: localForage.createInstance({
@@ -77,6 +78,10 @@ class Cache {
 		}
 
 		try {
+			if (isProxy(value)) {
+				value = JSON.parse(JSON.stringify(value));
+			}
+
 			await storage.setItem('' + key, {
 				value,
 				expiry

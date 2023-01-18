@@ -15,8 +15,8 @@
 
 <script>
 	import globe from '../../../assets/images/globe-icon.png';
-	import Profile from "@/Components/Dashboard/Profile";
-	import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField";
+	import Profile from "@/Components/Dashboard/Profile.vue";
+	import MultiFileField from "@/Components/Modals/CreateMarker/MultiFileField.vue";
 
 	export default {
 		name: "ProfileEdit",

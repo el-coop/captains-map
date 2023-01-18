@@ -11,10 +11,11 @@
 
 <script>
 	export default {
-		name: "DateTimeField",
+        name: "DateTimeField",
+        emits: ['update:modelValue'],
 
 		props: {
-			value: {
+            modelValue: {
 				default() {
 					return null;
 				}
@@ -70,8 +71,8 @@
 
 		data() {
 			return {
-				date: this.formatDate(this.value),
-				time: this.formatTime(this.value),
+				date: this.formatDate(this.modelValue),
+				time: this.formatTime(this.modelValue),
 			}
 		},
 
@@ -79,11 +80,11 @@
 			date: {
 				immediate: true,
 				handler(value) {
-					this.$emit('input', this.getDateTime());
+					this.$emit('update:modelValue', this.getDateTime());
 				}
 			},
 			time(value) {
-				this.$emit('input', this.getDateTime());
+				this.$emit('update:modelValue', this.getDateTime());
 			},
 		},
 

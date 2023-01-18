@@ -94,7 +94,7 @@ class HttpService {
 			});
 		} catch (error) {
 			if (error.response && error.response.data.message === 'invalid csrf token' && repeat) {
-				return await this.repeatWithCsrf('post', url, headers, data, config);
+				return await this.repeatWithCsrf('patch', url, headers, data, config);
 			}
 			return error.response;
 		}
@@ -116,11 +116,12 @@ class HttpService {
 		if (method === "delete") {
 			return await this.delete(url, headers, false);
 		}
-		return await this.post(url, data, headers, config, false);
+
+		return await this[method](url, data, headers, config, false);
 	}
 
-	static install(Vue) {
-		Vue.prototype.$http = service;
+	static install(app) {
+		app.config.globalProperties.$http = service;
 	}
 }
 

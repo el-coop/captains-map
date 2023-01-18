@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
+import {describe, it, expect, afterEach} from 'vitest';
 import Store from '@/store';
 import uploadsStore from '@/store/uploads';
 import cache from '@/Services/Cache';
@@ -10,7 +10,7 @@ import toast from "izitoast";
 
 describe('Upload store', () => {
 
-	afterEach('Reset sinon and settings', () => {
+	afterEach(() => {
 		sinon.restore();
 	});
 
@@ -18,7 +18,7 @@ describe('Upload store', () => {
 		uploadsStore.state.queue = [{id: 1}, {id: 2}];
 		uploadsStore.state.errored = [{id: 3}, {id: 4}];
 
-		assert.deepEqual(Store.getters['Uploads/allFiles'], [{id: 1}, {id: 2}, {id: 3}, {id: 4}]);
+		expect(Store.getters['Uploads/allFiles'], [{id: 1}, {id: 2}, {id: 3}, {id: 4}]);
 	});
 
 	it('pushes to queue', () => {
@@ -27,7 +27,7 @@ describe('Upload store', () => {
 		};
 		uploadsStore.mutations.pushToQueue(state, {id: 1});
 
-		assert.deepEqual(state.queue[0], {id: 1});
+		expect(state.queue[0]).toEqual({id: 1});
 	});
 
 
@@ -37,7 +37,7 @@ describe('Upload store', () => {
 		};
 		uploadsStore.mutations.pushToErrored(state, {id: 1});
 
-		assert.deepEqual(state.errored[0], {id: 1});
+		expect(state.errored[0]).toEqual({id: 1});
 	});
 
 
@@ -47,7 +47,7 @@ describe('Upload store', () => {
 		};
 		uploadsStore.mutations.removeFromQueue(state, 2);
 
-		assert.deepEqual(state.queue, [{uploadTime: 1}, {uploadTime: 3}]);
+		expect(state.queue).toEqual([{uploadTime: 1}, {uploadTime: 3}]);
 	});
 
 	it('removes from errored', () => {
@@ -56,7 +56,7 @@ describe('Upload store', () => {
 		};
 		uploadsStore.mutations.removeFromErrored(state, 1);
 
-		assert.deepEqual(state.errored, [{uploadTime: 2}, {uploadTime: 3}]);
+		expect(state.errored).toEqual([{uploadTime: 2}, {uploadTime: 3}]);
 	});
 
 	it('marks as working', () => {
@@ -65,7 +65,7 @@ describe('Upload store', () => {
 		};
 		uploadsStore.mutations.markAsWorking(state, 1);
 
-		assert.deepEqual(state.workingId, 1);
+		expect(state.workingId).toBe(1);
 	});
 
 	it('Doesnt process queue when there is no csrf', () => {
@@ -80,7 +80,7 @@ describe('Upload store', () => {
 
 		uploadsStore.actions.processQueue({state, rootState});
 
-		assert.isTrue(uploadServiceStub.notCalled);
+		expect(uploadServiceStub.notCalled).toBeTruthy();
 	});
 
 	it('Doesnt process queue when queue isnt loaded', () => {
@@ -95,7 +95,7 @@ describe('Upload store', () => {
 
 		uploadsStore.actions.processQueue({state, rootState});
 
-		assert.isTrue(uploadServiceStub.notCalled);
+		expect(uploadServiceStub.notCalled).toBeTruthy();
 	});
 
 	it('processes queue when queue is loaded and csrf is ready', () => {
@@ -110,7 +110,7 @@ describe('Upload store', () => {
 
 		uploadsStore.actions.processQueue({state, rootState});
 
-		assert.isTrue(uploadServiceStub.calledOnce);
+		expect(uploadServiceStub.calledOnce).toBeTruthy();
 	});
 
 	it('initializes queue', async () => {
@@ -165,10 +165,10 @@ describe('Upload store', () => {
 
 		await uploadsStore.actions.init({state, dispatch});
 
-		assert.isTrue(state.loaded);
-		assert.isTrue(dispatch.calledOnce);
-		assert.isTrue(dispatch.calledWith('processQueue'));
-		assert.deepEqual(state.errored, [{
+		expect(state.loaded).toBeTruthy();
+		expect(dispatch.calledOnce).toBeTruthy();
+		expect(dispatch.calledWith('processQueue')).toBeTruthy();
+		expect(state.errored).toEqual([{
 			id: 1,
 			error: 'bla',
 			media: {
@@ -178,7 +178,7 @@ describe('Upload store', () => {
 				}
 			}
 		}]);
-		assert.deepEqual(state.queue, [{
+		expect(state.queue).toEqual([{
 			id: 2,
 			media: {
 				files: {
@@ -207,11 +207,11 @@ describe('Upload store', () => {
 			commit
 		}, marker);
 
-		assert.isTrue(commit.calledOnce);
-		assert.isTrue(commit.calledWith('pushToQueue', marker));
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith(marker.uploadTime + '', {value: marker, expiry: null}));
-		assert.isTrue(uploadServiceStub.calledOnce);
+		expect(commit.calledOnce).toBeTruthy();
+		expect(commit.calledWith('pushToQueue', marker)).toBeTruthy();
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.calledWith(marker.uploadTime + '', {value: marker, expiry: null})).toBeTruthy();
+		expect(uploadServiceStub.calledOnce).toBeTruthy();
 	});
 
 	it('cancels upload', async () => {
@@ -220,10 +220,10 @@ describe('Upload store', () => {
 
 		await uploadsStore.actions.cancelUpload({commit}, 1);
 
-		assert.isTrue(commit.calledOnce);
-		assert.isTrue(commit.calledWith('removeFromErrored', 1));
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith('1'));
+		expect(commit.calledOnce).toBeTruthy();
+		expect(commit.calledWith('removeFromErrored', 1)).toBeTruthy();
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.calledWith('1')).toBeTruthy();
 	});
 
 	it('returns marker to queue', async () => {
@@ -243,10 +243,10 @@ describe('Upload store', () => {
 			}
 		}, marker);
 
-		assert.isTrue(commit.calledTwice);
-		assert.isTrue(commit.calledWith('pushToQueue', marker));
-		assert.isTrue(commit.calledWith('removeFromErrored', 1));
-		assert.isTrue(uploadServiceStub.calledOnce);
+		expect(commit.calledTwice).toBeTruthy();
+		expect(commit.calledWith('pushToQueue', marker)).toBeTruthy();
+		expect(commit.calledWith('removeFromErrored', 1)).toBeTruthy();
+		expect(uploadServiceStub.calledOnce).toBeTruthy();
 	});
 
 	it('returns marker to queue but doesnt process when no csrf', async () => {
@@ -266,10 +266,10 @@ describe('Upload store', () => {
 			}
 		}, marker);
 
-		assert.isTrue(commit.calledTwice);
-		assert.isTrue(commit.calledWith('pushToQueue', marker));
-		assert.isTrue(commit.calledWith('removeFromErrored', 1));
-		assert.isFalse(uploadServiceStub.calledOnce);
+		expect(commit.calledTwice).toBeTruthy();
+		expect(commit.calledWith('pushToQueue', marker)).toBeTruthy();
+		expect(commit.calledWith('removeFromErrored', 1)).toBeTruthy();
+		expect(uploadServiceStub.calledOnce).toBeFalsy();
 	});
 
 	it('moves marker from queue to error', async () => {
@@ -287,13 +287,13 @@ describe('Upload store', () => {
 
 		await uploadsStore.actions.uploadError({commit}, marker);
 
-		assert.isTrue(commit.calledTwice);
-		assert.isTrue(commit.calledWith('pushToErrored', marker));
-		assert.isTrue(commit.calledWith('removeFromQueue', 1));
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith('1', {value: marker, expiry: null}));
-		assert.isTrue(toastStub.calledOnce);
-		assert.isTrue(toastStub.calledWith({message: 'Please try again later', title: 'Upload failed'}));
+		expect(commit.calledTwice).toBeTruthy();
+		expect(commit.calledWith('pushToErrored', marker)).toBeTruthy();
+		expect(commit.calledWith('removeFromQueue', 1)).toBeTruthy();
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.calledWith('1', {value: marker, expiry: null})).toBeTruthy();
+		expect(toastStub.calledOnce).toBeTruthy();
+		expect(toastStub.calledWith({message: 'Please try again later', title: 'Upload failed'})).toBeTruthy();
 	});
 
 	it('removes marker from storage when uploaded', async () => {
@@ -308,13 +308,13 @@ describe('Upload store', () => {
 
 		await uploadsStore.actions.uploaded({commit}, marker);
 
-		assert.isTrue(commit.calledTwice);
-		assert.isTrue(commit.calledWith('Markers/addAtStart', marker, {
+		expect(commit.calledTwice).toBeTruthy();
+		expect(commit.calledWith('Markers/addAtStart', marker, {
 			root: true
-		}));
-		assert.isTrue(commit.calledWith('removeFromQueue', 1));
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith('1'));
+		})).toBeTruthy();
+		expect(commit.calledWith('removeFromQueue', 1)).toBeTruthy();
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.calledWith('1')).toBeTruthy();
 	});
 
 	it('removes marker from storage when uploaded and adds to story if story id', async () => {
@@ -330,13 +330,13 @@ describe('Upload store', () => {
 
 		await uploadsStore.actions.uploaded({commit}, marker);
 
-		assert.isTrue(commit.calledTwice);
-		assert.isTrue(commit.calledWith('Stories/add', marker, {
+		expect(commit.calledTwice).toBeTruthy();
+		expect(commit.calledWith('Stories/add', marker, {
 			root: true
-		}));
-		assert.isTrue(commit.calledWith('removeFromQueue', 1));
-		assert.isTrue(cacheStub.calledOnce);
-		assert.isTrue(cacheStub.calledWith('1'));
+		})).toBeTruthy();
+		expect(commit.calledWith('removeFromQueue', 1)).toBeTruthy();
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(cacheStub.calledWith('1')).toBeTruthy();
 	});
 
 	it('Purges queue', async () => {
@@ -347,8 +347,8 @@ describe('Upload store', () => {
 		};
 		const cacheStub = sinon.stub(cache.caches().uploads, 'clear');
 		await uploadsStore.actions.purge({state});
-		assert.isTrue(cacheStub.calledOnce);
-		assert.deepEqual(state, {
+		expect(cacheStub.calledOnce).toBeTruthy();
+		expect(state).toEqual({
 			queue: [],
 			errored: [],
 			workingId: null,
@@ -364,7 +364,7 @@ describe('Upload store', () => {
 		dispatch.onCall(0).returns(false);
 
 		await uploadsStore.actions.uploadOfflineError({state, dispatch});
-		assert.isTrue(dispatch.calledOnce);
+		expect(dispatch.calledOnce).toBeTruthy();
 	});
 
 	it('Retries uploads with offline errors when logged in', async () => {
@@ -376,9 +376,9 @@ describe('Upload store', () => {
 		dispatch.onCall(0).returns(true);
 
 		await uploadsStore.actions.uploadOfflineError({state, dispatch});
-		assert.isTrue(dispatch.calledThrice);
-		assert.isTrue(dispatch.secondCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}}));
-		assert.isTrue(dispatch.thirdCall.calledWith('returnToQueue', {id: 3, error: {status: 'offline'}}));
+		expect(dispatch.calledThrice).toBeTruthy();
+		expect(dispatch.secondCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}})).toBeTruthy();
+		expect(dispatch.thirdCall.calledWith('returnToQueue', {id: 3, error: {status: 'offline'}})).toBeTruthy();
 	});
 
 	it('Retries only uploads with offline error', async () => {
@@ -391,7 +391,7 @@ describe('Upload store', () => {
 		dispatch.onCall(0).returns(true);
 
 		await uploadsStore.actions.uploadOfflineError({state, dispatch});
-		assert.isTrue(dispatch.calledTwice);
-		assert.isTrue(dispatch.secondCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}}));
+		expect(dispatch.calledTwice).toBeTruthy();
+		expect(dispatch.secondCall.calledWith('returnToQueue', {id: 2, error: {status: 'offline'}})).toBeTruthy();
 	});
 });

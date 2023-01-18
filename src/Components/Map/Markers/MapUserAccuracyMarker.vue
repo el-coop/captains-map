@@ -3,13 +3,14 @@
 </template>
 
 <script>
-	import MapObjectMixin from '@/Components/Map/MapObjectMixin';
-	import UserMarkerMixin from '@/Components/Map/Markers/MapUserMarkerMixin';
+	import MapObjectMixin from '@/Components/Map/MapObjectMixin.vue';
+	import UserMarkerMixin from '@/Components/Map/Markers/MapUserMarkerMixin.vue';
 
 	export default {
 		name: "MapUserAccuracyMarker",
 		mixins: [MapObjectMixin, UserMarkerMixin],
-		props: {
+        emits:['user-marker-click'],
+        props: {
 			lat: {
 				type: Number,
 				required: true
@@ -26,7 +27,8 @@
 
 		data() {
 			return {
-				iconSize: Math.min(750, this.accuracy / 2)
+				iconSize: Math.min(750, this.accuracy / 2),
+                event: 'user-marker-click'
 			}
 		},
 

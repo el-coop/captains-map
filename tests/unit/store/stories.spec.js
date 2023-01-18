@@ -1,12 +1,13 @@
 import sinon from 'sinon';
-import { assert } from 'chai';
-import store from '@/store';
+import {describe, it, expect, afterEach} from 'vitest';
+import { getters } from '@/store';
+
 import storiesStore from '@/store/stories';
 import http from '@/Services/HttpService';
 
 describe('Stories Store', () => {
 
-	afterEach('Reset sinon and settings', () => {
+	afterEach(() => {
 		sinon.restore();
 	});
 
@@ -22,7 +23,7 @@ describe('Stories Store', () => {
 
 		storiesStore.mutations.exit(storiesStore.state);
 
-		assert.deepEqual(storiesStore.state, {
+		expect(storiesStore.state, {
 			story: null,
 			markers: []
 		});
@@ -41,7 +42,7 @@ describe('Stories Store', () => {
 			id: 2
 		});
 
-		assert.deepEqual(storiesStore.state.markers, [{
+		expect(storiesStore.state.markers).toEqual([{
 			id: 1
 		}, {
 			id: 2
@@ -65,7 +66,7 @@ describe('Stories Store', () => {
 		}
 		storiesStore.mutations.remove(storiesStore.state, 1);
 
-		assert.deepEqual(storiesStore.state.markers, [{
+		expect(storiesStore.state.markers).toEqual([{
 			id: 2,
 			media: [{
 				type: 'type',
@@ -73,7 +74,7 @@ describe('Stories Store', () => {
 			}]
 		}]);
 
-		assert.deepEqual(storiesStore.state.story.cover, {
+		expect(storiesStore.state.story.cover).toEqual({
 			type: 'type',
 			path: 'path'
 		});
@@ -90,9 +91,9 @@ describe('Stories Store', () => {
 		}
 		storiesStore.mutations.remove(storiesStore.state, 1);
 
-		assert.deepEqual(storiesStore.state.markers, []);
+		expect(storiesStore.state.markers).toEqual([]);
 
-		assert.deepEqual(storiesStore.state.story.cover, {
+		expect(storiesStore.state.story.cover).toEqual({
 			type: null,
 			path: null
 		});
@@ -132,11 +133,11 @@ describe('Stories Store', () => {
 			storyId: 1
 		});
 
-		assert.isTrue(getStub.called);
-		assert.isTrue(getStub.calledWith('story/test/1'));
-		assert.equal(response, 200);
-		assert.isFalse(storiesStore.state.loading);
-		assert.deepEqual(storiesStore.state.story, {
+		expect(getStub.called).toBeTruthy();
+		expect(getStub.calledWith('story/test/1')).toBeTruthy();
+		expect(response).toBe(200);
+		expect(storiesStore.state.loading).toBeFalsy();
+		expect(storiesStore.state.story).toEqual({
 			id: 1,
 			name: 'name',
 			user_id: 1,
@@ -146,7 +147,7 @@ describe('Stories Store', () => {
 				path: 'path',
 			}
 		});
-		assert.deepEqual(storiesStore.state.markers, data.markers);
+		expect(storiesStore.state.markers).toEqual(data.markers);
 	});
 
 	it('Returns 404 when api returns 404', async () => {
@@ -167,12 +168,12 @@ describe('Stories Store', () => {
 			storyId: 1
 		});
 
-		assert.isTrue(getStub.called);
-		assert.isTrue(getStub.calledWith('story/test/1'));
-		assert.equal(response, 404);
-		assert.isFalse(storiesStore.state.loading);
-		assert.equal(storiesStore.state.story, null);
-		assert.deepEqual(storiesStore.state.markers, []);
+		expect(getStub.called).toBeTruthy();
+		expect(getStub.calledWith('story/test/1')).toBeTruthy();
+		expect(response, 404);
+		expect(storiesStore.state.loading).toBeFalsy();
+		expect(storiesStore.state.story).toBe(null);
+		expect(storiesStore.state.markers).toEqual([]);
 	});
 
 	it('Saves new story', async () => {
@@ -194,16 +195,16 @@ describe('Stories Store', () => {
 			name: 'name'
 		});
 
-		assert.isTrue(postStub.calledOnce);
-		assert.isTrue(postStub.calledWith('story', {
+		expect(postStub.calledOnce).toBeTruthy();
+		expect(postStub.calledWith('story', {
 			name: 'name',
 			published: 0
-		}));
+		})).toBeTruthy();
 
-		assert.isTrue(commit.calledOnce);
-		assert.isTrue(commit.calledWith('Profile/addStory', {id: 1}, {root: true}));
+		expect(commit.calledOnce).toBeTruthy();
+		expect(commit.calledWith('Profile/addStory', {id: 1}, {root: true})).toBeTruthy();
 
-		assert.deepEqual(response, {
+		expect(response).toEqual( {
 			status: 201,
 			id: 1
 		});
@@ -234,24 +235,24 @@ describe('Stories Store', () => {
 			published: 1
 		});
 
-		assert.isTrue(patchStub.calledOnce);
-		assert.isTrue(patchStub.calledWith('story/1', {
+		expect(patchStub.calledOnce).toBeTruthy();
+		expect(patchStub.calledWith('story/1',{
 			name: 'name',
 			published: 1
-		}));
+		})).toBeTruthy();
 
-		assert.isTrue(commit.called);
-		assert.isTrue(commit.calledWith('Profile/updateStory', {
+		expect(commit.called).toBeTruthy();
+		expect(commit.calledWith('Profile/updateStory', {
 			id: 1,
 			name: 'name',
 			published: 1
-		}));
+		})).toBeTruthy();
 
-		assert.deepEqual(response, {
+		expect(response).toEqual({
 			status: 200,
 			id: 1
 		});
-		assert.deepEqual(storiesStore.state.story, {
+		expect(storiesStore.state.story).toEqual({
 			id: 1,
 			name: 'name',
 			published: 1
@@ -282,19 +283,19 @@ describe('Stories Store', () => {
 			published: 1
 		});
 
-		assert.isTrue(patchStub.calledOnce);
-		assert.isTrue(patchStub.calledWith('story/1', {
+		expect(patchStub.calledOnce).toBeTruthy();
+		expect(patchStub.calledWith('story/1', {
 			name: 'name',
 			published: 1
-		}));
+		})).toBeTruthy();
 
-		assert.isTrue(commit.notCalled);
+		expect(commit.notCalled).toBeTruthy();
 
-		assert.deepEqual(response, {
+		expect(response).toEqual({
 			status: 500,
 			id: 0
 		});
-		assert.deepEqual(storiesStore.state.story, {
+		expect(storiesStore.state.story).toEqual({
 			id: 1,
 		});
 	});
@@ -317,13 +318,13 @@ describe('Stories Store', () => {
 
 		const response = await storiesStore.actions.delete({state: storiesStore.state, commit});
 
-		assert.isTrue(deleteStub.calledOnce);
-		assert.isTrue(deleteStub.calledWith('story/1'));
+		expect(deleteStub.calledOnce).toBeTruthy();
+		expect(deleteStub.calledWith('story/1')).toBeTruthy();
 
-		assert.isTrue(commit.calledOnce);
-		assert.isTrue(commit.calledWith('Profile/removeStory', 1, {root: true}));
+		expect(commit.calledOnce).toBeTruthy();
+		expect(commit.calledWith('Profile/removeStory', 1, {root: true})).toBeTruthy();
 
-		assert.isTrue(response);
+		expect(response).toBeTruthy();
 	});
 
 	it('Returns false when fails to delete a story', async () => {
@@ -344,11 +345,11 @@ describe('Stories Store', () => {
 
 		const response = await storiesStore.actions.delete({state: storiesStore.state, commit});
 
-		assert.isTrue(deleteStub.calledOnce);
-		assert.isTrue(deleteStub.calledWith('story/1'));
+		expect(deleteStub.calledOnce).toBeTruthy();
+		expect(deleteStub.calledWith('story/1')).toBeTruthy();
 
-		assert.isTrue(commit.notCalled);
+		expect(commit.notCalled).toBeTruthy();
 
-		assert.isFalse(response);
+		expect(response).toBeFalsy();
 	});
 });

@@ -2,6 +2,7 @@
 	import leaflet from 'leaflet';
 
 	export default {
+	    emits: ['add-to-map','remove-from-map'],
 		data() {
 			return {
 				event: 'marker-click',
@@ -20,7 +21,7 @@
 			}
 		},
 
-		beforeDestroy() {
+		beforeUnmount() {
 			this.removeFromMap();
 		},
 
@@ -47,14 +48,14 @@
 				}
 			},
 
-			addToMap() {
-				this.$parent.addObject(this.mapObject);
+			addToMap(object) {
+			    this.$emit('add-to-map',object || this.mapObject);
 			},
-			removeFromMap() {
-				this.$parent.removeObject(this.mapObject);
+			removeFromMap(object) {
+                this.$emit('remove-from-map',object || this.mapObject);
 			},
 			onClick() {
-				this.$bus.$emit(this.event, this.payload);
+				this.$emit(this.event, this.payload);
 			},
 
 			setIcon(icon) {
