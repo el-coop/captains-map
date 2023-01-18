@@ -21,6 +21,7 @@ workbox.routing.registerRoute(
 );
 
 self.addEventListener('message', (message) => {
+	console.log('message',message);
 	if (message.data.action === 'skipWaiting') {
 		self.skipWaiting();
 	}

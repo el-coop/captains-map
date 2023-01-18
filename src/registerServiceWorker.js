@@ -18,7 +18,7 @@ if (import.meta.env.PROD) {
 		},
 		updated(registration) {
 			console.log('New content is available; please refresh.');
-			console.log('here');
+			console.log('here - why does this happen?');
 			toast.question({
 				title: "Update available for Captain's Map.",
 				message: '',
@@ -28,9 +28,10 @@ if (import.meta.env.PROD) {
 				buttons: [
 					['<button>Update</button>', () => {
 						try {
+							console.log('click');
 							registration.waiting.postMessage({action: 'skipWaiting'});
 						} catch (error) {
-							
+							console.log(error);
 						}
 					}],
 				]
