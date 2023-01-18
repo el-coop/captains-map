@@ -1,20 +1,25 @@
-workbox.core.setCacheNameDetails({prefix: "captains-map"});
+import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { setCacheNameDetails } from 'workbox-core';
+import { cacheFirst } from 'workbox-strategies';
 
-workbox.precaching.cleanupOutdatedCaches()
+setCacheNameDetails({prefix: "captains-map"});
+
+cleanupOutdatedCaches()
 
 self.__precacheManifest = [].concat(self.__WB_MANIFEST || []);
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerRoute(
+registerRoute(
 	new RegExp('/api/images/.*'),
-	workbox.strategies.cacheFirst({
+	cacheFirst({
 		cacheName: 'image-cache',
 	})
 );
 
-workbox.routing.registerRoute(
+registerRoute(
 	new RegExp('/api/thumbnails/.*'),
-	workbox.strategies.cacheFirst({
+	cacheFirst({
 		cacheName: 'image-cache',
 	})
 );
