@@ -5,7 +5,6 @@ workbox.precaching.cleanupOutdatedCaches()
 self.__precacheManifest = [].concat(self.__WB_MANIFEST || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-
 workbox.routing.registerRoute(
 	new RegExp('/api/images/.*'),
 	workbox.strategies.cacheFirst({
@@ -21,7 +20,6 @@ workbox.routing.registerRoute(
 );
 
 self.addEventListener('message', (message) => {
-	console.log('message',message);
 	if (message.data.action === 'skipWaiting') {
 		self.skipWaiting();
 	}

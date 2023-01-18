@@ -25,7 +25,7 @@ export default defineConfig({
 	plugins: [
 		vue(),
 		VitePWA({
-			strategies: "InjectManifest",
+			strategies: "injectManifest",
 			injectRegister: null,
 			srcDir: "src",
 			filename: "service-worker.js",
