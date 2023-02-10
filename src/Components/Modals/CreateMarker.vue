@@ -1,6 +1,6 @@
 <template>
 	<form @submitting="loading = true" @submit.prevent="queueUpload">
-		<BaseModal route-name="edit" v-model:active="modal">
+		<BaseModal v-model:active="modal">
 			<template #header>
 				<p class="card__header-title">Create new marker</p>
 			</template>
@@ -21,7 +21,8 @@
 				<SelectField v-model="form.type" :error="errors ? errors['type'] : ''" :options="markerTypes"
 							 label="Type"
 							 name="type"/>
-				<SearchLocationField v-model="form.location" :latLng="{lat: form.lat, lng: form.lng}"/>
+				<SearchLocationField v-model="form.location" :latLng="{lat: form.lat, lng: form.lng}"
+                                     :error="(errors && errors['location']) ? 'The maximum length for location is 255 characters' : ''"/>
 				<TextareaField label="Description" v-model="form.description" name="description"/>
 			</template>
 

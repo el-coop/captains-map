@@ -62,7 +62,12 @@ export default {
         },
         
         showUploads() {
-            if (!this.$store.getters['Uploads/allFiles'].length) {
+            const storyId = this.$store.state.Stories.story ? this.$store.state.Stories.story.id : null;
+            const uploadsLength = this.$store.getters['Uploads/allFiles'].filter((marker) => {
+                return marker.story == storyId;
+            }).length;
+            
+            if (! uploadsLength) {
                 return false
             }
             

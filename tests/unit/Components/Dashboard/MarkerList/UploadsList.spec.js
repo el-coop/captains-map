@@ -18,8 +18,13 @@ describe('UploadsList.vue', () => {
 					namespaced: true,
 					getters: {
 						allFiles() {
-							return new Array(3).fill({lat: 0, lng: 0});
+							return new Array(3).fill({lat: 0, lng: 0}).concat([{lat:0, lng:0, story: 1}]);
 						}
+					}
+				},
+				Stories: {
+					state: {
+						story: null
 					}
 				}
 			}
@@ -78,7 +83,7 @@ describe('UploadsList.vue', () => {
 		expect(wrapper.find('ul').exists()).toBeFalsy();
 	});
 
-	it('Lists all the different upload entries', async () => {
+	it('Lists only general upload entries when no story', async () => {
 		const wrapper = shallowMount(UploadsList, {
 			global: {
 				plugins: [createStore(storeOptions)],
@@ -91,5 +96,23 @@ describe('UploadsList.vue', () => {
 		});
 
 		expect(wrapper.findAll('upload-entry-stub').length).toBe(3);
+	});
+
+	it('Lists only the story entries when there is a story', async () => {
+		storeOptions.modules.Stories.state.story = {
+			id: 1
+		};
+		const wrapper = shallowMount(UploadsList, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			}
+		});
+
+		await wrapper.setData({
+			open: true
+		});
+
+		expect(wrapper.findAll('upload-entry-stub').length).toBe(1);
 	});
 });

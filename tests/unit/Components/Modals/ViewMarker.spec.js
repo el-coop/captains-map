@@ -51,6 +51,7 @@ describe('ViewMarker.vue', () => {
 		mocks = {
 			$router: {
 				pushRoute: sinon.stub(),
+				replaceRoute: sinon.stub(),
 				push: sinon.stub(),
 
 			},
@@ -515,10 +516,60 @@ describe('ViewMarker.vue', () => {
 			marker,
 		});
 
-		wrapper.vm.closedNavigation();
+		wrapper.vm.closedNavigation({
+			back:false
+		});
 
-		expect(mocks.$router.pushRoute.calledTwice).toBeTruthy();
-		expect(mocks.$router.pushRoute.secondCall.calledWith('test/story/1')).toBeTruthy();
+		expect(mocks.$router.replaceRoute.calledOnce).toBeTruthy();
+		expect(mocks.$router.replaceRoute.calledWith('test/story/1')).toBeTruthy();
+	});
+
+	it('Doesnt navigates back to story when back button is called', async () => {
+		mocks.$route.params.username = 'test';
+		mocks.$route.params.story = 1;
+		const wrapper = mount(ViewMarker, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
+		});
+
+		await wrapper.setData({
+			modal: true,
+			marker,
+		});
+
+		wrapper.vm.closedNavigation({
+			back: true
+		});
+
+		expect(mocks.$router.replaceRoute.notCalled).toBeTruthy();
+	});
+
+	it('Navigates back to story when back button is called but back has marker as well', async () => {
+		mocks.$route.params.username = 'test';
+		mocks.$route.params.story = 1;
+		mocks.$route.params.marker = marker.id;
+		const wrapper = mount(ViewMarker, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
+		});
+
+		await wrapper.setData({
+			modal: true,
+			marker,
+		});
+
+		wrapper.vm.closedNavigation({
+			back: true
+		});
+
+		expect(mocks.$router.replaceRoute.calledOnce).toBeTruthy();
+		expect(mocks.$router.replaceRoute.calledWith('test/story/1')).toBeTruthy();
 	});
 
 	it('Navigates back to user when it was loaded before', async () => {

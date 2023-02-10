@@ -65,7 +65,7 @@ describe('ViewMarker/Content.vue', () => {
 	});
 
 
-	it('Copies links', async () => {
+	it('Copies links when no navigator.share', async () => {
 		const wrapper = shallowMount(Content, {
 			props: {
 				marker
@@ -87,7 +87,9 @@ describe('ViewMarker/Content.vue', () => {
 	});
 
 
-	it('Shares to facebook when navigator.share is not available and prints 2 buttons', async () => {
+	it('Copies links when no navigator.share fails', async () => {
+		global.navigator.share = sinon.stub().throws();
+
 		const wrapper = shallowMount(Content, {
 			props: {
 				marker
@@ -98,13 +100,14 @@ describe('ViewMarker/Content.vue', () => {
 			}
 		});
 
-		wrapper.findAll('button').at(1).trigger('click');
+		wrapper.find('button').trigger('click');
 
 		await wrapper.vm.$nextTick();
 
-		expect(wrapper.findAll('button').length).toBe(2);
-		expect(global.window.open.calledOnce).toBeTruthy();
-		expect(global.window.open.calledWith(`https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}href`)).toBeTruthy();
+		expect(global.navigator.clipboard.writeText.calledOnce).toBeTruthy();
+		expect(global.navigator.clipboard.writeText.calledWith(`${window.location.protocol}//${window.location.host}href`)).toBeTruthy();
+		expect(mocks.$toast.info.calledOnce).toBeTruthy();
+		expect(mocks.$toast.info.calledWith('You can paste it anywhere', 'Link copied')).toBeTruthy();
 	});
 
 	it('Shares when navigator.share is available and shows only one button', async () => {

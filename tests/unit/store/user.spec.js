@@ -6,7 +6,7 @@ import cache from '@/Services/Cache';
 import router from '@/router';
 import http from '@/Services/HttpService';
 
-describe('User Store', () => {
+describe.only('User Store', () => {
 
 	afterEach(() => {
 		sinon.restore();
@@ -82,7 +82,9 @@ describe('User Store', () => {
 		const cacheClearStub = sinon.stub(cache, 'clear');
 		const routerStub = sinon.stub(router, 'push');
 		sinon.stub(router, 'currentRoute').value({
-			path: '/edit'
+			value: {
+				path: '/edit'
+			}
 		});
 		const httpStub = sinon.stub(http, 'get').callsFake(() => {
 			return {status: 200,}

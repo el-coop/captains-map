@@ -6,12 +6,8 @@
 			<p v-text="marker.description"/>
 		</div>
 		<div class="view-marker__content-buttons">
-			<button class="button is-dark view-marker__content-button" @click="copyLink" v-if="! hasShare">
-				<FontAwesomeIcon icon="copy" size="lg"/>
-			</button>
-			<br class="is-hidden-desktop">
-			<button class="button is-dark view-marker__content-button" @click="facebookShare">
-				<FontAwesomeIcon :icon="hasShare ? 'share-alt' : ['fab','facebook']" size="lg"/>
+			<button class="button is-dark view-marker__content-button" @click="shareLink">
+				<FontAwesomeIcon icon="share-alt" size="lg"/>
 			</button>
 		</div>
 	</div>
@@ -34,28 +30,26 @@
 		},
 
 		methods: {
-			async copyLink() {
-				await navigator.clipboard.writeText(`${window.location.protocol}//${window.location.host}${this.link}`);
-				this.$toast.info('You can paste it anywhere', 'Link copied');
-			},
-
-			async facebookShare() {
-				const url = `${window.location.protocol}//${window.location.host}${this.link}`;
-				if (this.hasShare) {
-					try {
-						await navigator.share({
-							title: '',
-							text: '',
-							url: url,
-						});
-					} catch (error) {
-
-					}
-					return;
-				}
-
-				window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`,);
-			}
+		    async shareLink(){
+                const url = `${window.location.protocol}//${window.location.host}${this.link}`;
+            
+                if (this.hasShare) {
+                    try {
+                        await navigator.share({
+                            title: '',
+                            text: '',
+                            url: url,
+                        });
+                        return;
+                    } catch (error) {
+                    
+                    }
+                }
+            
+                await navigator.clipboard.writeText(`${window.location.protocol}//${window.location.host}${this.link}`);
+                this.$toast.info('You can paste it anywhere', 'Link copied');
+            },
+            
 		},
 	}
 </script>

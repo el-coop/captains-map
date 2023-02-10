@@ -12,6 +12,12 @@ describe('StoriesOpen.vue', () => {
 	let storeOptions;
 
 	beforeEach(() => {
+		global.navigator.share = false;
+		global.navigator.clipboard ={
+			writeText: sinon.stub()
+		};
+		global.window.open = sinon.stub();
+
 		storeOptions = {
 			modules: {
 				Stories: {
@@ -40,7 +46,8 @@ describe('StoriesOpen.vue', () => {
 		};
 		mocks = {
 			$toast: {
-				success: sinon.stub()
+				success: sinon.stub(),
+				info: sinon.stub(),
 			},
 			$route: {
 				params: {
@@ -48,7 +55,8 @@ describe('StoriesOpen.vue', () => {
 				}
 			},
 			$router: {
-				push: sinon.stub()
+				push: sinon.stub(),
+				go: sinon.stub()
 			}
 		};
 
@@ -60,6 +68,10 @@ describe('StoriesOpen.vue', () => {
 
 	afterEach(() => {
 		sinon.restore();
+		delete global.navigator.share;
+		delete global.window.open;
+		delete global.navigator.clipboard;
+
 	});
 
 
@@ -112,7 +124,15 @@ describe('StoriesOpen.vue', () => {
 		expect(wrapper.find('.profile-open').exists()).toBeTruthy();
 	});
 
-	it('Exists story when exit clicked', () => {
+	it('Exists story to user when clicked without history', () => {
+		delete global.window.history;
+		global.window = Object.create(window);
+		global.window.history = {
+			state: {
+				back: null
+			}
+		}
+
 		const trackStoryStub = sinon.stub();
 		storeOptions.modules.Profile.mutations.trackStory = trackStoryStub;
 
@@ -132,6 +152,35 @@ describe('StoriesOpen.vue', () => {
 
 		expect(mocks.$router.push.calledOnce).toBeTruthy();
 		expect(mocks.$router.push.calledWith('/username')).toBeTruthy();
+	});
+
+	it('Exists story with -1 when history exists', () => {
+		delete global.window.history;
+		global.window = Object.create(window);
+		global.window.history = {
+			state: {
+				back: '/edit'
+			}
+		}
+
+		const trackStoryStub = sinon.stub();
+		storeOptions.modules.Profile.mutations.trackStory = trackStoryStub;
+
+		const wrapper = shallowMount(StoriesOpen, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
+		});
+
+		wrapper.find('button.webpush').trigger('click');
+
+		expect(trackStoryStub.calledOnce).toBeTruthy();
+		expect(trackStoryStub.calledWith(sinon.match.any,storeOptions.modules.Stories.state.story)).toBeTruthy();
+
+		expect(mocks.$router.go.calledOnce).toBeTruthy();
+		expect(mocks.$router.go.calledWith(-1)).toBeTruthy();
 	});
 
 	it('Opens edit modal when edit is clicked', () => {
@@ -160,5 +209,99 @@ describe('StoriesOpen.vue', () => {
 		wrapper.find('story-edit-modal-stub').trigger('saved');
 
 		expect(wrapper.vm.$data.edit).toBeFalsy();
+	});
+
+	it('Doesnt show share button when story is unpublished', async () => {
+		storeOptions.modules.Stories.state.story = {
+			name: 'story1',
+			published: 'false'
+		};
+
+		const wrapper = shallowMount(StoriesOpen, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
+		});
+
+		expect(wrapper.find('button.webpush.story__bar-button').exists()).toBeFalsy();
+
+	});
+
+	it('Copies links', async () => {
+		storeOptions.modules.Stories.state.story = {
+			name: 'story1',
+			published: 'true'
+		};
+		const wrapper = shallowMount(StoriesOpen, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
+		});
+
+		wrapper.find('button.webpush.story__bar-button').trigger('click');
+
+		await wrapper.vm.$nextTick();
+
+		expect(global.navigator.clipboard.writeText.calledOnce).toBeTruthy();
+		expect(global.navigator.clipboard.writeText.calledWith(window.location.href)).toBeTruthy();
+		expect(mocks.$toast.info.calledOnce).toBeTruthy();
+		expect(mocks.$toast.info.calledWith('You can paste it anywhere', 'Link copied')).toBeTruthy();
+	});
+
+
+	it('Uses navigator share', async () => {
+		global.navigator.share = sinon.stub();
+		storeOptions.modules.Stories.state.story = {
+			name: 'story1',
+			published: 'true'
+		};
+		const wrapper = shallowMount(StoriesOpen, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
+		});
+
+		wrapper.find('button.webpush.story__bar-button').trigger('click');
+
+		await wrapper.vm.$nextTick();
+
+		expect(global.window.open.notCalled).toBeTruthy();
+		expect(global.navigator.share.calledOnce).toBeTruthy();
+		expect(global.navigator.share.calledWith({
+			title: '',
+			text: '',
+			url: window.location.href,
+		})).toBeTruthy();
+	});
+
+	it('Copies link share if navigator share fails', async () => {
+		global.navigator.share = sinon.stub().throws();
+		storeOptions.modules.Stories.state.story = {
+			name: 'story1',
+			published: 'true'
+		};
+		const wrapper = shallowMount(StoriesOpen, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+				stubs
+			}
+		});
+
+		wrapper.find('button.webpush.story__bar-button').trigger('click');
+
+		await wrapper.vm.$nextTick();
+
+		expect(global.navigator.clipboard.writeText.calledOnce).toBeTruthy();
+		expect(global.navigator.clipboard.writeText.calledWith(window.location.href)).toBeTruthy();
+		expect(mocks.$toast.info.calledOnce).toBeTruthy();
+		expect(mocks.$toast.info.calledWith('You can paste it anywhere', 'Link copied')).toBeTruthy();
+
 	});
 });

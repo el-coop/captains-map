@@ -316,5 +316,58 @@ describe('MarkerList.vue', () => {
 
 		expect(wrapper.find('uploads-list-stub').exists()).toBeFalsy();
 	});
+
+	it('Doesnt Show story upload list when there are pending uploads and route is not story', () => {
+		storeOptions.modules.Uploads.getters.allFiles = (state) => {
+			return new Array(pageSize * 3).fill({lat: 0, lng: 0, story: 1});
+		};
+		mocks.$route.name = 'edit';
+
+		const wrapper = shallowMount(MarkerList, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
+		});
+
+		expect(wrapper.find('uploads-list-stub').exists()).toBeFalsy();
+	});
+
+	it('Doesnt Show story upload list when there are pending uploads and route is a different story story', () => {
+		storeOptions.modules.Uploads.getters.allFiles = (state) => {
+			return new Array(pageSize * 3).fill({lat: 0, lng: 0, story: 1});
+		};
+		storeOptions.modules.Stories.state.story = {
+			user_id: 1,
+			id: 2
+		};
+
+		const wrapper = shallowMount(MarkerList, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
+		});
+
+		expect(wrapper.find('uploads-list-stub').exists()).toBeFalsy();
+	});
+
+	it('Shows story upload list when there are pending uploads and route is same story', () => {
+		storeOptions.modules.Uploads.getters.allFiles = (state) => {
+			return new Array(pageSize * 3).fill({lat: 0, lng: 0, story: 1});
+		};
+		storeOptions.modules.Stories.state.story = {
+			user_id: 1,
+			id: 1
+		};
+
+		const wrapper = shallowMount(MarkerList, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks
+			}
+		});
+
+		expect(wrapper.find('uploads-list-stub').exists()).toBeTruthy();
+	});
 })
-;

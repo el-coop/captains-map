@@ -38,7 +38,7 @@ export default {
 			await cache.forget('settings', 'user');
 			await cache.clear('requests');
 			state.user = null;
-			if (router.currentRoute.path !== '/') {
+			if (router.currentRoute.value.path !== '/') {
 				await router.push('/');
 			}
 		},

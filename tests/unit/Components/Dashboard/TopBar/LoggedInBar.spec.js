@@ -45,10 +45,11 @@ describe('LoggedInBar.vue', () => {
 		mocks = {
 			$router: {
 				push: sinon.spy(),
-				currentRoute: {
-					path: '/'
-				}
 			},
+			$route: {
+				path: '/'
+
+			}
 		};
 
 	});
@@ -92,7 +93,7 @@ describe('LoggedInBar.vue', () => {
 
 
 	it('Renders with disabled edit button in edit page', () => {
-		mocks.$router.currentRoute.path = "/edit";
+		mocks.$route.path = "/edit";
 
 		const wrapper = mount(LoggedInBar, {
 			global: {

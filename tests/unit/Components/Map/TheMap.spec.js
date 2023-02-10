@@ -19,6 +19,13 @@ describe('TheMap.vue', () => {
 		mapOnStub = sinon.stub(mapService, 'on');
 		storeOptions = {
 			modules: {
+				User: {
+					namespaced: true,
+					state: {
+						username: 'user'
+					}
+
+				},
 				Markers: {
 					namespaced: true,
 					state: {
@@ -43,7 +50,13 @@ describe('TheMap.vue', () => {
 								error: {
 									status: 500
 								}
-							}];
+							},{
+								uploadTime: 3,
+								story: 1,
+								error: {
+									status: 500
+								}
+							},];
 						}
 					}
 				},
@@ -252,5 +265,45 @@ describe('TheMap.vue', () => {
 		const queueMarkers = wrapper.findAll('map-upload-marker-stub');
 
 		expect(queueMarkers.length).toBe(0);
+	});
+
+	it('Doesnt renders the queue story markers when it has entries and mode is story without the user', () => {
+		mocks.$route.name = 'user/story/1';
+
+		const wrapper = shallowMount(TheMap, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+			},
+		});
+
+		const queueMarkers = wrapper.findAll('map-upload-marker-stub');
+
+		expect(queueMarkers.length).toBe(0);
+	});
+
+	it('Renders the queue story markers when it has entries and mode is story with logged in user', async () => {
+		mocks.$route.params = {
+			username: 'user'
+		};
+		mocks.$route.currentPath = 'user/story/1'
+		storeOptions.modules.Stories.state.story = {
+			id: 1
+		}
+		storeOptions.modules.User.state.user = {
+			username: 'user'
+		}
+
+
+		const wrapper = shallowMount(TheMap, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				mocks,
+			},
+		});
+
+		const queueMarkers = wrapper.findAll('map-upload-marker-stub');
+
+		expect(queueMarkers.length).toBe(1);
 	});
 });

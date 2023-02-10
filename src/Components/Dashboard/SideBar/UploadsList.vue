@@ -29,7 +29,11 @@
 
 		computed: {
 			markers() {
-				return this.$store.getters['Uploads/allFiles'];
+       
+			    const storyId = this.$store.state.Stories.story ? this.$store.state.Stories.story.id : null;
+				return this.$store.getters['Uploads/allFiles'].filter((marker) => {
+				    return marker.story == storyId;
+                });
 			},
 		},
 	}

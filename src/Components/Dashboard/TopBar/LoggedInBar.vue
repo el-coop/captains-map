@@ -63,7 +63,7 @@ export default {
         },
         
         isEdit() {
-            return this.$router.currentRoute.path === '/edit'
+            return this.$route.path === '/edit'
         }
     }
 }

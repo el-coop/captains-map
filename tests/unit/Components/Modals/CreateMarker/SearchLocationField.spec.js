@@ -35,7 +35,7 @@ describe('CreateMarker/SearchLocationField.vue', () => {
 
 
 		expect(wrapper.find('.help.is-danger').exists()).toBeTruthy();
-		expect(wrapper.find('.help.is-danger').text()).toBe('The location is invalid.');
+		expect(wrapper.find('.help.is-danger').text()).toBe('error');
 
 	});
 

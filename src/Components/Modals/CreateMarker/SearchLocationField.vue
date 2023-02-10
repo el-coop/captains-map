@@ -25,7 +25,7 @@
 			</button>
 
 		</div>
-		<p class="help is-danger" v-if="error">The location is invalid.</p>
+		<p class="help is-danger" v-if="error" v-text="error"/>
 	</div>
 
 </template>
