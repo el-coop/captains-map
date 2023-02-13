@@ -10,7 +10,7 @@
                            @remove-from-map="removeObject"
                            @user-marker-click="rightClick"/>
             
-            <template v-if="$route.name === 'edit'">
+            <template v-if="showUploads">
                 <MapUploadMarker v-for="marker in uploadMarkers" :marker="marker"
                                  @add-to-map="addObject"
                                  @remove-from-map="removeObject"
@@ -124,8 +124,22 @@ export default {
             return this.$store.state.Markers.userMarker;
         },
         uploadMarkers() {
-            return this.$store.getters['Uploads/allFiles'];
+            const storyId = this.$store.state.Stories.story ? this.$store.state.Stories.story.id : null;
+            return this.$store.getters['Uploads/allFiles'].filter((marker) => {
+                return marker.story == storyId;
+            });
         },
+        showUploads(){
+            if(this.$route.name === 'edit'){
+                return true;
+            }
+    
+            if(this.$store.state.Stories.story){
+               return !!(this.$store.state.User.user && this.$route.params.username === this.$store.state.User.user.username);
+            }
+            
+            return false
+        }
     },
     
     mounted() {

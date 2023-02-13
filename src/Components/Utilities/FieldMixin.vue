@@ -27,7 +27,7 @@ export default {
     },
     data() {
         return {
-            id: `label_${getCurrentInstance().uid}`
+            inputId: `label_${getCurrentInstance().uid}`
         }
     },
     

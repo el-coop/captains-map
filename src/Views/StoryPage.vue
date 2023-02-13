@@ -12,7 +12,7 @@ import map from "@/Services/LeafletMapService";
 
 export default {
     name: "StoryPage",
-    emits:['update:selectedMarker','update:createMarkerData','env-setup','404'],
+    emits: ['update:selectedMarker', 'update:createMarkerData', 'env-setup', '404'],
     metaInfo() {
         return {
             title: this.$route.params.username
@@ -31,6 +31,11 @@ export default {
     mounted() {
         this.$emit('env-setup');
         this.loadStory();
+        window.addEventListener('popstate', this.findMarker);
+    },
+    
+    beforeUnmount() {
+        window.removeEventListener('popstate', this.findMarker);
     },
     
     computed: {
@@ -41,6 +46,20 @@ export default {
     },
     
     methods: {
+        findMarker() {
+            if (this.$route.params.marker) {
+                const markers = this.$store.state.Stories.markers;
+                const marker = markers.find(({id}) => {
+                    return id == this.$route.params.marker;
+                });
+    
+                if (!marker) {
+                    return this.$emit('404');
+                }
+    
+                return map.setView([marker.lat, marker.lng]);
+            }
+        },
         async loadStory() {
             const responseStatus = await this.$store.dispatch('Stories/load', {
                 user: this.$route.params.username,

@@ -101,14 +101,18 @@ export default {
             this.userNavigation = true;
         },
         
-        async closedNavigation() {
+        async closedNavigation(data = {}) {
+            const back = data.back || false;
             this.$emit('close');
             if (this.userNavigation) {
                 this.userNavigation = false;
                 return this.$router.push(`/${this.marker.user.username}`);
             }
             if (this.$route.params.story) {
-                return this.$router.pushRoute(`${this.$route.params.username}/story/${this.$route.params.story}`);
+                if(! back || this.$route.params.marker){
+                    this.$router.replaceRoute(`${this.$route.params.username}/story/${this.$route.params.story}`);
+                }
+                return;
             }
             if (this.$route.params.username) {
                 return this.$router.pushRoute(this.$route.params.username);
@@ -140,6 +144,7 @@ export default {
             if (!this.marker) {
                 return '';
             }
+            console.log(this.marker);
             if (this.$route.params.story) {
                 return `${this.marker.user.username}/story/${this.$route.params.story}/${this.marker.id}`
             }

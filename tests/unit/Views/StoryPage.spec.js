@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import StoryPage from '@/Views/StoryPage.vue';
 import {describe, it, expect, afterEach, beforeEach} from 'vitest';
 import map from '@/Services/LeafletMapService';
@@ -10,6 +10,9 @@ describe('StoryPage.vue', () => {
 	let storeOptions;
 
 	beforeEach(() => {
+		global.window.addEventListener = sinon.stub();
+		global.window.removeEventListener = sinon.stub();
+
 		storeOptions = {
 			modules: {
 				Markers: {
@@ -77,7 +80,30 @@ describe('StoryPage.vue', () => {
 
 
 	afterEach(() => {
+		delete global.window.addEventListener;
+		delete global.window.removeEventListener;
+
 		sinon.restore();
+	});
+
+	it('Registers and destroys window pop state event', () => {
+
+		const wrapper = shallowMount(StoryPage, {
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
+		});
+
+		expect(global.window.addEventListener.calledOnce).toBeTruthy();
+		expect(global.window.addEventListener.calledWith('popstate')).toBeTruthy();
+
+		wrapper.unmount();
+
+		expect(global.window.removeEventListener.calledOnce).toBeTruthy();
+		expect(global.window.removeEventListener.calledWith('popstate')).toBeTruthy();
+
+
 	});
 
 	it('Renders without create marker when no logged in user', () => {
@@ -290,6 +316,40 @@ describe('StoryPage.vue', () => {
 
 		expect(mapSetViewStub.called).toBeTruthy();
 		expect(mapSetViewStub.calledWith([
+			10, 10
+		])).toBeTruthy();
+	})
+
+	it('Sets view to specific marker when backed/forwarded into it', async () => {
+		const mapSetViewStub = sinon.stub(map, 'setView');
+		storeOptions.modules.Stories.state.markers = [{
+			id: 1,
+			lat: 1,
+			lng: 1
+		}, {
+			id: 2,
+			lat: 10,
+			lng: 10
+		}];
+
+		mocks.$route.params.marker = 2;
+		const wrapper = await shallowMount(StoryPage, {
+			global: {
+				plugins:[createStore(storeOptions)],
+				mocks
+			}
+		});
+
+		wrapper.vm.findMarker();
+
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 5);
+		});
+
+		expect(mapSetViewStub.calledTwice).toBeTruthy();
+		expect(mapSetViewStub.secondCall.calledWith([
 			10, 10
 		])).toBeTruthy();
 	})

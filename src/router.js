@@ -31,6 +31,11 @@ router.pushRoute = async function (location) {
 	history.pushState(null, null, `${window.location.protocol}//${window.location.host}/${location}`);
 };
 
+
+router.replaceRoute = async function (location) {
+	history.replaceState(null, null, `${window.location.protocol}//${window.location.host}/${location}`);
+};
+
 router.afterEach(async (to, from) => {
 	if (from.name) {
 		await cache.store('settings', 'route', to.fullPath);

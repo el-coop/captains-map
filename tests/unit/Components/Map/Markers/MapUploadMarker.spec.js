@@ -175,7 +175,7 @@ describe('MapUploadMarker.vue', () => {
 		await new Promise((resolve) => {
 			setTimeout(() => {
 				resolve();
-			}, 10);
+			}, 20);
 		});
 
 		expect(divIcon.firstChild.classList.add.calledOnce).toBeTruthy();
