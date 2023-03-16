@@ -144,7 +144,6 @@ export default {
             if (!this.marker) {
                 return '';
             }
-            console.log(this.marker);
             if (this.$route.params.story) {
                 return `${this.marker.user.username}/story/${this.$route.params.story}/${this.marker.id}`
             }

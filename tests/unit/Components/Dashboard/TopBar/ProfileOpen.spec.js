@@ -10,6 +10,7 @@ describe('ProfileOpen.vue', () => {
 
 	let stubs;
 	let storeOptions;
+	let mocks;
 
 	beforeEach(() => {
 		storeOptions = {
@@ -26,6 +27,12 @@ describe('ProfileOpen.vue', () => {
 						toggle(){}
 					}
 				},
+				User: {
+					namespaced: true,
+					state: {
+						user: {}
+					}
+				},
 				Webpush: {
 					namespaced:true,
 					state:{
@@ -39,6 +46,13 @@ describe('ProfileOpen.vue', () => {
 			FontAwesomeIcon: true,
 			FollowButton: true
 		};
+
+		mocks = {
+			$router: {
+				push: sinon.stub()
+			}
+		};
+
 	});
 
 	afterEach(() => {
@@ -100,6 +114,40 @@ describe('ProfileOpen.vue', () => {
 
 		expect(profileToggleStub.calledOnce).toBeTruthy();
 		expect(profileToggleStub.calledWith()).toBeTruthy();
+	});
+
+
+	it('Doesnt show exit profile button when logged in', async () => {
+
+		const wrapper = shallowMount(ProfileOpen, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs
+			}
+		});
+
+		expect(wrapper.find('.webpush').exists()).toBeFalsy();
+
+	});
+
+	it('shows exit profile button when logged out, and allows exit', async () => {
+
+		storeOptions.modules.User.state.user = null;
+
+		const wrapper = shallowMount(ProfileOpen, {
+			global: {
+				plugins: [createStore(storeOptions)],
+				stubs,
+				mocks
+			}
+		});
+
+		wrapper.find('.webpush').trigger('click');
+
+		expect(mocks.$router.push.called).toBeTruthy();
+		expect(mocks.$router.push.calledWith('/')).toBeTruthy();
+
+
 	});
 
 });
