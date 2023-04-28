@@ -15,6 +15,7 @@
 					const regex = new RegExp(/https:\/\/www\.instagram\.com\/p\/(\w*)\/.*/i);
 					const path = regex.exec(src.media.path);
 					if (path) {
+					    //TODO: Fix uploaded images
 						return `https://instagram.com/p/${path[1]}/media/`;
 					} else {
 						return '';
@@ -28,7 +29,7 @@
 
 			calculateVerifiedImage(src) {
 				if (src.type === 'instagram') {
-					return `https://instagram.com/p/${src.path}/media/`;
+					return `/api/marker/instagram/${src.id}`;
 				} else {
 					return `/api${src.path.replace('images', 'thumbnails')}`;
 				}

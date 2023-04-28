@@ -39,6 +39,10 @@ export default {
         }
     },
     
+    async created() {
+        this.src = await this.calculateImage();
+    },
+    
     mounted() {
         this.resizeDescription();
         window.addEventListener('resize', this.resizeDescription);
@@ -51,7 +55,7 @@ export default {
     data() {
         return {
             resizeListener: null,
-            src: this.calculateImage(),
+            src: null,
             className: `marker-entry__card--${this.marker.type}`,
             description: '',
             user: this.marker.user
@@ -75,12 +79,12 @@ export default {
     },
     
     methods: {
-        calculateImage() {
+        async calculateImage() {
             if (!this.marker.media || !this.marker.media.length) {
                 return '';
             }
             
-            return this.calculateVerifiedImage(this.marker.media[0]);
+            return await this.calculateVerifiedImage(this.marker.media[0]);
         },
         showMarker() {
             map.move([this.marker.lat, this.marker.lng], 16);
