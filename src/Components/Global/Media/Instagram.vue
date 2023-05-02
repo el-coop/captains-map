@@ -1,6 +1,6 @@
 <template>
     <figure class="image view-marker__image">
-        <img :src="`/api/marker/instagram/${this.id}`" :alt="alt" class="view-marker__image-img">
+        <img :src="`/api/marker/instagram/${instagram_type || 'p'}/${this.path}`" :alt="alt" class="view-marker__image-img">
         <button class="button is-light-background view-marker__image-button" @click="openImage">
             <FontAwesomeIcon icon="camera-retro" fixed-width></FontAwesomeIcon>
         </button>
@@ -12,13 +12,14 @@ export default {
     name: "Instagram",
     
     props: {
-        id: {
-            required: true,
-            type: Number
-        },
         path: {
             required: true,
             type: String
+        },
+    
+        instagram_type: {
+            required: false,
+            default: 'p'
         },
         alt: {
             type: String,

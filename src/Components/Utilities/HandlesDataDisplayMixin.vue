@@ -12,11 +12,12 @@
 		methods: {
 			calculateUnverifiedImage(src) {
 				if (src.media.type === 'instagram') {
-					const regex = new RegExp(/https:\/\/www\.instagram\.com\/p\/(\w*)\/.*/i);
+
+					const regex = new RegExp(/https:\/\/www\.instagram\.com\/(p|reel)\/(\w*)\/.*/i);
 					const path = regex.exec(src.media.path);
 					if (path) {
 					    //TODO: Fix uploaded images
-						return `https://instagram.com/p/${path[1]}/media/`;
+                        return `/api/marker/instagram/${path[1]}/${path[2]}`;
 					} else {
 						return '';
 					}
@@ -29,7 +30,8 @@
 
 			calculateVerifiedImage(src) {
 				if (src.type === 'instagram') {
-					return `/api/marker/instagram/${src.id}`;
+				    const instagram_type = src.instagram_type || 'p';
+					return `/api/marker/instagram/${instagram_type}/${src.path}`;
 				} else {
 					return `/api${src.path.replace('images', 'thumbnails')}`;
 				}
