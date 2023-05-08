@@ -29,7 +29,7 @@ export default {
     
     methods: {
         openImage() {
-            window.open(`https://www.instagram.com/p/${this.path}/`);
+            window.open(`https://www.instagram.com/${this.instagram_type}/${this.path}/`);
         }
     }
 }

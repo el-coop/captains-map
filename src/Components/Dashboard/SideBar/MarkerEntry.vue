@@ -79,12 +79,12 @@ export default {
     },
     
     methods: {
-        async calculateImage() {
+        calculateImage() {
             if (!this.marker.media || !this.marker.media.length) {
                 return '';
             }
             
-            return await this.calculateVerifiedImage(this.marker.media[0]);
+            return this.calculateVerifiedImage(this.marker.media[0]);
         },
         showMarker() {
             map.move([this.marker.lat, this.marker.lng], 16);

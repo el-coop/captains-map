@@ -34,18 +34,33 @@ describe('Instagram.vue', () => {
 				}
 			},
 			props: {
-				id: 1
+				id: 1,
+				path: 'bla'
 			},
 
 		});
 
-		expect(wrapper.find('h4.title').exists()).toBeTruthy();
-		expect($http.get.calledOnce).toBeTruthy();
-		expect($http.get.calledWith('marker/instagram/1')).toBeTruthy();
+		expect(wrapper.find('img').exists()).toBeTruthy();
+		expect(wrapper.find('img').element.src).toBe('http://localhost:3000/api/marker/instagram/p/bla');
 
-		await wrapper.vm.$nextTick();
+	});
 
-		expect(wrapper.vm.$data.embedCode).toBe('html');
-		expect(global.instgrm.Embeds.process.calledOnce).toBeTruthy();
+	it('Opens instagram in new window when button is clicked', () => {
+		global.window.open = sinon.stub();
+
+		const wrapper = shallowMount(Istangram, {
+			props: {
+				id: 1,
+				path: 'bla'
+			},
+
+		});
+
+		wrapper.find('button').trigger('click');
+
+		expect(global.window.open.calledOnce).toBeTruthy();
+		expect(global.window.open.calledWith('https://www.instagram.com/p/bla/')).toBeTruthy();
+
+		delete global.window.open;
 	});
 });
