@@ -30,7 +30,7 @@
 					return `/api${this.cover.path}`;
 				}
 
-				return `https://instagram.com/p/${this.cover.path}/media/`;
+				return `/api/marker/instagram/${this.cover.instagram_type || 'p'}/${this.cover.path}`;
 
 			}
 		}

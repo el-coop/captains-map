@@ -94,7 +94,7 @@ describe('UploadEntry.vue', () => {
 		expect(wrapper.find('.progress').exists()).toBeFalsy();
 	});
 
-	it('Calculates image src for image type', () => {
+	it('Calculates image src for image type', async () => {
 		const wrapper = shallowMount(UploadEntry, {
 			global: {
 				plugins: [createStore(storeOptions)],
@@ -105,10 +105,12 @@ describe('UploadEntry.vue', () => {
 			}
 		});
 
+		await wrapper.vm.$nextTick();
+
 		expect(wrapper.vm.$data.src).toBe(file.preview);
 	});
 
-	it('Calculates image src for instagram type', () => {
+	it('Calculates image src for instagram type', async () => {
 		marker.media.type = 'instagram';
 
 		const wrapper = shallowMount(UploadEntry, {
@@ -120,7 +122,10 @@ describe('UploadEntry.vue', () => {
 				marker
 			}
 		});
-		expect(wrapper.vm.$data.src).toBe(`https://instagram.com/p/path/media/`);
+
+		await wrapper.vm.$nextTick();
+
+		expect(wrapper.vm.$data.src).toBe(`/api/marker/instagram/p/path`);
 	});
 
 	it('Reacts to click', () => {
@@ -262,6 +267,8 @@ describe('UploadEntry.vue', () => {
 				marker
 			}
 		});
+
+		await wrapper.vm.$nextTick();
 
 		expect(wrapper.vm.$data.src).toBe(file.preview);
 

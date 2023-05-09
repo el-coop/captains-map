@@ -80,7 +80,7 @@ describe('MarkerEntry.vue', () => {
 
 	});
 
-	it('Calculates image src for image type', () => {
+	it('Calculates image src for image type', async () => {
 		const wrapper = shallowMount(MarkerEntry, {
 			global: {
 				stubs
@@ -88,14 +88,16 @@ describe('MarkerEntry.vue', () => {
 			props: {
 				marker
 			}
-
 		});
+
+		await wrapper.vm.$nextTick();
 
 		expect(wrapper.vm.$data.src).toBe(`/api${marker.media[0].path.replace('images', 'thumbnails')}`);
 	});
 
-	it('Calculates image src for instagram type', () => {
+	it('Calculates image src for instagram type',async () => {
 		marker.media[0].type = 'instagram';
+		marker.media[0].path = 'bla';
 
 		const wrapper = shallowMount(MarkerEntry, {
 			global: {
@@ -106,8 +108,9 @@ describe('MarkerEntry.vue', () => {
 			}
 
 		});
+		await wrapper.vm.$nextTick();
 
-		expect(wrapper.vm.$data.src).toBe(`https://instagram.com/p/${marker.media[0].path}/media/`);
+		expect(wrapper.vm.$data.src).toBe(`/api/marker/instagram/p/${marker.media[0].path}`);
 	});
 
 	it('Reacts to click', () => {

@@ -39,6 +39,10 @@ export default {
         }
     },
     
+    async created() {
+        this.src = await this.calculateImage();
+    },
+    
     mounted() {
         this.resizeDescription();
         window.addEventListener('resize', this.resizeDescription);
@@ -51,7 +55,7 @@ export default {
     data() {
         return {
             resizeListener: null,
-            src: this.calculateImage(),
+            src: null,
             className: `marker-entry__card--${this.marker.type}`,
             description: '',
             user: this.marker.user

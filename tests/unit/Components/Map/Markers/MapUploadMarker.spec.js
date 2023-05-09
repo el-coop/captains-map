@@ -127,8 +127,7 @@ describe('MapUploadMarker.vue', () => {
 				marker
 			},
 		});
-
-		expect(wrapper.find('img[src="https://instagram.com/p/path/media/"]').exists()).toBeTruthy();
+		expect(wrapper.find('img[src="/api/marker/instagram/p/path"]').exists()).toBeTruthy();
 	});
 
 	it('Renders images marker preview', () => {

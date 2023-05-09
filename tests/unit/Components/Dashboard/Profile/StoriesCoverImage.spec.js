@@ -4,7 +4,7 @@ import StoryCoverImage from '@/Components/Dashboard/Profile/StoryCoverImage.vue'
 import sinon from 'sinon';
 import globe from '@/assets/images/globe-icon.png';
 
-describe('Stories.vue', () => {
+describe('StoriesCoverImage.vue', () => {
 
 	afterEach(() => {
 		sinon.restore();
@@ -35,7 +35,7 @@ describe('Stories.vue', () => {
 
 		expect(wrapper.find('.story__figure').exists()).toBeTruthy();
 		expect(wrapper.find('.image.is-32x32').exists()).toBeFalsy();
-		expect(wrapper.find('img').attributes('src')).toBe(`https://instagram.com/p/bla/media/`);
+		expect(wrapper.find('img').attributes('src')).toBe(`/api/marker/instagram/p/bla`);
 	});
 
 	it('Renders with image when cover is image', async () => {
@@ -66,6 +66,6 @@ describe('Stories.vue', () => {
 		});
 
 		expect(wrapper.find('.story__figure.image.is-32x32').exists()).toBeTruthy();
-		expect(wrapper.find('img').attributes('src')).toBe(`https://instagram.com/p/bla/media/`);
+		expect(wrapper.find('img').attributes('src')).toBe(`/api/marker/instagram/p/bla`);
 	});
 });

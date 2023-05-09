@@ -23,6 +23,7 @@
                 <component v-if="currentMedia === mediaIndex"
                            :is="media.type === 'instagram' ? 'Instagram': 'Photo'"
                            :key="`media_${media.id}`"
+                           :instagram_type="media.instagram_type"
                            :path="media.path" :id="media.id"
                            :alt="`${marker.user.username} | ${marker.description}`"/>
             </template>
@@ -144,7 +145,6 @@ export default {
             if (!this.marker) {
                 return '';
             }
-            console.log(this.marker);
             if (this.$route.params.story) {
                 return `${this.marker.user.username}/story/${this.$route.params.story}/${this.marker.id}`
             }
