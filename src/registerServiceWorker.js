@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { register } from 'register-service-worker'
+import {register} from 'register-service-worker'
 import toast from 'izitoast';
 import store from "@/store";
 
@@ -48,4 +48,13 @@ if (import.meta.env.PROD) {
 		window.location.reload();
 		refreshing = true;
 	});
+} else {
+	navigator.serviceWorker.register('/dist/service-worker.js')
+		.then((registration) => {
+			console.log('serviceWorker installed!');
+			store.dispatch('Webpush/initialize', registration);
+		})
+		.catch((err) => {
+			console.log(err)
+		});
 }
