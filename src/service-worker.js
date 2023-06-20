@@ -31,13 +31,14 @@ self.addEventListener('message', (message) => {
 });
 
 self.addEventListener('push', (event) => {
-	const payload = JSON.parse(event.data.text());
+	const payload = event.data.json();
 
 	let image = payload.image;
-	if (image.indexOf('images') === -1) {
-		image = `https://instagram.com/p/${image}/media/`;
+
+	if (image.type !== 'image') {
+		image = `https://map.elcoop.io/api/marker/instagram/${image.instagram_type}/${image.path}`;
 	} else {
-		image = `https://map.elcoop.io/api/${image}`;
+		image = `https://map.elcoop.io/api${image.path}`;
 	}
 
 	event.waitUntil(
